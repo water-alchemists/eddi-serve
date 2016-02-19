@@ -1,0 +1,78 @@
+<html>
+	<head>
+		<link type='text/css' rel='stylesheet' href='index.css' />
+	</head>
+	<body>
+		<div class='container'>
+			<h3>Users</h3>
+			<div id='user-content' class='content'>
+				<div id='user-list'>
+				</div>
+				<div id='user-create-form'>
+					<form action='' novalidate>
+						<div class='form-wrapper'>
+							<div class='message'></div>
+							<div class='input-container'>
+								<label for='email'>Email</label>
+								<input type='email' name='email'/>
+							</div>
+							<div class='input-container'>
+								<label for='password'>Password</label>
+								<input type='password' name='password'/>
+							</div>
+							<div class='input-container'>
+								<label for='name'>Name</label>
+								<input type='text' name='name'/>
+							</div>
+							<div class='input-container'>
+								<label for='zip'>Zip Code</label>
+								<input type='number' name='zip'/>
+							</div>
+							<button type='submit'>Add User</button>
+						</div>
+					</form>
+				</div>
+				<div id='user-login-form'>
+					<form action='' novalidate>
+						<div class='form-wrapper'>
+							<div class='message'></div>
+							<div class='input-container'>
+								<label for='email'>Email</label>
+								<input type='email' name='email' />
+							</div>
+							<div class='input-container'>
+								<label for='password'>Password</label>
+								<input type='password' name='password' />
+							</div>
+							<button type='submit'>Login</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class='container'>
+			<h3>Machines</h3>
+			<div id='machine-content' class='content'>
+				<div id='machine-list'>
+				</div>
+				<div id='machine-form'>
+					<form action='' novalidate>
+						<div class='form-wrapper'>
+							<div class='message'></div>
+							<div class='input-container'>
+								<label for='id'>Eddi Number</label>
+								<input type='text' name='id'/>
+							</div>
+							<button type='submit'>Add Machine</button>
+						</div>
+						
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="bower_components/jquery/dist/jquery.js"></script>
+		<script src="bower_components/bluebird/js/browser/bluebird.js"></script>
+		<script  src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
+		<script src='index.js'></script>
+	</body>
+</html>
