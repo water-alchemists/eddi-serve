@@ -30,8 +30,11 @@ $(document).ready(function(){
 	var showUserCreateError = displayText.bind(null, '#user-create-form .message'),
 		showUserLoginError = displayText.bind(null, '#user-login-form .message'),
 		showEddiError = displayText.bind(null, '#machine-form .message'),
+		showEddiListError = displayText.bind(null, '#machine-list .list'),
 		showAuthenticateStatus = displayText.bind(null, '#user-profile > .authenticate'),
 		showUserProfile = displayText.bind(null, '#user-profile > .profile');
+
+
 
 	function checkCookie(){
 		var cookie = document.cookie,
@@ -76,7 +79,6 @@ $(document).ready(function(){
 	}
 
 	refs.BASE.onAuth(onAuthHandler);
-
 
 	//Firebase Related
 	//User Related
@@ -175,6 +177,22 @@ $(document).ready(function(){
 		});
 	}
 
+	function getAllEddiByUser(userId){
+		return new Promise(function(resolve, reject){
+			refs.USER
+				.child(userId)
+				.child(paths.EDDI_PATH)
+				.once('value', function(data){
+					var eddiList = data.val();
+					if(!eddiList) return reject(new Error('There is no list of eddis.'));
+					eddiList = Object.keys(eddiList).map(function(key){
+						return eddiList[key];
+					});
+					resolve(eddiList);
+				});
+		});
+	}
+
 	function login(email, password){
 		return authenticateWithPassword(email, password);
 	}
@@ -186,19 +204,19 @@ $(document).ready(function(){
 	//Eddi Related
 	function findByEddi(id){
 		return new Promise(function(resolve, reject){
-			refs.EDDI.child(id).once('value', function(snapshot){
-				var data = snapshot.val();
-				if(!data) return reject(new Error('Eddi machine does not exist'));
-				resolve(data);
+			refs.EDDI.child(id).once('value', function(data){
+				var eddi = data.val();
+				if(!eddi) return reject(new Error('Eddi machine "' + id + '" does not exist'));
+				resolve(eddi);
 			}, reject);
 		});
 	}
 
-	function assignEddiToUser(id, eddiId){
+	function assignEddiToUser(userId, eddiId){
 		return new Promise(function(resolve, reject){
-			refs.USER.child(id)
+			refs.USER.child(userId)
 					.child(paths.EDDI_PATH)
-					.push(id, function(error){
+					.push(eddiId, function(error){
 						if(error) return reject(error);
 						resolve();
 					});
@@ -218,6 +236,7 @@ $(document).ready(function(){
 	}
 
 	function setEddiState(eddiId, state){
+		if(typeof state !== 'number') state = parseInt(state);
 		return new Promise(function(resolve, reject){
 			refs.EDDI.child(eddiId)
 					.set({ state : state }, function(error){
@@ -294,9 +313,18 @@ $(document).ready(function(){
 			submission = data.reduce(function(obj, pair){
 				obj[pair.name] = pair.value;
 				return obj;
-			}, {});
+			}, {}),
+			eddiId = submission.id,
+			userId = cache.user.uid;
 		console.log('machine form submitted', data);
 		console.dir(submission);
+		findByEddi(eddiId)
+			.then(function(eddi){
+				return assignEddiToUser(userId, eddiId);
+			})
+			.catch(function(error){
+				return showEddiError(error.message);
+			});
 	});
 
 	$('#check-auth').click(function(e){
@@ -330,6 +358,26 @@ $(document).ready(function(){
 			.catch(function(){
 				return showUserProfile('Profile not found. Please login.')
 			});
-	})
+	});
+
+	$('#machine-list > button').click(function(e){
+		e.preventDefault();
+		var userId = cache.user.uid;
+		getAllEddiByUser(userId)
+			.then(function(eddiList){
+				console.log('got all eddiList', eddiList);
+				var getEddiDetails = eddiList.map(function(eddiId){
+					return findByEddi(eddiId);
+				});
+				return Promise.all(getEddiDetails)
+						.then(function(eddiDetails){
+							console.log('this is the eddi details', eddiDetails);
+							return showEddiListError(JSON.stringify(eddiDetails, null, '\t'));
+						});
+			})
+			.catch(function(error){
+				return showEddiListError(error.message);
+			});
+	});
 
 });
