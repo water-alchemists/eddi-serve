@@ -1,8 +1,12 @@
 $(document).ready(function(){
 	var paths = {
 			BASE_PATH : 'https://eddi.firebaseIO.com',
-			USERS_PATH : 'user',
-			EDDI_PATH : 'eddi'
+			USERS_PATH : 'users',
+			EDDI_PATH : 'eddis',
+			METRIC_PATH : 'metrics',
+			STATE_PATH : 'state',
+			PIN_PATH : 'pins',
+			TESTEDDI_PATH : 'test-eddi'
 		};
 
 	var ref = new Firebase(paths.BASE_PATH),
@@ -134,8 +138,7 @@ $(document).ready(function(){
 	function createUserProfile(id, user){
 		var submission = {};
 		submission[id] = user;
-
-		return Promise(function(resolve, reject){
+		return new Promise(function(resolve, reject){
 			refs.USER.set(submission, function(error){
 				if(error) return reject(error);
 				resolve(submission);
@@ -143,7 +146,16 @@ $(document).ready(function(){
 		});
 	}
 
-	function updateUser(id, update){
+	function removeUserProfile(id){
+		return new Promise(function(resolve, reject){
+			refs.USER.child(id).remove(function(error){
+				if(error) return reject(error);
+				resolve();
+			});
+		});
+	}
+
+	function updateUserProfile(id, update){
 		return new Promise(function(resolve, reject){
 			refs.USER.child(id).update(update, function(error){
 				if(error) return reject(error);
@@ -240,6 +252,10 @@ $(document).ready(function(){
 				//create the user profile
 				return createUserProfile(id, submission);
 			})
+			.then(function(){
+				//log the user in after signing in
+				return authenticateWithPassword(email, password);
+			})
 			.catch(function(error){
 				switch(error.code){
 					case 'EMAIL_TAKEN' : 
@@ -308,8 +324,9 @@ $(document).ready(function(){
 				return getUserProfile(userId);
 			})
 			.then(function(user){
-				console.log('getting user profile', user);
-				return showUserProfile(JSON.stringify(user, null, '\t'));
+				var data = user.val();
+				console.log('getting user profile', data);
+				return showUserProfile(JSON.stringify(data, null, '\t'));
 			})
 			.catch(function(){
 				return showUserProfile('Profile not found. Please login.')
