@@ -34,8 +34,25 @@ $(document).ready(function(){
 		showAuthenticateStatus = displayText.bind(null, '#user-profile > .authenticate'),
 		showUserProfile = displayText.bind(null, '#user-profile > .profile');
 
+	function displayEddiList(selector, eddiList){
+		var buttonString = '<button type="button">Remove</button>',
+			nameString = '<h5 class="eddi-name"></h5>',
+			stateString = '<div></div>',
+			metricString = '<code></code>',
+			pinString = '<code></code>',
+			html = eddiList.map(function(eddi){
+					var eddiId = Object.keys(eddi)[0],
+						removeButton = $(buttonString).attr('data-id', eddiId);
+					return $('div');
+				})
+				.reduce(function(htmlString, eddiHtml){
 
+				}, '');
+		//insert html into selector
+		return $(selector).html(html);
+	}
 
+	//Cookies
 	function checkCookie(){
 		var cookie = document.cookie,
 			token;
@@ -137,11 +154,11 @@ $(document).ready(function(){
 	}
 
 	function createUserProfile(id, user){
-		var submission = {};
-		submission[id] = user;
 		return new Promise(function(resolve, reject){
-			refs.USER.set(submission, function(error){
+			refs.USER.child(id).set(user, function(error){
 				if(error) return reject(error);
+				var submission = {};
+				submission[id] = user;
 				resolve(submission);
 			});
 		});
