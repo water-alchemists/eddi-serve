@@ -1,5 +1,4 @@
 $(document).ready(function(){
-	console.log('window', window);
 	var paths = {
 			BASE_PATH : 'https://eddi.firebaseIO.com',
 			USERS_PATH : 'user',
@@ -8,30 +7,116 @@ $(document).ready(function(){
 
 	var ref = new Firebase(paths.BASE_PATH),
 		refs = {
-		BASE : ref,
-		USER : ref.child(paths.USERS_PATH),
-		EDDI : ref.child(paths.EDDI_PATH)
-	};
+			BASE : ref,
+			USER : ref.child(paths.USERS_PATH),
+			EDDI : ref.child(paths.EDDI_PATH)
+		};
 
+	//Handles Authentication
 	var cache = {
 		user : null
 	};
 
 	//Edit Dom
 	//Display Error
-	function displayError(selector, text){
+	function displayText(selector, text){
 		$(selector).show().text(text);
 	}
 
-	var showUserCreateError = displayError.bind(this, '#user-create-form .message'),
-		showUserLoginError = displayError.bind(this, '#user-login-form .message'),
-		showEddiError = displayError.bind(this, '#machine-form .message');
+	var showUserCreateError = displayText.bind(null, '#user-create-form .message'),
+		showUserLoginError = displayText.bind(null, '#user-login-form .message'),
+		showEddiError = displayText.bind(null, '#machine-form .message'),
+		showAuthenticateStatus = displayText.bind(null, '#user-profile > .authenticate'),
+		showUserProfile = displayText.bind(null, '#user-profile > .profile');
+
+	function checkCookie(){
+		var cookie = document.cookie,
+			token;
+
+		return new Promise(function(resolve, reject){
+			if(cookie){
+				var regex = /token=(.*?);/;
+				token = cookie.match(regex)[1];
+				return refs.BASE.auth(token, function(error, data){
+					if(error) return reject(error);
+					resolve(data);
+				});
+			} else return resolve(null);
+		});
+	}
+
+	function setCookie(token, expires){
+		var cookie = "";
+		if(token) {
+			cookie += "token=" + token;
+			if(expires) cookie += ";expires=" + (new Date(expires).toUTCString());
+		}
+		console.log('this is the cookie', cookie);
+		document.cookie = cookie;
+		return;
+	}
+
+	function onAuthHandler(user){
+		console.log('i am in auth handler', user);
+		var token, expires;
+		if(user) {
+			token = user.token;
+			expires = user.expires;
+
+			//cache user
+			cache.user = user;
+
+		}
+
+		setCookie(token, expires);
+		return token ? showAuthenticateStatus('Authenticated') : showAuthenticateStatus('Not Authenticated');
+	}
+
+	refs.BASE.onAuth(onAuthHandler);
 
 
 	//Firebase Related
 	//User Related
-	function getUser(email, password){
+	function isAuthenticated(){
+		return new Promise(function(resolve, reject){
+			var user = refs.BASE.getAuth();
+			if(!user) reject(new Error('User is not authenticated.'));
+			resolve(user);
+		});
+	}
 
+	function authenticateWithToken(token){
+		return new Promise(function(resolve, reject){
+			refs.BASE.auth(token, function(error, user){
+				if(error) return reject(error);
+				resolve(user);
+			});
+		});
+	}
+
+	function authenticateWithPassword(email, password){
+		return new Promise(function(resolve, reject){
+			refs.BASE.authWithPassword({
+				email : email,
+				password : password
+			}, function(error, user){
+				if(error) return reject(error);
+				resolve(user);
+			});
+		});
+	}
+
+	function unauthenticate(){
+		return refs.BASE.unauth();
+	}
+
+	function getUserProfile(id){
+		return new Promise(function(resolve, reject){
+			refs.USER.child(id).once('value', function(user){
+				if(!user) return reject(new Error('Profile does not exist for this user.'));
+				resolve(user);
+			});
+		});
 	}
 
 	function createUser(email, password){
@@ -80,24 +165,17 @@ $(document).ready(function(){
 	}
 
 	function login(email, password){
-		return new Promise(function(resolve, reject){
-			refs.BASE.authWithPassword({
-				email : email,
-				password : password
-			}, function(){
-
-			});
-		});
+		return authenticateWithPassword(email, password);
 	}
 
 	function logout(){
-
+		return unauthenticate();
 	}
 
 	//Eddi Related
 	function findByEddi(id){
 		return new Promise(function(resolve, reject){
-			refs.EDDI.child(id).on('value', function(snapshot){
+			refs.EDDI.child(id).once('value', function(snapshot){
 				var data = snapshot.val();
 				if(!data) return reject(new Error('Eddi machine does not exist'));
 				resolve(data);
@@ -105,16 +183,37 @@ $(document).ready(function(){
 		});
 	}
 
-	function updateEddi(){
+	function assignEddiToUser(id, eddiId){
+		return new Promise(function(resolve, reject){
+			refs.USER.child(id)
+					.child(paths.EDDI_PATH)
+					.push(id, function(error){
+						if(error) return reject(error);
+						resolve();
+					});
 
+		});
 	}
 
-	function setEddi(){
-
+	function unassignEddiToUser(pushId){
+		return new Promise(function(resolve, reject){
+			refs.USER.child(id)
+				.child(paths.EDDI_PATH)
+				.remove(pushId, function(error){
+					if(error) return reject(error);
+					resolve();
+				});
+		});
 	}
 
-	function unsetEddi(){
-
+	function setEddiState(eddiId, state){
+		return new Promise(function(resolve, reject){
+			refs.EDDI.child(eddiId)
+					.set({ state : state }, function(error){
+						if(error) return reject(error);
+						resolve();
+					});
+		});
 	}
 
 	//Handles form submissions
@@ -162,10 +261,15 @@ $(document).ready(function(){
 			submission = data.reduce(function(obj, pair){
 				obj[pair.name] = pair.value;
 				return obj;
-			}, {});
+			}, {}),
+			email = submission.email,
+			password = submission.password;
 		console.log('login form submitted', data);
 		console.dir(submission);
-		loginUser()
+		login(email, password)
+			.catch(function(error){
+				showUserLoginError(error.message);
+			});
 	});
 
 	$('#machine-form > form').submit(function(e){
@@ -179,4 +283,37 @@ $(document).ready(function(){
 		console.log('machine form submitted', data);
 		console.dir(submission);
 	});
+
+	$('#check-auth').click(function(e){
+		e.preventDefault();
+		isAuthenticated()
+			.then(function(user){
+				console.log('you are logged in', user);
+			})
+			.catch(function(error){
+				showUserLoginError(error.message);
+			});
+	});
+
+	$('#logout').click(function(e){
+		e.preventDefault();
+		logout();
+	});
+
+	$('#user-profile > button').click(function(e){
+		e.preventDefault();
+		isAuthenticated()
+			.then(function(){
+				var userId = cache.user.uid;
+				return getUserProfile(userId);
+			})
+			.then(function(user){
+				console.log('getting user profile', user);
+				return showUserProfile(JSON.stringify(user, null, '\t'));
+			})
+			.catch(function(){
+				return showUserProfile('Profile not found. Please login.')
+			});
+	})
+
 });

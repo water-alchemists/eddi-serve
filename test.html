@@ -4,9 +4,12 @@
 	</head>
 	<body>
 		<div class='container'>
-			<h3>Users</h3>
+			<h3>User</h3>
 			<div id='user-content' class='content'>
-				<div id='user-list'>
+				<div id='user-profile'>
+					<div class='authenticate'></div>
+					<code class='profile'></code>
+					<button type='button'>Get Profile</button>
 				</div>
 				<div id='user-create-form'>
 					<form action='' novalidate>
@@ -47,6 +50,12 @@
 							<button type='submit'>Login</button>
 						</div>
 					</form>
+					<button id='check-auth' type='button'>
+						Check Authentication
+					</button>
+					<button id='logout' type='button'>
+						Logout
+					</button>
 				</div>
 			</div>
 		</div>
