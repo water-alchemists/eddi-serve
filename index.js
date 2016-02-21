@@ -53,7 +53,7 @@ $(document).ready(function(){
 		var cookie = "";
 		if(token) {
 			cookie += "token=" + token;
-			if(expires) cookie += ";expires=" + (new Date(expires).toUTCString());
+			if(expires) cookie += ";expires=" + expires.toUTCString();
 		}
 		console.log('this is the cookie', cookie);
 		document.cookie = cookie;
@@ -65,11 +65,10 @@ $(document).ready(function(){
 		var token, expires;
 		if(user) {
 			token = user.token;
-			expires = user.expires;
+			expires = new Date(Date.now() + user.expires);
 
-			//cache user
+			//cache users
 			cache.user = user;
-
 		}
 
 		setCookie(token, expires);
