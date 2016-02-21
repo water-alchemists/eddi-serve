@@ -367,7 +367,12 @@ $(document).ready(function(){
 			.then(function(eddiList){
 				console.log('got all eddiList', eddiList);
 				var getEddiDetails = eddiList.map(function(eddiId){
-					return findByEddi(eddiId);
+					return findByEddi(eddiId)
+							.then(function(details){
+								var obj = {};
+								obj[eddiId] = details;
+								return obj;
+							});
 				});
 				return Promise.all(getEddiDetails)
 						.then(function(eddiDetails){
