@@ -42,13 +42,19 @@
       }
     }
     
-    window.onload = function(){
+    function init(){
       render();
       console.log(document.getElementById("ppmin"));
       document.getElementById("ppmin").onchange = function(ev){
         ppm = ev.target.value;
         render();
       }
+    }
+    
+    if( document.readyState === "complete" ){
+      init();
+    } else {
+      document.onload = init;
     }
   </script>
 </body>
