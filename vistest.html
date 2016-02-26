@@ -57,11 +57,11 @@
         var radius = (ix * (150/density));
         var angleIncr = 60 / ix;
         var reddity = Math.round(Math.min(255, radius*(density/5)));
-        var color = "rgba("+reddity+","+80+","+(255-reddity)+", 1)";
+        var color = "rgba("+reddity+","+Math.round((255-reddity)/2)+","+(255-reddity)+", 1)";
         console.log("color: "+color);
         for( var ir=0; ir < 360; ir += angleIncr ){
-          var centerX = 150 + (radius * Math.sin(Math.PI * (ir/180)));
-          var centerY = 150 + (radius * Math.cos(Math.PI * (ir/180)));
+          var centerX = 150 + (radius * Math.sin(Math.PI * (((ix*2)+ir)/180)));
+          var centerY = 150 + (radius * Math.cos(Math.PI * (((ix*2)+ir)/180)));
           context.beginPath();
           context.arc(centerX, centerY, 2, 0, 2 * Math.PI, false);
           context.fillStyle = color;
