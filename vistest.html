@@ -1,36 +1,64 @@
 <html>
 <head>
   <style type="text/css">
-  canvas{
+    canvas{
       display: block;
       margin: 40px auto;
     }
-    
     body{
       background-color: black;
+    }
+    #ppmin-container{
+      width: 320px;
+      margin: 40px auto;
+      text-align: center;
+    }
+    label{
+      color: white;
+      font-size: 32px;
+      display: inline-block;
+      vertical-align: middle;
+      font-family: sans-serif;
+    }
+    #ppmin{
+      border: 0;
+      margin: 0;
+      padding: 8px;
+      border-bottom: 2px solid white;
+      display: inline-block;
+      vertical-align: middle;
+      background-color: black;
+      color: white;
+      font-size: 32px;
+      width: 120px;
+      text-align: center;
+      font-family: sans-serif;
     }
   </style>
 </head>
 <body>
   <canvas height="300" width="300" id="vect" >
   </canvas>
-  <input type='number' id='ppmin' value='1000' min='0' max='4000'/>
-  <script type="application/javascript>
+  <div id='ppmin-container'>
+    <label>ppm</label>
+    <input type='number' id='ppmin' value='1000' min='0' max='4000'/>
+  </div>
+  <script type="application/javascript">
     var canvas = document.getElementById('vect');
     var context = canvas.getContext('2d');
-    
+
     var centerX=150, centerY=150;
     var ppm = 1000;
-    
+
     function render(){
-      console.log("Rendering");
       context.clearRect(0, 0, canvas.width, canvas.height);
       var density = ppm / 100;
       for( var ix=0; ix < density; ix++ ){
         var radius = (ix * (150/density));
         var angleIncr = 60 / ix;
-        var reddity = Math.min(255, radius*(density/5) );
+        var reddity = Math.round(Math.min(255, radius*(density/5)));
         var color = "rgba("+reddity+","+80+","+(255-reddity)+", 1)";
+        console.log("color: "+color);
         for( var ir=0; ir < 360; ir += angleIncr ){
           var centerX = 150 + (radius * Math.sin(Math.PI * (ir/180)));
           var centerY = 150 + (radius * Math.cos(Math.PI * (ir/180)));
@@ -41,20 +69,19 @@
         }
       }
     }
-    
+
     function init(){
       render();
-      console.log(document.getElementById("ppmin"));
-      document.getElementById("ppmin").onchange = function(ev){
+      document.getElementById("ppmin").oninput = function(ev){
         ppm = ev.target.value;
         render();
       }
     }
-    
+
     if( document.readyState === "complete" ){
       init();
     } else {
-      document.onload = init;
+      document.addEventListener( "DOMContentLoaded", init, false );
     }
   </script>
 </body>
