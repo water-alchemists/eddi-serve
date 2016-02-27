@@ -14,6 +14,7 @@
 				<div id='user-create-form'>
 					<form action='' novalidate>
 						<div class='form-wrapper'>
+							<h5>Create a user</h5>
 							<div class='message'></div>
 							<div class='input-container'>
 								<label for='email'>Email</label>
@@ -38,6 +39,7 @@
 				<div id='user-login-form'>
 					<form action='' novalidate>
 						<div class='form-wrapper'>
+							<h5>Login</h5>
 							<div class='message'></div>
 							<div class='input-container'>
 								<label for='email'>Email</label>
@@ -66,9 +68,36 @@
 					<code class='list'></code>
 					<button type='button'>List All Eddis</button>
 				</div>
+				<div id='edit-eddi-container'>
+					<h5>Edit Eddi Machine</h5>
+					<div id='view-eddi-details'></div>
+					<div id='set-state-form'>
+						<form>
+							<div class='form-wrapper'>
+								<div class='input-container'>
+									<label for='state'>State</label>
+									<input type='number' name='state'/>
+								</div>
+								<button type='submit'>Set State</button>
+							</div>
+						</form>
+					</div>
+					<div id='set-salinity-form'>
+						<form>
+							<div class='form-wrapper'>
+								<div class='input-container'>
+									<label for='salinity'>Salinity Out</label>
+									<input type='number' name='salinity'/>
+								</div>
+								<button type='submit'>Set Salinity</button>
+							</div>
+						</form>
+					</div>
+				</div>
 				<div id='machine-form'>
 					<form action='' novalidate>
 						<div class='form-wrapper'>
+							<h5>Add An Eddi</h5>
 							<div class='message'></div>
 							<div class='input-container'>
 								<label for='id'>Eddi Number</label>

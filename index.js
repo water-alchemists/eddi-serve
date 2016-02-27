@@ -42,8 +42,13 @@ $(document).ready(function(){
 			pinString = '<code></code>',
 			html = eddiList.map(function(eddi){
 					var eddiId = Object.keys(eddi)[0],
-						removeButton = $(buttonString).attr('data-id', eddiId);
-					return $('div');
+						removeButton = $(buttonString).attr('data-id', eddiId),
+						stateContainer = $(stateString).addClass('state').text('State : ' + eddiId[paths.STATE_PATH]),
+						metricContainer = $(metricString).addClass('metrics').text(JSON.stringify(eddi[paths.METRIC_PATH], null, '\t')),
+						pinContainer = $(pinString).addClass('pins').text(JSON.stringify(eddi[paths.PIN_PATH], null, '\t')),
+						dataContainer = $('div').addClass('eddi-data').html(stateContainer.append(metricContainer).append(pinContainer));
+
+					return $('div').addClass('eddi-container').html(dataContainer.append(removeButton));
 				})
 				.reduce(function(htmlString, eddiHtml){
 
@@ -379,8 +384,10 @@ $(document).ready(function(){
 
 	$('#machine-list > button').click(function(e){
 		e.preventDefault();
-		var userId = cache.user.uid;
-		getAllEddiByUser(userId)
+		var user = cache.user || {},
+			userId = user.uid;
+		if(userId){
+			getAllEddiByUser(userId)
 			.then(function(eddiList){
 				console.log('got all eddiList', eddiList);
 				var getEddiDetails = eddiList.map(function(eddiId){
@@ -400,6 +407,8 @@ $(document).ready(function(){
 			.catch(function(error){
 				return showEddiListError(error.message);
 			});
+		} else showEddiListError('Need to log in.');
+		
 	});
 
 });
