@@ -15,15 +15,19 @@ class SignupForm extends Component {
 		};
 	}
 
-	onUsernameChange(username){
+	onUsernameChange(event){
+		const username = event.target.value;
 		this.setState({ username })
 	}
 
-	onPasswordChange(password){
+	onPasswordChange(event){
+		const password = event.target.value;
 		this.setState({ password });
 	}
 
-	onNameChange(name){
+	onNameChange(event){
+		const name = event.target.value;
+		console.log('this is the name', name);
 		this.setState({ name });
 	}
 
@@ -36,6 +40,7 @@ class SignupForm extends Component {
 
 	render(){
 		const { username, password, name } = this.state;
+		console.log('this is the username', username, password, name);
 		return (
 			<form onSubmit={() => this.submitHandler()}>
 				<div>

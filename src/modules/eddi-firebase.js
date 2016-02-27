@@ -111,10 +111,10 @@ class EddiFire {
 				.once('value', data => {
 					const eddiList = data.val();
 					if(!eddiList) return reject(new Error('There is no list of eddis for this user.'));
-					eddiList = Object.keys(eddiList).map(key => {
+					eddiIdList = Object.keys(eddiList).map(key => {
 						return eddiList[key];
 					});
-					resolve(eddiList[key]);
+					resolve(eddiIdList);
 				});
 		});
 	}
@@ -186,7 +186,7 @@ class EddiFire {
 						);
 			});
 	}
-	
+
 }
 
 

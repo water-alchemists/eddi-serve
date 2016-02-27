@@ -1,10 +1,13 @@
 'use strict';
+import EddiFireStarter from '../modules/eddi-firebase';
 import {
 	USER_LOGIN,
 	USER_LOGOUT,
 	USER_UPDATE,
 	USER_GET
 } from '../constants';
+
+const EddiFire = EddiFireStarter();
 
 export function userLogin(user){
 	return {
@@ -34,7 +37,8 @@ export function userGet(user){
 }
 
 export function userCreateThunk(user){
+	// console.log('i am clicked', EddiFire);
 	return dispatch => {
-		
+		console.log(EddiFire);
 	}
 }

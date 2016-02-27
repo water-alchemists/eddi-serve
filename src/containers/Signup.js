@@ -20,6 +20,7 @@ function mapDispatchToProps(dispatch){
 class Signup extends Component {
 	render(){
 		const { signup, user } = this.props;
+		console.log('this is the signup', signup, 'this is the user', user)
 		return (
 			<div>
 				<SignupForm onSubmit={signup} />

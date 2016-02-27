@@ -14,11 +14,13 @@ class LoginForm extends Component {
 		};
 	}
 
-	onUsernameChange(username){
+	onUsernameChange(event){
+		const username = event.target.value;
 		this.setState({ username });
 	}
 
-	onPasswordChange(password){
+	onPasswordChange(event){
+		const password = event.target.value;
 		this.setState({ password });
 	}
 
