@@ -1,0 +1,88 @@
+<html>
+<head>
+  <style type="text/css">
+    canvas{
+      display: block;
+      margin: 40px auto;
+    }
+    body{
+      background-color: black;
+    }
+    #ppmin-container{
+      width: 320px;
+      margin: 40px auto;
+      text-align: center;
+    }
+    label{
+      color: white;
+      font-size: 32px;
+      display: inline-block;
+      vertical-align: middle;
+      font-family: sans-serif;
+    }
+    #ppmin{
+      border: 0;
+      margin: 0;
+      padding: 8px;
+      border-bottom: 2px solid white;
+      display: inline-block;
+      vertical-align: middle;
+      background-color: black;
+      color: white;
+      font-size: 32px;
+      width: 120px;
+      text-align: center;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <canvas height="300" width="300" id="vect" >
+  </canvas>
+  <div id='ppmin-container'>
+    <label>ppm</label>
+    <input type='number' id='ppmin' value='1000' min='0' max='4000'/>
+  </div>
+  <script type="application/javascript">
+    var canvas = document.getElementById('vect');
+    var context = canvas.getContext('2d');
+
+    var centerX=150, centerY=150;
+    var ppm = 1000;
+
+    function render(){
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      var density = ppm / 100;
+      for( var ix=0; ix < density; ix++ ){
+        var radius = (ix * (150/density));
+        var angleIncr = 60 / ix;
+        var reddity = Math.round(Math.min(255, radius*(density/5)));
+        var color = "rgba("+reddity+","+Math.round((255-reddity)/2)+","+(255-reddity)+", 1)";
+        console.log("color: "+color);
+        for( var ir=0; ir < 360; ir += angleIncr ){
+          var centerX = 150 + (radius * Math.sin(Math.PI * (((ix*2)+ir)/180)));
+          var centerY = 150 + (radius * Math.cos(Math.PI * (((ix*2)+ir)/180)));
+          context.beginPath();
+          context.arc(centerX, centerY, 2, 0, 2 * Math.PI, false);
+          context.fillStyle = color;
+          context.fill();
+        }
+      }
+    }
+
+    function init(){
+      render();
+      document.getElementById("ppmin").oninput = function(ev){
+        ppm = ev.target.value;
+        render();
+      }
+    }
+
+    if( document.readyState === "complete" ){
+      init();
+    } else {
+      document.addEventListener( "DOMContentLoaded", init, false );
+    }
+  </script>
+</body>
+</html>
