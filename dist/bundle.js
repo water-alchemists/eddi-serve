@@ -26967,7 +26967,16 @@
 	function userCreateThunk(user) {
 		// console.log('i am clicked', EddiFire);
 		return function (dispatch) {
-			console.log(EddiFire);
+			var email = user.email;
+			var password = user.password;
+
+			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
+				var id = userSuccess.uid;
+				debugger;
+				delete user.password;
+				console.log('created a user', userSuccess);
+				return EddiFire.createUserProfile(id, user);
+			});
 		};
 	}
 
@@ -27101,9 +27110,11 @@
 			}
 		}, {
 			key: 'submitHandler',
-			value: function submitHandler() {
+			value: function submitHandler(event) {
 				var onSubmit = this.props.onSubmit;
 				var user = this.state;
+				console.log('there is an event', event);
+				event.preventDefault();
 				if (onSubmit) onSubmit(user);
 			}
 		}, {
@@ -27117,8 +27128,8 @@
 
 				return _react2.default.createElement(
 					'form',
-					{ onSubmit: function onSubmit() {
-							return _this2.submitHandler();
+					{ onSubmit: function onSubmit(event) {
+							return _this2.submitHandler(event);
 						} },
 					_react2.default.createElement(
 						'div',
@@ -27131,8 +27142,8 @@
 								null,
 								'Username'
 							),
-							_react2.default.createElement('input', { onChange: function onChange(text) {
-									return _this2.onUsernameChange(text);
+							_react2.default.createElement('input', { onChange: function onChange(event) {
+									return _this2.onUsernameChange(event);
 								},
 								type: 'text',
 								value: username
@@ -27146,8 +27157,8 @@
 								null,
 								'Password'
 							),
-							_react2.default.createElement('input', { onChange: function onChange(text) {
-									return _this2.onPasswordChange(text);
+							_react2.default.createElement('input', { onChange: function onChange(event) {
+									return _this2.onPasswordChange(event);
 								},
 								type: 'text',
 								value: password
@@ -27311,10 +27322,10 @@
 			}
 		}, {
 			key: 'submitHandler',
-			value: function submitHandler() {
+			value: function submitHandler(event) {
 				var onSubmit = this.props.onSubmit;
 				var user = this.state;
-
+				event.preventDefault();
 				if (onSubmit) onSubmit(user);
 			}
 		}, {
@@ -27327,11 +27338,10 @@
 				var password = _state.password;
 				var name = _state.name;
 
-				console.log('this is the username', username, password, name);
 				return _react2.default.createElement(
 					'form',
-					{ onSubmit: function onSubmit() {
-							return _this2.submitHandler();
+					{ onSubmit: function onSubmit(event) {
+							return _this2.submitHandler(event);
 						} },
 					_react2.default.createElement(
 						'div',
@@ -27345,8 +27355,8 @@
 								'Username'
 							),
 							_react2.default.createElement('input', {
-								onChange: function onChange(text) {
-									return _this2.onUsernameChange(text);
+								onChange: function onChange(event) {
+									return _this2.onUsernameChange(event);
 								},
 								name: 'username',
 								type: 'text',
@@ -27362,8 +27372,8 @@
 								'Password'
 							),
 							_react2.default.createElement('input', {
-								onChange: function onChange(text) {
-									return _this2.onPasswordChange(text);
+								onChange: function onChange(event) {
+									return _this2.onPasswordChange(event);
 								},
 								name: 'password',
 								type: 'password',
@@ -27379,8 +27389,8 @@
 								'Name'
 							),
 							_react2.default.createElement('input', {
-								onChange: function onChange(text) {
-									return _this2.onNameChange(text);
+								onChange: function onChange(event) {
+									return _this2.onNameChange(event);
 								},
 								name: 'name',
 								type: 'text',

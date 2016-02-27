@@ -38,7 +38,15 @@ export function userGet(user){
 
 export function userCreateThunk(user){
 	// console.log('i am clicked', EddiFire);
-	return dispatch => {
-		console.log(EddiFire);
+	return function(dispatch) {
+		const { email, password } = user;
+		return EddiFire.createUser({ email, password })
+			.then(userSuccess => {
+				const id = userSuccess.uid;
+				debugger;
+				delete user.password;
+				console.log('created a user', userSuccess);
+				return EddiFire.createUserProfile(id, user);
+			});
 	}
 }

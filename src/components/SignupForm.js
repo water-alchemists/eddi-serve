@@ -31,23 +31,22 @@ class SignupForm extends Component {
 		this.setState({ name });
 	}
 
-	submitHandler(){
+	submitHandler(event){
 		const { onSubmit } = this.props,
 			user = this.state;
-
+		event.preventDefault();
 		if(onSubmit) onSubmit(user);
 	}
 
 	render(){
 		const { username, password, name } = this.state;
-		console.log('this is the username', username, password, name);
 		return (
-			<form onSubmit={() => this.submitHandler()}>
+			<form onSubmit={event => this.submitHandler(event)}>
 				<div>
 					<div>
 						<label htmlFor='username'>Username</label>
 						<input 
-							onChange={text => this.onUsernameChange(text)}
+							onChange={event => this.onUsernameChange(event)}
 							name='username' 
 							type='text'
 							value={username}
@@ -56,7 +55,7 @@ class SignupForm extends Component {
 					<div>
 						<label htmlFor='password'>Password</label>
 						<input 
-							onChange={text => this.onPasswordChange(text)}
+							onChange={event => this.onPasswordChange(event)}
 							name='password'
 							type='password'
 							value={password}
@@ -65,7 +64,7 @@ class SignupForm extends Component {
 					<div>
 						<label htmlFor='name'>Name</label>
 						<input
-							onChange={text => this.onNameChange(text)}
+							onChange={event => this.onNameChange(event)}
 							name='name'
 							type='text'
 							value={name}
