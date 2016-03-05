@@ -4,10 +4,10 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
+import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux';
 
 import * as reducers from './reducers';
-import * as middlewares from './middlewares';
+import middlewares from './middlewares';
 import { App, Home, Login, Signup } from './containers';
 
 const reducer = combineReducers({
@@ -15,9 +15,10 @@ const reducer = combineReducers({
   routing: routerReducer
 });
 
-const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
-console.log('this is the middlewares', middlewares);
-const store = createStoreWithMiddleware(reducer);
+const reduxRouterMiddleware = routerMiddleware(browserHistory),
+	enhanceWithMiddleware = applyMiddleware(...middlewares, reduxRouterMiddleware);
+
+const store = enhanceWithMiddleware(createStore)(reducer);
 
 const history = syncHistoryWithStore(browserHistory, store);
 

@@ -1,2 +1,8 @@
 'use strict';
-export thunk from './thunk';
+import thunk from './thunk';
+import logger from './logger';
+
+export default [
+	logger,
+	thunk
+];
