@@ -27,7 +27,7 @@ class LoginForm extends Component {
 	submitHandler(event){
 		const { onSubmit } = this.props,
 			user = this.state;
-		console.log('there is an event', event);
+
 		event.preventDefault();
 		if(onSubmit) onSubmit(user);
 	}

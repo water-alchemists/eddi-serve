@@ -26783,6 +26783,10 @@
 
 	var _reactRouter = __webpack_require__(180);
 
+	var _Menu = __webpack_require__(263);
+
+	var _Menu2 = _interopRequireDefault(_Menu);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26790,6 +26794,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	console.log('this is the Menu', _Menu2.default);
 
 	var App = function (_Component) {
 		_inherits(App, _Component);
@@ -26808,64 +26814,7 @@
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(
-						'header',
-						null,
-						'Links:',
-						' ',
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/react' },
-							'Home'
-						),
-						' ',
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/react/login' },
-							'Login'
-						),
-						' ',
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/react/signup' },
-							'Signup'
-						),
-						' ',
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/react/dashboard' },
-							'Dashboard'
-						),
-						' ',
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/react/report' },
-							'Report'
-						),
-						' ',
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/react/settings' },
-							'Settings'
-						),
-						' ',
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/react/troubleshoot' },
-							'Troubleshoot'
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'button',
-							{ onClick: function onClick() {
-									return _reactRouter.hashHistory.push('/');
-								} },
-							'Go to Home'
-						)
-					),
+					_react2.default.createElement(_Menu2.default, null),
 					_react2.default.createElement(
 						'div',
 						{ style: { marginTop: '1.5em' } },
@@ -27662,7 +27611,7 @@
 			value: function submitHandler(event) {
 				var onSubmit = this.props.onSubmit;
 				var user = this.state;
-				console.log('there is an event', event);
+
 				event.preventDefault();
 				if (onSubmit) onSubmit(user);
 			}
@@ -27794,7 +27743,7 @@
 				var signup = _props.signup;
 				var user = _props.user;
 
-				console.log('this is the signup', signup, 'this is the user', user);
+
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -27978,10 +27927,8 @@
 		var dispatch = _ref.dispatch;
 		var getState = _ref.getState;
 
-		console.log('i am here');
 		return function (next) {
 			return function (action) {
-				console.log('i am here');
 				return typeof action === 'function' ? action(dispatch, getState) : next(action);
 			};
 		};
@@ -28263,6 +28210,101 @@
 	}(_react.Component);
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Menu = function (_Component) {
+		_inherits(Menu, _Component);
+
+		function Menu() {
+			_classCallCheck(this, Menu);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Menu).apply(this, arguments));
+		}
+
+		_createClass(Menu, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'header',
+					null,
+					'Links:',
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.HOME },
+						'Home'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.LOGIN },
+						'Login'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SIGNUP },
+						'Signup'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.DASHBOARD },
+						'Dashboard'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.REPORT },
+						'Report'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SETTINGS },
+						'Settings'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.TROUBLESHOOT },
+						'Troubleshoot'
+					)
+				);
+			}
+		}]);
+
+		return Menu;
+	}(_react.Component);
+
+	exports.default = Menu;
 
 /***/ }
 /******/ ]);

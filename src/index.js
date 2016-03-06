@@ -8,7 +8,15 @@ import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-rou
 
 import * as reducers from './reducers';
 import middlewares from './middlewares';
-import { App, Home, Login, Signup, Dashboard, Report, Settings, Troubleshoot } from './containers';
+import { App, 
+		Home, 
+		Login, 
+		Signup, 
+		Dashboard, 
+		Report, 
+		Settings, 
+		Troubleshoot 
+	} from './containers';
 
 const reducer = combineReducers({
   ...reducers,
