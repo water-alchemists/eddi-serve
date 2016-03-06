@@ -15,9 +15,17 @@ class App extends Component {
 					<Link to="/react/login">Login</Link>
 					{' '}
 					<Link to="/react/signup">Signup</Link>
+					{' '}
+					<Link to="/react/dashboard">Dashboard</Link>
+					{' '}
+					<Link to="/react/report">Report</Link>
+					{' '}
+					<Link to="/react/settings">Settings</Link>
+					{' '}
+					<Link to="/react/troubleshoot">Troubleshoot</Link>
 				</header>
 				<div>
-					<button onClick={() => hashHistory.push('/')}>Go to /foo</button>
+					<button onClick={() => hashHistory.push('/')}>Go to Home</button>
 				</div>
 				<div style={{ marginTop: '1.5em' }}>{children}</div>
 			</div>
