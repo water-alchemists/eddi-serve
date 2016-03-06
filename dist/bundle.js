@@ -26621,10 +26621,13 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	var USER_LOGIN = exports.USER_LOGIN = 'USER_LOGIN';
+	var USERLOGIN_SUCCESS = exports.USERLOGIN_SUCCESS = 'USERLOGIN_SUCCESS';
+	var USERLOGIN_ERROR = exports.USERLOGIN_ERROR = 'USERLOGIN_ERROR';
 	var USER_LOGOUT = exports.USER_LOGOUT = 'USER_LOGOUT';
 	var USER_GET = exports.USER_GET = 'USER_GET';
-	var USER_UPDATE = exports.USER_UPDATE = 'USER_UPDATE';
+	var USERUPDATE_SUCCESS = exports.USERUPDATE_SUCCESS = 'USERUPDATE_SUCCESS';
+	var USERUPDATE_ERROR = exports.USERUPDATE_ERROR = 'USERUPDATE_ERROR';
+	var USERCREATE_ERROR = exports.USERCREATE_ERROR = 'USERERROR_ERROR';
 
 	//Eddi Related
 	var EDDI_GETALL = exports.EDDI_GETALL = 'EDDI_GET';
@@ -26913,12 +26916,11 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.userLogin = userLogin;
 	exports.userLogout = userLogout;
-	exports.userUpdate = userUpdate;
 	exports.userGet = userGet;
 	exports.userCreateThunk = userCreateThunk;
-	exports.userThunk = userThunk;
+	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
+	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
 
 	var _eddiFirebase = __webpack_require__(251);
 
@@ -26930,10 +26932,17 @@
 
 	var EddiFire = (0, _eddiFirebase2.default)();
 
-	function userLogin(user) {
+	function userLoginSuccess(user) {
 		return {
-			type: _constants.USER_LOGIN,
+			type: _constants.USERLOGIN_SUCCESS,
 			user: user
+		};
+	}
+
+	function userLoginError(error) {
+		return {
+			export: _constants.USERLOGIN_ERROR,
+			error: error
 		};
 	}
 
@@ -26943,9 +26952,16 @@
 		};
 	}
 
-	function userUpdate(user) {
+	function userUpdateSuccess(user) {
 		return {
-			type: _constants.USER_UPDATE,
+			type: _constants.USERUPDATE_SUCCESS,
+			user: user
+		};
+	}
+
+	function userUpdateError(user) {
+		return {
+			type: _constants.USERUPDATE_ERROR,
 			user: user
 		};
 	}
@@ -26957,22 +26973,50 @@
 		};
 	}
 
+	function userCreateError(error) {
+		return {
+			type: _constants.USERCREATE_ERROR,
+			error: error
+		};
+	}
+
 	function userCreateThunk(user) {
-		// console.log('i am clicked', EddiFire);
+
 		return function (dispatch) {
 			var email = user.email;
 			var password = user.password;
 
 			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
+				console.log('this is the userSuccess', userSuccess);
 				var id = userSuccess.uid;
 				delete user.password;
 				console.log('created a user', userSuccess);
 				return EddiFire.createUserProfile(id, user);
+			}).catch(function (err) {
+				return dispatch(userCreateError(err));
 			});
 		};
 	}
 
-	function userThunk() {}
+	function userLoginWithPasswordThunk(email, password) {
+		return function (dispatch) {
+			return EddiFire.authWithPassword(email, password).then(function (user) {
+				return console.log('this is the user', user);
+			}).catch(function (err) {
+				return dispatch(userLoginError(err));
+			});
+		};
+	}
+
+	function userLoginWithTokenThunk(token) {
+		return function (dispatch) {
+			return EddiFire.authWithToken(token).then(function (user) {
+				return console.log('this is the user', user);
+			}).catch(function (err) {
+				return dispatch(userLoginError(err));
+			});
+		};
+	}
 
 /***/ },
 /* 251 */
@@ -27035,8 +27079,8 @@
 				});
 			}
 		}, {
-			key: 'authenticateWithToken',
-			value: function authenticateWithToken(token) {
+			key: 'authWithToken',
+			value: function authWithToken(token) {
 				var _this2 = this;
 
 				return new Promise(function (resolve, reject) {
@@ -27047,13 +27091,13 @@
 				});
 			}
 		}, {
-			key: 'authenticateWithPassword',
-			value: function authenticateWithPassword(email, password) {
+			key: 'authWithPassword',
+			value: function authWithPassword(email, password) {
 				var _this3 = this;
 
 				var submission = { email: email, password: password };
 				return new Promise(function (resolve, reject) {
-					_this3.refs.BASE.authenticateWithPassword(submission, function (error, user) {
+					_this3.refs.BASE.authWithPassword(submission, function (error, user) {
 						if (error) return reject(error);
 						resolve(user);
 					});
@@ -27522,8 +27566,10 @@
 
 	function mapDispatchToProps(dispatch) {
 		return {
-			login: function login(user) {
-				return dispatch((0, _user.userLogin)(user));
+			login: function login(_ref) {
+				var email = _ref.email;
+				var password = _ref.password;
+				return dispatch((0, _user.userLoginWithPasswordThunk)(email, password));
 			}
 		};
 	}
@@ -27592,22 +27638,24 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LoginForm).call(this, props));
 
 			_this.state = {
-				username: '',
+				email: '',
 				password: ''
 			};
 			return _this;
 		}
 
 		_createClass(LoginForm, [{
-			key: 'onUsernameChange',
-			value: function onUsernameChange(event) {
-				var username = event.target.value;
-				this.setState({ username: username });
+			key: 'onEmailChange',
+			value: function onEmailChange(event) {
+				var email = event.target.value;
+				event.preventDefault();
+				this.setState({ email: email });
 			}
 		}, {
 			key: 'onPasswordChange',
 			value: function onPasswordChange(event) {
 				var password = event.target.value;
+				event.preventDefault();
 				this.setState({ password: password });
 			}
 		}, {
@@ -27625,7 +27673,7 @@
 				var _this2 = this;
 
 				var _state = this.state;
-				var username = _state.username;
+				var email = _state.email;
 				var password = _state.password;
 
 				return _react2.default.createElement(
@@ -27641,14 +27689,15 @@
 							null,
 							_react2.default.createElement(
 								'label',
-								null,
-								'Username'
+								{ htmlFor: 'email' },
+								'Email : '
 							),
 							_react2.default.createElement('input', { onChange: function onChange(event) {
-									return _this2.onUsernameChange(event);
+									return _this2.onEmailChange(event);
 								},
-								type: 'text',
-								value: username
+								type: 'email',
+								name: 'email',
+								value: email
 							})
 						),
 						_react2.default.createElement(
@@ -27656,13 +27705,14 @@
 							null,
 							_react2.default.createElement(
 								'label',
-								null,
-								'Password'
+								{ htmlFor: 'password' },
+								'Password : '
 							),
 							_react2.default.createElement('input', { onChange: function onChange(event) {
 									return _this2.onPasswordChange(event);
 								},
 								type: 'text',
+								name: 'password',
 								value: password
 							})
 						),
@@ -27796,7 +27846,7 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SignupForm).call(this, props));
 
 			_this.state = {
-				username: '',
+				email: '',
 				password: '',
 				name: ''
 			};
@@ -27804,22 +27854,24 @@
 		}
 
 		_createClass(SignupForm, [{
-			key: 'onUsernameChange',
-			value: function onUsernameChange(event) {
-				var username = event.target.value;
-				this.setState({ username: username });
+			key: 'onEmailChange',
+			value: function onEmailChange(event) {
+				var email = event.target.value;
+				event.preventDefault();
+				this.setState({ email: email });
 			}
 		}, {
 			key: 'onPasswordChange',
 			value: function onPasswordChange(event) {
 				var password = event.target.value;
+				event.preventDefault();
 				this.setState({ password: password });
 			}
 		}, {
 			key: 'onNameChange',
 			value: function onNameChange(event) {
 				var name = event.target.value;
-				console.log('this is the name', name);
+				event.preventDefault();
 				this.setState({ name: name });
 			}
 		}, {
@@ -27836,7 +27888,7 @@
 				var _this2 = this;
 
 				var _state = this.state;
-				var username = _state.username;
+				var email = _state.email;
 				var password = _state.password;
 				var name = _state.name;
 
@@ -27853,16 +27905,16 @@
 							null,
 							_react2.default.createElement(
 								'label',
-								{ htmlFor: 'username' },
-								'Username'
+								{ htmlFor: 'email' },
+								'Email : '
 							),
 							_react2.default.createElement('input', {
 								onChange: function onChange(event) {
-									return _this2.onUsernameChange(event);
+									return _this2.onEmailChange(event);
 								},
-								name: 'username',
+								name: 'email',
 								type: 'text',
-								value: username
+								value: email
 							})
 						),
 						_react2.default.createElement(
@@ -27871,7 +27923,7 @@
 							_react2.default.createElement(
 								'label',
 								{ htmlFor: 'password' },
-								'Password'
+								'Password : '
 							),
 							_react2.default.createElement('input', {
 								onChange: function onChange(event) {
@@ -27888,7 +27940,7 @@
 							_react2.default.createElement(
 								'label',
 								{ htmlFor: 'name' },
-								'Name'
+								'Name : '
 							),
 							_react2.default.createElement('input', {
 								onChange: function onChange(event) {

@@ -32,7 +32,7 @@ class EddiFire {
 		})
 	}
 
-	authenticateWithToken(token){
+	authWithToken(token){
 		return new Promise((resolve, reject) => {
 			this.refs.BASE.auth(token, (error, user) => {
 				if(error) return reject(error);
@@ -41,10 +41,10 @@ class EddiFire {
 		});
 	}
 
-	authenticateWithPassword(email, password){
+	authWithPassword(email, password){
 		const submission = { email, password };
 		return new Promise((resolve, reject) => {
-			this.refs.BASE.authenticateWithPassword(
+			this.refs.BASE.authWithPassword(
 				submission, 
 				(error, user) => {
 					if(error) return reject(error);

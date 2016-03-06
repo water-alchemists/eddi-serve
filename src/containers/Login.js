@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userLogin } from '../actions/user';
+import { userLoginWithPasswordThunk } from '../actions/user';
 
 import LoginForm from '../components/LoginForm';
 
@@ -13,7 +13,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		login : user => dispatch(userLogin(user))
+		login : ({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password))
 	};
 }
 

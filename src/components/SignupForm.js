@@ -9,25 +9,27 @@ class SignupForm extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			username : '',
+			email : '',
 			password : '',
 			name : ''
 		};
 	}
 
-	onUsernameChange(event){
-		const username = event.target.value;
-		this.setState({ username })
+	onEmailChange(event){
+		const email = event.target.value;
+		event.preventDefault();
+		this.setState({ email })
 	}
 
 	onPasswordChange(event){
 		const password = event.target.value;
+		event.preventDefault();
 		this.setState({ password });
 	}
 
 	onNameChange(event){
 		const name = event.target.value;
-		console.log('this is the name', name);
+		event.preventDefault();
 		this.setState({ name });
 	}
 
@@ -39,21 +41,21 @@ class SignupForm extends Component {
 	}
 
 	render(){
-		const { username, password, name } = this.state;
+		const { email, password, name } = this.state;
 		return (
 			<form onSubmit={event => this.submitHandler(event)}>
 				<div>
 					<div>
-						<label htmlFor='username'>Username</label>
+						<label htmlFor='email'>Email : </label>
 						<input 
-							onChange={event => this.onUsernameChange(event)}
-							name='username' 
+							onChange={event => this.onEmailChange(event)}
+							name='email' 
 							type='text'
-							value={username}
+							value={email}
 						/>
 					</div>
 					<div>
-						<label htmlFor='password'>Password</label>
+						<label htmlFor='password'>Password : </label>
 						<input 
 							onChange={event => this.onPasswordChange(event)}
 							name='password'
@@ -62,7 +64,7 @@ class SignupForm extends Component {
 						/>
 					</div>
 					<div>
-						<label htmlFor='name'>Name</label>
+						<label htmlFor='name'>Name : </label>
 						<input
 							onChange={event => this.onNameChange(event)}
 							name='name'

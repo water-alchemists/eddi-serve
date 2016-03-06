@@ -1,9 +1,12 @@
 'use strict';
 //User Related
-export const USER_LOGIN = 'USER_LOGIN';
+export const USERLOGIN_SUCCESS = 'USERLOGIN_SUCCESS';
+export const USERLOGIN_ERROR = 'USERLOGIN_ERROR';
 export const USER_LOGOUT = 'USER_LOGOUT';
 export const USER_GET = 'USER_GET';
-export const USER_UPDATE = 'USER_UPDATE';
+export const USERUPDATE_SUCCESS = 'USERUPDATE_SUCCESS';
+export const USERUPDATE_ERROR = 'USERUPDATE_ERROR';
+export const USERCREATE_ERROR = 'USERERROR_ERROR';
 
 //Eddi Related
 export const EDDI_GETALL = 'EDDI_GET';

@@ -9,18 +9,20 @@ class LoginForm extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			username : '',
+			email : '',
 			password : ''
 		};
 	}
 
-	onUsernameChange(event){
-		const username = event.target.value;
-		this.setState({ username });
+	onEmailChange(event){
+		const email = event.target.value;
+		event.preventDefault();
+		this.setState({ email });
 	}
 
 	onPasswordChange(event){
 		const password = event.target.value;
+		event.preventDefault();
 		this.setState({ password });
 	}
 
@@ -33,21 +35,23 @@ class LoginForm extends Component {
 	}
 
 	render(){
-		const { username, password } = this.state
+		const { email, password } = this.state
 		return (
 			<form onSubmit={event => this.submitHandler(event)}>
 				<div>
 					<div>
-						<label>Username</label>
-						<input onChange={event => this.onUsernameChange(event)}
-							type='text'
-							value={username}
+						<label htmlFor='email' >Email : </label>
+						<input onChange={event => this.onEmailChange(event)}
+							type='email'
+							name='email'
+							value={email}
 						/>
 					</div>
 					<div>
-						<label>Password</label>
+						<label htmlFor='password'>Password : </label>
 						<input onChange={event => this.onPasswordChange(event)} 
 							type='text' 
+							name='password'
 							value={password}
 						/>
 					</div>
