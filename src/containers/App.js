@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Link, hashHistory } from 'react-router';
 import Menu from '../components/Menu';
-console.log('this is the Menu', Menu);
+
 class App extends Component {
 	render(){
 		const { children } = this.props;

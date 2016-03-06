@@ -26707,9 +26707,13 @@
 
 	var _logger2 = _interopRequireDefault(_logger);
 
+	var _error = __webpack_require__(264);
+
+	var _error2 = _interopRequireDefault(_error);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = [_logger2.default, _thunk2.default];
+	exports.default = [_logger2.default, _thunk2.default, _error2.default];
 
 /***/ },
 /* 247 */
@@ -26794,8 +26798,6 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	console.log('this is the Menu', _Menu2.default);
 
 	var App = function (_Component) {
 		_inherits(App, _Component);
@@ -26916,6 +26918,7 @@
 	exports.userUpdate = userUpdate;
 	exports.userGet = userGet;
 	exports.userCreateThunk = userCreateThunk;
+	exports.userThunk = userThunk;
 
 	var _eddiFirebase = __webpack_require__(251);
 
@@ -26962,13 +26965,14 @@
 
 			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
 				var id = userSuccess.uid;
-				debugger;
 				delete user.password;
 				console.log('created a user', userSuccess);
 				return EddiFire.createUserProfile(id, user);
 			});
 		};
 	}
+
+	function userThunk() {}
 
 /***/ },
 /* 251 */
@@ -27947,7 +27951,6 @@
 	});
 	function logger(_ref) {
 		var dispatch = _ref.dispatch;
-		var getState = _ref.getState;
 
 		return function (next) {
 			return function (action) {
@@ -28305,6 +28308,30 @@
 	}(_react.Component);
 
 	exports.default = Menu;
+
+/***/ },
+/* 264 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	function errorHandle(_ref) {
+		var dispatch = _ref.dispatch;
+
+		return function (next) {
+			return function (action) {
+				var error = action.error;
+
+				if (error) window.alert(error.message);
+				return next(action);
+			};
+		};
+	}
+
+	exports.default = errorHandle;
 
 /***/ }
 /******/ ]);

@@ -1,5 +1,5 @@
 'use strict';
-function logger({ dispatch, getState }){
+function logger({ dispatch }){
 	return next => action => {
 		console.log('dispatching : ', action);
 		return next(action);

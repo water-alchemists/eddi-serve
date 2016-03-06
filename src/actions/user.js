@@ -43,10 +43,13 @@ export function userCreateThunk(user){
 		return EddiFire.createUser({ email, password })
 			.then(userSuccess => {
 				const id = userSuccess.uid;
-				debugger;
 				delete user.password;
 				console.log('created a user', userSuccess);
 				return EddiFire.createUserProfile(id, user);
 			});
 	}
+}
+
+export function userThunk(){
+
 }
