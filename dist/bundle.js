@@ -27771,7 +27771,7 @@
 							_react2.default.createElement('input', { onChange: function onChange(event) {
 									return _this2.onPasswordChange(event);
 								},
-								type: 'text',
+								type: 'password',
 								name: 'password',
 								value: password
 							})

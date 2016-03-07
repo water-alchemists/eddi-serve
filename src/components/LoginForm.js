@@ -50,7 +50,7 @@ class LoginForm extends Component {
 					<div>
 						<label htmlFor='password'>Password : </label>
 						<input onChange={event => this.onPasswordChange(event)} 
-							type='text' 
+							type='password' 
 							name='password'
 							value={password}
 						/>
