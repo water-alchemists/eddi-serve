@@ -1,7 +1,8 @@
 'use strict';
 import {
 	USER_LOGIN,
-	USER_LOGOUT
+	USER_LOGOUT,
+	USER_GETPROFILE_SUCCESS
 } from '../constants';
 
 const initialState = {
@@ -11,7 +12,7 @@ const initialState = {
 export default function(state = initialState, action = {}){
 	const { type, user = {} } = action;
 	switch(type){
-	case USER_LOGIN : 
+	case USER_GETPROFILE_SUCCESS : 
 		console.log('user logged in');
 		return {
 			...state,

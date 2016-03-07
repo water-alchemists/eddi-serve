@@ -3,8 +3,18 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { PATHS } from '../constants';
 
+const { 
+	PropTypes
+} = React;
+
 class Menu extends Component {
+	logoutHandler(){
+		const { logout } = this.props;
+		if(logout instanceof Function) logout();
+	}
+
 	render(){
+		console.dir(this.props);
 		return(
 			<header>
 				Links:
@@ -22,9 +32,16 @@ class Menu extends Component {
 				<Link to={PATHS.SETTINGS}>Settings</Link>
 				{' '}
 				<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>
+				{' '}
+				<div onClick={() => this.logoutHandler()}>Logout</div>
 			</header>
 		);
 	}
 }
+
+Menu.propTypes = {
+	isOpen : PropTypes.bool.isRequired,
+	logout : PropTypes.func.isRequired
+};
 
 export default Menu;

@@ -26596,7 +26596,7 @@
 		var user = _action$user === undefined ? {} : _action$user;
 
 		switch (type) {
-			case _constants.USER_LOGIN:
+			case _constants.USER_GETPROFILE_SUCCESS:
 				console.log('user logged in');
 				return _extends({}, state, user);
 			case _constants.USER_LOGOUT:
@@ -26621,13 +26621,13 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	var USERLOGIN_SUCCESS = exports.USERLOGIN_SUCCESS = 'USERLOGIN_SUCCESS';
-	var USERLOGIN_ERROR = exports.USERLOGIN_ERROR = 'USERLOGIN_ERROR';
+	var USER_LOGIN_SUCCESS = exports.USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
+	var USER_LOGIN_ERROR = exports.USER_LOGIN_ERROR = 'USER_LOGIN_ERROR';
 	var USER_LOGOUT = exports.USER_LOGOUT = 'USER_LOGOUT';
-	var USER_GET = exports.USER_GET = 'USER_GET';
-	var USERUPDATE_SUCCESS = exports.USERUPDATE_SUCCESS = 'USERUPDATE_SUCCESS';
-	var USERUPDATE_ERROR = exports.USERUPDATE_ERROR = 'USERUPDATE_ERROR';
-	var USERCREATE_ERROR = exports.USERCREATE_ERROR = 'USERERROR_ERROR';
+	var USER_GETPROFILE_SUCCESS = exports.USER_GETPROFILE_SUCCESS = 'USER_GETPROFILE_SUCCESS';
+	var USER_UPDATE_SUCCESS = exports.USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
+	var USER_UPDATE_ERROR = exports.USER_UPDATE_ERROR = 'USER_UPDATE_ERROR';
+	var USER_CREATE_ERROR = exports.USER_CREATE_ERROR = 'USER_ERROR_ERROR';
 
 	//Eddi Related
 	var EDDI_GETALL = exports.EDDI_GETALL = 'EDDI_GET';
@@ -26788,11 +26788,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(180);
+	var _reactRedux = __webpack_require__(169);
 
 	var _Menu = __webpack_require__(263);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
+
+	var _user = __webpack_require__(250);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26801,6 +26803,21 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user,
+			eddi: state.eddis.selected
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			logout: function logout() {
+				return dispatch((0, _user.userLogout)());
+			}
+		};
+	}
 
 	var App = function (_Component) {
 		_inherits(App, _Component);
@@ -26814,12 +26831,16 @@
 		_createClass(App, [{
 			key: 'render',
 			value: function render() {
-				var children = this.props.children;
+				var _props = this.props;
+				var logout = _props.logout;
+				var children = _props.children;
 
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_Menu2.default, null),
+					_react2.default.createElement(_Menu2.default, { isOpen: true,
+						logout: logout
+					}),
 					_react2.default.createElement(
 						'div',
 						{ style: { marginTop: '1.5em' } },
@@ -26832,7 +26853,7 @@
 		return App;
 	}(_react.Component);
 
-	exports.default = App;
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 /***/ },
 /* 249 */
@@ -26917,31 +26938,39 @@
 		value: true
 	});
 	exports.userLogout = userLogout;
-	exports.userGet = userGet;
+	exports.userGetProfile = userGetProfile;
 	exports.userCreateThunk = userCreateThunk;
 	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
 	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
+	exports.userLogout = userLogout;
 
 	var _eddiFirebase = __webpack_require__(251);
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
 
+	var _cookieStore = __webpack_require__(265);
+
+	var _cookieStore2 = _interopRequireDefault(_cookieStore);
+
+	var _reactRouter = __webpack_require__(180);
+
 	var _constants = __webpack_require__(244);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var EddiFire = (0, _eddiFirebase2.default)();
+	var EddiFire = (0, _eddiFirebase2.default)(),
+	    EddiCookie = (0, _cookieStore2.default)();
 
 	function userLoginSuccess(user) {
 		return {
-			type: _constants.USERLOGIN_SUCCESS,
+			type: _constants.USER_LOGIN_SUCCESS,
 			user: user
 		};
 	}
 
 	function userLoginError(error) {
 		return {
-			export: _constants.USERLOGIN_ERROR,
+			export: _constants.USER_LOGIN_ERROR,
 			error: error
 		};
 	}
@@ -26954,28 +26983,28 @@
 
 	function userUpdateSuccess(user) {
 		return {
-			type: _constants.USERUPDATE_SUCCESS,
+			type: _constants.USER_UPDATE_SUCCESS,
 			user: user
 		};
 	}
 
 	function userUpdateError(user) {
 		return {
-			type: _constants.USERUPDATE_ERROR,
+			type: _constants.USER_UPDATE_ERROR,
 			user: user
 		};
 	}
 
-	function userGet(user) {
+	function userGetProfile(user) {
 		return {
-			type: _constants.USER_GET,
+			type: _constants.USER_GETPROFILE_SUCCESS,
 			user: user
 		};
 	}
 
 	function userCreateError(error) {
 		return {
-			type: _constants.USERCREATE_ERROR,
+			type: _constants.USER_CREATE_ERROR,
 			error: error
 		};
 	}
@@ -26991,7 +27020,10 @@
 				var id = userSuccess.uid;
 				delete user.password;
 				console.log('created a user', userSuccess);
-				return EddiFire.createUserProfile(id, user);
+				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.hashHistory.push(_constants.PATHS.HOME);
+				});
 			}).catch(function (err) {
 				return dispatch(userCreateError(err));
 			});
@@ -27001,7 +27033,19 @@
 	function userLoginWithPasswordThunk(email, password) {
 		return function (dispatch) {
 			return EddiFire.authWithPassword(email, password).then(function (user) {
-				return console.log('this is the user', user);
+				var uid = user.uid;
+				var token = user.token;
+				var expires = user.expires;
+
+				//set the token to cookie
+
+				EddiCookie.setCookie(token, expires);
+
+				//gets the user profile
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.hashHistory.push(_constants.PATHS.HOME);
+				});
 			}).catch(function (err) {
 				return dispatch(userLoginError(err));
 			});
@@ -27011,10 +27055,25 @@
 	function userLoginWithTokenThunk(token) {
 		return function (dispatch) {
 			return EddiFire.authWithToken(token).then(function (user) {
-				return console.log('this is the user', user);
+				//gets the user profile
+				var uid = user.uid;
+
+
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					return dispatch(userGetProfile(userProfile));
+				});
 			}).catch(function (err) {
 				return dispatch(userLoginError(err));
 			});
+		};
+	}
+
+	function userLogout() {
+		return function (dispatch) {
+			EddiFire.unauthenticate();
+			EddiCookie.setCookie(null);
+			//let store know of logout
+			dispatch(userLogout());
 		};
 	}
 
@@ -27031,7 +27090,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	exports.default = function () {
-		var init;
+		var init = undefined;
 		if (init) return init;else {
 			init = new EddiFire();
 			return init;
@@ -27042,7 +27101,7 @@
 
 	var Firebase = __webpack_require__(252);
 
-	var paths = {
+	var PATHS = {
 		BASE_PATH: 'https://eddi.firebaseIO.com',
 		USER_PATH: 'user',
 		EDDI_PATH: 'eddi',
@@ -27058,12 +27117,12 @@
 		function EddiFire() {
 			_classCallCheck(this, EddiFire);
 
-			var ref = new Firebase(paths.BASE_PATH);
+			var ref = new Firebase(PATHS.BASE_PATH);
 
 			this.refs = {
 				BASE: ref,
-				USER: ref.child(paths.USER_PATH),
-				EDDI: ref.child(paths.EDDI_PATH)
+				USER: ref.child(PATHS.USER_PATH),
+				EDDI: ref.child(PATHS.EDDI_PATH)
 			};
 		}
 
@@ -27106,7 +27165,7 @@
 		}, {
 			key: 'unauthenticate',
 			value: function unauthenticate() {
-				return refs.BASE.unauth();
+				return this.refs.BASE.unauth();
 			}
 		}, {
 			key: 'getUserProfile',
@@ -27114,7 +27173,8 @@
 				var _this4 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this4.refs.USER.child(id).once('value', function (user) {
+					_this4.refs.USER.child(id).once('value', function (snapshot) {
+						var user = snapshot.val();
 						if (!user) return reject(new Error('Profile does not exist for this user.'));
 						resolve(user);
 					});
@@ -27165,7 +27225,7 @@
 				var _this8 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this8.refs.EDDI.child(paths.USER_PATH).equalTo(userId).once('value', function (data) {
+					_this8.refs.EDDI.child(PATHS.USER_PATH).equalTo(userId).once('value', function (data) {
 						var eddiList = data.val();
 						if (!eddiList) return reject(new Error('There is no list of eddis for this user.'));
 						eddiIdList = Object.keys(eddiList).map(function (key) {
@@ -27194,7 +27254,7 @@
 				var _this10 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this10.refs.EDDI.child(eddiId).child(paths.USER_PATH).set(userId, function (error) {
+					_this10.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).set(userId, function (error) {
 						if (error) return reject(error);
 						resolve();
 					});
@@ -27206,7 +27266,7 @@
 				var _this11 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this11.refs.EDDI.child(eddiId).child(paths.USER_PATH).set(null, function (error) {
+					_this11.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).set(null, function (error) {
 						if (error) return reject(error);
 						resolve();
 					});
@@ -27219,7 +27279,7 @@
 
 				return isAuthenticated().then(function (user) {
 					var userId = user.uid;
-					_this12.refs.EDDI.child(eddiId).child(paths.USER_PATH).once('value', function (error, data) {
+					_this12.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).once('value', function (error, data) {
 						if (error) return reject(error);else if (data === userId) return resolve();else return reject('User is not the owner of this eddi.');
 					});
 				});
@@ -27230,7 +27290,7 @@
 				var _this13 = this;
 
 				return isEddiOwner(eddiId).then(function () {
-					_this13.refs.EDDI.child(eddiId).child(paths.SETTINGS_PATH).child(paths.SALINITY_PATH).set(salinityLevel, function (error) {
+					_this13.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinityLevel, function (error) {
 						if (error) return reject(error);
 						resolve();
 					});
@@ -28003,11 +28063,14 @@
 	});
 	function logger(_ref) {
 		var dispatch = _ref.dispatch;
+		var getState = _ref.getState;
 
 		return function (next) {
 			return function (action) {
-				console.log('dispatching : ', action);
-				return next(action);
+				console.log('dispatching :', action);
+				next(action);
+				console.log('new state :', getState());
+				return;
 			};
 		};
 	}
@@ -28294,6 +28357,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var PropTypes = _react2.default.PropTypes;
+
 	var Menu = function (_Component) {
 		_inherits(Menu, _Component);
 
@@ -28304,8 +28369,18 @@
 		}
 
 		_createClass(Menu, [{
+			key: 'logoutHandler',
+			value: function logoutHandler() {
+				var logout = this.props.logout;
+
+				if (logout instanceof Function) logout();
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
+				console.dir(this.props);
 				return _react2.default.createElement(
 					'header',
 					null,
@@ -28351,6 +28426,14 @@
 						_reactRouter.Link,
 						{ to: _constants.PATHS.TROUBLESHOOT },
 						'Troubleshoot'
+					),
+					' ',
+					_react2.default.createElement(
+						'div',
+						{ onClick: function onClick() {
+								return _this2.logoutHandler();
+							} },
+						'Logout'
 					)
 				);
 			}
@@ -28358,6 +28441,11 @@
 
 		return Menu;
 	}(_react.Component);
+
+	Menu.propTypes = {
+		isOpen: PropTypes.bool.isRequired,
+		logout: PropTypes.func.isRequired
+	};
 
 	exports.default = Menu;
 
@@ -28377,13 +28465,82 @@
 			return function (action) {
 				var error = action.error;
 
-				if (error) window.alert(error.message);
+				if (error instanceof Error) window.alert(error.message);
 				return next(action);
 			};
 		};
 	}
 
 	exports.default = errorHandle;
+
+/***/ },
+/* 265 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = function () {
+		var init = undefined;
+		if (init) return init;else {
+			init = new CookieStore();
+			return init;
+		}
+	};
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function parseCookie(cookieString) {
+		var sections = cookieString.split(';').map(function (section) {
+			return section.split('=');
+		});
+		return sections.reduce(function (cookie, section) {
+			cookie[section[0]] = section[1];
+			return cookie;
+		}, {});
+	}
+
+	function formatCookie(token, expires) {
+		return 'token=' + token + ';expires=' + expires + ';';
+	}
+
+	var CookieStore = function () {
+		function CookieStore() {
+			_classCallCheck(this, CookieStore);
+
+			this.cookie = null;
+		}
+
+		_createClass(CookieStore, [{
+			key: 'setCookie',
+			value: function setCookie(token, expires) {
+				console.log('i am setting myself');
+				//sets the cookie
+				if (token) {
+					document.cookie = formatCookie(token, expires);
+					this.cookie = {
+						token: token,
+						expires: expires
+					};
+				} else document.cookie = this.cookie = null;
+			}
+		}, {
+			key: 'getCookie',
+			value: function getCookie() {
+				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
+				return this.cookie;
+			}
+		}]);
+
+		return CookieStore;
+	}();
+
+	;
 
 /***/ }
 /******/ ]);

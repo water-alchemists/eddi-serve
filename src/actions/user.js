@@ -1,27 +1,33 @@
 'use strict';
 import EddiFireStarter from '../modules/eddi-firebase';
+import CookieStoreMaker from '../modules/cookie-store';
+
+import { hashHistory } from 'react-router';
+import { PATHS } from '../constants';
+
 import {
-	USERLOGIN_SUCCESS,
-	USERLOGIN_ERROR,
+	USER_LOGIN_SUCCESS,
+	USER_LOGIN_ERROR,
 	USER_LOGOUT,
-	USERUPDATE_SUCCESS,
-	USERUPDATE_ERROR,
-	USER_GET,
-	USERCREATE_ERROR
+	USER_UPDATE_SUCCESS,
+	USER_UPDATE_ERROR,
+	USER_GETPROFILE_SUCCESS,
+	USER_CREATE_ERROR
 } from '../constants';
 
-const EddiFire = EddiFireStarter();
+const EddiFire = EddiFireStarter(),
+	EddiCookie = CookieStoreMaker();
 
 function userLoginSuccess(user){
 	return {
-		type : USERLOGIN_SUCCESS,
+		type : USER_LOGIN_SUCCESS,
 		user
 	};
 }
 
 function userLoginError(error){
 	return {
-		export : USERLOGIN_ERROR,
+		export : USER_LOGIN_ERROR,
 		error
 	}
 }
@@ -34,28 +40,28 @@ export function userLogout(){
 
 function userUpdateSuccess(user){
 	return {
-		type : USERUPDATE_SUCCESS,
+		type : USER_UPDATE_SUCCESS,
 		user
 	};
 }
 
 function userUpdateError(user){
 	return {
-		type : USERUPDATE_ERROR,
+		type : USER_UPDATE_ERROR,
 		user
 	};
 }
 
-export function userGet(user){
+export function userGetProfile(user){
 	return {
-		type : USER_GET,
+		type : USER_GETPROFILE_SUCCESS,
 		user
 	}
 }
 
 function userCreateError(error){
 	return {
-		type : USERCREATE_ERROR,
+		type : USER_CREATE_ERROR,
 		error
 	};
 }
@@ -70,7 +76,11 @@ export function userCreateThunk(user){
 				const id = userSuccess.uid;
 				delete user.password;
 				console.log('created a user', userSuccess);
-				return EddiFire.createUserProfile(id, user);
+				return EddiFire.createUserProfile(id, user)
+					.then(userProfile => {
+						dispatch(userGetProfile(userProfile));
+						hashHistory.push(PATHS.HOME);
+					});
 			})
 			.catch(err => dispatch(userCreateError(err)));
 	}
@@ -79,7 +89,19 @@ export function userCreateThunk(user){
 export function userLoginWithPasswordThunk(email, password){
 	return dispatch => {
 		return EddiFire.authWithPassword(email, password)
-			.then(user => console.log('this is the user', user))
+			.then(user => {
+				const { uid, token, expires } = user;
+
+				//set the token to cookie
+				EddiCookie.setCookie(token, expires);
+
+				//gets the user profile
+				return EddiFire.getUserProfile(uid)
+					.then(userProfile => {
+						dispatch(userGetProfile(userProfile));
+						hashHistory.push(PATHS.HOME);
+					});
+			})
 			.catch(err => dispatch(userLoginError(err)));
 	}
 }
@@ -87,7 +109,23 @@ export function userLoginWithPasswordThunk(email, password){
 export function userLoginWithTokenThunk(token){
 	return dispatch => {
 		return EddiFire.authWithToken(token)
-			.then(user => console.log('this is the user', user))
+			.then(user => {
+				//gets the user profile
+				const { uid } = user;
+
+				return EddiFire.getUserProfile(uid)
+					.then(userProfile => dispatch(userGetProfile(userProfile)));
+
+			})
 			.catch(err => dispatch(userLoginError(err)));
+	}
+}
+
+export function userLogout(){
+	return dispatch => {
+		EddiFire.unauthenticate();
+		EddiCookie.setCookie(null);
+		//let store know of logout
+		dispatch(userLogout());
 	}
 }

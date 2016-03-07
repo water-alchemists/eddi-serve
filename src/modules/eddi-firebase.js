@@ -1,7 +1,7 @@
 'use strict';
 const Firebase = require('firebase');
 
-var paths = {
+const PATHS = {
 	BASE_PATH : 'https://eddi.firebaseIO.com',
 	USER_PATH : 'user',
 	EDDI_PATH : 'eddi',
@@ -15,12 +15,12 @@ var paths = {
 
 class EddiFire {
 	constructor(){
-		const ref = new Firebase(paths.BASE_PATH);
+		const ref = new Firebase(PATHS.BASE_PATH);
 
 		this.refs = {
 			BASE : ref,
-			USER : ref.child(paths.USER_PATH),
-			EDDI : ref.child(paths.EDDI_PATH)
+			USER : ref.child(PATHS.USER_PATH),
+			EDDI : ref.child(PATHS.EDDI_PATH)
 		};
 	}
 
@@ -55,12 +55,13 @@ class EddiFire {
 	}
 
 	unauthenticate(){
-		return refs.BASE.unauth();
+		return this.refs.BASE.unauth();
 	}
 
 	getUserProfile(id){
 		return new Promise((resolve, reject) => {
-			this.refs.USER.child(id).once('value', (user) => {
+			this.refs.USER.child(id).once('value', snapshot => {
+				const user = snapshot.val();
 				if(!user) return reject(new Error('Profile does not exist for this user.'));
 				resolve(user);
 			});
@@ -106,7 +107,7 @@ class EddiFire {
 	getAllEddiByUser(userId){
 		return new Promise((resolve, reject) => {
 			this.refs.EDDI
-				.child(paths.USER_PATH)
+				.child(PATHS.USER_PATH)
 				.equalTo(userId)
 				.once('value', data => {
 					const eddiList = data.val();
@@ -132,7 +133,7 @@ class EddiFire {
 	assignEddiToUser(userId, eddiId){
 		return new Promise((resolve, reject) => {
 			this.refs.EDDI.child(eddiId)
-						.child(paths.USER_PATH)
+						.child(PATHS.USER_PATH)
 						.set(
 							userId, 
 							error => {
@@ -146,7 +147,7 @@ class EddiFire {
 	unassignEddiToUser(userId, eddiId){
 		return new Promise((resolve, reject) => {
 			this.refs.EDDI.child(eddiId)
-						.child(paths.USER_PATH)
+						.child(PATHS.USER_PATH)
 						.set(
 							null,
 							error => {
@@ -162,7 +163,7 @@ class EddiFire {
 			.then(user => {
 				const userId = user.uid;
 				this.refs.EDDI.child(eddiId)
-						.child(paths.USER_PATH)
+						.child(PATHS.USER_PATH)
 						.once('value', (error, data) => {
 							if(error) return reject(error);
 							else if(data === userId) return resolve();
@@ -175,8 +176,8 @@ class EddiFire {
 		return isEddiOwner(eddiId)
 			.then(() => {
 				this.refs.EDDI.child(eddiId)
-						.child(paths.SETTINGS_PATH)
-						.child(paths.SALINITY_PATH)
+						.child(PATHS.SETTINGS_PATH)
+						.child(PATHS.SALINITY_PATH)
 						.set(
 							salinityLevel, 
 							error => {
@@ -191,7 +192,7 @@ class EddiFire {
 
 
 export default function(){
-	var init;
+	let init;
 	if(init) return init;
 	else {
 		init = new EddiFire();
