@@ -8,7 +8,7 @@ import { PATHS } from '../constants';
 import {
 	USER_LOGIN_SUCCESS,
 	USER_LOGIN_ERROR,
-	USER_LOGOUT,
+	USER_LOGOUT_SUCCESS,
 	USER_UPDATE_SUCCESS,
 	USER_UPDATE_ERROR,
 	USER_GETPROFILE_SUCCESS,
@@ -32,9 +32,9 @@ function userLoginError(error){
 	}
 }
 
-export function userLogout(){
+export function userLogoutSuccess(){
 	return {
-		type : USER_LOGOUT
+		type : USER_LOGOUT_SUCCESS
 	};
 }
 
@@ -126,6 +126,6 @@ export function userLogout(){
 		EddiFire.unauthenticate();
 		EddiCookie.setCookie(null);
 		//let store know of logout
-		dispatch(userLogout());
+		dispatch(userLogoutSuccess());
 	}
 }

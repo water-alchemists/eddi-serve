@@ -26623,7 +26623,7 @@
 	});
 	var USER_LOGIN_SUCCESS = exports.USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 	var USER_LOGIN_ERROR = exports.USER_LOGIN_ERROR = 'USER_LOGIN_ERROR';
-	var USER_LOGOUT = exports.USER_LOGOUT = 'USER_LOGOUT';
+	var USER_LOGOUT_SUCCESS = exports.USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS';
 	var USER_GETPROFILE_SUCCESS = exports.USER_GETPROFILE_SUCCESS = 'USER_GETPROFILE_SUCCESS';
 	var USER_UPDATE_SUCCESS = exports.USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
 	var USER_UPDATE_ERROR = exports.USER_UPDATE_ERROR = 'USER_UPDATE_ERROR';
@@ -26937,7 +26937,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.userLogout = userLogout;
+	exports.userLogoutSuccess = userLogoutSuccess;
 	exports.userGetProfile = userGetProfile;
 	exports.userCreateThunk = userCreateThunk;
 	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
@@ -26975,9 +26975,9 @@
 		};
 	}
 
-	function userLogout() {
+	function userLogoutSuccess() {
 		return {
-			type: _constants.USER_LOGOUT
+			type: _constants.USER_LOGOUT_SUCCESS
 		};
 	}
 
@@ -27073,7 +27073,7 @@
 			EddiFire.unauthenticate();
 			EddiCookie.setCookie(null);
 			//let store know of logout
-			dispatch(userLogout());
+			dispatch(userLogoutSuccess());
 		};
 	}
 
