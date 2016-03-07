@@ -27103,8 +27103,8 @@
 
 	var PATHS = {
 		BASE_PATH: 'https://eddi.firebaseIO.com',
-		USER_PATH: 'user',
-		EDDI_PATH: 'eddi',
+		USER_PATH: 'users',
+		EDDI_PATH: 'eddis',
 		METRIC_PATH: 'metrics',
 		STATE_PATH: 'state',
 		PIN_PATH: 'pins',
@@ -27173,6 +27173,7 @@
 				var _this4 = this;
 
 				return new Promise(function (resolve, reject) {
+					console.log('this is the id', id);
 					_this4.refs.USER.child(id).once('value', function (snapshot) {
 						var user = snapshot.val();
 						if (!user) return reject(new Error('Profile does not exist for this user.'));

@@ -3,8 +3,8 @@ const Firebase = require('firebase');
 
 const PATHS = {
 	BASE_PATH : 'https://eddi.firebaseIO.com',
-	USER_PATH : 'user',
-	EDDI_PATH : 'eddi',
+	USER_PATH : 'users',
+	EDDI_PATH : 'eddis',
 	METRIC_PATH : 'metrics',
 	STATE_PATH : 'state',
 	PIN_PATH : 'pins',
@@ -60,6 +60,7 @@ class EddiFire {
 
 	getUserProfile(id){
 		return new Promise((resolve, reject) => {
+			console.log('this is the id', id);
 			this.refs.USER.child(id).once('value', snapshot => {
 				const user = snapshot.val();
 				if(!user) return reject(new Error('Profile does not exist for this user.'));
