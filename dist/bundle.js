@@ -26627,7 +26627,7 @@
 	var USER_GETPROFILE_SUCCESS = exports.USER_GETPROFILE_SUCCESS = 'USER_GETPROFILE_SUCCESS';
 	var USER_UPDATE_SUCCESS = exports.USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
 	var USER_UPDATE_ERROR = exports.USER_UPDATE_ERROR = 'USER_UPDATE_ERROR';
-	var USER_CREATE_ERROR = exports.USER_CREATE_ERROR = 'USER_ERROR_ERROR';
+	var USER_CREATE_ERROR = exports.USER_CREATE_ERROR = 'USER_CREATE_ERROR';
 
 	//Eddi Related
 	var EDDI_GETALL = exports.EDDI_GETALL = 'EDDI_GET';
@@ -28465,7 +28465,7 @@
 			return function (action) {
 				var error = action.error;
 
-				if (error instanceof Error) window.alert(error.message);
+				if (error instanceof Error) return window.alert(error.message);
 				return next(action);
 			};
 		};
