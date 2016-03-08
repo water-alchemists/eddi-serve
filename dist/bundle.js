@@ -26827,10 +26827,15 @@
 	var App = function (_Component) {
 		_inherits(App, _Component);
 
-		function App() {
+		function App(props) {
 			_classCallCheck(this, App);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(App).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
+
+			_this.state = {
+				isOpen: true
+			};
+			return _this;
 		}
 
 		_createClass(App, [{
@@ -26841,18 +26846,39 @@
 				loginWithToken();
 			}
 		}, {
+			key: '_toggleMenu',
+			value: function _toggleMenu(isOpen) {
+				this.setState({ isOpen: isOpen });
+			}
+		}, {
+			key: '_cloneChildrenWithToggle',
+			value: function _cloneChildrenWithToggle() {
+				var _this2 = this;
+
+				var children = this.props.children;
+				var additionalProps = {
+					toggleMenu: function toggleMenu(isOpen) {
+						return _this2._toggleMenu(isOpen);
+					}
+				};
+				console.log('this is the children', children);
+				return _react2.default.Children.map(children, function (child) {
+					return _react2.default.cloneElement(child, additionalProps);
+				});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var _props = this.props;
 				var user = _props.user;
 				var eddi = _props.eddi;
 				var logout = _props.logout;
-				var children = _props.children;
-
+				var isOpen = this.state.isOpen;
+				var children = this._cloneChildrenWithToggle();
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_Menu2.default, { isOpen: true,
+					_react2.default.createElement(_Menu2.default, { isOpen: isOpen,
 						logout: logout,
 						user: user
 					}),
@@ -26933,6 +26959,7 @@
 			value: function render() {
 				var user = this.props.user;
 
+				console.log('at home', this.props);
 				return _react2.default.createElement(
 					'div',
 					null,

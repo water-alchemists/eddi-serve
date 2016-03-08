@@ -22,6 +22,7 @@ function mapDispatchToProps(dispatch){
 class Home extends Component {
 	render(){
 		const { user } = this.props;
+		console.log('at home', this.props);
 		return (
 			<div>
 				Some state changes:
