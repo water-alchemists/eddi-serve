@@ -36,6 +36,10 @@ class CookieStore {
 		if(!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
 		return this.cookie;
 	}
+
+	deleteCookie(){
+		this.setCookie(null);
+	}
 }
 
 export default function(){

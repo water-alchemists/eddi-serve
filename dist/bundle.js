@@ -27037,7 +27037,7 @@
 				console.log('created a user', userSuccess);
 				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
 					dispatch(userGetProfile(userProfile));
-					_reactRouter.hashHistory.push(_constants.PATHS.HOME);
+					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
 				});
 			}).catch(function (err) {
 				return dispatch(userCreateError(err));
@@ -27059,7 +27059,8 @@
 				//gets the user profile
 				return EddiFire.getUserProfile(uid).then(function (userProfile) {
 					dispatch(userGetProfile(userProfile));
-					_reactRouter.hashHistory.push(_constants.PATHS.HOME);
+					console.log('PATHs', _constants.PATHS.HOME);
+					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
 				});
 			}).catch(function (err) {
 				return dispatch(userLoginError(err));
@@ -27089,8 +27090,8 @@
 	function userLogout() {
 		return function (dispatch) {
 			EddiFire.unauthenticate();
-			EddiCookie.setCookie(null);
-			console.log('user logging out', EddiCookie.getCookie());
+			EddiCookie.deleteCookie();
+
 			//let store know of logout
 			dispatch(userLogoutSuccess());
 		};
@@ -28558,6 +28559,11 @@
 			value: function getCookie() {
 				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
 				return this.cookie;
+			}
+		}, {
+			key: 'deleteCookie',
+			value: function deleteCookie() {
+				this.setCookie(null);
 			}
 		}]);
 

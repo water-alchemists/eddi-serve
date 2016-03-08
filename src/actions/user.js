@@ -2,7 +2,7 @@
 import EddiFireStarter from '../modules/eddi-firebase';
 import CookieStoreMaker from '../modules/cookie-store';
 
-import { hashHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 import { PATHS } from '../constants';
 
 import {
@@ -79,7 +79,7 @@ export function userCreateThunk(user){
 				return EddiFire.createUserProfile(id, user)
 					.then(userProfile => {
 						dispatch(userGetProfile(userProfile));
-						hashHistory.push(PATHS.HOME);
+						browserHistory.push(PATHS.HOME);
 					});
 			})
 			.catch(err => dispatch(userCreateError(err)));
@@ -99,7 +99,8 @@ export function userLoginWithPasswordThunk(email, password){
 				return EddiFire.getUserProfile(uid)
 					.then(userProfile => {
 						dispatch(userGetProfile(userProfile));
-						hashHistory.push(PATHS.HOME);
+						console.log('PATHs', PATHS.HOME);
+						browserHistory.push(PATHS.HOME);
 					});
 			})
 			.catch(err => dispatch(userLoginError(err)));
@@ -128,8 +129,8 @@ export function userLoginWithTokenThunk(){
 export function userLogout(){
 	return dispatch => {
 		EddiFire.unauthenticate();
-		EddiCookie.setCookie(null);
-		console.log('user logging out', EddiCookie.getCookie());
+		EddiCookie.deleteCookie();
+
 		//let store know of logout
 		dispatch(userLogoutSuccess());
 	}
