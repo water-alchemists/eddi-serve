@@ -108,8 +108,9 @@ export function userLoginWithPasswordThunk(email, password){
 
 export function userLoginWithTokenThunk(){
 	return dispatch => {
-		const token = EddiCookie.getCookie().token;
-		console.log('this is the token', token);
+		const cookie = EddiCookie.getCookie() || {},
+			token = cookie.token;
+		if(!token) return; //if there is no token, don't do anything
 		return EddiFire.authWithToken(token)
 			.then(user => {
 				//gets the user profile
@@ -120,6 +121,7 @@ export function userLoginWithTokenThunk(){
 
 			})
 			.catch(err => dispatch(userLoginError(err)));
+		
 	}
 }
 
@@ -127,6 +129,7 @@ export function userLogout(){
 	return dispatch => {
 		EddiFire.unauthenticate();
 		EddiCookie.setCookie(null);
+		console.log('user logging out', EddiCookie.getCookie());
 		//let store know of logout
 		dispatch(userLogoutSuccess());
 	}

@@ -10,6 +10,7 @@ const {
 class Menu extends Component {
 	logoutHandler(){
 		const { logout } = this.props;
+		console.log('this is the logout', logout);
 		if(logout instanceof Function) logout();
 	}
 

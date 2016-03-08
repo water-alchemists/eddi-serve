@@ -1,7 +1,7 @@
 'use strict';
 import {
 	USER_LOGIN,
-	USER_LOGOUT,
+	USER_LOGOUT_SUCCESS,
 	USER_GETPROFILE_SUCCESS
 } from '../constants';
 
@@ -18,7 +18,7 @@ export default function(state = initialState, action = {}){
 			...state,
 			...user
 		};
-	case USER_LOGOUT : 
+	case USER_LOGOUT_SUCCESS : 
 		console.log('user logged out');
 		return {
 			... initialState

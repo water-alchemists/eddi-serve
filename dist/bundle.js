@@ -26601,7 +26601,7 @@
 			case _constants.USER_GETPROFILE_SUCCESS:
 				console.log('user logged in');
 				return _extends({}, state, user);
-			case _constants.USER_LOGOUT:
+			case _constants.USER_LOGOUT_SUCCESS:
 				console.log('user logged out');
 				return _extends({}, initialState);
 			default:
@@ -27069,8 +27069,9 @@
 
 	function userLoginWithTokenThunk() {
 		return function (dispatch) {
-			var token = EddiCookie.getCookie().token;
-			console.log('this is the token', token);
+			var cookie = EddiCookie.getCookie() || {},
+			    token = cookie.token;
+			if (!token) return; //if there is no token, don't do anything
 			return EddiFire.authWithToken(token).then(function (user) {
 				//gets the user profile
 				var uid = user.uid;
@@ -27089,6 +27090,7 @@
 		return function (dispatch) {
 			EddiFire.unauthenticate();
 			EddiCookie.setCookie(null);
+			console.log('user logging out', EddiCookie.getCookie());
 			//let store know of logout
 			dispatch(userLogoutSuccess());
 		};
@@ -28391,6 +28393,7 @@
 			value: function logoutHandler() {
 				var logout = this.props.logout;
 
+				console.log('this is the logout', logout);
 				if (logout instanceof Function) logout();
 			}
 		}, {
@@ -28514,11 +28517,11 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function parseCookie(cookieString) {
-		var sections = cookieString.split(';').map(function (section) {
+		var sections = cookieString.split('; ').map(function (section) {
 			return section.split('=');
 		});
 		return sections.reduce(function (cookie, section) {
-			cookie[section[0].trim()] = section[1];
+			cookie[section[0]] = section[1];
 			return cookie;
 		}, {});
 	}
@@ -28537,7 +28540,6 @@
 		_createClass(CookieStore, [{
 			key: 'setCookie',
 			value: function setCookie(token, expires) {
-				console.log('i am setting myself');
 				//sets the cookie
 				if (token) {
 					document.cookie = formatCookie(token, expires);
@@ -28545,13 +28547,16 @@
 						token: token,
 						expires: expires
 					};
-				} else document.cookie = this.cookie = null;
+				} else {
+					document.cookie = formatCookie("", -1);
+					this.cookie = null;
+				};
+				console.log('this is the document cookie', document.cookie, this.cookie);
 			}
 		}, {
 			key: 'getCookie',
 			value: function getCookie() {
 				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
-				console.log('this is hte cookie', this.cookie);
 				return this.cookie;
 			}
 		}]);
