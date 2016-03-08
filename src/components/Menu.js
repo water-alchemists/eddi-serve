@@ -33,7 +33,7 @@ class Menu extends Component {
 				{' '}
 				<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>
 				{' '}
-				<div onClick={() => this.logoutHandler()}>Logout</div>
+				<span onClick={() => this.logoutHandler()}>Logout</span>
 			</header>
 		);
 	}

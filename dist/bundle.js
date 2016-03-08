@@ -72,6 +72,8 @@
 
 	var _middlewares2 = _interopRequireDefault(_middlewares);
 
+	var _constants = __webpack_require__(244);
+
 	var _containers = __webpack_require__(247);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -102,14 +104,14 @@
 				{ history: history },
 				_react2.default.createElement(
 					_reactRouter.Route,
-					{ path: '/react', component: _containers.App },
+					{ path: _constants.PATHS.HOME, component: _containers.App },
 					_react2.default.createElement(_reactRouter.IndexRoute, { component: _containers.Home }),
-					_react2.default.createElement(_reactRouter.Route, { path: '/react/login', component: _containers.Login }),
-					_react2.default.createElement(_reactRouter.Route, { path: '/react/signup', component: _containers.Signup }),
-					_react2.default.createElement(_reactRouter.Route, { path: '/react/dashboard', component: _containers.Dashboard }),
-					_react2.default.createElement(_reactRouter.Route, { path: '/react/report', component: _containers.Report }),
-					_react2.default.createElement(_reactRouter.Route, { path: '/react/settings', component: _containers.Settings }),
-					_react2.default.createElement(_reactRouter.Route, { path: '/react/troubleshoot', component: _containers.Troubleshoot })
+					_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.LOGIN, component: _containers.Login }),
+					_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.SIGNUP, component: _containers.Signup }),
+					_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.DASHBOARD, component: _containers.Dashboard }),
+					_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.REPORT, component: _containers.Report }),
+					_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.SETTINGS, component: _containers.Settings }),
+					_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.TROUBLESHOOT, component: _containers.Troubleshoot })
 				)
 			)
 		)
@@ -26813,6 +26815,9 @@
 
 	function mapDispatchToProps(dispatch) {
 		return {
+			loginWithToken: function loginWithToken() {
+				return dispatch((0, _user.userLoginWithTokenThunk)());
+			},
 			logout: function logout() {
 				return dispatch((0, _user.userLogout)());
 			}
@@ -26829,9 +26834,18 @@
 		}
 
 		_createClass(App, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var loginWithToken = this.props.loginWithToken;
+
+				loginWithToken();
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var _props = this.props;
+				var user = _props.user;
+				var eddi = _props.eddi;
 				var logout = _props.logout;
 				var children = _props.children;
 
@@ -26839,7 +26853,8 @@
 					'div',
 					null,
 					_react2.default.createElement(_Menu2.default, { isOpen: true,
-						logout: logout
+						logout: logout,
+						user: user
 					}),
 					_react2.default.createElement(
 						'div',
@@ -27052,8 +27067,10 @@
 		};
 	}
 
-	function userLoginWithTokenThunk(token) {
+	function userLoginWithTokenThunk() {
 		return function (dispatch) {
+			var token = EddiCookie.getCookie().token;
+			console.log('this is the token', token);
 			return EddiFire.authWithToken(token).then(function (user) {
 				//gets the user profile
 				var uid = user.uid;
@@ -28430,7 +28447,7 @@
 					),
 					' ',
 					_react2.default.createElement(
-						'div',
+						'span',
 						{ onClick: function onClick() {
 								return _this2.logoutHandler();
 							} },
@@ -28501,7 +28518,7 @@
 			return section.split('=');
 		});
 		return sections.reduce(function (cookie, section) {
-			cookie[section[0]] = section[1];
+			cookie[section[0].trim()] = section[1];
 			return cookie;
 		}, {});
 	}
@@ -28534,6 +28551,7 @@
 			key: 'getCookie',
 			value: function getCookie() {
 				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
+				console.log('this is hte cookie', this.cookie);
 				return this.cookie;
 			}
 		}]);

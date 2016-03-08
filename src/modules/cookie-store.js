@@ -2,7 +2,7 @@
 function parseCookie(cookieString){
 	const sections = cookieString.split(';').map(section => section.split('='));
 	return sections.reduce((cookie, section) => {
-		cookie[section[0]] = section[1];
+		cookie[section[0].trim()] = section[1];
 		return cookie;
 	}, {});
 }
@@ -31,6 +31,7 @@ class CookieStore {
 
 	getCookie(){
 		if(!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
+		console.log('this is hte cookie', this.cookie);
 		return this.cookie;
 	}
 }

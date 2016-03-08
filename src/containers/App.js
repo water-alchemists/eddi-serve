@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Menu from '../components/Menu';
 
-import { userLogout } from '../actions/user';
+import { userLogout, userLoginWithTokenThunk } from '../actions/user';
 
 function mapStateToProps(state){
 	return {
@@ -15,17 +15,24 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
+		loginWithToken : () => dispatch(userLoginWithTokenThunk()),
 		logout : () => dispatch(userLogout())
 	}
 }
 
 class App extends Component {
+	componentWillMount(){
+		const { loginWithToken } = this.props;
+		loginWithToken();
+	}
+
 	render(){
-		const { logout, children } = this.props;
+		const { user, eddi, logout, children } = this.props;
 		return (
 			<div>
 				<Menu isOpen={true}
 					logout={logout}
+					user={user}
 				/>
 				<div style={{ marginTop: '1.5em' }}>{children}</div>
 			</div>

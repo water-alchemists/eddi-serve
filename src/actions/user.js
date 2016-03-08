@@ -106,8 +106,10 @@ export function userLoginWithPasswordThunk(email, password){
 	}
 }
 
-export function userLoginWithTokenThunk(token){
+export function userLoginWithTokenThunk(){
 	return dispatch => {
+		const token = EddiCookie.getCookie().token;
+		console.log('this is the token', token);
 		return EddiFire.authWithToken(token)
 			.then(user => {
 				//gets the user profile

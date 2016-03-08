@@ -8,15 +8,16 @@ import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-rou
 
 import * as reducers from './reducers';
 import middlewares from './middlewares';
+import { PATHS } from './constants';
 import { App, 
-		Home, 
-		Login, 
-		Signup, 
-		Dashboard, 
-		Report, 
-		Settings, 
-		Troubleshoot 
-	} from './containers';
+	Home, 
+	Login, 
+	Signup, 
+	Dashboard, 
+	Report, 
+	Settings, 
+	Troubleshoot 
+} from './containers';
 
 const reducer = combineReducers({
   ...reducers,
@@ -34,14 +35,14 @@ ReactDOM.render(
 	<Provider store={store}>
 		<div>
 			<Router history={history}>
-				<Route path='/react' component={App}>
+				<Route path={PATHS.HOME} component={App}>
 					<IndexRoute component={Home}/>
-					<Route path='/react/login' component={Login}/>
-					<Route path='/react/signup' component={Signup}/>
-					<Route path='/react/dashboard' component={Dashboard}/>
-					<Route path='/react/report' component={Report}/>
-					<Route path='/react/settings' component={Settings}/>
-					<Route path='/react/troubleshoot' component={Troubleshoot}/>
+					<Route path={PATHS.LOGIN} component={Login}/>
+					<Route path={PATHS.SIGNUP} component={Signup}/>
+					<Route path={PATHS.DASHBOARD} component={Dashboard}/>
+					<Route path={PATHS.REPORT} component={Report}/>
+					<Route path={PATHS.SETTINGS} component={Settings}/>
+					<Route path={PATHS.TROUBLESHOOT} component={Troubleshoot}/>
 				</Route>
 			</Router>
 		</div>
