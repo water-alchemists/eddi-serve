@@ -15,9 +15,51 @@ import {
 
 const EddiFire = EddiFireStarter();
 
-function getEddisSuccess(list){
+function getAllEddiSuccess(list){
 	return {
 		type : EDDI_GETALL_SUCCESS, 
 		list
 	};
 }
+
+function getAllEddiError(error){
+	return {
+		type : EDDI_GETALL_ERROR,
+		error
+	};
+}
+
+function updateEddiSuccess(){
+	return {
+		type : EDDI_UPDATE_SUCCESS
+	};
+}
+
+function updateEddiError(error){
+	return {
+		type : EDDI_UPDATE_ERROR,
+		error
+	};
+}
+
+function getOneEddiSuccess(selected){
+	return {
+		type : EDDI_GETONE_SUCCESS,
+		selected
+	};
+}
+
+function getOneEddiError(error){
+	return {
+		type : EDDI_GETONE_ERROR,
+		error
+	}
+}
+
+function selectEddi(selected){
+	return {
+		type : EDDI_SELECT,
+		selected
+	};
+}
+
