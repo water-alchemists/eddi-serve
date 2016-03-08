@@ -8,23 +8,12 @@ const {
 } = React;
 
 class Menu extends Component {
-	logoutHandler(){
-		const { logout } = this.props;
-		console.log('this is the logout', logout);
-		if(logout instanceof Function) logout();
-	}
-
-	render(){
-		console.dir(this.props);
-		return(
+	_renderLoggedIn(){
+		return (
 			<header>
 				Links:
 				{' '}
 				<Link to={PATHS.HOME}>Home</Link>
-				{' '}
-				<Link to={PATHS.LOGIN}>Login</Link>
-				{' '}
-				<Link to={PATHS.SIGNUP}>Signup</Link>
 				{' '}
 				<Link to={PATHS.DASHBOARD}>Dashboard</Link>
 				{' '}
@@ -38,11 +27,41 @@ class Menu extends Component {
 			</header>
 		);
 	}
+
+	_renderLoggedOut(){
+		return (
+			<header>
+				Links:
+				{' '}
+				<Link to={PATHS.HOME}>Home</Link>
+				{' '}
+				<Link to={PATHS.LOGIN}>Login</Link>
+				{' '}
+				<Link to={PATHS.SIGNUP}>Signup</Link>
+			</header>
+		);
+	}
+
+	logoutHandler(){
+		const { logout } = this.props;
+		if(logout instanceof Function) logout();
+	}
+
+	render(){
+		const { user } = this.props,
+			isLoggedIn = !!user.email;
+
+		if(isLoggedIn) return this._renderLoggedIn();
+		else return this._renderLoggedOut();
+	}
 }
 
 Menu.propTypes = {
 	isOpen : PropTypes.bool.isRequired,
-	logout : PropTypes.func.isRequired
+	logout : PropTypes.func.isRequired,
+	user : PropTypes.shape({
+		email : PropTypes.string
+	})
 };
 
 export default Menu;

@@ -1,6 +1,9 @@
 'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
+
+import { PATHS } from '../constants';
 import { userLogin, userLogout } from '../actions/user';
 
 function mapStateToProps(state){

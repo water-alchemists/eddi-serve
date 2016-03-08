@@ -26888,6 +26888,10 @@
 
 	var _reactRedux = __webpack_require__(169);
 
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
 	var _user = __webpack_require__(250);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -27626,6 +27630,10 @@
 	var _reactRedux = __webpack_require__(169);
 
 	var _user = __webpack_require__(250);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
 
 	var _LoginForm = __webpack_require__(254);
 
@@ -28390,19 +28398,10 @@
 		}
 
 		_createClass(Menu, [{
-			key: 'logoutHandler',
-			value: function logoutHandler() {
-				var logout = this.props.logout;
-
-				console.log('this is the logout', logout);
-				if (logout instanceof Function) logout();
-			}
-		}, {
-			key: 'render',
-			value: function render() {
+			key: '_renderLoggedIn',
+			value: function _renderLoggedIn() {
 				var _this2 = this;
 
-				console.dir(this.props);
 				return _react2.default.createElement(
 					'header',
 					null,
@@ -28412,18 +28411,6 @@
 						_reactRouter.Link,
 						{ to: _constants.PATHS.HOME },
 						'Home'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.LOGIN },
-						'Login'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.SIGNUP },
-						'Signup'
 					),
 					' ',
 					_react2.default.createElement(
@@ -28459,6 +28446,48 @@
 					)
 				);
 			}
+		}, {
+			key: '_renderLoggedOut',
+			value: function _renderLoggedOut() {
+				return _react2.default.createElement(
+					'header',
+					null,
+					'Links:',
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.HOME },
+						'Home'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.LOGIN },
+						'Login'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SIGNUP },
+						'Signup'
+					)
+				);
+			}
+		}, {
+			key: 'logoutHandler',
+			value: function logoutHandler() {
+				var logout = this.props.logout;
+
+				if (logout instanceof Function) logout();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var user = this.props.user;
+				var isLoggedIn = !!user.email;
+
+				if (isLoggedIn) return this._renderLoggedIn();else return this._renderLoggedOut();
+			}
 		}]);
 
 		return Menu;
@@ -28466,7 +28495,10 @@
 
 	Menu.propTypes = {
 		isOpen: PropTypes.bool.isRequired,
-		logout: PropTypes.func.isRequired
+		logout: PropTypes.func.isRequired,
+		user: PropTypes.shape({
+			email: PropTypes.string
+		})
 	};
 
 	exports.default = Menu;

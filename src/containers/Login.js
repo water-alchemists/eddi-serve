@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { userLoginWithPasswordThunk } from '../actions/user';
+import { browserHistory } from 'react-router';
 
+import { PATHS } from '../constants';
 import LoginForm from '../components/LoginForm';
 
 function mapStateToProps(state){
