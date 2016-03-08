@@ -26632,8 +26632,12 @@
 	var USER_CREATE_ERROR = exports.USER_CREATE_ERROR = 'USER_CREATE_ERROR';
 
 	//Eddi Related
-	var EDDI_GETALL = exports.EDDI_GETALL = 'EDDI_GET';
-	var EDDI_UPDATE = exports.EDDI_UPDATE = 'EDDI_UPDATE';
+	var EDDI_GETALL_SUCCESS = exports.EDDI_GETALL_SUCCESS = 'EDDI_GETALL_SUCCESS';
+	var EDDI_GETALL_ERROR = exports.EDDI_GETALL_ERROR = 'EDDI_GETALL_ERROR';
+	var EDDI_UPDATE_SUCCESS = exports.EDDI_UPDATE_SUCCESS = 'EDDI_UPDATE_SUCCESS';
+	var EDDI_UPDATE_ERROR = exports.EDDI_UPDATE_ERROR = 'EDDI_UPDATE_ERROR';
+	var EDDI_GETONE_SUCCESS = exports.EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
+	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
 
 	//paths
@@ -26669,7 +26673,7 @@
 		var selected = eddis.selected;
 
 		switch (type) {
-			case _constants.EDDI_GETALL:
+			case _constants.EDDI_GETALL_SUCCESS:
 				console.log('eddi got all');
 				return _extends({}, state, {
 					list: list

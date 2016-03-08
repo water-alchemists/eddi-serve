@@ -3,9 +3,9 @@ import EddiFireStarter from '../modules/eddi-firebase';
 import CookieStoreMaker from '../modules/cookie-store';
 
 import { browserHistory } from 'react-router';
-import { PATHS } from '../constants';
 
 import {
+	PATHS,
 	USER_LOGIN_SUCCESS,
 	USER_LOGIN_ERROR,
 	USER_LOGOUT_SUCCESS,

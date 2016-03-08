@@ -1,8 +1,12 @@
 'use strict';
 import {
 	USER_LOGOUT,
-	EDDI_GETALL,
-	EDDI_UPDATE,
+	EDDI_GETALL_SUCCESS,
+	EDDI_GETALL_ERROR,
+	EDDI_UPDATE_SUCCESS,
+	EDDI_UPDATE_ERROR,
+	EDDI_GETONE_SUCCESS,
+	EDDI_GETONE_ERROR,
 	EDDI_SELECT
 } from '../constants';
 
@@ -15,7 +19,7 @@ export default function(state = initialState, action = {}){
 	const { type, eddis = {} } = action,
 		{ list, selected } = eddis;
 	switch(type){
-	case EDDI_GETALL : 
+	case EDDI_GETALL_SUCCESS : 
 		console.log('eddi got all');
 		return {
 			...state,
