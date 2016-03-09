@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 import { PATHS } from '../constants';
 
 import HomeButton from '../components/HomeButton';
+import LoggedOutHome from '../components/LoggedOutHome';
 
 function mapStateToProps(state){
 	return {
@@ -33,16 +34,15 @@ class Home extends Component {
 		);
 	}
 
-	_renderLoggedOut(){
-
-	}
-
 	render(){
-		const { user } = this.props;
+		const { user } = this.props,
+			LoggedOutElement = <LoggedOutHome />,
+			LoggedInElement = <HomeButton name={'Hello'} />,
+			showHome = user.name ? LoggedInElement : LoggedOutElement;
 		console.log('at home', this.props);
 		return (
 			<div>
-				<HomeButton name={'Hello'} />
+				{showHome}
 			</div>
 		);
 	}
