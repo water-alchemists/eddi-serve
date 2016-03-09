@@ -27887,9 +27887,9 @@
 
 	var _constants = __webpack_require__(244);
 
-	var _HomeEddiButton = __webpack_require__(266);
+	var _HomeButton = __webpack_require__(267);
 
-	var _HomeEddiButton2 = _interopRequireDefault(_HomeEddiButton);
+	var _HomeButton2 = _interopRequireDefault(_HomeButton);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27949,7 +27949,7 @@
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_HomeEddiButton2.default, { name: 'Hello' })
+					_react2.default.createElement(_HomeButton2.default, { name: 'Hello' })
 				);
 			}
 		}]);
@@ -28660,7 +28660,8 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 266 */
+/* 266 */,
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28685,29 +28686,32 @@
 
 	var PropTypes = _react2.default.PropTypes;
 
-	var HomeEddiButton = function (_Component) {
-		_inherits(HomeEddiButton, _Component);
+	var HomeButton = function (_Component) {
+		_inherits(HomeButton, _Component);
 
-		function HomeEddiButton() {
-			_classCallCheck(this, HomeEddiButton);
+		function HomeButton() {
+			_classCallCheck(this, HomeButton);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(HomeEddiButton).apply(this, arguments));
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(HomeButton).apply(this, arguments));
 		}
 
-		_createClass(HomeEddiButton, [{
+		_createClass(HomeButton, [{
 			key: 'render',
 			value: function render() {
-				var name = this.props.name;
-
+				var _props = this.props;
+				var name = _props.name;
+				var image = _props.image;
+				var Image = _react2.default.createElement(
+					'div',
+					{ style: styles.textCenter },
+					image
+				);
+				var showImage = image ? Image : null;
 
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(
-						'div',
-						{ style: styles.textCenter },
-						'Insert Image'
-					),
+					showImage,
 					_react2.default.createElement(
 						'div',
 						{ style: styles.bottomLine },
@@ -28726,11 +28730,12 @@
 			}
 		}]);
 
-		return HomeEddiButton;
+		return HomeButton;
 	}(_react.Component);
 
-	HomeEddiButton.propTypes = {
-		name: PropTypes.string.isRequired
+	HomeButton.propTypes = {
+		name: PropTypes.string.isRequired,
+		image: PropTypes.string
 	};
 
 	var styles = {
@@ -28745,7 +28750,7 @@
 		}
 	};
 
-	exports.default = HomeEddiButton;
+	exports.default = HomeButton;
 
 /***/ }
 /******/ ]);

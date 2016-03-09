@@ -5,13 +5,15 @@ const {
 	PropTypes
 } = React;
 
-class HomeEddiButton extends Component {
+class HomeButton extends Component {
 	render(){
-		const { name } = this.props;
+		const { name, image } = this.props,
+			Image = (<div style={styles.textCenter}>{image}</div>),
+			showImage = image ? Image : null;
 
 		return (
 			<div>
-				<div style={styles.textCenter}>Insert Image</div>
+				{showImage}
 				<div style={styles.bottomLine}>
 					<p>{name}</p>
 					<p>{'>'}</p>
@@ -21,8 +23,9 @@ class HomeEddiButton extends Component {
 	}
 }
 
-HomeEddiButton.propTypes = {
-	name : PropTypes.string.isRequired
+HomeButton.propTypes = {
+	name : PropTypes.string.isRequired,
+	image : PropTypes.string
 };
 
 const styles = {
@@ -37,4 +40,4 @@ const styles = {
 	}
 }
 
-export default HomeEddiButton;
+export default HomeButton;

@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 
 import { PATHS } from '../constants';
 
-import HomeEddiButton from '../components/HomeEddiButton';
+import HomeButton from '../components/HomeButton';
 
 function mapStateToProps(state){
 	return {
@@ -42,7 +42,7 @@ class Home extends Component {
 		console.log('at home', this.props);
 		return (
 			<div>
-				<HomeEddiButton name={'Hello'} />
+				<HomeButton name={'Hello'} />
 			</div>
 		);
 	}
