@@ -121,7 +121,13 @@ export function userLoginWithTokenThunk(){
 					.then(userProfile => dispatch(userGetProfile(userProfile)));
 
 			})
-			.catch(err => dispatch(userLoginError(err)));
+			.catch(err => {
+				const { code } = err;
+				console.log('this is the code', code);
+				if(code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
+				console.log('this is the code', code);
+				// dispatch(userLoginError(err))
+			});
 		
 	}
 }

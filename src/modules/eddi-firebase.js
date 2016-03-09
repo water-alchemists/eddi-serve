@@ -10,6 +10,9 @@ const PATHS = {
 	PIN_PATH : 'pins',
 	SETTINGS_PATH : 'settings',
 	SALINITY_PATH : 'salinity',
+	SCHEDULE_PATH : 'schedule',
+	START_SCHEDULE_TIME : 'start',
+	END_SCHEDULE_TIME : 'end',
 	TESTEDDI_PATH : 'test-eddi'
 };
 

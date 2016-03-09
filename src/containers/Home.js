@@ -4,29 +4,45 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
 import { PATHS } from '../constants';
-import { userLogin, userLogout } from '../actions/user';
+
+import HomeEddiButton from '../components/HomeEddiButton';
 
 function mapStateToProps(state){
 	return {
-		user : state.user
+		user : state.user,
+		eddis : state.eddis
 	};
 }
 
 function mapDispatchToProps(dispatch){
 	return {
-		login : user => dispatch(userLogin(value)),
-		logout : () => dispatch(userLogout())
+		navigateTo : (pathname, query) => browserHistory.push({ pathname, query })
 	};
 }
 
 class Home extends Component {
+	clickHandler(destination, query){
+		const { navigateTo } = this.props;
+		navigateTo(destination, query);
+	}
+
+	_renderLoggedIn(){
+		const { eddis } = this.props;
+		return (
+			<div></div>
+		);
+	}
+
+	_renderLoggedOut(){
+
+	}
+
 	render(){
 		const { user } = this.props;
 		console.log('at home', this.props);
 		return (
 			<div>
-				Some state changes:
-				{JSON.stringify(user)}
+				<HomeEddiButton name={'Hello'} />
 			</div>
 		);
 	}

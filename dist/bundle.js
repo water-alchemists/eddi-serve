@@ -74,7 +74,7 @@
 
 	var _constants = __webpack_require__(244);
 
-	var _containers = __webpack_require__(247);
+	var _containers = __webpack_require__(250);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -26708,15 +26708,15 @@
 		value: true
 	});
 
-	var _thunk = __webpack_require__(257);
+	var _thunk = __webpack_require__(247);
 
 	var _thunk2 = _interopRequireDefault(_thunk);
 
-	var _logger = __webpack_require__(258);
+	var _logger = __webpack_require__(248);
 
 	var _logger2 = _interopRequireDefault(_logger);
 
-	var _error = __webpack_require__(264);
+	var _error = __webpack_require__(249);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -26726,6 +26726,77 @@
 
 /***/ },
 /* 247 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	function thunkMiddleware(_ref) {
+		var dispatch = _ref.dispatch;
+		var getState = _ref.getState;
+
+		return function (next) {
+			return function (action) {
+				return typeof action === 'function' ? action(dispatch, getState) : next(action);
+			};
+		};
+	}
+
+	exports.default = thunkMiddleware;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	function logger(_ref) {
+		var dispatch = _ref.dispatch;
+		var getState = _ref.getState;
+
+		return function (next) {
+			return function (action) {
+				console.log('dispatching :', action);
+				next(action);
+				console.log('new state :', getState());
+				return;
+			};
+		};
+	}
+
+	exports.default = logger;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	function errorHandle(_ref) {
+		var dispatch = _ref.dispatch;
+
+		return function (next) {
+			return function (action) {
+				var error = action.error;
+
+				if (error instanceof Error) return window.alert(error.message);
+				return next(action);
+			};
+		};
+	}
+
+	exports.default = errorHandle;
+
+/***/ },
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26735,35 +26806,35 @@
 	});
 	exports.Report = exports.Troubleshoot = exports.Settings = exports.Dashboard = exports.Signup = exports.Login = exports.Home = exports.App = undefined;
 
-	var _App2 = __webpack_require__(248);
+	var _App2 = __webpack_require__(251);
 
 	var _App3 = _interopRequireDefault(_App2);
 
-	var _Home2 = __webpack_require__(249);
+	var _Home2 = __webpack_require__(257);
 
 	var _Home3 = _interopRequireDefault(_Home2);
 
-	var _Login2 = __webpack_require__(253);
+	var _Login2 = __webpack_require__(258);
 
 	var _Login3 = _interopRequireDefault(_Login2);
 
-	var _Signup2 = __webpack_require__(255);
+	var _Signup2 = __webpack_require__(260);
 
 	var _Signup3 = _interopRequireDefault(_Signup2);
 
-	var _Dashboard2 = __webpack_require__(259);
+	var _Dashboard2 = __webpack_require__(262);
 
 	var _Dashboard3 = _interopRequireDefault(_Dashboard2);
 
-	var _Settings2 = __webpack_require__(260);
+	var _Settings2 = __webpack_require__(263);
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(261);
+	var _Troubleshoot2 = __webpack_require__(264);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(262);
+	var _Report2 = __webpack_require__(265);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -26779,7 +26850,7 @@
 	exports.Report = _Report3.default;
 
 /***/ },
-/* 248 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26796,11 +26867,11 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _Menu = __webpack_require__(263);
+	var _Menu = __webpack_require__(252);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
-	var _user = __webpack_require__(250);
+	var _user = __webpack_require__(253);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26901,7 +26972,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 /***/ },
-/* 249 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26916,13 +26987,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRedux = __webpack_require__(169);
-
 	var _reactRouter = __webpack_require__(180);
 
 	var _constants = __webpack_require__(244);
-
-	var _user = __webpack_require__(250);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26932,54 +26999,125 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	function mapStateToProps(state) {
-		return {
-			user: state.user
-		};
-	}
+	var PropTypes = _react2.default.PropTypes;
 
-	function mapDispatchToProps(dispatch) {
-		return {
-			login: function login(user) {
-				return dispatch((0, _user.userLogin)(value));
-			},
-			logout: function logout() {
-				return dispatch((0, _user.userLogout)());
-			}
-		};
-	}
+	var Menu = function (_Component) {
+		_inherits(Menu, _Component);
 
-	var Home = function (_Component) {
-		_inherits(Home, _Component);
+		function Menu() {
+			_classCallCheck(this, Menu);
 
-		function Home() {
-			_classCallCheck(this, Home);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Menu).apply(this, arguments));
 		}
 
-		_createClass(Home, [{
+		_createClass(Menu, [{
+			key: '_renderLoggedIn',
+			value: function _renderLoggedIn() {
+				var _this2 = this;
+
+				return _react2.default.createElement(
+					'header',
+					null,
+					'Links:',
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.HOME },
+						'Home'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.DASHBOARD },
+						'Dashboard'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.REPORT },
+						'Report'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SETTINGS },
+						'Settings'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.TROUBLESHOOT },
+						'Troubleshoot'
+					),
+					' ',
+					_react2.default.createElement(
+						'span',
+						{ onClick: function onClick() {
+								return _this2.logoutHandler();
+							} },
+						'Logout'
+					)
+				);
+			}
+		}, {
+			key: '_renderLoggedOut',
+			value: function _renderLoggedOut() {
+				return _react2.default.createElement(
+					'header',
+					null,
+					'Links:',
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.HOME },
+						'Home'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.LOGIN },
+						'Login'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SIGNUP },
+						'Signup'
+					)
+				);
+			}
+		}, {
+			key: 'logoutHandler',
+			value: function logoutHandler() {
+				var logout = this.props.logout;
+
+				if (logout instanceof Function) logout();
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var user = this.props.user;
+				var isLoggedIn = !!user.email;
 
-				console.log('at home', this.props);
-				return _react2.default.createElement(
-					'div',
-					null,
-					'Some state changes:',
-					JSON.stringify(user)
-				);
+				if (isLoggedIn) return this._renderLoggedIn();else return this._renderLoggedOut();
 			}
 		}]);
 
-		return Home;
+		return Menu;
 	}(_react.Component);
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
+	Menu.propTypes = {
+		isOpen: PropTypes.bool.isRequired,
+		logout: PropTypes.func.isRequired,
+		user: PropTypes.shape({
+			email: PropTypes.string
+		})
+	};
+
+	exports.default = Menu;
 
 /***/ },
-/* 250 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26994,11 +27132,11 @@
 	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
 	exports.userLogout = userLogout;
 
-	var _eddiFirebase = __webpack_require__(251);
+	var _eddiFirebase = __webpack_require__(254);
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
 
-	var _cookieStore = __webpack_require__(265);
+	var _cookieStore = __webpack_require__(256);
 
 	var _cookieStore2 = _interopRequireDefault(_cookieStore);
 
@@ -27117,7 +27255,12 @@
 					return dispatch(userGetProfile(userProfile));
 				});
 			}).catch(function (err) {
-				return dispatch(userLoginError(err));
+				var code = err.code;
+
+				console.log('this is the code', code);
+				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
+				console.log('this is the code', code);
+				// dispatch(userLoginError(err))
 			});
 		};
 	}
@@ -27133,7 +27276,7 @@
 	}
 
 /***/ },
-/* 251 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27154,7 +27297,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Firebase = __webpack_require__(252);
+	var Firebase = __webpack_require__(255);
 
 	var PATHS = {
 		BASE_PATH: 'https://eddi.firebaseIO.com',
@@ -27165,6 +27308,9 @@
 		PIN_PATH: 'pins',
 		SETTINGS_PATH: 'settings',
 		SALINITY_PATH: 'salinity',
+		SCHEDULE_PATH: 'schedule',
+		START_SCHEDULE_TIME: 'start',
+		END_SCHEDULE_TIME: 'end',
 		TESTEDDI_PATH: 'test-eddi'
 	};
 
@@ -27358,7 +27504,7 @@
 	}();
 
 /***/ },
-/* 252 */
+/* 255 */
 /***/ function(module, exports) {
 
 	/*! @license Firebase v2.4.1
@@ -27643,7 +27789,84 @@
 
 
 /***/ },
-/* 253 */
+/* 256 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = function () {
+		var init = undefined;
+		if (init) return init;else {
+			init = new CookieStore();
+			return init;
+		}
+	};
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function parseCookie(cookieString) {
+		var sections = cookieString.split('; ').map(function (section) {
+			return section.split('=');
+		});
+		return sections.reduce(function (cookie, section) {
+			cookie[section[0]] = section[1];
+			return cookie;
+		}, {});
+	}
+
+	function formatCookie(token, expires) {
+		return 'token=' + token + ';expires=' + expires + ';';
+	}
+
+	var CookieStore = function () {
+		function CookieStore() {
+			_classCallCheck(this, CookieStore);
+
+			this.cookie = null;
+		}
+
+		_createClass(CookieStore, [{
+			key: 'setCookie',
+			value: function setCookie(token, expires) {
+				//sets the cookie
+				if (token) {
+					document.cookie = formatCookie(token, expires);
+					this.cookie = {
+						token: token,
+						expires: expires
+					};
+				} else {
+					document.cookie = formatCookie("", -1);
+					this.cookie = null;
+				};
+				console.log('this is the document cookie', document.cookie, this.cookie);
+			}
+		}, {
+			key: 'getCookie',
+			value: function getCookie() {
+				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
+				return this.cookie;
+			}
+		}, {
+			key: 'deleteCookie',
+			value: function deleteCookie() {
+				this.setCookie(null);
+			}
+		}]);
+
+		return CookieStore;
+	}();
+
+	;
+
+/***/ },
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27660,13 +27883,107 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _user = __webpack_require__(250);
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	var _HomeEddiButton = __webpack_require__(266);
+
+	var _HomeEddiButton2 = _interopRequireDefault(_HomeEddiButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user,
+			eddis: state.eddis
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			navigateTo: function navigateTo(pathname, query) {
+				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
+			}
+		};
+	}
+
+	var Home = function (_Component) {
+		_inherits(Home, _Component);
+
+		function Home() {
+			_classCallCheck(this, Home);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
+		}
+
+		_createClass(Home, [{
+			key: 'clickHandler',
+			value: function clickHandler(destination, query) {
+				var navigateTo = this.props.navigateTo;
+
+				navigateTo(destination, query);
+			}
+		}, {
+			key: '_renderLoggedIn',
+			value: function _renderLoggedIn() {
+				var eddis = this.props.eddis;
+
+				return _react2.default.createElement('div', null);
+			}
+		}, {
+			key: '_renderLoggedOut',
+			value: function _renderLoggedOut() {}
+		}, {
+			key: 'render',
+			value: function render() {
+				var user = this.props.user;
+
+				console.log('at home', this.props);
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_HomeEddiButton2.default, { name: 'Hello' })
+				);
+			}
+		}]);
+
+		return Home;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _user = __webpack_require__(253);
 
 	var _reactRouter = __webpack_require__(180);
 
 	var _constants = __webpack_require__(244);
 
-	var _LoginForm = __webpack_require__(254);
+	var _LoginForm = __webpack_require__(259);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
@@ -27724,7 +28041,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);
 
 /***/ },
-/* 254 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27856,7 +28173,7 @@
 	exports.default = LoginForm;
 
 /***/ },
-/* 255 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27873,9 +28190,9 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _user = __webpack_require__(250);
+	var _user = __webpack_require__(253);
 
-	var _SignupForm = __webpack_require__(256);
+	var _SignupForm = __webpack_require__(261);
 
 	var _SignupForm2 = _interopRequireDefault(_SignupForm);
 
@@ -27932,7 +28249,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Signup);
 
 /***/ },
-/* 256 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28091,54 +28408,7 @@
 	exports.default = SignupForm;
 
 /***/ },
-/* 257 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	function thunkMiddleware(_ref) {
-		var dispatch = _ref.dispatch;
-		var getState = _ref.getState;
-
-		return function (next) {
-			return function (action) {
-				return typeof action === 'function' ? action(dispatch, getState) : next(action);
-			};
-		};
-	}
-
-	exports.default = thunkMiddleware;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	function logger(_ref) {
-		var dispatch = _ref.dispatch;
-		var getState = _ref.getState;
-
-		return function (next) {
-			return function (action) {
-				console.log('dispatching :', action);
-				next(action);
-				console.log('new state :', getState());
-				return;
-			};
-		};
-	}
-
-	exports.default = logger;
-
-/***/ },
-/* 259 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28201,7 +28471,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
 
 /***/ },
-/* 260 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28264,7 +28534,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
 
 /***/ },
-/* 261 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28327,7 +28597,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
 
 /***/ },
-/* 262 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28390,7 +28660,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 263 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28405,10 +28675,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(180);
-
-	var _constants = __webpack_require__(244);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28419,221 +28685,67 @@
 
 	var PropTypes = _react2.default.PropTypes;
 
-	var Menu = function (_Component) {
-		_inherits(Menu, _Component);
+	var HomeEddiButton = function (_Component) {
+		_inherits(HomeEddiButton, _Component);
 
-		function Menu() {
-			_classCallCheck(this, Menu);
+		function HomeEddiButton() {
+			_classCallCheck(this, HomeEddiButton);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Menu).apply(this, arguments));
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(HomeEddiButton).apply(this, arguments));
 		}
 
-		_createClass(Menu, [{
-			key: '_renderLoggedIn',
-			value: function _renderLoggedIn() {
-				var _this2 = this;
-
-				return _react2.default.createElement(
-					'header',
-					null,
-					'Links:',
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.HOME },
-						'Home'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.DASHBOARD },
-						'Dashboard'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.REPORT },
-						'Report'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.SETTINGS },
-						'Settings'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.TROUBLESHOOT },
-						'Troubleshoot'
-					),
-					' ',
-					_react2.default.createElement(
-						'span',
-						{ onClick: function onClick() {
-								return _this2.logoutHandler();
-							} },
-						'Logout'
-					)
-				);
-			}
-		}, {
-			key: '_renderLoggedOut',
-			value: function _renderLoggedOut() {
-				return _react2.default.createElement(
-					'header',
-					null,
-					'Links:',
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.HOME },
-						'Home'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.LOGIN },
-						'Login'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.SIGNUP },
-						'Signup'
-					)
-				);
-			}
-		}, {
-			key: 'logoutHandler',
-			value: function logoutHandler() {
-				var logout = this.props.logout;
-
-				if (logout instanceof Function) logout();
-			}
-		}, {
+		_createClass(HomeEddiButton, [{
 			key: 'render',
 			value: function render() {
-				var user = this.props.user;
-				var isLoggedIn = !!user.email;
+				var name = this.props.name;
 
-				if (isLoggedIn) return this._renderLoggedIn();else return this._renderLoggedOut();
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: styles.textCenter },
+						'Insert Image'
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: styles.bottomLine },
+						_react2.default.createElement(
+							'p',
+							null,
+							name
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'>'
+						)
+					)
+				);
 			}
 		}]);
 
-		return Menu;
+		return HomeEddiButton;
 	}(_react.Component);
 
-	Menu.propTypes = {
-		isOpen: PropTypes.bool.isRequired,
-		logout: PropTypes.func.isRequired,
-		user: PropTypes.shape({
-			email: PropTypes.string
-		})
+	HomeEddiButton.propTypes = {
+		name: PropTypes.string.isRequired
 	};
 
-	exports.default = Menu;
-
-/***/ },
-/* 264 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	function errorHandle(_ref) {
-		var dispatch = _ref.dispatch;
-
-		return function (next) {
-			return function (action) {
-				var error = action.error;
-
-				if (error instanceof Error) return window.alert(error.message);
-				return next(action);
-			};
-		};
-	}
-
-	exports.default = errorHandle;
-
-/***/ },
-/* 265 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.default = function () {
-		var init = undefined;
-		if (init) return init;else {
-			init = new CookieStore();
-			return init;
+	var styles = {
+		textCenter: {
+			textAlign: 'center'
+		},
+		bottomLine: {
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'space-between'
 		}
 	};
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function parseCookie(cookieString) {
-		var sections = cookieString.split('; ').map(function (section) {
-			return section.split('=');
-		});
-		return sections.reduce(function (cookie, section) {
-			cookie[section[0]] = section[1];
-			return cookie;
-		}, {});
-	}
-
-	function formatCookie(token, expires) {
-		return 'token=' + token + ';expires=' + expires + ';';
-	}
-
-	var CookieStore = function () {
-		function CookieStore() {
-			_classCallCheck(this, CookieStore);
-
-			this.cookie = null;
-		}
-
-		_createClass(CookieStore, [{
-			key: 'setCookie',
-			value: function setCookie(token, expires) {
-				//sets the cookie
-				if (token) {
-					document.cookie = formatCookie(token, expires);
-					this.cookie = {
-						token: token,
-						expires: expires
-					};
-				} else {
-					document.cookie = formatCookie("", -1);
-					this.cookie = null;
-				};
-				console.log('this is the document cookie', document.cookie, this.cookie);
-			}
-		}, {
-			key: 'getCookie',
-			value: function getCookie() {
-				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
-				return this.cookie;
-			}
-		}, {
-			key: 'deleteCookie',
-			value: function deleteCookie() {
-				this.setCookie(null);
-			}
-		}]);
-
-		return CookieStore;
-	}();
-
-	;
+	exports.default = HomeEddiButton;
 
 /***/ }
 /******/ ]);
