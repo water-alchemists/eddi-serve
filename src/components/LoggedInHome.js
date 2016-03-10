@@ -9,7 +9,7 @@ const {
 } = React;
 
 class LoggedInHome extends Component {
-	navigateTo(key, query){
+	navigateTo(key, query = {}){
 		const pathname = PATHS[key],
 			destination = {
 				pathname,
@@ -21,20 +21,22 @@ class LoggedInHome extends Component {
 
 	_renderEddiButtons(){
 		const { eddis } = this.props;
-		return eddis.map(eddi => {
-			const name = eddi.name;
-			return (
-				<div>{name}</div>
-			);
-		});
+		if(eddis) {
+			return eddis.map(eddi => {
+				const name = eddi.name;
+				return (
+					<div>{name}</div>
+				);
+			});
+		}
 	}
 
 	_renderNoEddis(){
 		return (
 			<p>
-				Currently you are not tracking any eddis. Click
-				<a>here</a>
-				to start tracking one.
+				{`Currently you are not tracking any eddis. Click `}
+				<a onClick={() => this.navigateTo('SETTINGS')}>here</a>
+				{` to start tracking one.`}
 			</p>
 		);
 	}
@@ -43,7 +45,7 @@ class LoggedInHome extends Component {
 		const { eddis } = this.props,
 			NoEddiElement = this._renderNoEddis(),
 			EddiButtons = this._renderEddiButtons(),
-			showEddi = eddis ? EddiButtons : NoEddiElement;
+			showEddi = eddis && eddis.length ? EddiButtons : NoEddiElement;
 		return (
 			<div>
 				{ showEddi }
@@ -57,7 +59,7 @@ LoggedInHome.propTypes = {
 		PropTypes.shape({
 			name : PropTypes.string
 		})
-	);
+	)
 }
 
 export default LoggedInHome;

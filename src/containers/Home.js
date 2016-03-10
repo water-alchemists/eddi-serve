@@ -7,13 +7,14 @@ import { PATHS } from '../constants';
 
 import HomeButton from '../components/HomeButton';
 import LoggedOutHome from '../components/LoggedOutHome';
+import LoggedInHome from '../components/LoggedInHome';
 
 import { getAllEddiByUserThunk } from '../actions/eddis';
 
 function mapStateToProps(state){
 	return {
 		user : state.user,
-		eddis : state.eddis
+		eddis : state.eddis.list
 	};
 }
 
@@ -35,19 +36,13 @@ class Home extends Component {
 		navigateTo(destination, query);
 	}
 
-	_renderLoggedIn(){
-		const { eddis } = this.props;
-		return (
-			<div></div>
-		);
-	}
-
 	render(){
-		const { user } = this.props,
+		const { user, eddis } = this.props,
+			{ email } = user,
 			LoggedOutElement = <LoggedOutHome />,
-			LoggedInElement = <HomeButton name={'Hello'} />,
-			showHome = user.name ? LoggedInElement : LoggedOutElement;
-
+			LoggedInElement = <LoggedInHome eddis={eddis} />,
+			showHome = email ? LoggedInElement : LoggedOutElement;
+		console.log('these are teh eddis', eddis);
 		return (
 			<div>
 				{showHome}

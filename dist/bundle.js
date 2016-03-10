@@ -27889,6 +27889,10 @@
 
 	var _LoggedOutHome2 = _interopRequireDefault(_LoggedOutHome);
 
+	var _LoggedInHome = __webpack_require__(270);
+
+	var _LoggedInHome2 = _interopRequireDefault(_LoggedInHome);
+
 	var _eddis = __webpack_require__(269);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -27902,7 +27906,7 @@
 	function mapStateToProps(state) {
 		return {
 			user: state.user,
-			eddis: state.eddis
+			eddis: state.eddis.list
 		};
 	}
 
@@ -27943,20 +27947,16 @@
 				navigateTo(destination, query);
 			}
 		}, {
-			key: '_renderLoggedIn',
-			value: function _renderLoggedIn() {
-				var eddis = this.props.eddis;
-
-				return _react2.default.createElement('div', null);
-			}
-		}, {
 			key: 'render',
 			value: function render() {
-				var user = this.props.user;
+				var _props2 = this.props;
+				var user = _props2.user;
+				var eddis = _props2.eddis;
+				var email = user.email;
 				var LoggedOutElement = _react2.default.createElement(_LoggedOutHome2.default, null);
-				var LoggedInElement = _react2.default.createElement(_HomeButton2.default, { name: 'Hello' });
-				var showHome = user.name ? LoggedInElement : LoggedOutElement;
-
+				var LoggedInElement = _react2.default.createElement(_LoggedInHome2.default, { eddis: eddis });
+				var showHome = email ? LoggedInElement : LoggedOutElement;
+				console.log('these are teh eddis', eddis);
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -28926,12 +28926,125 @@
 				var uid = _ref.uid;
 				return EddiFire.getAllEddiByUser(uid);
 			}).then(function (eddis) {
-				return console.log('these are all the eddis');
+				return console.log('these are all the eddis', eddis);
 			}).catch(function (err) {
 				return dispatch(getAllEddiError(err));
 			});
 		};
 	}
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var LoggedInHome = function (_Component) {
+		_inherits(LoggedInHome, _Component);
+
+		function LoggedInHome() {
+			_classCallCheck(this, LoggedInHome);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(LoggedInHome).apply(this, arguments));
+		}
+
+		_createClass(LoggedInHome, [{
+			key: 'navigateTo',
+			value: function navigateTo(key) {
+				var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+				var pathname = _constants.PATHS[key],
+				    destination = {
+					pathname: pathname,
+					query: query
+				};
+
+				if (pathname) return _reactRouter.browserHistory.push(destination);
+			}
+		}, {
+			key: '_renderEddiButtons',
+			value: function _renderEddiButtons() {
+				var eddis = this.props.eddis;
+
+				if (eddis) {
+					return eddis.map(function (eddi) {
+						var name = eddi.name;
+						return _react2.default.createElement(
+							'div',
+							null,
+							name
+						);
+					});
+				}
+			}
+		}, {
+			key: '_renderNoEddis',
+			value: function _renderNoEddis() {
+				var _this2 = this;
+
+				return _react2.default.createElement(
+					'p',
+					null,
+					'Currently you are not tracking any eddis. Click ',
+					_react2.default.createElement(
+						'a',
+						{ onClick: function onClick() {
+								return _this2.navigateTo('SETTINGS');
+							} },
+						'here'
+					),
+					' to start tracking one.'
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var eddis = this.props.eddis;
+				var NoEddiElement = this._renderNoEddis();
+				var EddiButtons = this._renderEddiButtons();
+				var showEddi = eddis && eddis.length ? EddiButtons : NoEddiElement;
+				return _react2.default.createElement(
+					'div',
+					null,
+					showEddi
+				);
+			}
+		}]);
+
+		return LoggedInHome;
+	}(_react.Component);
+
+	LoggedInHome.propTypes = {
+		eddis: PropTypes.arrayOf(PropTypes.shape({
+			name: PropTypes.string
+		}))
+	};
+
+	exports.default = LoggedInHome;
 
 /***/ }
 /******/ ]);
