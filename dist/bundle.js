@@ -28509,6 +28509,10 @@
 
 	var _eddis = __webpack_require__(269);
 
+	var _AddEddiForm = __webpack_require__(271);
+
+	var _AddEddiForm2 = _interopRequireDefault(_AddEddiForm);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29143,6 +29147,116 @@
 	};
 
 	exports.default = LoggedInHome;
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var AddEddiForm = function (_Component) {
+		_inherits(AddEddiForm, _Component);
+
+		function AddEddiForm(props) {
+			_classCallCheck(this, AddEddiForm);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiForm).call(this, props));
+
+			_this.state = {
+				eddi: null
+			};
+			return _this;
+		}
+
+		_createClass(AddEddiForm, [{
+			key: 'onIdChange',
+			value: function onIdChange(event) {
+				var eddi = event.target.value;
+				this.setState({ eddi: eddi });
+			}
+		}, {
+			key: 'submitHandler',
+			value: function submitHandler() {
+				var eddi = this.state.eddi;
+				var onSubmit = this.props.onSubmit;
+
+
+				if (onSubmit instanceof Function) return onSubmit(eddi);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var eddi = this.props.eddi;
+
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'form',
+						{ onSubmit: function onSubmit() {
+								return _this2.submitHandler();
+							} },
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement(
+									'label',
+									{ htmlFor: 'id' },
+									'Eddi Id : '
+								),
+								_react2.default.createElement('input', { type: 'text',
+									name: 'id',
+									onChange: function onChange(event) {
+										return _this2.onIdChange(event);
+									},
+									value: eddi
+								})
+							),
+							_react2.default.createElement(
+								'button',
+								{ type: 'submit' },
+								'Add'
+							)
+						)
+					)
+				);
+			}
+		}]);
+
+		return AddEddiForm;
+	}(_react.Component);
+
+	AddEddiForm.propTypes = {
+		onSubmit: PropTypes.func
+	};
+
+	exports.default = AddEddiForm;
 
 /***/ }
 /******/ ]);

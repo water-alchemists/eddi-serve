@@ -9,6 +9,8 @@ import {
 	setEddiSalinityThunk
 } from '../actions/eddis';
 
+import AddEddiForm from '../components/AddEddiForm';
+
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.list
