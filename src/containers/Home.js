@@ -8,6 +8,8 @@ import { PATHS } from '../constants';
 import HomeButton from '../components/HomeButton';
 import LoggedOutHome from '../components/LoggedOutHome';
 
+import { getAllEddiByUserThunk } from '../actions/eddis';
+
 function mapStateToProps(state){
 	return {
 		user : state.user,
@@ -17,11 +19,17 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		navigateTo : (pathname, query) => browserHistory.push({ pathname, query })
+		navigateTo : (pathname, query) => browserHistory.push({ pathname, query }),
+		getEddisByUser : () => dispatch(getAllEddiByUserThunk())
 	};
 }
 
 class Home extends Component {
+	componentWillReceiveProps(nextProps){
+		const { user, getEddisByUser } = this.props;
+		if(nextProps.user !== user) return getEddisByUser();
+	}
+
 	clickHandler(destination, query){
 		const { navigateTo } = this.props;
 		navigateTo(destination, query);
@@ -39,7 +47,7 @@ class Home extends Component {
 			LoggedOutElement = <LoggedOutHome />,
 			LoggedInElement = <HomeButton name={'Hello'} />,
 			showHome = user.name ? LoggedInElement : LoggedOutElement;
-		console.log('at home', this.props);
+
 		return (
 			<div>
 				{showHome}

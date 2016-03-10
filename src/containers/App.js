@@ -9,7 +9,6 @@ import { userLogout, userLoginWithTokenThunk } from '../actions/user';
 function mapStateToProps(state){
 	return {
 		user : state.user,
-		eddi : state.eddis.selected
 	};
 }
 
@@ -42,12 +41,12 @@ class App extends Component {
 			additionalProps = {
 				toggleMenu : isOpen => this._toggleMenu(isOpen)
 			};
-		console.log('this is the children', children);
+
 		return React.Children.map(children, child => React.cloneElement(child, additionalProps));
 	}
 
 	render(){
-		const { user, eddi, logout } = this.props,
+		const { user, logout } = this.props,
 			{ isOpen } = this.state,
 			children = this._cloneChildrenWithToggle();
 		return (

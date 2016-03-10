@@ -37,7 +37,7 @@ class EddiFire {
 
 	authWithToken(token){
 		return new Promise((resolve, reject) => {
-			this.refs.BASE.auth(token, (error, user) => {
+			this.refs.BASE.authWithCustomToken(token, (error, user) => {
 				if(error) return reject(error);
 				resolve(user);
 			});
@@ -114,11 +114,10 @@ class EddiFire {
 				.child(PATHS.USER_PATH)
 				.equalTo(userId)
 				.once('value', data => {
-					const eddiList = data.val();
-					if(!eddiList) return reject(new Error('There is no list of eddis for this user.'));
-					eddiIdList = Object.keys(eddiList).map(key => {
-						return eddiList[key];
-					});
+					const eddiList = data.val() || [],
+						eddiIdList = Object.keys(eddiList).map(key => {
+							return eddiList[key];
+						});
 					resolve(eddiIdList);
 				});
 		});

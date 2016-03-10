@@ -26883,8 +26883,7 @@
 
 	function mapStateToProps(state) {
 		return {
-			user: state.user,
-			eddi: state.eddis.selected
+			user: state.user
 		};
 	}
 
@@ -26936,7 +26935,7 @@
 						return _this2._toggleMenu(isOpen);
 					}
 				};
-				console.log('this is the children', children);
+
 				return _react2.default.Children.map(children, function (child) {
 					return _react2.default.cloneElement(child, additionalProps);
 				});
@@ -26946,7 +26945,6 @@
 			value: function render() {
 				var _props = this.props;
 				var user = _props.user;
-				var eddi = _props.eddi;
 				var logout = _props.logout;
 				var isOpen = this.state.isOpen;
 				var children = this._cloneChildrenWithToggle();
@@ -27232,7 +27230,6 @@
 				//gets the user profile
 				return EddiFire.getUserProfile(uid).then(function (userProfile) {
 					dispatch(userGetProfile(userProfile));
-					console.log('PATHs', _constants.PATHS.HOME);
 					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
 				});
 			}).catch(function (err) {
@@ -27257,10 +27254,8 @@
 			}).catch(function (err) {
 				var code = err.code;
 
-				console.log('this is the code', code);
 				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
-				console.log('this is the code', code);
-				// dispatch(userLoginError(err))
+				dispatch(userLoginError(err));
 			});
 		};
 	}
@@ -27344,7 +27339,7 @@
 				var _this2 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this2.refs.BASE.auth(token, function (error, user) {
+					_this2.refs.BASE.authWithCustomToken(token, function (error, user) {
 						if (error) return reject(error);
 						resolve(user);
 					});
@@ -27428,9 +27423,8 @@
 
 				return new Promise(function (resolve, reject) {
 					_this8.refs.EDDI.child(PATHS.USER_PATH).equalTo(userId).once('value', function (data) {
-						var eddiList = data.val();
-						if (!eddiList) return reject(new Error('There is no list of eddis for this user.'));
-						eddiIdList = Object.keys(eddiList).map(function (key) {
+						var eddiList = data.val() || [],
+						    eddiIdList = Object.keys(eddiList).map(function (key) {
 							return eddiList[key];
 						});
 						resolve(eddiIdList);
@@ -27895,6 +27889,8 @@
 
 	var _LoggedOutHome2 = _interopRequireDefault(_LoggedOutHome);
 
+	var _eddis = __webpack_require__(269);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27914,6 +27910,9 @@
 		return {
 			navigateTo: function navigateTo(pathname, query) {
 				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
+			},
+			getEddisByUser: function getEddisByUser() {
+				return dispatch((0, _eddis.getAllEddiByUserThunk)());
 			}
 		};
 	}
@@ -27928,6 +27927,15 @@
 		}
 
 		_createClass(Home, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var _props = this.props;
+				var user = _props.user;
+				var getEddisByUser = _props.getEddisByUser;
+
+				if (nextProps.user !== user) return getEddisByUser();
+			}
+		}, {
 			key: 'clickHandler',
 			value: function clickHandler(destination, query) {
 				var navigateTo = this.props.navigateTo;
@@ -27948,7 +27956,7 @@
 				var LoggedOutElement = _react2.default.createElement(_LoggedOutHome2.default, null);
 				var LoggedInElement = _react2.default.createElement(_HomeButton2.default, { name: 'Hello' });
 				var showHome = user.name ? LoggedInElement : LoggedOutElement;
-				console.log('at home', this.props);
+
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -28840,6 +28848,90 @@
 	}(_react.Component);
 
 	exports.default = LoggedOutHome;
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
+
+	var _eddiFirebase = __webpack_require__(254);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EddiFire = (0, _eddiFirebase2.default)();
+
+	function getAllEddiSuccess(list) {
+		return {
+			type: _constants.EDDI_GETALL_SUCCESS,
+			list: list
+		};
+	}
+
+	function getAllEddiError(error) {
+		return {
+			type: _constants.EDDI_GETALL_ERROR,
+			error: error
+		};
+	}
+
+	function updateEddiSuccess() {
+		return {
+			type: _constants.EDDI_UPDATE_SUCCESS
+		};
+	}
+
+	function updateEddiError(error) {
+		return {
+			type: _constants.EDDI_UPDATE_ERROR,
+			error: error
+		};
+	}
+
+	function getOneEddiSuccess(selected) {
+		return {
+			type: _constants.EDDI_GETONE_SUCCESS,
+			selected: selected
+		};
+	}
+
+	function getOneEddiError(error) {
+		return {
+			type: _constants.EDDI_GETONE_ERROR,
+			error: error
+		};
+	}
+
+	function selectEddi(selected) {
+		return {
+			type: _constants.EDDI_SELECT,
+			selected: selected
+		};
+	}
+
+	function getAllEddiByUserThunk() {
+		return function (dispatch) {
+			return EddiFire.isAuthenticated().then(function (_ref) {
+				var uid = _ref.uid;
+				return EddiFire.getAllEddiByUser(uid);
+			}).then(function (eddis) {
+				return console.log('these are all the eddis');
+			}).catch(function (err) {
+				return dispatch(getAllEddiError(err));
+			});
+		};
+	}
 
 /***/ }
 /******/ ]);

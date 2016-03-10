@@ -99,7 +99,6 @@ export function userLoginWithPasswordThunk(email, password){
 				return EddiFire.getUserProfile(uid)
 					.then(userProfile => {
 						dispatch(userGetProfile(userProfile));
-						console.log('PATHs', PATHS.HOME);
 						browserHistory.push(PATHS.HOME);
 					});
 			})
@@ -123,10 +122,8 @@ export function userLoginWithTokenThunk(){
 			})
 			.catch(err => {
 				const { code } = err;
-				console.log('this is the code', code);
 				if(code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
-				console.log('this is the code', code);
-				// dispatch(userLoginError(err))
+				dispatch(userLoginError(err))
 			});
 		
 	}

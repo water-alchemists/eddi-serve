@@ -63,3 +63,12 @@ function selectEddi(selected){
 	};
 }
 
+export function getAllEddiByUserThunk(){
+	return dispatch => {
+		return EddiFire.isAuthenticated()
+			.then(({ uid }) => EddiFire.getAllEddiByUser(uid))
+			.then(eddis => console.log('these are all the eddis'))
+			.catch(err => dispatch(getAllEddiError(err)));
+	}
+}
+
