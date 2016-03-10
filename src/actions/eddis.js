@@ -29,6 +29,13 @@ function getAllEddiError(error){
 	};
 }
 
+function assignEddiError(error){
+	return {
+		type : EDDI_GETALL_ERROR,
+		error
+	};
+}
+
 function updateEddiSuccess(){
 	return {
 		type : EDDI_UPDATE_SUCCESS
@@ -71,4 +78,18 @@ export function getAllEddiByUserThunk(){
 			.catch(err => dispatch(getAllEddiError(err)));
 	}
 }
+
+export function assignEddiThunk(eddiId){
+	return dispatch => {
+		return EddiFire.isAuthenticated()
+			.then(({ uid }) => {
+				return EddiFire.assignEddiToUser(uid, eddiId)
+					.then(() => EddiFire.getAllEddiByUser(uid));
+			})
+			.then(eddis => console.log('these are all the eddis', eddis))
+			.catch(err => dispatch(assignEddiError(err)))
+	}
+}
+
+
 

@@ -28509,12 +28509,25 @@
 
 	function mapStateToProps(state) {
 		return {
-			eddi: state.eddis.eddi
+			eddi: state.eddis.list
 		};
 	}
 
 	function mapDispatchToProps(dispatch) {
-		return {};
+		return {
+			addEddi: function addEddi(eddiId) {
+				return dispatch();
+			},
+			updateStart: function updateStart(time) {
+				return dispatch();
+			},
+			updateEnd: function updateEnd(time) {
+				return dispatch();
+			},
+			updateSalinity: function updateSalinity(salinity) {
+				return dispatch();
+			}
+		};
 	}
 
 	var Settings = function (_Component) {
@@ -28531,11 +28544,7 @@
 			value: function render() {
 				var eddi = this.props.eddi;
 
-				return _react2.default.createElement(
-					'div',
-					null,
-					'This is the settings page.'
-				);
+				return _react2.default.createElement('div', null);
 			}
 		}]);
 
@@ -28859,6 +28868,7 @@
 		value: true
 	});
 	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
+	exports.assignEddiThunk = assignEddiThunk;
 
 	var _eddiFirebase = __webpack_require__(254);
 
@@ -28880,6 +28890,13 @@
 	}
 
 	function getAllEddiError(error) {
+		return {
+			type: _constants.EDDI_GETALL_ERROR,
+			error: error
+		};
+	}
+
+	function assignEddiError(error) {
 		return {
 			type: _constants.EDDI_GETALL_ERROR,
 			error: error
@@ -28929,6 +28946,22 @@
 				return console.log('these are all the eddis', eddis);
 			}).catch(function (err) {
 				return dispatch(getAllEddiError(err));
+			});
+		};
+	}
+
+	function assignEddiThunk(eddiId) {
+		return function (dispatch) {
+			return EddiFire.isAuthenticated().then(function (_ref2) {
+				var uid = _ref2.uid;
+
+				return EddiFire.assignEddiToUser(uid, eddiId).then(function () {
+					return EddiFire.getAllEddiByUser(uid);
+				});
+			}).then(function (eddis) {
+				return console.log('these are all the eddis', eddis);
+			}).catch(function (err) {
+				return dispatch(assignEddiError(err));
 			});
 		};
 	}

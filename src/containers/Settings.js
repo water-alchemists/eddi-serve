@@ -4,12 +4,16 @@ import { connect } from 'react-redux';
 
 function mapStateToProps(state){
 	return {
-		eddi : state.eddis.eddi
+		eddi : state.eddis.list
 	};
 }
 
 function mapDispatchToProps(dispatch){
 	return {
+		addEddi : eddiId => dispatch(),
+		updateStart : time => dispatch(),
+		updateEnd : time => dispatch(),
+		updateSalinity : salinity => dispatch()
 	};
 }
 
@@ -18,7 +22,7 @@ class Settings extends Component {
 		const { eddi } = this.props;
 		return (
 			<div>
-				{'This is the settings page.'}
+				
 			</div>
 		);
 	}
