@@ -91,5 +91,21 @@ export function assignEddiThunk(eddiId){
 	}
 }
 
+export function setEddiStartThunk(eddiId, hour, minutes){
+	return dispatch => {
+		if((!typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
+	}
+}
 
+export function setEddiEndThunk(eddiId, hour, minutes){
+	return dispatch => {
+		if(!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
+	}
+}
+
+export function setEddiSalinityThunk(eddiId, salinity){
+	return dispatch => {
+		if(typeof salinity === 'number') throw new Error(`Salinity must be a number.`)
+	}
+}
 

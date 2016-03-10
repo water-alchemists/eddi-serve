@@ -27303,9 +27303,11 @@
 		PIN_PATH: 'pins',
 		SETTINGS_PATH: 'settings',
 		SALINITY_PATH: 'salinity',
-		SCHEDULE_PATH: 'schedule',
-		START_SCHEDULE_TIME: 'start',
-		END_SCHEDULE_TIME: 'end',
+		TIMING_PATH: 'timing',
+		START_TIME: 'start',
+		END_TIME: 'end',
+		HOUR: 'hour',
+		MINUTE: 'minute',
 		TESTEDDI_PATH: 'test-eddi'
 	};
 
@@ -27481,17 +27483,23 @@
 				});
 			}
 		}, {
-			key: 'setSalinityLevel',
-			value: function setSalinityLevel(eddiId, salinityLevel) {
+			key: 'setSalinity',
+			value: function setSalinity(eddiId, salinity) {
 				var _this13 = this;
 
 				return isEddiOwner(eddiId).then(function () {
-					_this13.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinityLevel, function (error) {
+					_this13.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinity, function (error) {
 						if (error) return reject(error);
 						resolve();
 					});
 				});
 			}
+		}, {
+			key: 'setStartTime',
+			value: function setStartTime(eddiId, hours, minutes) {}
+		}, {
+			key: 'setEndTime',
+			value: function setEndTime(eddiId, hours, minutes) {}
 		}]);
 
 		return EddiFire;
@@ -28499,6 +28507,8 @@
 
 	var _reactRedux = __webpack_require__(169);
 
+	var _eddis = __webpack_require__(269);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28515,17 +28525,17 @@
 
 	function mapDispatchToProps(dispatch) {
 		return {
-			addEddi: function addEddi(eddiId) {
-				return dispatch();
+			assignEddi: function assignEddi(eddiId) {
+				return dispatch((0, _eddis.assignEddiThunk)(eddiId));
 			},
-			updateStart: function updateStart(time) {
-				return dispatch();
+			updateStart: function updateStart(eddiId, hour, minutes) {
+				return dispatch((0, _eddis.setEddiStartThunk)(eddiId, hour, minutes));
 			},
-			updateEnd: function updateEnd(time) {
-				return dispatch();
+			updateEnd: function updateEnd(eddiId, hour, minutes) {
+				return dispatch((0, _eddis.setEddiEndThunk)(eddiId, hour, minutes));
 			},
-			updateSalinity: function updateSalinity(salinity) {
-				return dispatch();
+			updateSalinity: function updateSalinity(eddiId, salinity) {
+				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
 			}
 		};
 	}
@@ -28867,8 +28877,14 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
 	exports.assignEddiThunk = assignEddiThunk;
+	exports.setEddiStartThunk = setEddiStartThunk;
+	exports.setEddiEndThunk = setEddiEndThunk;
+	exports.setEddiSalinityThunk = setEddiSalinityThunk;
 
 	var _eddiFirebase = __webpack_require__(254);
 
@@ -28963,6 +28979,24 @@
 			}).catch(function (err) {
 				return dispatch(assignEddiError(err));
 			});
+		};
+	}
+
+	function setEddiStartThunk(eddiId, hour, minutes) {
+		return function (dispatch) {
+			if (!(typeof hour === 'undefined' ? 'undefined' : _typeof(hour)) === 'number' || typeof minutes === 'number') throw new Error('Hour and minutes must be numbers.');
+		};
+	}
+
+	function setEddiEndThunk(eddiId, hour, minutes) {
+		return function (dispatch) {
+			if (!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error('Hour and minutes must be numbers.');
+		};
+	}
+
+	function setEddiSalinityThunk(eddiId, salinity) {
+		return function (dispatch) {
+			if (typeof salinity === 'number') throw new Error('Salinity must be a number.');
 		};
 	}
 

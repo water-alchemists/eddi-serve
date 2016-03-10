@@ -2,6 +2,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import {
+	assignEddiThunk,
+	setEddiStartThunk,
+	setEddiEndThunk,
+	setEddiSalinityThunk
+} from '../actions/eddis';
+
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.list
@@ -10,10 +17,10 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		addEddi : eddiId => dispatch(),
-		updateStart : time => dispatch(),
-		updateEnd : time => dispatch(),
-		updateSalinity : salinity => dispatch()
+		assignEddi : eddiId => dispatch(assignEddiThunk(eddiId)),
+		updateStart : (eddiId, hour, minutes) => dispatch(setEddiStartThunk(eddiId, hour, minutes)),
+		updateEnd : (eddiId, hour, minutes) => dispatch(setEddiEndThunk(eddiId, hour, minutes)),
+		updateSalinity : (eddiId, salinity) => dispatch(setEddiSalinityThunk(eddiId, salinity))
 	};
 }
 

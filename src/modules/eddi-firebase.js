@@ -10,9 +10,11 @@ const PATHS = {
 	PIN_PATH : 'pins',
 	SETTINGS_PATH : 'settings',
 	SALINITY_PATH : 'salinity',
-	SCHEDULE_PATH : 'schedule',
-	START_SCHEDULE_TIME : 'start',
-	END_SCHEDULE_TIME : 'end',
+	TIMING_PATH : 'timing',
+	START_TIME : 'start',
+	END_TIME : 'end',
+	HOUR : 'hour',
+	MINUTE : 'minute',
 	TESTEDDI_PATH : 'test-eddi'
 };
 
@@ -175,20 +177,28 @@ class EddiFire {
 			});
 	}
 
-	setSalinityLevel(eddiId, salinityLevel){
+	setSalinity(eddiId, salinity){
 		return isEddiOwner(eddiId)
 			.then(() => {
 				this.refs.EDDI.child(eddiId)
 						.child(PATHS.SETTINGS_PATH)
 						.child(PATHS.SALINITY_PATH)
 						.set(
-							salinityLevel, 
+							salinity, 
 							error => {
 								if(error) return reject(error);
 								resolve();
 							}
 						);
 			});
+	}
+
+	setStartTime(eddiId, hours, minutes){
+
+	}
+
+	setEndTime(eddiId, hours, minutes){
+		
 	}
 
 }
