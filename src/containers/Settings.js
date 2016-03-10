@@ -25,13 +25,29 @@ function mapDispatchToProps(dispatch){
 }
 
 class Settings extends Component {
+	clickAddHandler(){
+		const { assignEddi } = this.props;
+	}
+
 	render(){
 		const { eddi } = this.props;
 		return (
 			<div>
-				
+				<div style={styles.addButton}>
+					<p>add new</p>
+					<p>+</p>
+				</div>
 			</div>
 		);
+	}
+}
+
+const styles = {
+	addButton : {
+		display : 'flex',
+		flexDirection : 'row',
+		justifyContent : 'space-between',
+		alignItems : 'center'
 	}
 }
 

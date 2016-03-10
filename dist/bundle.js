@@ -28550,16 +28550,47 @@
 		}
 
 		_createClass(Settings, [{
+			key: 'clickAddHandler',
+			value: function clickAddHandler() {
+				var assignEddi = this.props.assignEddi;
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var eddi = this.props.eddi;
 
-				return _react2.default.createElement('div', null);
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: styles.addButton },
+						_react2.default.createElement(
+							'p',
+							null,
+							'add new'
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'+'
+						)
+					)
+				);
 			}
 		}]);
 
 		return Settings;
 	}(_react.Component);
+
+	var styles = {
+		addButton: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center'
+		}
+	};
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
 
