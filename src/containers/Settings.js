@@ -9,6 +9,8 @@ import {
 	setEddiSalinityThunk
 } from '../actions/eddis';
 
+import { modalShow } from '../actions/modal';
+
 import AddEddiForm from '../components/AddEddiForm';
 
 function mapStateToProps(state){
@@ -22,21 +24,24 @@ function mapDispatchToProps(dispatch){
 		assignEddi : eddiId => dispatch(assignEddiThunk(eddiId)),
 		updateStart : (eddiId, hour, minutes) => dispatch(setEddiStartThunk(eddiId, hour, minutes)),
 		updateEnd : (eddiId, hour, minutes) => dispatch(setEddiEndThunk(eddiId, hour, minutes)),
-		updateSalinity : (eddiId, salinity) => dispatch(setEddiSalinityThunk(eddiId, salinity))
+		updateSalinity : (eddiId, salinity) => dispatch(setEddiSalinityThunk(eddiId, salinity)),
+		openAddForm : () => dispatch(modalShow('AddEddiForm'))
 	};
 }
 
 class Settings extends Component {
 	clickAddHandler(){
-		const { assignEddi } = this.props;
+		const { openAddForm } = this.props;
+		console.log('this ')
+		openAddForm();
 	}
 
 	render(){
 		const { eddi } = this.props;
 		return (
 			<div>
-				<div style={styles.addButton}>
-					<p>add new</p>
+				<div style={styles.addButton} onClick={() => this.clickAddHandler()}>
+					<p>add new</p>	
 					<p>+</p>
 				</div>
 			</div>

@@ -68,13 +68,13 @@
 
 	var reducers = _interopRequireWildcard(_reducers);
 
-	var _middlewares = __webpack_require__(246);
+	var _middlewares = __webpack_require__(247);
 
 	var _middlewares2 = _interopRequireDefault(_middlewares);
 
 	var _constants = __webpack_require__(244);
 
-	var _containers = __webpack_require__(250);
+	var _containers = __webpack_require__(251);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -26563,7 +26563,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.eddis = exports.user = undefined;
+	exports.modal = exports.eddis = exports.user = undefined;
 
 	var _user2 = __webpack_require__(243);
 
@@ -26573,10 +26573,15 @@
 
 	var _eddis3 = _interopRequireDefault(_eddis2);
 
+	var _modal2 = __webpack_require__(246);
+
+	var _modal3 = _interopRequireDefault(_modal2);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.user = _user3.default;
 	exports.eddis = _eddis3.default;
+	exports.modal = _modal3.default;
 
 /***/ },
 /* 243 */
@@ -26712,15 +26717,59 @@
 		value: true
 	});
 
-	var _thunk = __webpack_require__(247);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.default = function () {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+		var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+		var type = action.type;
+		var component = action.component;
+		var _action$props = action.props;
+		var props = _action$props === undefined ? {} : _action$props;
+
+		switch (type) {
+			case _constants.MODAL_ON:
+				return _extends({}, state, {
+					on: true,
+					props: _extends({}, props),
+					component: component
+				});
+			case _constants.MODAL_OFF:
+				return _extends({}, state, {
+					on: false
+				});
+			default:
+				return state;
+		}
+	};
+
+	var _constants = __webpack_require__(244);
+
+	var initialState = {
+		on: false,
+		component: '',
+		props: ''
+	};
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _thunk = __webpack_require__(248);
 
 	var _thunk2 = _interopRequireDefault(_thunk);
 
-	var _logger = __webpack_require__(248);
+	var _logger = __webpack_require__(249);
 
 	var _logger2 = _interopRequireDefault(_logger);
 
-	var _error = __webpack_require__(249);
+	var _error = __webpack_require__(250);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -26729,7 +26778,7 @@
 	exports.default = [_logger2.default, _thunk2.default, _error2.default];
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26751,7 +26800,7 @@
 	exports.default = thunkMiddleware;
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26776,7 +26825,7 @@
 	exports.default = logger;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26800,7 +26849,7 @@
 	exports.default = errorHandle;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26810,35 +26859,35 @@
 	});
 	exports.Report = exports.Troubleshoot = exports.Settings = exports.Dashboard = exports.Signup = exports.Login = exports.Home = exports.App = undefined;
 
-	var _App2 = __webpack_require__(251);
+	var _App2 = __webpack_require__(252);
 
 	var _App3 = _interopRequireDefault(_App2);
 
-	var _Home2 = __webpack_require__(257);
+	var _Home2 = __webpack_require__(253);
 
 	var _Home3 = _interopRequireDefault(_Home2);
 
-	var _Login2 = __webpack_require__(258);
+	var _Login2 = __webpack_require__(260);
 
 	var _Login3 = _interopRequireDefault(_Login2);
 
-	var _Signup2 = __webpack_require__(260);
+	var _Signup2 = __webpack_require__(264);
 
 	var _Signup3 = _interopRequireDefault(_Signup2);
 
-	var _Dashboard2 = __webpack_require__(262);
+	var _Dashboard2 = __webpack_require__(266);
 
 	var _Dashboard3 = _interopRequireDefault(_Dashboard2);
 
-	var _Settings2 = __webpack_require__(263);
+	var _Settings2 = __webpack_require__(267);
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(264);
+	var _Troubleshoot2 = __webpack_require__(269);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(265);
+	var _Report2 = __webpack_require__(270);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -26854,7 +26903,7 @@
 	exports.Report = _Report3.default;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26871,11 +26920,17 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _Menu = __webpack_require__(252);
+	var _reactModal = __webpack_require__(271);
+
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+
+	var _Menu = __webpack_require__(291);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
-	var _user = __webpack_require__(253);
+	var _user = __webpack_require__(261);
+
+	var _modal = __webpack_require__(292);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26887,7 +26942,8 @@
 
 	function mapStateToProps(state) {
 		return {
-			user: state.user
+			user: state.user,
+			modal: state.modal
 		};
 	}
 
@@ -26898,6 +26954,9 @@
 			},
 			logout: function logout() {
 				return dispatch((0, _user.userLogout)());
+			},
+			modalHide: function modalHide() {
+				return dispatch((0, _modal.modalHide)());
 			}
 		};
 	}
@@ -26945,13 +27004,39 @@
 				});
 			}
 		}, {
+			key: '_renderModal',
+			value: function _renderModal() {
+				var _props = this.props;
+				var modal = _props.modal;
+				var modalHide = _props.modalHide;
+				var on = modal.on;
+				var props = modal.props;
+				var component = modal.component;
+				var closeModal = function closeModal() {
+					return modalHide();
+				};
+				if (!on) return null;
+				return _react2.default.createElement(
+					_reactModal2.default,
+					{ isOpen: on },
+					_react2.default.createElement(
+						'div',
+						{ onClick: function onClick() {
+								return closeModal();
+							} },
+						'hello'
+					)
+				);
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var _props = this.props;
-				var user = _props.user;
-				var logout = _props.logout;
+				var _props2 = this.props;
+				var user = _props2.user;
+				var logout = _props2.logout;
 				var isOpen = this.state.isOpen;
 				var children = this._cloneChildrenWithToggle();
+				var ModalElement = this._renderModal();
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -26963,7 +27048,8 @@
 						'div',
 						{ style: { marginTop: '1.5em' } },
 						children
-					)
+					),
+					ModalElement
 				);
 			}
 		}]);
@@ -26974,7 +27060,296 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 /***/ },
-/* 252 */
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	var _HomeButton = __webpack_require__(254);
+
+	var _HomeButton2 = _interopRequireDefault(_HomeButton);
+
+	var _LoggedOutHome = __webpack_require__(255);
+
+	var _LoggedOutHome2 = _interopRequireDefault(_LoggedOutHome);
+
+	var _LoggedInHome = __webpack_require__(256);
+
+	var _LoggedInHome2 = _interopRequireDefault(_LoggedInHome);
+
+	var _eddis = __webpack_require__(257);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user,
+			eddis: state.eddis.list
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			navigateTo: function navigateTo(pathname, query) {
+				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
+			},
+			getEddisByUser: function getEddisByUser() {
+				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			}
+		};
+	}
+
+	var Home = function (_Component) {
+		_inherits(Home, _Component);
+
+		function Home() {
+			_classCallCheck(this, Home);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
+		}
+
+		_createClass(Home, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var _props = this.props;
+				var user = _props.user;
+				var getEddisByUser = _props.getEddisByUser;
+
+				if (nextProps.user !== user) return getEddisByUser();
+			}
+		}, {
+			key: 'clickHandler',
+			value: function clickHandler(destination, query) {
+				var navigateTo = this.props.navigateTo;
+
+				navigateTo(destination, query);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _props2 = this.props;
+				var user = _props2.user;
+				var eddis = _props2.eddis;
+				var email = user.email;
+				var LoggedOutElement = _react2.default.createElement(_LoggedOutHome2.default, null);
+				var LoggedInElement = _react2.default.createElement(_LoggedInHome2.default, { eddis: eddis });
+				var showHome = email ? LoggedInElement : LoggedOutElement;
+				console.log('these are teh eddis', eddis);
+				return _react2.default.createElement(
+					'div',
+					null,
+					showHome
+				);
+			}
+		}]);
+
+		return Home;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var HomeButton = function (_Component) {
+		_inherits(HomeButton, _Component);
+
+		function HomeButton() {
+			_classCallCheck(this, HomeButton);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(HomeButton).apply(this, arguments));
+		}
+
+		_createClass(HomeButton, [{
+			key: 'clickHandler',
+			value: function clickHandler() {
+				var onClick = this.props.onClick;
+
+				if (onClick instanceof Function) return onClick();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _props = this.props;
+				var name = _props.name;
+				var image = _props.image;
+				var Image = _react2.default.createElement(
+					'div',
+					{ style: styles.textCenter },
+					image
+				);
+				var showImage = image ? Image : null;
+
+				return _react2.default.createElement(
+					'div',
+					{ onClick: function onClick() {
+							return _this2.clickHandler();
+						} },
+					showImage,
+					_react2.default.createElement(
+						'div',
+						{ style: styles.bottomLine },
+						_react2.default.createElement(
+							'p',
+							null,
+							name
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'>'
+						)
+					)
+				);
+			}
+		}]);
+
+		return HomeButton;
+	}(_react.Component);
+
+	HomeButton.propTypes = {
+		name: PropTypes.string.isRequired,
+		image: PropTypes.string,
+		onClick: PropTypes.func
+	};
+
+	var styles = {
+		textCenter: {
+			textAlign: 'center'
+		},
+		bottomLine: {
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'space-between'
+		}
+	};
+
+	exports.default = HomeButton;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _HomeButton = __webpack_require__(254);
+
+	var _HomeButton2 = _interopRequireDefault(_HomeButton);
+
+	var _constants = __webpack_require__(244);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var LoggedOutHome = function (_Component) {
+		_inherits(LoggedOutHome, _Component);
+
+		function LoggedOutHome() {
+			_classCallCheck(this, LoggedOutHome);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(LoggedOutHome).apply(this, arguments));
+		}
+
+		_createClass(LoggedOutHome, [{
+			key: 'navigateTo',
+			value: function navigateTo(key) {
+				var destination = _constants.PATHS[key];
+				if (destination) return _reactRouter.browserHistory.push(destination);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_HomeButton2.default, { onClick: function onClick() {
+							return _this2.navigateTo('LOGIN');
+						},
+						name: 'Login'
+					}),
+					_react2.default.createElement(_HomeButton2.default, { onClick: function onClick() {
+							return _this2.navigateTo('SIGNUP');
+						},
+						name: 'Signup'
+					})
+				);
+			}
+		}]);
+
+		return LoggedOutHome;
+	}(_react.Component);
+
+	exports.default = LoggedOutHome;
+
+/***/ },
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27003,123 +27378,91 @@
 
 	var PropTypes = _react2.default.PropTypes;
 
-	var Menu = function (_Component) {
-		_inherits(Menu, _Component);
+	var LoggedInHome = function (_Component) {
+		_inherits(LoggedInHome, _Component);
 
-		function Menu() {
-			_classCallCheck(this, Menu);
+		function LoggedInHome() {
+			_classCallCheck(this, LoggedInHome);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Menu).apply(this, arguments));
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(LoggedInHome).apply(this, arguments));
 		}
 
-		_createClass(Menu, [{
-			key: '_renderLoggedIn',
-			value: function _renderLoggedIn() {
+		_createClass(LoggedInHome, [{
+			key: 'navigateTo',
+			value: function navigateTo(key) {
+				var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+				var pathname = _constants.PATHS[key],
+				    destination = {
+					pathname: pathname,
+					query: query
+				};
+
+				if (pathname) return _reactRouter.browserHistory.push(destination);
+			}
+		}, {
+			key: '_renderEddiButtons',
+			value: function _renderEddiButtons() {
+				var eddis = this.props.eddis;
+
+				if (eddis) {
+					return eddis.map(function (eddi) {
+						var name = eddi.name;
+						return _react2.default.createElement(
+							'div',
+							null,
+							name
+						);
+					});
+				}
+			}
+		}, {
+			key: '_renderNoEddis',
+			value: function _renderNoEddis() {
 				var _this2 = this;
 
 				return _react2.default.createElement(
-					'header',
-					{ className: 'navbar' },
-					'Links:',
-					' ',
+					'p',
+					null,
+					'Currently you are not tracking any eddis. Click ',
 					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.HOME },
-						'Home'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.DASHBOARD },
-						'Dashboard'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.REPORT },
-						'Report'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.SETTINGS },
-						'Settings'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.TROUBLESHOOT },
-						'Troubleshoot'
-					),
-					' ',
-					_react2.default.createElement(
-						'span',
+						'a',
 						{ onClick: function onClick() {
-								return _this2.logoutHandler();
+								return _this2.navigateTo('SETTINGS');
 							} },
-						'Logout'
-					)
-				);
-			}
-		}, {
-			key: '_renderLoggedOut',
-			value: function _renderLoggedOut() {
-				return _react2.default.createElement(
-					'header',
-					{ className: 'navbar' },
-					'Links:',
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.HOME },
-						'Home'
+						'here'
 					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.LOGIN },
-						'Login'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.SIGNUP },
-						'Signup'
-					)
+					' to start tracking one.'
 				);
-			}
-		}, {
-			key: 'logoutHandler',
-			value: function logoutHandler() {
-				var logout = this.props.logout;
-
-				if (logout instanceof Function) logout();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var user = this.props.user;
-				var isLoggedIn = !!user.email;
-
-				if (isLoggedIn) return this._renderLoggedIn();else return this._renderLoggedOut();
+				var eddis = this.props.eddis;
+				var NoEddiElement = this._renderNoEddis();
+				var EddiButtons = this._renderEddiButtons();
+				var showEddi = eddis && eddis.length ? EddiButtons : NoEddiElement;
+				return _react2.default.createElement(
+					'div',
+					null,
+					showEddi
+				);
 			}
 		}]);
 
-		return Menu;
+		return LoggedInHome;
 	}(_react.Component);
 
-	Menu.propTypes = {
-		isOpen: PropTypes.bool.isRequired,
-		logout: PropTypes.func.isRequired,
-		user: PropTypes.shape({
-			email: PropTypes.string
-		})
+	LoggedInHome.propTypes = {
+		eddis: PropTypes.arrayOf(PropTypes.shape({
+			name: PropTypes.string
+		}))
 	};
 
-	exports.default = Menu;
+	exports.default = LoggedInHome;
 
 /***/ },
-/* 253 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27127,20 +27470,18 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.userLogoutSuccess = userLogoutSuccess;
-	exports.userGetProfile = userGetProfile;
-	exports.userCreateThunk = userCreateThunk;
-	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
-	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
-	exports.userLogout = userLogout;
 
-	var _eddiFirebase = __webpack_require__(254);
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
+	exports.assignEddiThunk = assignEddiThunk;
+	exports.setEddiStartThunk = setEddiStartThunk;
+	exports.setEddiEndThunk = setEddiEndThunk;
+	exports.setEddiSalinityThunk = setEddiSalinityThunk;
+
+	var _eddiFirebase = __webpack_require__(258);
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
-
-	var _cookieStore = __webpack_require__(256);
-
-	var _cookieStore2 = _interopRequireDefault(_cookieStore);
 
 	var _reactRouter = __webpack_require__(180);
 
@@ -27148,134 +27489,112 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var EddiFire = (0, _eddiFirebase2.default)(),
-	    EddiCookie = (0, _cookieStore2.default)();
+	var EddiFire = (0, _eddiFirebase2.default)();
 
-	function userLoginSuccess(user) {
+	function getAllEddiSuccess(list) {
 		return {
-			type: _constants.USER_LOGIN_SUCCESS,
-			user: user
+			type: _constants.EDDI_GETALL_SUCCESS,
+			list: list
 		};
 	}
 
-	function userLoginError(error) {
+	function getAllEddiError(error) {
 		return {
-			export: _constants.USER_LOGIN_ERROR,
+			type: _constants.EDDI_GETALL_ERROR,
 			error: error
 		};
 	}
 
-	function userLogoutSuccess() {
+	function assignEddiError(error) {
 		return {
-			type: _constants.USER_LOGOUT_SUCCESS
-		};
-	}
-
-	function userUpdateSuccess(user) {
-		return {
-			type: _constants.USER_UPDATE_SUCCESS,
-			user: user
-		};
-	}
-
-	function userUpdateError(user) {
-		return {
-			type: _constants.USER_UPDATE_ERROR,
-			user: user
-		};
-	}
-
-	function userGetProfile(user) {
-		return {
-			type: _constants.USER_GETPROFILE_SUCCESS,
-			user: user
-		};
-	}
-
-	function userCreateError(error) {
-		return {
-			type: _constants.USER_CREATE_ERROR,
+			type: _constants.EDDI_GETALL_ERROR,
 			error: error
 		};
 	}
 
-	function userCreateThunk(user) {
+	function updateEddiSuccess() {
+		return {
+			type: _constants.EDDI_UPDATE_SUCCESS
+		};
+	}
 
+	function updateEddiError(error) {
+		return {
+			type: _constants.EDDI_UPDATE_ERROR,
+			error: error
+		};
+	}
+
+	function getOneEddiSuccess(selected) {
+		return {
+			type: _constants.EDDI_GETONE_SUCCESS,
+			selected: selected
+		};
+	}
+
+	function getOneEddiError(error) {
+		return {
+			type: _constants.EDDI_GETONE_ERROR,
+			error: error
+		};
+	}
+
+	function selectEddi(selected) {
+		return {
+			type: _constants.EDDI_SELECT,
+			selected: selected
+		};
+	}
+
+	function getAllEddiByUserThunk() {
 		return function (dispatch) {
-			var email = user.email;
-			var password = user.password;
-
-			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
-				console.log('this is the userSuccess', userSuccess);
-				var id = userSuccess.uid;
-				delete user.password;
-				console.log('created a user', userSuccess);
-				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
-					dispatch(userGetProfile(userProfile));
-					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
-				});
+			return EddiFire.isAuthenticated().then(function (_ref) {
+				var uid = _ref.uid;
+				return EddiFire.getAllEddiByUser(uid);
+			}).then(function (eddis) {
+				return console.log('these are all the eddis', eddis);
 			}).catch(function (err) {
-				return dispatch(userCreateError(err));
+				return dispatch(getAllEddiError(err));
 			});
 		};
 	}
 
-	function userLoginWithPasswordThunk(email, password) {
+	function assignEddiThunk(eddiId) {
 		return function (dispatch) {
-			return EddiFire.authWithPassword(email, password).then(function (user) {
-				var uid = user.uid;
-				var token = user.token;
-				var expires = user.expires;
+			return EddiFire.isAuthenticated().then(function (_ref2) {
+				var uid = _ref2.uid;
 
-				//set the token to cookie
-
-				EddiCookie.setCookie(token, expires);
-
-				//gets the user profile
-				return EddiFire.getUserProfile(uid).then(function (userProfile) {
-					dispatch(userGetProfile(userProfile));
-					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
+				return EddiFire.assignEddiToUser(uid, eddiId).then(function () {
+					return EddiFire.getAllEddiByUser(uid);
 				});
+			}).then(function (eddis) {
+				return console.log('these are all the eddis', eddis);
 			}).catch(function (err) {
-				return dispatch(userLoginError(err));
+				return dispatch(assignEddiError(err));
 			});
 		};
 	}
 
-	function userLoginWithTokenThunk() {
+	function setEddiStartThunk(eddiId, hour, minutes) {
 		return function (dispatch) {
-			var cookie = EddiCookie.getCookie() || {},
-			    token = cookie.token;
-			if (!token) return; //if there is no token, don't do anything
-			return EddiFire.authWithToken(token).then(function (user) {
-				//gets the user profile
-				var uid = user.uid;
-
-
-				return EddiFire.getUserProfile(uid).then(function (userProfile) {
-					return dispatch(userGetProfile(userProfile));
-				});
-			}).catch(function (err) {
-				var code = err.code;
-
-				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
-				dispatch(userLoginError(err));
-			});
+			if (!(typeof hour === 'undefined' ? 'undefined' : _typeof(hour)) === 'number' || typeof minutes === 'number') throw new Error('Hour and minutes must be numbers.');
 		};
 	}
 
-	function userLogout() {
+	function setEddiEndThunk(eddiId, hour, minutes) {
 		return function (dispatch) {
-			EddiFire.unauthenticate();
-			EddiCookie.deleteCookie();
+			if (!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error('Hour and minutes must be numbers.');
+		};
+	}
 
-			//let store know of logout
-			dispatch(userLogoutSuccess());
+	function setEddiSalinityThunk(eddiId, salinity) {
+		return function (dispatch) {
+			if (typeof salinity === 'number') throw new Error('Salinity must be a number.');
 		};
 	}
 
 /***/ },
-/* 254 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27296,7 +27615,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Firebase = __webpack_require__(255);
+	var Firebase = __webpack_require__(259);
 
 	var PATHS = {
 		BASE_PATH: 'https://eddi.firebaseIO.com',
@@ -27510,7 +27829,7 @@
 	}();
 
 /***/ },
-/* 255 */
+/* 259 */
 /***/ function(module, exports) {
 
 	/*! @license Firebase v2.4.1
@@ -27795,7 +28114,244 @@
 
 
 /***/ },
-/* 256 */
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _user = __webpack_require__(261);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	var _LoginForm = __webpack_require__(263);
+
+	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			login: function login(_ref) {
+				var email = _ref.email;
+				var password = _ref.password;
+				return dispatch((0, _user.userLoginWithPasswordThunk)(email, password));
+			}
+		};
+	}
+
+	var Login = function (_Component) {
+		_inherits(Login, _Component);
+
+		function Login() {
+			_classCallCheck(this, Login);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Login).apply(this, arguments));
+		}
+
+		_createClass(Login, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var login = _props.login;
+				var user = _props.user;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_LoginForm2.default, { onSubmit: login })
+				);
+			}
+		}]);
+
+		return Login;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.userLogoutSuccess = userLogoutSuccess;
+	exports.userGetProfile = userGetProfile;
+	exports.userCreateThunk = userCreateThunk;
+	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
+	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
+	exports.userLogout = userLogout;
+
+	var _eddiFirebase = __webpack_require__(258);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	var _cookieStore = __webpack_require__(262);
+
+	var _cookieStore2 = _interopRequireDefault(_cookieStore);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EddiFire = (0, _eddiFirebase2.default)(),
+	    EddiCookie = (0, _cookieStore2.default)();
+
+	function userLoginSuccess(user) {
+		return {
+			type: _constants.USER_LOGIN_SUCCESS,
+			user: user
+		};
+	}
+
+	function userLoginError(error) {
+		return {
+			export: _constants.USER_LOGIN_ERROR,
+			error: error
+		};
+	}
+
+	function userLogoutSuccess() {
+		return {
+			type: _constants.USER_LOGOUT_SUCCESS
+		};
+	}
+
+	function userUpdateSuccess(user) {
+		return {
+			type: _constants.USER_UPDATE_SUCCESS,
+			user: user
+		};
+	}
+
+	function userUpdateError(user) {
+		return {
+			type: _constants.USER_UPDATE_ERROR,
+			user: user
+		};
+	}
+
+	function userGetProfile(user) {
+		return {
+			type: _constants.USER_GETPROFILE_SUCCESS,
+			user: user
+		};
+	}
+
+	function userCreateError(error) {
+		return {
+			type: _constants.USER_CREATE_ERROR,
+			error: error
+		};
+	}
+
+	function userCreateThunk(user) {
+
+		return function (dispatch) {
+			var email = user.email;
+			var password = user.password;
+
+			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
+				console.log('this is the userSuccess', userSuccess);
+				var id = userSuccess.uid;
+				delete user.password;
+				console.log('created a user', userSuccess);
+				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
+				});
+			}).catch(function (err) {
+				return dispatch(userCreateError(err));
+			});
+		};
+	}
+
+	function userLoginWithPasswordThunk(email, password) {
+		return function (dispatch) {
+			return EddiFire.authWithPassword(email, password).then(function (user) {
+				var uid = user.uid;
+				var token = user.token;
+				var expires = user.expires;
+
+				//set the token to cookie
+
+				EddiCookie.setCookie(token, expires);
+
+				//gets the user profile
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
+				});
+			}).catch(function (err) {
+				return dispatch(userLoginError(err));
+			});
+		};
+	}
+
+	function userLoginWithTokenThunk() {
+		return function (dispatch) {
+			var cookie = EddiCookie.getCookie() || {},
+			    token = cookie.token;
+			if (!token) return; //if there is no token, don't do anything
+			return EddiFire.authWithToken(token).then(function (user) {
+				//gets the user profile
+				var uid = user.uid;
+
+
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					return dispatch(userGetProfile(userProfile));
+				});
+			}).catch(function (err) {
+				var code = err.code;
+
+				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
+				dispatch(userLoginError(err));
+			});
+		};
+	}
+
+	function userLogout() {
+		return function (dispatch) {
+			EddiFire.unauthenticate();
+			EddiCookie.deleteCookie();
+
+			//let store know of logout
+			dispatch(userLogoutSuccess());
+		};
+	}
+
+/***/ },
+/* 262 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27872,199 +28428,7 @@
 	;
 
 /***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(169);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _constants = __webpack_require__(244);
-
-	var _HomeButton = __webpack_require__(267);
-
-	var _HomeButton2 = _interopRequireDefault(_HomeButton);
-
-	var _LoggedOutHome = __webpack_require__(268);
-
-	var _LoggedOutHome2 = _interopRequireDefault(_LoggedOutHome);
-
-	var _LoggedInHome = __webpack_require__(270);
-
-	var _LoggedInHome2 = _interopRequireDefault(_LoggedInHome);
-
-	var _eddis = __webpack_require__(269);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			user: state.user,
-			eddis: state.eddis.list
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			navigateTo: function navigateTo(pathname, query) {
-				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
-			},
-			getEddisByUser: function getEddisByUser() {
-				return dispatch((0, _eddis.getAllEddiByUserThunk)());
-			}
-		};
-	}
-
-	var Home = function (_Component) {
-		_inherits(Home, _Component);
-
-		function Home() {
-			_classCallCheck(this, Home);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
-		}
-
-		_createClass(Home, [{
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps) {
-				var _props = this.props;
-				var user = _props.user;
-				var getEddisByUser = _props.getEddisByUser;
-
-				if (nextProps.user !== user) return getEddisByUser();
-			}
-		}, {
-			key: 'clickHandler',
-			value: function clickHandler(destination, query) {
-				var navigateTo = this.props.navigateTo;
-
-				navigateTo(destination, query);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _props2 = this.props;
-				var user = _props2.user;
-				var eddis = _props2.eddis;
-				var email = user.email;
-				var LoggedOutElement = _react2.default.createElement(_LoggedOutHome2.default, null);
-				var LoggedInElement = _react2.default.createElement(_LoggedInHome2.default, { eddis: eddis });
-				var showHome = email ? LoggedInElement : LoggedOutElement;
-				console.log('these are teh eddis', eddis);
-				return _react2.default.createElement(
-					'div',
-					null,
-					showHome
-				);
-			}
-		}]);
-
-		return Home;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
-
-/***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(169);
-
-	var _user = __webpack_require__(253);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _constants = __webpack_require__(244);
-
-	var _LoginForm = __webpack_require__(259);
-
-	var _LoginForm2 = _interopRequireDefault(_LoginForm);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			user: state.user
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			login: function login(_ref) {
-				var email = _ref.email;
-				var password = _ref.password;
-				return dispatch((0, _user.userLoginWithPasswordThunk)(email, password));
-			}
-		};
-	}
-
-	var Login = function (_Component) {
-		_inherits(Login, _Component);
-
-		function Login() {
-			_classCallCheck(this, Login);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Login).apply(this, arguments));
-		}
-
-		_createClass(Login, [{
-			key: 'render',
-			value: function render() {
-				var _props = this.props;
-				var login = _props.login;
-				var user = _props.user;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_LoginForm2.default, { onSubmit: login })
-				);
-			}
-		}]);
-
-		return Login;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);
-
-/***/ },
-/* 259 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28196,7 +28560,7 @@
 	exports.default = LoginForm;
 
 /***/ },
-/* 260 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28213,9 +28577,9 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _user = __webpack_require__(253);
+	var _user = __webpack_require__(261);
 
-	var _SignupForm = __webpack_require__(261);
+	var _SignupForm = __webpack_require__(265);
 
 	var _SignupForm2 = _interopRequireDefault(_SignupForm);
 
@@ -28272,7 +28636,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Signup);
 
 /***/ },
-/* 261 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28431,7 +28795,7 @@
 	exports.default = SignupForm;
 
 /***/ },
-/* 262 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28494,7 +28858,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
 
 /***/ },
-/* 263 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28511,9 +28875,11 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _eddis = __webpack_require__(269);
+	var _eddis = __webpack_require__(257);
 
-	var _AddEddiForm = __webpack_require__(271);
+	var _modal = __webpack_require__(292);
+
+	var _AddEddiForm = __webpack_require__(268);
 
 	var _AddEddiForm2 = _interopRequireDefault(_AddEddiForm);
 
@@ -28544,6 +28910,9 @@
 			},
 			updateSalinity: function updateSalinity(eddiId, salinity) {
 				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
+			},
+			openAddForm: function openAddForm() {
+				return dispatch((0, _modal.modalShow)('AddEddiForm'));
 			}
 		};
 	}
@@ -28560,11 +28929,16 @@
 		_createClass(Settings, [{
 			key: 'clickAddHandler',
 			value: function clickAddHandler() {
-				var assignEddi = this.props.assignEddi;
+				var openAddForm = this.props.openAddForm;
+
+				console.log('this ');
+				openAddForm();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
 				var eddi = this.props.eddi;
 
 				return _react2.default.createElement(
@@ -28572,7 +28946,9 @@
 					null,
 					_react2.default.createElement(
 						'div',
-						{ style: styles.addButton },
+						{ style: styles.addButton, onClick: function onClick() {
+								return _this2.clickAddHandler();
+							} },
 						_react2.default.createElement(
 							'p',
 							null,
@@ -28603,557 +28979,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
 
 /***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(169);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddi: state.eddis.selected
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {};
-	}
-
-	var Troubleshoot = function (_Component) {
-		_inherits(Troubleshoot, _Component);
-
-		function Troubleshoot() {
-			_classCallCheck(this, Troubleshoot);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
-		}
-
-		_createClass(Troubleshoot, [{
-			key: 'render',
-			value: function render() {
-				var eddi = this.props.eddi;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					'This is the troubleshoot page.'
-				);
-			}
-		}]);
-
-		return Troubleshoot;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(169);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddi: state.eddis.eddi
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {};
-	}
-
-	var Report = function (_Component) {
-		_inherits(Report, _Component);
-
-		function Report() {
-			_classCallCheck(this, Report);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Report).apply(this, arguments));
-		}
-
-		_createClass(Report, [{
-			key: 'render',
-			value: function render() {
-				var eddi = this.props.eddi;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					'This is the report page.'
-				);
-			}
-		}]);
-
-		return Report;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
-
-/***/ },
-/* 266 */,
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var HomeButton = function (_Component) {
-		_inherits(HomeButton, _Component);
-
-		function HomeButton() {
-			_classCallCheck(this, HomeButton);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(HomeButton).apply(this, arguments));
-		}
-
-		_createClass(HomeButton, [{
-			key: 'clickHandler',
-			value: function clickHandler() {
-				var onClick = this.props.onClick;
-
-				if (onClick instanceof Function) return onClick();
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _props = this.props;
-				var name = _props.name;
-				var image = _props.image;
-				var Image = _react2.default.createElement(
-					'div',
-					{ style: styles.textCenter },
-					image
-				);
-				var showImage = image ? Image : null;
-
-				return _react2.default.createElement(
-					'div',
-					{ onClick: function onClick() {
-							return _this2.clickHandler();
-						} },
-					showImage,
-					_react2.default.createElement(
-						'div',
-						{ style: styles.bottomLine },
-						_react2.default.createElement(
-							'p',
-							null,
-							name
-						),
-						_react2.default.createElement(
-							'p',
-							null,
-							'>'
-						)
-					)
-				);
-			}
-		}]);
-
-		return HomeButton;
-	}(_react.Component);
-
-	HomeButton.propTypes = {
-		name: PropTypes.string.isRequired,
-		image: PropTypes.string,
-		onClick: PropTypes.func
-	};
-
-	var styles = {
-		textCenter: {
-			textAlign: 'center'
-		},
-		bottomLine: {
-			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'center',
-			justifyContent: 'space-between'
-		}
-	};
-
-	exports.default = HomeButton;
-
-/***/ },
 /* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _HomeButton = __webpack_require__(267);
-
-	var _HomeButton2 = _interopRequireDefault(_HomeButton);
-
-	var _constants = __webpack_require__(244);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var LoggedOutHome = function (_Component) {
-		_inherits(LoggedOutHome, _Component);
-
-		function LoggedOutHome() {
-			_classCallCheck(this, LoggedOutHome);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(LoggedOutHome).apply(this, arguments));
-		}
-
-		_createClass(LoggedOutHome, [{
-			key: 'navigateTo',
-			value: function navigateTo(key) {
-				var destination = _constants.PATHS[key];
-				if (destination) return _reactRouter.browserHistory.push(destination);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_HomeButton2.default, { onClick: function onClick() {
-							return _this2.navigateTo('LOGIN');
-						},
-						name: 'Login'
-					}),
-					_react2.default.createElement(_HomeButton2.default, { onClick: function onClick() {
-							return _this2.navigateTo('SIGNUP');
-						},
-						name: 'Signup'
-					})
-				);
-			}
-		}]);
-
-		return LoggedOutHome;
-	}(_react.Component);
-
-	exports.default = LoggedOutHome;
-
-/***/ },
-/* 269 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
-	exports.assignEddiThunk = assignEddiThunk;
-	exports.setEddiStartThunk = setEddiStartThunk;
-	exports.setEddiEndThunk = setEddiEndThunk;
-	exports.setEddiSalinityThunk = setEddiSalinityThunk;
-
-	var _eddiFirebase = __webpack_require__(254);
-
-	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _constants = __webpack_require__(244);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EddiFire = (0, _eddiFirebase2.default)();
-
-	function getAllEddiSuccess(list) {
-		return {
-			type: _constants.EDDI_GETALL_SUCCESS,
-			list: list
-		};
-	}
-
-	function getAllEddiError(error) {
-		return {
-			type: _constants.EDDI_GETALL_ERROR,
-			error: error
-		};
-	}
-
-	function assignEddiError(error) {
-		return {
-			type: _constants.EDDI_GETALL_ERROR,
-			error: error
-		};
-	}
-
-	function updateEddiSuccess() {
-		return {
-			type: _constants.EDDI_UPDATE_SUCCESS
-		};
-	}
-
-	function updateEddiError(error) {
-		return {
-			type: _constants.EDDI_UPDATE_ERROR,
-			error: error
-		};
-	}
-
-	function getOneEddiSuccess(selected) {
-		return {
-			type: _constants.EDDI_GETONE_SUCCESS,
-			selected: selected
-		};
-	}
-
-	function getOneEddiError(error) {
-		return {
-			type: _constants.EDDI_GETONE_ERROR,
-			error: error
-		};
-	}
-
-	function selectEddi(selected) {
-		return {
-			type: _constants.EDDI_SELECT,
-			selected: selected
-		};
-	}
-
-	function getAllEddiByUserThunk() {
-		return function (dispatch) {
-			return EddiFire.isAuthenticated().then(function (_ref) {
-				var uid = _ref.uid;
-				return EddiFire.getAllEddiByUser(uid);
-			}).then(function (eddis) {
-				return console.log('these are all the eddis', eddis);
-			}).catch(function (err) {
-				return dispatch(getAllEddiError(err));
-			});
-		};
-	}
-
-	function assignEddiThunk(eddiId) {
-		return function (dispatch) {
-			return EddiFire.isAuthenticated().then(function (_ref2) {
-				var uid = _ref2.uid;
-
-				return EddiFire.assignEddiToUser(uid, eddiId).then(function () {
-					return EddiFire.getAllEddiByUser(uid);
-				});
-			}).then(function (eddis) {
-				return console.log('these are all the eddis', eddis);
-			}).catch(function (err) {
-				return dispatch(assignEddiError(err));
-			});
-		};
-	}
-
-	function setEddiStartThunk(eddiId, hour, minutes) {
-		return function (dispatch) {
-			if (!(typeof hour === 'undefined' ? 'undefined' : _typeof(hour)) === 'number' || typeof minutes === 'number') throw new Error('Hour and minutes must be numbers.');
-		};
-	}
-
-	function setEddiEndThunk(eddiId, hour, minutes) {
-		return function (dispatch) {
-			if (!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error('Hour and minutes must be numbers.');
-		};
-	}
-
-	function setEddiSalinityThunk(eddiId, salinity) {
-		return function (dispatch) {
-			if (typeof salinity === 'number') throw new Error('Salinity must be a number.');
-		};
-	}
-
-/***/ },
-/* 270 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _constants = __webpack_require__(244);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var LoggedInHome = function (_Component) {
-		_inherits(LoggedInHome, _Component);
-
-		function LoggedInHome() {
-			_classCallCheck(this, LoggedInHome);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(LoggedInHome).apply(this, arguments));
-		}
-
-		_createClass(LoggedInHome, [{
-			key: 'navigateTo',
-			value: function navigateTo(key) {
-				var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-				var pathname = _constants.PATHS[key],
-				    destination = {
-					pathname: pathname,
-					query: query
-				};
-
-				if (pathname) return _reactRouter.browserHistory.push(destination);
-			}
-		}, {
-			key: '_renderEddiButtons',
-			value: function _renderEddiButtons() {
-				var eddis = this.props.eddis;
-
-				if (eddis) {
-					return eddis.map(function (eddi) {
-						var name = eddi.name;
-						return _react2.default.createElement(
-							'div',
-							null,
-							name
-						);
-					});
-				}
-			}
-		}, {
-			key: '_renderNoEddis',
-			value: function _renderNoEddis() {
-				var _this2 = this;
-
-				return _react2.default.createElement(
-					'p',
-					null,
-					'Currently you are not tracking any eddis. Click ',
-					_react2.default.createElement(
-						'a',
-						{ onClick: function onClick() {
-								return _this2.navigateTo('SETTINGS');
-							} },
-						'here'
-					),
-					' to start tracking one.'
-				);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var eddis = this.props.eddis;
-				var NoEddiElement = this._renderNoEddis();
-				var EddiButtons = this._renderEddiButtons();
-				var showEddi = eddis && eddis.length ? EddiButtons : NoEddiElement;
-				return _react2.default.createElement(
-					'div',
-					null,
-					showEddi
-				);
-			}
-		}]);
-
-		return LoggedInHome;
-	}(_react.Component);
-
-	LoggedInHome.propTypes = {
-		eddis: PropTypes.arrayOf(PropTypes.shape({
-			name: PropTypes.string
-		}))
-	};
-
-	exports.default = LoggedInHome;
-
-/***/ },
-/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29306,6 +29132,2229 @@
 	};
 
 	exports.default = AddEddiForm;
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.selected
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
+
+	var Troubleshoot = function (_Component) {
+		_inherits(Troubleshoot, _Component);
+
+		function Troubleshoot() {
+			_classCallCheck(this, Troubleshoot);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
+		}
+
+		_createClass(Troubleshoot, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the troubleshoot page.'
+				);
+			}
+		}]);
+
+		return Troubleshoot;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.eddi
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
+
+	var Report = function (_Component) {
+		_inherits(Report, _Component);
+
+		function Report() {
+			_classCallCheck(this, Report);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Report).apply(this, arguments));
+		}
+
+		_createClass(Report, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the report page.'
+				);
+			}
+		}]);
+
+		return Report;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(272);
+
+
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var ExecutionEnvironment = __webpack_require__(273);
+	var ModalPortal = React.createFactory(__webpack_require__(274));
+	var ariaAppHider = __webpack_require__(289);
+	var elementClass = __webpack_require__(290);
+	var renderSubtreeIntoContainer = __webpack_require__(158).unstable_renderSubtreeIntoContainer;
+
+	var SafeHTMLElement = ExecutionEnvironment.canUseDOM ? window.HTMLElement : {};
+
+	var Modal = module.exports = React.createClass({
+
+	  displayName: 'Modal',
+	  statics: {
+	    setAppElement: ariaAppHider.setElement,
+	    injectCSS: function() {
+	      "production" !== process.env.NODE_ENV
+	        && console.warn('React-Modal: injectCSS has been deprecated ' +
+	                        'and no longer has any effect. It will be removed in a later version');
+	    }
+	  },
+
+	  propTypes: {
+	    isOpen: React.PropTypes.bool.isRequired,
+	    style: React.PropTypes.shape({
+	      content: React.PropTypes.object,
+	      overlay: React.PropTypes.object
+	    }),
+	    appElement: React.PropTypes.instanceOf(SafeHTMLElement),
+	    onRequestClose: React.PropTypes.func,
+	    closeTimeoutMS: React.PropTypes.number,
+	    ariaHideApp: React.PropTypes.bool
+	  },
+
+	  getDefaultProps: function () {
+	    return {
+	      isOpen: false,
+	      ariaHideApp: true,
+	      closeTimeoutMS: 0
+	    };
+	  },
+
+	  componentDidMount: function() {
+	    this.node = document.createElement('div');
+	    this.node.className = 'ReactModalPortal';
+	    document.body.appendChild(this.node);
+	    this.renderPortal(this.props);
+	  },
+
+	  componentWillReceiveProps: function(newProps) {
+	    this.renderPortal(newProps);
+	  },
+
+	  componentWillUnmount: function() {
+	    ReactDOM.unmountComponentAtNode(this.node);
+	    document.body.removeChild(this.node);
+	  },
+
+	  renderPortal: function(props) {
+	    if (props.isOpen) {
+	      elementClass(document.body).add('ReactModal__Body--open');
+	    } else {
+	      elementClass(document.body).remove('ReactModal__Body--open');
+	    }
+
+	    if (props.ariaHideApp) {
+	      ariaAppHider.toggle(props.isOpen, props.appElement);
+	    }
+	    sanitizeProps(props);
+	    this.portal = renderSubtreeIntoContainer(this, ModalPortal(props), this.node);
+	  },
+
+	  render: function () {
+	    return React.DOM.noscript();
+	  }
+	});
+
+	function sanitizeProps(props) {
+	  delete props.ref;
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
+
+	(function () {
+		'use strict';
+
+		var canUseDOM = !!(
+			typeof window !== 'undefined' &&
+			window.document &&
+			window.document.createElement
+		);
+
+		var ExecutionEnvironment = {
+
+			canUseDOM: canUseDOM,
+
+			canUseWorkers: typeof Worker !== 'undefined',
+
+			canUseEventListeners:
+				canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+			canUseViewport: canUseDOM && !!window.screen
+
+		};
+
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
+
+	}());
+
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var div = React.DOM.div;
+	var focusManager = __webpack_require__(275);
+	var scopeTab = __webpack_require__(277);
+	var Assign = __webpack_require__(278);
+
+
+	// so that our CSS is statically analyzable
+	var CLASS_NAMES = {
+	  overlay: {
+	    base: 'ReactModal__Overlay',
+	    afterOpen: 'ReactModal__Overlay--after-open',
+	    beforeClose: 'ReactModal__Overlay--before-close'
+	  },
+	  content: {
+	    base: 'ReactModal__Content',
+	    afterOpen: 'ReactModal__Content--after-open',
+	    beforeClose: 'ReactModal__Content--before-close'
+	  }
+	};
+
+	var defaultStyles = {
+	  overlay: {
+	    position        : 'fixed',
+	    top             : 0,
+	    left            : 0,
+	    right           : 0,
+	    bottom          : 0,
+	    backgroundColor : 'rgba(255, 255, 255, 0.75)'
+	  },
+	  content: {
+	    position                : 'absolute',
+	    top                     : '40px',
+	    left                    : '40px',
+	    right                   : '40px',
+	    bottom                  : '40px',
+	    border                  : '1px solid #ccc',
+	    background              : '#fff',
+	    overflow                : 'auto',
+	    WebkitOverflowScrolling : 'touch',
+	    borderRadius            : '4px',
+	    outline                 : 'none',
+	    padding                 : '20px'
+	  }
+	};
+
+	function stopPropagation(event) {
+	  event.stopPropagation();
+	}
+
+	var ModalPortal = module.exports = React.createClass({
+
+	  displayName: 'ModalPortal',
+
+	  getDefaultProps: function() {
+	    return {
+	      style: {
+	        overlay: {},
+	        content: {}
+	      }
+	    };
+	  },
+
+	  getInitialState: function() {
+	    return {
+	      afterOpen: false,
+	      beforeClose: false
+	    };
+	  },
+
+	  componentDidMount: function() {
+	    // Focus needs to be set when mounting and already open
+	    if (this.props.isOpen) {
+	      this.setFocusAfterRender(true);
+	      this.open();
+	    }
+	  },
+
+	  componentWillUnmount: function() {
+	    clearTimeout(this.closeTimer);
+	  },
+
+	  componentWillReceiveProps: function(newProps) {
+	    // Focus only needs to be set once when the modal is being opened
+	    if (!this.props.isOpen && newProps.isOpen) {
+	      this.setFocusAfterRender(true);
+	      this.open();
+	    } else if (this.props.isOpen && !newProps.isOpen) {
+	      this.close();
+	    }
+	  },
+
+	  componentDidUpdate: function () {
+	    if (this.focusAfterRender) {
+	      this.focusContent();
+	      this.setFocusAfterRender(false);
+	    }
+	  },
+
+	  setFocusAfterRender: function (focus) {
+	    this.focusAfterRender = focus;
+	  },
+
+	  open: function() {
+	    focusManager.setupScopedFocus(this.node);
+	    focusManager.markForFocusLater();
+	    this.setState({isOpen: true}, function() {
+	      this.setState({afterOpen: true});
+	    }.bind(this));
+	  },
+
+	  close: function() {
+	    if (!this.ownerHandlesClose())
+	      return;
+	    if (this.props.closeTimeoutMS > 0)
+	      this.closeWithTimeout();
+	    else
+	      this.closeWithoutTimeout();
+	  },
+
+	  focusContent: function() {
+	    this.refs.content.focus();
+	  },
+
+	  closeWithTimeout: function() {
+	    this.setState({beforeClose: true}, function() {
+	      this.closeTimer = setTimeout(this.closeWithoutTimeout, this.props.closeTimeoutMS);
+	    }.bind(this));
+	  },
+
+	  closeWithoutTimeout: function() {
+	    this.setState({
+	      afterOpen: false,
+	      beforeClose: false
+	    }, this.afterClose);
+	  },
+
+	  afterClose: function() {
+	    focusManager.returnFocus();
+	    focusManager.teardownScopedFocus();
+	  },
+
+	  handleKeyDown: function(event) {
+	    if (event.keyCode == 9 /*tab*/) scopeTab(this.refs.content, event);
+	    if (event.keyCode == 27 /*esc*/) this.requestClose();
+	  },
+
+	  handleOverlayClick: function() {
+	    if (this.ownerHandlesClose())
+	      this.requestClose();
+	    else
+	      this.focusContent();
+	  },
+
+	  requestClose: function() {
+	    if (this.ownerHandlesClose())
+	      this.props.onRequestClose();
+	  },
+
+	  ownerHandlesClose: function() {
+	    return this.props.onRequestClose;
+	  },
+
+	  shouldBeClosed: function() {
+	    return !this.props.isOpen && !this.state.beforeClose;
+	  },
+
+	  buildClassName: function(which, additional) {
+	    var className = CLASS_NAMES[which].base;
+	    if (this.state.afterOpen)
+	      className += ' '+CLASS_NAMES[which].afterOpen;
+	    if (this.state.beforeClose)
+	      className += ' '+CLASS_NAMES[which].beforeClose;
+	    return additional ? className + ' ' + additional : className;
+	  },
+
+	  render: function() {
+	    return this.shouldBeClosed() ? div() : (
+	      div({
+	        ref: "overlay",
+	        className: this.buildClassName('overlay', this.props.overlayClassName),
+	        style: Assign({}, defaultStyles.overlay, this.props.style.overlay || {}),
+	        onClick: this.handleOverlayClick
+	      },
+	        div({
+	          ref: "content",
+	          style: Assign({}, defaultStyles.content, this.props.style.content || {}),
+	          className: this.buildClassName('content', this.props.className),
+	          tabIndex: "-1",
+	          onClick: stopPropagation,
+	          onKeyDown: this.handleKeyDown
+	        },
+	          this.props.children
+	        )
+	      )
+	    );
+	  }
+	});
+
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var findTabbable = __webpack_require__(276);
+	var modalElement = null;
+	var focusLaterElement = null;
+	var needToFocus = false;
+
+	function handleBlur(event) {
+	  needToFocus = true;
+	}
+
+	function handleFocus(event) {
+	  if (needToFocus) {
+	    needToFocus = false;
+	    if (!modalElement) {
+	      return;
+	    }
+	    // need to see how jQuery shims document.on('focusin') so we don't need the
+	    // setTimeout, firefox doesn't support focusin, if it did, we could focus
+	    // the element outside of a setTimeout. Side-effect of this implementation 
+	    // is that the document.body gets focus, and then we focus our element right 
+	    // after, seems fine.
+	    setTimeout(function() {
+	      if (modalElement.contains(document.activeElement))
+	        return;
+	      var el = (findTabbable(modalElement)[0] || modalElement);
+	      el.focus();
+	    }, 0);
+	  }
+	}
+
+	exports.markForFocusLater = function() {
+	  focusLaterElement = document.activeElement;
+	};
+
+	exports.returnFocus = function() {
+	  try {
+	    focusLaterElement.focus();
+	  }
+	  catch (e) {
+	    console.warn('You tried to return focus to '+focusLaterElement+' but it is not in the DOM anymore');
+	  }
+	  focusLaterElement = null;
+	};
+
+	exports.setupScopedFocus = function(element) {
+	  modalElement = element;
+
+	  if (window.addEventListener) {
+	    window.addEventListener('blur', handleBlur, false);
+	    document.addEventListener('focus', handleFocus, true);
+	  } else {
+	    window.attachEvent('onBlur', handleBlur);
+	    document.attachEvent('onFocus', handleFocus);
+	  }
+	};
+
+	exports.teardownScopedFocus = function() {
+	  modalElement = null;
+
+	  if (window.addEventListener) {
+	    window.removeEventListener('blur', handleBlur);
+	    document.removeEventListener('focus', handleFocus);
+	  } else {
+	    window.detachEvent('onBlur', handleBlur);
+	    document.detachEvent('onFocus', handleFocus);
+	  }
+	};
+
+
+
+
+/***/ },
+/* 276 */
+/***/ function(module, exports) {
+
+	/*!
+	 * Adapted from jQuery UI core
+	 *
+	 * http://jqueryui.com
+	 *
+	 * Copyright 2014 jQuery Foundation and other contributors
+	 * Released under the MIT license.
+	 * http://jquery.org/license
+	 *
+	 * http://api.jqueryui.com/category/ui-core/
+	 */
+
+	function focusable(element, isTabIndexNotNaN) {
+	  var nodeName = element.nodeName.toLowerCase();
+	  return (/input|select|textarea|button|object/.test(nodeName) ?
+	    !element.disabled :
+	    "a" === nodeName ?
+	      element.href || isTabIndexNotNaN :
+	      isTabIndexNotNaN) && visible(element);
+	}
+
+	function hidden(el) {
+	  return (el.offsetWidth <= 0 && el.offsetHeight <= 0) ||
+	    el.style.display === 'none';
+	}
+
+	function visible(element) {
+	  while (element) {
+	    if (element === document.body) break;
+	    if (hidden(element)) return false;
+	    element = element.parentNode;
+	  }
+	  return true;
+	}
+
+	function tabbable(element) {
+	  var tabIndex = element.getAttribute('tabindex');
+	  if (tabIndex === null) tabIndex = undefined;
+	  var isTabIndexNaN = isNaN(tabIndex);
+	  return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
+	}
+
+	function findTabbableDescendants(element) {
+	  return [].slice.call(element.querySelectorAll('*'), 0).filter(function(el) {
+	    return tabbable(el);
+	  });
+	}
+
+	module.exports = findTabbableDescendants;
+
+
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var findTabbable = __webpack_require__(276);
+
+	module.exports = function(node, event) {
+	  var tabbable = findTabbable(node);
+	  var finalTabbable = tabbable[event.shiftKey ? 0 : tabbable.length - 1];
+	  var leavingFinalTabbable = (
+	    finalTabbable === document.activeElement ||
+	    // handle immediate shift+tab after opening with mouse
+	    node === document.activeElement
+	  );
+	  if (!leavingFinalTabbable) return;
+	  event.preventDefault();
+	  var target = tabbable[event.shiftKey ? tabbable.length - 1 : 0];
+	  target.focus();
+	};
+
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.2.0 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var baseAssign = __webpack_require__(279),
+	    createAssigner = __webpack_require__(285),
+	    keys = __webpack_require__(281);
+
+	/**
+	 * A specialized version of `_.assign` for customizing assigned values without
+	 * support for argument juggling, multiple sources, and `this` binding `customizer`
+	 * functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @param {Function} customizer The function to customize assigned values.
+	 * @returns {Object} Returns `object`.
+	 */
+	function assignWith(object, source, customizer) {
+	  var index = -1,
+	      props = keys(source),
+	      length = props.length;
+
+	  while (++index < length) {
+	    var key = props[index],
+	        value = object[key],
+	        result = customizer(value, source[key], key, object, source);
+
+	    if ((result === result ? (result !== value) : (value === value)) ||
+	        (value === undefined && !(key in object))) {
+	      object[key] = result;
+	    }
+	  }
+	  return object;
+	}
+
+	/**
+	 * Assigns own enumerable properties of source object(s) to the destination
+	 * object. Subsequent sources overwrite property assignments of previous sources.
+	 * If `customizer` is provided it is invoked to produce the assigned values.
+	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
+	 * (objectValue, sourceValue, key, object, source).
+	 *
+	 * **Note:** This method mutates `object` and is based on
+	 * [`Object.assign`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.assign).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias extend
+	 * @category Object
+	 * @param {Object} object The destination object.
+	 * @param {...Object} [sources] The source objects.
+	 * @param {Function} [customizer] The function to customize assigned values.
+	 * @param {*} [thisArg] The `this` binding of `customizer`.
+	 * @returns {Object} Returns `object`.
+	 * @example
+	 *
+	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
+	 * // => { 'user': 'fred', 'age': 40 }
+	 *
+	 * // using a customizer callback
+	 * var defaults = _.partialRight(_.assign, function(value, other) {
+	 *   return _.isUndefined(value) ? other : value;
+	 * });
+	 *
+	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
+	 * // => { 'user': 'barney', 'age': 36 }
+	 */
+	var assign = createAssigner(function(object, source, customizer) {
+	  return customizer
+	    ? assignWith(object, source, customizer)
+	    : baseAssign(object, source);
+	});
+
+	module.exports = assign;
+
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.2.0 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var baseCopy = __webpack_require__(280),
+	    keys = __webpack_require__(281);
+
+	/**
+	 * The base implementation of `_.assign` without support for argument juggling,
+	 * multiple sources, and `customizer` functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseAssign(object, source) {
+	  return source == null
+	    ? object
+	    : baseCopy(source, keys(source), object);
+	}
+
+	module.exports = baseAssign;
+
+
+/***/ },
+/* 280 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/**
+	 * Copies properties of `source` to `object`.
+	 *
+	 * @private
+	 * @param {Object} source The object to copy properties from.
+	 * @param {Array} props The property names to copy.
+	 * @param {Object} [object={}] The object to copy properties to.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseCopy(source, props, object) {
+	  object || (object = {});
+
+	  var index = -1,
+	      length = props.length;
+
+	  while (++index < length) {
+	    var key = props[index];
+	    object[key] = source[key];
+	  }
+	  return object;
+	}
+
+	module.exports = baseCopy;
+
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.1.2 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var getNative = __webpack_require__(282),
+	    isArguments = __webpack_require__(283),
+	    isArray = __webpack_require__(284);
+
+	/** Used to detect unsigned integer values. */
+	var reIsUint = /^\d+$/;
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeKeys = getNative(Object, 'keys');
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value));
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like index.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	 */
+	function isIndex(value, length) {
+	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+	  length = length == null ? MAX_SAFE_INTEGER : length;
+	  return value > -1 && value % 1 == 0 && value < length;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+
+	/**
+	 * A fallback implementation of `Object.keys` which creates an array of the
+	 * own enumerable property names of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 */
+	function shimKeys(object) {
+	  var props = keysIn(object),
+	      propsLength = props.length,
+	      length = propsLength && object.length;
+
+	  var allowIndexes = !!length && isLength(length) &&
+	    (isArray(object) || isArguments(object));
+
+	  var index = -1,
+	      result = [];
+
+	  while (++index < propsLength) {
+	    var key = props[index];
+	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Creates an array of the own enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects. See the
+	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+	 * for more details.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keys(new Foo);
+	 * // => ['a', 'b'] (iteration order is not guaranteed)
+	 *
+	 * _.keys('hi');
+	 * // => ['0', '1']
+	 */
+	var keys = !nativeKeys ? shimKeys : function(object) {
+	  var Ctor = object == null ? undefined : object.constructor;
+	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+	      (typeof object != 'function' && isArrayLike(object))) {
+	    return shimKeys(object);
+	  }
+	  return isObject(object) ? nativeKeys(object) : [];
+	};
+
+	/**
+	 * Creates an array of the own and inherited enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keysIn(new Foo);
+	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+	 */
+	function keysIn(object) {
+	  if (object == null) {
+	    return [];
+	  }
+	  if (!isObject(object)) {
+	    object = Object(object);
+	  }
+	  var length = object.length;
+	  length = (length && isLength(length) &&
+	    (isArray(object) || isArguments(object)) && length) || 0;
+
+	  var Ctor = object.constructor,
+	      index = -1,
+	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+	      result = Array(length),
+	      skipIndexes = length > 0;
+
+	  while (++index < length) {
+	    result[index] = (index + '');
+	  }
+	  for (var key in object) {
+	    if (!(skipIndexes && isIndex(key, length)) &&
+	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = keys;
+
+
+/***/ },
+/* 282 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.9.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/** `Object#toString` result references. */
+	var funcTag = '[object Function]';
+
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative(value) ? value : undefined;
+	}
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 equivalents which return 'object' for typed array constructors.
+	  return isObject(value) && objToString.call(value) == funcTag;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction(value)) {
+	    return reIsNative.test(fnToString.call(value));
+	  }
+	  return isObjectLike(value) && reIsHostCtor.test(value);
+	}
+
+	module.exports = getNative;
+
+
+/***/ },
+/* 283 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.8 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modularize exports="npm" -o ./`
+	 * Copyright 2012-2016 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2016 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/** Used as references for various `Number` constants. */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    funcTag = '[object Function]',
+	    genTag = '[object GeneratorFunction]';
+
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objectToString = objectProto.toString;
+
+	/** Built-in value references. */
+	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+
+	/**
+	 * Checks if `value` is likely an `arguments` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArguments(function() { return arguments; }());
+	 * // => true
+	 *
+	 * _.isArguments([1, 2, 3]);
+	 * // => false
+	 */
+	function isArguments(value) {
+	  // Safari 8.1 incorrectly makes `arguments.callee` enumerable in strict mode.
+	  return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
+	    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
+	}
+
+	/**
+	 * Checks if `value` is array-like. A value is considered array-like if it's
+	 * not a function and has a `value.length` that's an integer greater than or
+	 * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 * @example
+	 *
+	 * _.isArrayLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArrayLike(document.body.children);
+	 * // => true
+	 *
+	 * _.isArrayLike('abc');
+	 * // => true
+	 *
+	 * _.isArrayLike(_.noop);
+	 * // => false
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value)) && !isFunction(value);
+	}
+
+	/**
+	 * This method is like `_.isArrayLike` except that it also checks if `value`
+	 * is an object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an array-like object, else `false`.
+	 * @example
+	 *
+	 * _.isArrayLikeObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject(document.body.children);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject('abc');
+	 * // => false
+	 *
+	 * _.isArrayLikeObject(_.noop);
+	 * // => false
+	 */
+	function isArrayLikeObject(value) {
+	  return isObjectLike(value) && isArrayLike(value);
+	}
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in Safari 8 which returns 'object' for typed array and weak map constructors,
+	  // and PhantomJS 1.9 which returns 'function' for `NodeList` instances.
+	  var tag = isObject(value) ? objectToString.call(value) : '';
+	  return tag == funcTag || tag == genTag;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is loosely based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 * @example
+	 *
+	 * _.isLength(3);
+	 * // => true
+	 *
+	 * _.isLength(Number.MIN_VALUE);
+	 * // => false
+	 *
+	 * _.isLength(Infinity);
+	 * // => false
+	 *
+	 * _.isLength('3');
+	 * // => false
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' &&
+	    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(_.noop);
+	 * // => true
+	 *
+	 * _.isObject(null);
+	 * // => false
+	 */
+	function isObject(value) {
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	module.exports = isArguments;
+
+
+/***/ },
+/* 284 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.4 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/** `Object#toString` result references. */
+	var arrayTag = '[object Array]',
+	    funcTag = '[object Function]';
+
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeIsArray = getNative(Array, 'isArray');
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative(value) ? value : undefined;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+
+	/**
+	 * Checks if `value` is classified as an `Array` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArray([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArray(function() { return arguments; }());
+	 * // => false
+	 */
+	var isArray = nativeIsArray || function(value) {
+	  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
+	};
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 equivalents which return 'object' for typed array constructors.
+	  return isObject(value) && objToString.call(value) == funcTag;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction(value)) {
+	    return reIsNative.test(fnToString.call(value));
+	  }
+	  return isObjectLike(value) && reIsHostCtor.test(value);
+	}
+
+	module.exports = isArray;
+
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.1.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var bindCallback = __webpack_require__(286),
+	    isIterateeCall = __webpack_require__(287),
+	    restParam = __webpack_require__(288);
+
+	/**
+	 * Creates a function that assigns properties of source object(s) to a given
+	 * destination object.
+	 *
+	 * **Note:** This function is used to create `_.assign`, `_.defaults`, and `_.merge`.
+	 *
+	 * @private
+	 * @param {Function} assigner The function to assign values.
+	 * @returns {Function} Returns the new assigner function.
+	 */
+	function createAssigner(assigner) {
+	  return restParam(function(object, sources) {
+	    var index = -1,
+	        length = object == null ? 0 : sources.length,
+	        customizer = length > 2 ? sources[length - 2] : undefined,
+	        guard = length > 2 ? sources[2] : undefined,
+	        thisArg = length > 1 ? sources[length - 1] : undefined;
+
+	    if (typeof customizer == 'function') {
+	      customizer = bindCallback(customizer, thisArg, 5);
+	      length -= 2;
+	    } else {
+	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
+	      length -= (customizer ? 1 : 0);
+	    }
+	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+	      customizer = length < 3 ? undefined : customizer;
+	      length = 1;
+	    }
+	    while (++index < length) {
+	      var source = sources[index];
+	      if (source) {
+	        assigner(object, source, customizer);
+	      }
+	    }
+	    return object;
+	  });
+	}
+
+	module.exports = createAssigner;
+
+
+/***/ },
+/* 286 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/**
+	 * A specialized version of `baseCallback` which only supports `this` binding
+	 * and specifying the number of arguments to provide to `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to bind.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {number} [argCount] The number of arguments to provide to `func`.
+	 * @returns {Function} Returns the callback.
+	 */
+	function bindCallback(func, thisArg, argCount) {
+	  if (typeof func != 'function') {
+	    return identity;
+	  }
+	  if (thisArg === undefined) {
+	    return func;
+	  }
+	  switch (argCount) {
+	    case 1: return function(value) {
+	      return func.call(thisArg, value);
+	    };
+	    case 3: return function(value, index, collection) {
+	      return func.call(thisArg, value, index, collection);
+	    };
+	    case 4: return function(accumulator, value, index, collection) {
+	      return func.call(thisArg, accumulator, value, index, collection);
+	    };
+	    case 5: return function(value, other, key, object, source) {
+	      return func.call(thisArg, value, other, key, object, source);
+	    };
+	  }
+	  return function() {
+	    return func.apply(thisArg, arguments);
+	  };
+	}
+
+	/**
+	 * This method returns the first argument provided to it.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {*} value Any value.
+	 * @returns {*} Returns `value`.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * _.identity(object) === object;
+	 * // => true
+	 */
+	function identity(value) {
+	  return value;
+	}
+
+	module.exports = bindCallback;
+
+
+/***/ },
+/* 287 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.9 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/** Used to detect unsigned integer values. */
+	var reIsUint = /^\d+$/;
+
+	/**
+	 * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value));
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like index.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	 */
+	function isIndex(value, length) {
+	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+	  length = length == null ? MAX_SAFE_INTEGER : length;
+	  return value > -1 && value % 1 == 0 && value < length;
+	}
+
+	/**
+	 * Checks if the provided arguments are from an iteratee call.
+	 *
+	 * @private
+	 * @param {*} value The potential iteratee value argument.
+	 * @param {*} index The potential iteratee index or key argument.
+	 * @param {*} object The potential iteratee object argument.
+	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+	 */
+	function isIterateeCall(value, index, object) {
+	  if (!isObject(object)) {
+	    return false;
+	  }
+	  var type = typeof index;
+	  if (type == 'number'
+	      ? (isArrayLike(object) && isIndex(index, object.length))
+	      : (type == 'string' && index in object)) {
+	    var other = object[index];
+	    return value === value ? (value === other) : (other !== other);
+	  }
+	  return false;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	module.exports = isIterateeCall;
+
+
+/***/ },
+/* 288 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.6.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/** Used as the `TypeError` message for "Functions" methods. */
+	var FUNC_ERROR_TEXT = 'Expected a function';
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates a function that invokes `func` with the `this` binding of the
+	 * created function and arguments from `start` and beyond provided as an array.
+	 *
+	 * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Function
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @returns {Function} Returns the new function.
+	 * @example
+	 *
+	 * var say = _.restParam(function(what, names) {
+	 *   return what + ' ' + _.initial(names).join(', ') +
+	 *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
+	 * });
+	 *
+	 * say('hello', 'fred', 'barney', 'pebbles');
+	 * // => 'hello fred, barney, & pebbles'
+	 */
+	function restParam(func, start) {
+	  if (typeof func != 'function') {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
+	  return function() {
+	    var args = arguments,
+	        index = -1,
+	        length = nativeMax(args.length - start, 0),
+	        rest = Array(length);
+
+	    while (++index < length) {
+	      rest[index] = args[start + index];
+	    }
+	    switch (start) {
+	      case 0: return func.call(this, rest);
+	      case 1: return func.call(this, args[0], rest);
+	      case 2: return func.call(this, args[0], args[1], rest);
+	    }
+	    var otherArgs = Array(start + 1);
+	    index = -1;
+	    while (++index < start) {
+	      otherArgs[index] = args[index];
+	    }
+	    otherArgs[start] = rest;
+	    return func.apply(this, otherArgs);
+	  };
+	}
+
+	module.exports = restParam;
+
+
+/***/ },
+/* 289 */
+/***/ function(module, exports) {
+
+	var _element = typeof document !== 'undefined' ? document.body : null;
+
+	function setElement(element) {
+	  if (typeof element === 'string') {
+	    var el = document.querySelectorAll(element);
+	    element = 'length' in el ? el[0] : el;
+	  }
+	  _element = element || _element;
+	}
+
+	function hide(appElement) {
+	  validateElement(appElement);
+	  (appElement || _element).setAttribute('aria-hidden', 'true');
+	}
+
+	function show(appElement) {
+	  validateElement(appElement);
+	  (appElement || _element).removeAttribute('aria-hidden');
+	}
+
+	function toggle(shouldHide, appElement) {
+	  if (shouldHide)
+	    hide(appElement);
+	  else
+	    show(appElement);
+	}
+
+	function validateElement(appElement) {
+	  if (!appElement && !_element)
+	    throw new Error('react-modal: You must set an element with `Modal.setAppElement(el)` to make this accessible');
+	}
+
+	function resetForTesting() {
+	  _element = document.body;
+	}
+
+	exports.toggle = toggle;
+	exports.setElement = setElement;
+	exports.show = show;
+	exports.hide = hide;
+	exports.resetForTesting = resetForTesting;
+
+
+/***/ },
+/* 290 */
+/***/ function(module, exports) {
+
+	module.exports = function(opts) {
+	  return new ElementClass(opts)
+	}
+
+	function indexOf(arr, prop) {
+	  if (arr.indexOf) return arr.indexOf(prop)
+	  for (var i = 0, len = arr.length; i < len; i++)
+	    if (arr[i] === prop) return i
+	  return -1
+	}
+
+	function ElementClass(opts) {
+	  if (!(this instanceof ElementClass)) return new ElementClass(opts)
+	  var self = this
+	  if (!opts) opts = {}
+
+	  // similar doing instanceof HTMLElement but works in IE8
+	  if (opts.nodeType) opts = {el: opts}
+
+	  this.opts = opts
+	  this.el = opts.el || document.body
+	  if (typeof this.el !== 'object') this.el = document.querySelector(this.el)
+	}
+
+	ElementClass.prototype.add = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  if (el.className === "") return el.className = className
+	  var classes = el.className.split(' ')
+	  if (indexOf(classes, className) > -1) return classes
+	  classes.push(className)
+	  el.className = classes.join(' ')
+	  return classes
+	}
+
+	ElementClass.prototype.remove = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  if (el.className === "") return
+	  var classes = el.className.split(' ')
+	  var idx = indexOf(classes, className)
+	  if (idx > -1) classes.splice(idx, 1)
+	  el.className = classes.join(' ')
+	  return classes
+	}
+
+	ElementClass.prototype.has = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  var classes = el.className.split(' ')
+	  return indexOf(classes, className) > -1
+	}
+
+	ElementClass.prototype.toggle = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  if (this.has(className)) this.remove(className)
+	  else this.add(className)
+	}
+
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var Menu = function (_Component) {
+		_inherits(Menu, _Component);
+
+		function Menu() {
+			_classCallCheck(this, Menu);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Menu).apply(this, arguments));
+		}
+
+		_createClass(Menu, [{
+			key: '_renderLoggedIn',
+			value: function _renderLoggedIn() {
+				var _this2 = this;
+
+				return _react2.default.createElement(
+					'header',
+					{ className: 'navbar' },
+					'Links:',
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.HOME },
+						'Home'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.DASHBOARD },
+						'Dashboard'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.REPORT },
+						'Report'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SETTINGS },
+						'Settings'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.TROUBLESHOOT },
+						'Troubleshoot'
+					),
+					' ',
+					_react2.default.createElement(
+						'span',
+						{ onClick: function onClick() {
+								return _this2.logoutHandler();
+							} },
+						'Logout'
+					)
+				);
+			}
+		}, {
+			key: '_renderLoggedOut',
+			value: function _renderLoggedOut() {
+				return _react2.default.createElement(
+					'header',
+					{ className: 'navbar' },
+					'Links:',
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.HOME },
+						'Home'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.LOGIN },
+						'Login'
+					),
+					' ',
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SIGNUP },
+						'Signup'
+					)
+				);
+			}
+		}, {
+			key: 'logoutHandler',
+			value: function logoutHandler() {
+				var logout = this.props.logout;
+
+				if (logout instanceof Function) logout();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var user = this.props.user;
+				var isLoggedIn = !!user.email;
+
+				if (isLoggedIn) return this._renderLoggedIn();else return this._renderLoggedOut();
+			}
+		}]);
+
+		return Menu;
+	}(_react.Component);
+
+	Menu.propTypes = {
+		isOpen: PropTypes.bool.isRequired,
+		logout: PropTypes.func.isRequired,
+		user: PropTypes.shape({
+			email: PropTypes.string
+		})
+	};
+
+	exports.default = Menu;
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.modalShow = modalShow;
+	exports.modalHide = modalHide;
+
+	var _constants = __webpack_require__(244);
+
+	function modalShow(component, props) {
+		return {
+			type: _constants.MODAL_ON,
+			component: component,
+			props: props
+		};
+	}
+
+	function modalHide() {
+		return {
+			type: _constants.MODAL_OFF
+		};
+	}
 
 /***/ }
 /******/ ]);
