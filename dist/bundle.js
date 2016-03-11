@@ -26651,6 +26651,10 @@
 		TROUBLESHOOT: '/react/troubleshoot'
 	};
 
+	//Modal Related
+	var MODAL_ON = exports.MODAL_ON = 'MODAL_ON';
+	var MODAL_OFF = exports.MODAL_OFF = 'MODAL_OFF';
+
 /***/ },
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
@@ -27015,7 +27019,7 @@
 
 				return _react2.default.createElement(
 					'header',
-					null,
+					{ className: 'navbar' },
 					'Links:',
 					' ',
 					_react2.default.createElement(
@@ -27062,7 +27066,7 @@
 			value: function _renderLoggedOut() {
 				return _react2.default.createElement(
 					'header',
-					null,
+					{ className: 'navbar' },
 					'Links:',
 					' ',
 					_react2.default.createElement(
@@ -29183,7 +29187,8 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiForm).call(this, props));
 
 			_this.state = {
-				eddi: null
+				id: null,
+				name: null
 			};
 			return _this;
 		}
@@ -29191,57 +29196,100 @@
 		_createClass(AddEddiForm, [{
 			key: 'onIdChange',
 			value: function onIdChange(event) {
-				var eddi = event.target.value;
-				this.setState({ eddi: eddi });
+				var id = event.target.value;
+				event.preventDefault();
+				this.setState({ id: id });
+			}
+		}, {
+			key: 'onNameChange',
+			value: function onNameChange(event) {
+				var name = event.target.value;
+				event.preventDefault();
+				this.setState({ name: name });
 			}
 		}, {
 			key: 'submitHandler',
 			value: function submitHandler() {
-				var eddi = this.state.eddi;
+				var _state = this.state;
+				var id = _state.id;
+				var name = _state.name;
 				var onSubmit = this.props.onSubmit;
 
+				event.preventDefault();
+				if (onSubmit instanceof Function) return onSubmit(id, name);
+			}
+		}, {
+			key: 'cancelHandler',
+			value: function cancelHandler(event) {
+				var onCancel = this.props.onCancel;
 
-				if (onSubmit instanceof Function) return onSubmit(eddi);
+				event.preventDefault();
+				if (onCancel instanceof Function) return onCancel();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
 				var _this2 = this;
 
-				var eddi = this.props.eddi;
+				var _props = this.props;
+				var id = _props.id;
+				var name = _props.name;
 
 
 				return _react2.default.createElement(
-					'div',
-					null,
+					'form',
+					{ onSubmit: function onSubmit() {
+							return _this2.submitHandler();
+						} },
 					_react2.default.createElement(
-						'form',
-						{ onSubmit: function onSubmit() {
-								return _this2.submitHandler();
-							} },
+						'div',
+						{ className: 'form-container' },
+						_react2.default.createElement(
+							'div',
+							{ 'class': 'input-container' },
+							_react2.default.createElement(
+								'label',
+								{ htmlFor: 'id' },
+								'Eddi Id : '
+							),
+							_react2.default.createElement('input', { type: 'text',
+								name: 'id',
+								onChange: function onChange(event) {
+									return _this2.onIdChange(event);
+								},
+								value: id
+							})
+						),
 						_react2.default.createElement(
 							'div',
 							null,
 							_react2.default.createElement(
-								'div',
-								null,
-								_react2.default.createElement(
-									'label',
-									{ htmlFor: 'id' },
-									'Eddi Id : '
-								),
-								_react2.default.createElement('input', { type: 'text',
-									name: 'id',
-									onChange: function onChange(event) {
-										return _this2.onIdChange(event);
-									},
-									value: eddi
-								})
+								'label',
+								{ htmlFor: 'name' },
+								'Eddi Name : '
 							),
+							_react2.default.createElement('input', { type: 'text',
+								name: 'name',
+								onChange: function onChange(event) {
+									return _this2.onNameChange(event);
+								},
+								value: name
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							null,
 							_react2.default.createElement(
 								'button',
 								{ type: 'submit' },
 								'Add'
+							),
+							_react2.default.createElement(
+								'button',
+								{ type: 'button', onClick: function onClick(event) {
+										return _this2.cancelHandler(event);
+									} },
+								'Cancel'
 							)
 						)
 					)
@@ -29253,7 +29301,8 @@
 	}(_react.Component);
 
 	AddEddiForm.propTypes = {
-		onSubmit: PropTypes.func
+		onSubmit: PropTypes.func,
+		onCancel: PropTypes.func
 	};
 
 	exports.default = AddEddiForm;

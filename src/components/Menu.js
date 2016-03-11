@@ -10,7 +10,7 @@ const {
 class Menu extends Component {
 	_renderLoggedIn(){
 		return (
-			<header>
+			<header className={'navbar'}>
 				Links:
 				{' '}
 				<Link to={PATHS.HOME}>Home</Link>
@@ -30,7 +30,7 @@ class Menu extends Component {
 
 	_renderLoggedOut(){
 		return (
-			<header>
+			<header className={'navbar'}>
 				Links:
 				{' '}
 				<Link to={PATHS.HOME}>Home</Link>

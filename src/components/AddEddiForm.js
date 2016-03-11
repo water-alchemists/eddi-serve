@@ -9,47 +9,73 @@ class AddEddiForm extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			eddi : null
+			id : null,
+			name : null
 		};
 	}
 
 	onIdChange(event){
-		const eddi = event.target.value;
-		this.setState({ eddi });
+		const id = event.target.value;
+		event.preventDefault();
+		this.setState({ id });
+	}
+
+	onNameChange(event){
+		const name = event.target.value;
+		event.preventDefault();
+		this.setState({ name });
 	}
 
 	submitHandler(){
-		const { eddi } = this.state,
+		const { id, name } = this.state,
 			{ onSubmit } = this.props;
+		event.preventDefault();
+		if(onSubmit instanceof Function) return onSubmit(id, name);
+	}
 
-		if(onSubmit instanceof Function) return onSubmit(eddi);
+	cancelHandler(event){
+		const { onCancel } = this.props;
+		event.preventDefault();
+		if(onCancel instanceof Function) return onCancel();
 	}
 
 	render(){
-		const { eddi } = this.props;
+		const { id, name } = this.props;
 
 		return (
-			<div>
-				<form onSubmit={() => this.submitHandler()}>
-					<div>
-						<div>
-							<label htmlFor='id'>Eddi Id : </label>
-							<input type='text' 
-								name='id'
-								onChange={event => this.onIdChange(event)}
-								value={eddi}
-							/>
-						</div>
-						<button type='submit'>Add</button>
+			<form onSubmit={() => this.submitHandler()}>
+				<div className={'form-container'}>
+					<div class={'input-container'}>
+						<label htmlFor='id'>Eddi Id : </label>
+						<input type='text' 
+							name='id'
+							onChange={event => this.onIdChange(event)}
+							value={id}
+						/>
 					</div>
-				</form>
-			</div>
+					<div>
+						<label htmlFor='name'>Eddi Name : </label>
+						<input type='text'
+							name='name'
+							onChange={event => this.onNameChange(event)}
+							value={name}
+						/>
+					</div>
+					<div>
+						<button type='submit'>Add</button>
+						<button type='button' onClick={event => this.cancelHandler(event)}>
+							Cancel
+						</button>
+					</div>
+				</div>
+			</form>
 		)
 	}
 }
 
 AddEddiForm.propTypes = {
 	onSubmit : PropTypes.func,
+	onCancel : PropTypes.func
 }
 
 export default AddEddiForm;

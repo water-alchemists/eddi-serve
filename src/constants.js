@@ -27,3 +27,7 @@ export const PATHS = {
 	DASHBOARD : '/react/dashboard',
 	TROUBLESHOOT : '/react/troubleshoot',
 };
+
+//Modal Related
+export const MODAL_ON = 'MODAL_ON';
+export const MODAL_OFF = 'MODAL_OFF';
