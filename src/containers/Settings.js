@@ -25,7 +25,7 @@ function mapDispatchToProps(dispatch){
 		updateStart : (eddiId, hour, minutes) => dispatch(setEddiStartThunk(eddiId, hour, minutes)),
 		updateEnd : (eddiId, hour, minutes) => dispatch(setEddiEndThunk(eddiId, hour, minutes)),
 		updateSalinity : (eddiId, salinity) => dispatch(setEddiSalinityThunk(eddiId, salinity)),
-		openAddForm : () => dispatch(modalShow('AddEddiForm'))
+		openAddForm : () => dispatch(modalShow('AddEddiModal'))
 	};
 }
 

@@ -26726,18 +26726,22 @@
 		var component = action.component;
 		var _action$props = action.props;
 		var props = _action$props === undefined ? {} : _action$props;
+		var _action$context = action.context;
+		var context = _action$context === undefined ? {} : _action$context;
+		var _action$overlay = action.overlay;
+		var overlay = _action$overlay === undefined ? {} : _action$overlay;
 
 		switch (type) {
 			case _constants.MODAL_ON:
 				return _extends({}, state, {
 					on: true,
 					props: _extends({}, props),
-					component: component
+					component: component,
+					context: context,
+					overlay: overlay
 				});
 			case _constants.MODAL_OFF:
-				return _extends({}, state, {
-					on: false
-				});
+				return _extends({}, initialState);
 			default:
 				return state;
 		}
@@ -26748,7 +26752,9 @@
 	var initialState = {
 		on: false,
 		component: '',
-		props: ''
+		props: {},
+		context: {},
+		overlay: {}
 	};
 
 /***/ },
@@ -26920,17 +26926,15 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _reactModal = __webpack_require__(271);
-
-	var _reactModal2 = _interopRequireDefault(_reactModal);
-
 	var _Menu = __webpack_require__(291);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
-	var _user = __webpack_require__(261);
+	var _ModalWrapper = __webpack_require__(293);
 
-	var _modal = __webpack_require__(292);
+	var _ModalWrapper2 = _interopRequireDefault(_ModalWrapper);
+
+	var _user = __webpack_require__(261);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26947,16 +26951,16 @@
 		};
 	}
 
-	function mapDispatchToProps(dispatch) {
+	function mapDispatchToProps(_dispatch) {
 		return {
 			loginWithToken: function loginWithToken() {
-				return dispatch((0, _user.userLoginWithTokenThunk)());
+				return _dispatch((0, _user.userLoginWithTokenThunk)());
 			},
 			logout: function logout() {
-				return dispatch((0, _user.userLogout)());
+				return _dispatch((0, _user.userLogout)());
 			},
-			modalHide: function modalHide() {
-				return dispatch((0, _modal.modalHide)());
+			dispatch: function dispatch(action) {
+				return _dispatch(action);
 			}
 		};
 	}
@@ -27004,39 +27008,15 @@
 				});
 			}
 		}, {
-			key: '_renderModal',
-			value: function _renderModal() {
-				var _props = this.props;
-				var modal = _props.modal;
-				var modalHide = _props.modalHide;
-				var on = modal.on;
-				var props = modal.props;
-				var component = modal.component;
-				var closeModal = function closeModal() {
-					return modalHide();
-				};
-				if (!on) return null;
-				return _react2.default.createElement(
-					_reactModal2.default,
-					{ isOpen: on },
-					_react2.default.createElement(
-						'div',
-						{ onClick: function onClick() {
-								return closeModal();
-							} },
-						'hello'
-					)
-				);
-			}
-		}, {
 			key: 'render',
 			value: function render() {
-				var _props2 = this.props;
-				var user = _props2.user;
-				var logout = _props2.logout;
+				var _props = this.props;
+				var user = _props.user;
+				var logout = _props.logout;
+				var modal = _props.modal;
+				var dispatch = _props.dispatch;
 				var isOpen = this.state.isOpen;
 				var children = this._cloneChildrenWithToggle();
-				var ModalElement = this._renderModal();
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -27049,7 +27029,9 @@
 						{ style: { marginTop: '1.5em' } },
 						children
 					),
-					ModalElement
+					_react2.default.createElement(_ModalWrapper2.default, { dispatch: dispatch,
+						modal: modal
+					})
 				);
 			}
 		}]);
@@ -28912,7 +28894,7 @@
 				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
 			},
 			openAddForm: function openAddForm() {
-				return dispatch((0, _modal.modalShow)('AddEddiForm'));
+				return dispatch((0, _modal.modalShow)('AddEddiModal'));
 			}
 		};
 	}
@@ -29035,7 +29017,7 @@
 			}
 		}, {
 			key: 'submitHandler',
-			value: function submitHandler() {
+			value: function submitHandler(event) {
 				var _state = this.state;
 				var id = _state.id;
 				var name = _state.name;
@@ -29064,8 +29046,8 @@
 
 				return _react2.default.createElement(
 					'form',
-					{ onSubmit: function onSubmit() {
-							return _this2.submitHandler();
+					{ onSubmit: function onSubmit(event) {
+							return _this2.submitHandler(event);
 						} },
 					_react2.default.createElement(
 						'div',
@@ -31355,6 +31337,230 @@
 			type: _constants.MODAL_OFF
 		};
 	}
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactModal = __webpack_require__(271);
+
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+
+	var _modal = __webpack_require__(292);
+
+	var _modals = __webpack_require__(294);
+
+	var modals = _interopRequireWildcard(_modals);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var ModalWrapper = function (_Component) {
+		_inherits(ModalWrapper, _Component);
+
+		function ModalWrapper() {
+			_classCallCheck(this, ModalWrapper);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(ModalWrapper).apply(this, arguments));
+		}
+
+		_createClass(ModalWrapper, [{
+			key: 'closeModal',
+			value: function closeModal() {
+				var dispatch = this.props.dispatch;
+
+				dispatch((0, _modal.modalHide)());
+			}
+		}, {
+			key: '_renderContext',
+			value: function _renderContext() {
+				var _this2 = this;
+
+				var _props = this.props;
+				var modal = _props.modal;
+				var dispatch = _props.dispatch;
+				var component = modal.component;
+				var props = modal.props;
+				var modalClass = modals[component];
+				var newProps = _extends({}, props, {
+					dispatch: dispatch,
+					closeModal: function closeModal() {
+						return _this2.closeModal();
+					}
+				});
+
+				return modalClass ? _react2.default.createElement(modalClass, newProps) : null;
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this3 = this;
+
+				var modal = this.props.modal;
+				var on = modal.on;
+				var context = modal.context;
+				var overlay = modal.overlay;
+				var customStyles = {
+					context: context,
+					overlay: overlay
+				};
+				var ContextElement = this._renderContext();
+
+				return _react2.default.createElement(
+					_reactModal2.default,
+					{ isOpen: on,
+						onRequestClose: function onRequestClose() {
+							return _this3.closeModal();
+						},
+						style: customStyles
+					},
+					ContextElement
+				);
+			}
+		}]);
+
+		return ModalWrapper;
+	}(_react.Component);
+
+	ModalWrapper.propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		modal: PropTypes.shape({
+			on: PropTypes.bool.isRequired,
+			component: PropTypes.string,
+			props: PropTypes.object,
+			styles: PropTypes.shape({
+				overlay: PropTypes.object,
+				context: PropTypes.object
+			})
+		})
+	};
+
+	exports.default = ModalWrapper;
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.AddEddiModal = undefined;
+
+	var _AddEddiModal = __webpack_require__(295);
+
+	var _AddEddiModal2 = _interopRequireDefault(_AddEddiModal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.AddEddiModal = _AddEddiModal2.default;
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _eddis = __webpack_require__(257);
+
+	var _AddEddiForm = __webpack_require__(268);
+
+	var _AddEddiForm2 = _interopRequireDefault(_AddEddiForm);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var AddEddiModal = function (_Component) {
+		_inherits(AddEddiModal, _Component);
+
+		function AddEddiModal() {
+			_classCallCheck(this, AddEddiModal);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiModal).apply(this, arguments));
+		}
+
+		_createClass(AddEddiModal, [{
+			key: '_onCancel',
+			value: function _onCancel() {
+				var closeModal = this.props.closeModal;
+
+				closeModal();
+			}
+		}, {
+			key: '_onSubmit',
+			value: function _onSubmit(id, name) {
+				var _props = this.props;
+				var dispatch = _props.dispatch;
+				var closeModal = _props.closeModal;
+
+				dispatch((0, _eddis.assignEddiThunk)());
+				dispatch(closeModal());
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				return _react2.default.createElement(_AddEddiForm2.default, { onSubmit: function onSubmit(id, name) {
+						return _this2._onSubmit(id, name);
+					},
+					onCancel: function onCancel() {
+						return _this2._onCancel();
+					}
+				});
+			}
+		}]);
+
+		return AddEddiModal;
+	}(_react.Component);
+
+	AddEddiModal.propTypes = {
+		closeModal: PropTypes.func.isRequired,
+		dispatch: PropTypes.func.isRequired
+	};
+
+	exports.default = AddEddiModal;
 
 /***/ }
 /******/ ]);

@@ -26,7 +26,7 @@ class AddEddiForm extends Component {
 		this.setState({ name });
 	}
 
-	submitHandler(){
+	submitHandler(event){
 		const { id, name } = this.state,
 			{ onSubmit } = this.props;
 		event.preventDefault();
@@ -43,7 +43,7 @@ class AddEddiForm extends Component {
 		const { id, name } = this.props;
 
 		return (
-			<form onSubmit={() => this.submitHandler()}>
+			<form onSubmit={event => this.submitHandler(event)}>
 				<div className={'form-container'}>
 					<div class={'input-container'}>
 						<label htmlFor='id'>Eddi Id : </label>

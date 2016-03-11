@@ -1,12 +1,11 @@
 'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Modal from 'react-modal';
 
 import Menu from '../components/Menu';
+import ModalWrapper from '../components/ModalWrapper';
 
 import { userLogout, userLoginWithTokenThunk } from '../actions/user';
-import { modalHide } from '../actions/modal';
 
 function mapStateToProps(state){
 	return {
@@ -19,7 +18,7 @@ function mapDispatchToProps(dispatch){
 	return {
 		loginWithToken : () => dispatch(userLoginWithTokenThunk()),
 		logout : () => dispatch(userLogout()),
-		modalHide : () => dispatch(modalHide())
+		dispatch : action => dispatch(action)
 	}
 }
 
@@ -49,23 +48,10 @@ class App extends Component {
 		return React.Children.map(children, child => React.cloneElement(child, additionalProps));
 	}
 
-	_renderModal(){
-		const { modal, modalHide } = this.props,
-			{ on, props, component } = modal,
-			closeModal = () => modalHide();
-		if(!on) return null;
-		return (
-			<Modal isOpen={on}>
-				<div onClick={() => closeModal()}>hello</div>
-			</Modal>
-		);
-	}
-
 	render(){
-		const { user, logout } = this.props,
+		const { user, logout, modal, dispatch } = this.props,
 			{ isOpen } = this.state,
-			children = this._cloneChildrenWithToggle(),
-			ModalElement = this._renderModal();
+			children = this._cloneChildrenWithToggle();
 		return (
 			<div>
 				<Menu isOpen={isOpen}
@@ -73,7 +59,9 @@ class App extends Component {
 					user={user}
 				/>
 				<div style={{ marginTop: '1.5em' }}>{children}</div>
-				{ModalElement}
+				<ModalWrapper dispatch={dispatch}
+					modal={modal}
+				/>
 			</div>
 		);
 	}
