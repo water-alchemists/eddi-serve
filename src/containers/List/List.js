@@ -78,7 +78,7 @@ class List extends Component {
 		console.log('these are teh eddis', eddis);
 
 		return (
-			<div id="list">
+			<div id="list" className="page">
 				{ showEddi }
 			</div>
 		);
