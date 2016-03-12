@@ -19,13 +19,14 @@ export const EDDI_SELECT = 'EDDI_SELECT';
 
 //paths
 export const PATHS = {
-	HOME : '/react',
-	LOGIN : '/react/login',
-	SIGNUP : '/react/signup',
-	SETTINGS : '/react/settings',
-	REPORT : '/react/report',
-	DASHBOARD : '/react/dashboard',
-	TROUBLESHOOT : '/react/troubleshoot',
+	HOME : '/',
+	LOGIN : '/login',
+	SIGNUP : '/signup',
+	LIST : '/list',
+	SETTINGS : '/settings',
+	REPORT : '/report',
+	DASHBOARD : '/dashboard',
+	TROUBLESHOOT : '/troubleshoot',
 };
 
 //Modal Related
