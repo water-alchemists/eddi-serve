@@ -31382,7 +31382,9 @@
 
 	var _eddis = __webpack_require__(278);
 
-	var _modal = __webpack_require__(275);
+	var _AddEddiButton = __webpack_require__(412);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
 	var _SettingsEddi = __webpack_require__(294);
 
@@ -31418,9 +31420,6 @@
 			},
 			getAllEddis: function getAllEddis() {
 				return dispatch((0, _eddis.getAllEddiByUserThunk)());
-			},
-			openAddForm: function openAddForm() {
-				return dispatch((0, _modal.modalShow)('AddEddiModal'));
 			}
 		};
 	}
@@ -31440,13 +31439,6 @@
 				var getAllEddis = this.props.getAllEddis;
 
 				getAllEddis();
-			}
-		}, {
-			key: 'clickAddHandler',
-			value: function clickAddHandler() {
-				var openAddForm = this.props.openAddForm;
-
-				openAddForm();
 			}
 		}, {
 			key: 'onSalinityChange',
@@ -31496,8 +31488,6 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this2 = this;
-
 				var EddiElements = this._renderEddis();
 				return _react2.default.createElement(
 					'div',
@@ -31507,22 +31497,7 @@
 						null,
 						EddiElements
 					),
-					_react2.default.createElement(
-						'div',
-						{ style: styles.addButton, onClick: function onClick() {
-								return _this2.clickAddHandler();
-							} },
-						_react2.default.createElement(
-							'p',
-							null,
-							'add new'
-						),
-						_react2.default.createElement(
-							'p',
-							null,
-							'+'
-						)
-					)
+					_react2.default.createElement(_AddEddiButton2.default, null)
 				);
 			}
 		}]);
@@ -45572,6 +45547,10 @@
 
 	var _eddis = __webpack_require__(278);
 
+	var _List = __webpack_require__(410);
+
+	var _List2 = _interopRequireDefault(_List);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45653,20 +45632,24 @@
 		}, {
 			key: '_renderNoEddis',
 			value: function _renderNoEddis() {
-				var _this2 = this;
-
 				return _react2.default.createElement(
 					'p',
-					null,
-					'Currently you are not tracking any eddis. Click ',
+					{ className: 'eddis-empty' },
 					_react2.default.createElement(
-						'a',
-						{ onClick: function onClick() {
-								return _this2.navigateTo('SETTINGS');
-							} },
-						'here'
+						'span',
+						null,
+						' Currently you are not tracking any eddis. '
 					),
-					' to start tracking one.'
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SETTINGS },
+						'Click Here'
+					),
+					_react2.default.createElement(
+						'span',
+						null,
+						' to start tracking one. '
+					)
 				);
 			}
 		}, {
@@ -45675,11 +45658,15 @@
 				var _props2 = this.props;
 				var user = _props2.user;
 				var eddis = _props2.eddis;
-				var NoEddiElement = this._renderNoEddis();
-				var EddiButtons = this._renderEddiButtons();
-				var showEddi = eddis && eddis.length ? EddiButtons : NoEddiElement;
 
-				console.log('these are teh eddis', eddis);
+
+				var showEddi;
+				if (eddis && eddis.length) {
+					showEddi = this._renderEddiButtons();
+					console.log('these are teh eddis', eddis);
+				} else {
+					showEddi = this._renderNoEddis();
+				}
 
 				return _react2.default.createElement(
 					'div',
@@ -45693,6 +45680,116 @@
 	}(_react.Component);
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(List);
+
+/***/ },
+/* 409 */,
+/* 410 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(411);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(287)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./List.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./List.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 411 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(286)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#list .eddis-empty {\n  margin: 40px;\n  text-align: center;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 412 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _modal = __webpack_require__(275);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    openAddForm: function openAddForm() {
+	      return dispatch((0, _modal.modalShow)('AddEddiModal'));
+	    }
+	  };
+	}
+
+	var AddEddiButton = function (_Component) {
+	  _inherits(AddEddiButton, _Component);
+
+	  function AddEddiButton() {
+	    _classCallCheck(this, AddEddiButton);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiButton).apply(this, arguments));
+	  }
+
+	  _createClass(AddEddiButton, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        { onClick: function onClick() {
+	            return _this2.props.openAddForm();
+	          } },
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          'add new +'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return AddEddiButton;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(AddEddiButton);
 
 /***/ }
 /******/ ]);
