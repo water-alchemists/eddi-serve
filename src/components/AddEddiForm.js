@@ -30,7 +30,7 @@ class AddEddiForm extends Component {
 		const { id, name } = this.state,
 			{ onSubmit } = this.props;
 		event.preventDefault();
-		if(onSubmit instanceof Function) return onSubmit(id, name);
+		if(onSubmit instanceof Function) return onSubmit(id, { name });
 	}
 
 	cancelHandler(event){
@@ -45,7 +45,7 @@ class AddEddiForm extends Component {
 		return (
 			<form onSubmit={event => this.submitHandler(event)}>
 				<div className={'form-container'}>
-					<div class={'input-container'}>
+					<div className={'input-container'}>
 						<label htmlFor='id'>Eddi Id : </label>
 						<input type='text' 
 							name='id'
@@ -53,7 +53,7 @@ class AddEddiForm extends Component {
 							value={id}
 						/>
 					</div>
-					<div>
+					<div className={'input-container'}>
 						<label htmlFor='name'>Eddi Name : </label>
 						<input type='text'
 							name='name'
@@ -61,7 +61,7 @@ class AddEddiForm extends Component {
 							value={name}
 						/>
 					</div>
-					<div>
+					<div className={'input-container'}>
 						<button type='submit'>Add</button>
 						<button type='button' onClick={event => this.cancelHandler(event)}>
 							Cancel

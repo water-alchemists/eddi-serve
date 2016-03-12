@@ -11,6 +11,7 @@ const PATHS = {
 	SETTINGS_PATH : 'settings',
 	SALINITY_PATH : 'salinity',
 	TIMING_PATH : 'timing',
+	NAME_PATH : 'name',
 	START_TIME : 'start',
 	END_TIME : 'end',
 	HOUR : 'hour',
@@ -127,33 +128,40 @@ class EddiFire {
 
 	findByEddi(id){
 		return new Promise((resolve, reject) => {
-			this.refs.EDDI.child(id).once('value', data => {
-				const eddi = data.val();
-				if(!eddi) return reject(new Error(`Eddi machine ${id} does not exist.`));
-				resolve(eddi);
-			}, reject);
+			this.refs.EDDI.child(id).once('value',
+				snapshot => {
+					const eddi = snapshot.val();
+					if(!eddi) return reject(new Error(`Eddi machine ${id} does not exist.`));
+					resolve(eddi);
+				}, reject);
 		});
 	}
 
 	assignEddiToUser(userId, eddiId){
-		return new Promise((resolve, reject) => {
-			this.refs.EDDI.child(eddiId)
+		return this.findByEddi(eddiId)
+			.then(() => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(eddiId)
 						.child(PATHS.USER_PATH)
 						.set(
 							userId, 
 							error => {
+								console.log('this is assigninguser', error)
 								if(error) return reject(error);
 								resolve();
 							}
 						);
-		});
+					});
+			});
 	}
 
 	unassignEddiToUser(userId, eddiId){
-		return new Promise((resolve, reject) => {
-			this.refs.EDDI.child(eddiId)
+		return this.findByEddi(eddiId)
+			.then(() => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(eddiId)
 						.child(PATHS.USER_PATH)
-						.set(
+						.update(
 							null,
 							error => {
 								if(error) return reject(error);
@@ -161,29 +169,68 @@ class EddiFire {
 							}
 						);
 		});
-	}
-
-	isEddiOwner(eddiId){
-		return isAuthenticated()
-			.then(user => {
-				const userId = user.uid;
-				this.refs.EDDI.child(eddiId)
-						.child(PATHS.USER_PATH)
-						.once('value', (error, data) => {
-							if(error) return reject(error);
-							else if(data === userId) return resolve();
-							else return reject('User is not the owner of this eddi.');
-						});
 			});
 	}
 
+	isEddiOwner(eddiId){
+		return this.isAuthenticated()
+			.then(user => {
+				const userId = user.uid;
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(eddiId)
+						.child(PATHS.USER_PATH)
+						.once('value', (error, data) => {
+							if(error) return reject(error);
+							else if(data === userId) return resolve(userId);
+							else reject(new Error('User is not the owner of this eddi.'));
+						});
+				});
+			});
+	}
+
+	updateEddiSettings(eddiId, settings){
+		return this.findByEddi(eddiId)
+			.then(() => this.isEddiOwner(eddiId))
+			.then(userId => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(eddiId)
+						.child(PATHS.SETTINGS_PATH)
+						.update(settings, (error, data) => {
+							if(error) return reject(error);
+							resolve({...settings});
+						})
+					});
+			});
+	}
+
+	setName(eddiId, name){
+		return this.findByEddi(eddiId)
+			.then(() => this.isEddiOwner(eddiId))
+			.then(userId => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(eddiId)
+						.child(PATHS.SETTINGS_PATH)
+						.child(PATHS.NAME_PATH)
+						.update(
+							name,
+							error => {
+								if(error) return reject(error);
+								resolve();
+							}
+						);
+				})
+			})
+	}
+
+
 	setSalinity(eddiId, salinity){
-		return isEddiOwner(eddiId)
+		return this.findByEddi(eddiId)
+			.then(() => this.isEddiOwner(eddiId))
 			.then(() => {
 				this.refs.EDDI.child(eddiId)
 						.child(PATHS.SETTINGS_PATH)
 						.child(PATHS.SALINITY_PATH)
-						.set(
+						.update(
 							salinity, 
 							error => {
 								if(error) return reject(error);

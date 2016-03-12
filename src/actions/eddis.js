@@ -73,17 +73,20 @@ function selectEddi(selected){
 export function getAllEddiByUserThunk(){
 	return dispatch => {
 		return EddiFire.isAuthenticated()
-			.then(({ uid }) => EddiFire.getAllEddiByUser(uid))
+			.then(user => EddiFire.getAllEddiByUser(user.uid))
 			.then(eddis => console.log('these are all the eddis', eddis))
 			.catch(err => dispatch(getAllEddiError(err)));
 	}
 }
 
-export function assignEddiThunk(eddiId){
+export function assignEddiThunk(eddiId, info = {}){
 	return dispatch => {
 		return EddiFire.isAuthenticated()
-			.then(({ uid }) => {
-				return EddiFire.assignEddiToUser(uid, eddiId)
+			.then(user => {
+				const userId = user.uid;
+				console.log('this is hte uid', userId, eddiId);
+				return EddiFire.assignEddiToUser(userId, eddiId)
+					.then(() => EddiFire.updateEddiSettings(eddiId, info))
 					.then(() => EddiFire.getAllEddiByUser(uid));
 			})
 			.then(eddis => console.log('these are all the eddis', eddis))

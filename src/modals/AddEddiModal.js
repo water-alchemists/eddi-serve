@@ -15,9 +15,9 @@ class AddEddiModal extends Component {
 		closeModal();
 	}
 
-	_onSubmit(id, name){
+	_onSubmit(id, settings){
 		const { dispatch, closeModal } = this.props;
-		dispatch(assignEddiThunk());
+		dispatch(assignEddiThunk(id, settings));
 		dispatch(closeModal());
 	}
 
