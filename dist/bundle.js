@@ -45061,7 +45061,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.salinityOptions = exports.timeOptions = undefined;
+	exports.salinityOptions = exports.minutesOptions = exports.hourOptions = undefined;
 
 	var _moment = __webpack_require__(299);
 
@@ -45069,20 +45069,30 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function createTimeOptions(increment) {
-		var timeObjects = [];
-		for (var h = 0; h < 24; h++) {
-			for (var m = 0; m < 60; m += increment) {
-				timeObjects.push({ h: h, m: m });
-			}
+	function createHours(num) {
+		var hourOptions = [];
+		for (var i = 0; i < num; i++) {
+			hourOptions.push(i + 1);
 		}
-
-		return timeObjects.map(function (timeObj) {
-			return (0, _moment2.default)(timeObj);
-		});
+		return hourOptions;
 	}
 
-	var timeOptions = exports.timeOptions = createTimeOptions(15);
+	function createMinutes(increment) {
+		var minutesOptions = [];
+		for (var i = 0; i < 60; i++) {
+			minutesOptions.push(i * increment);
+		}
+		return minutesOptions;
+	}
+
+	function convertMiltaryToNormal() {}
+
+	function convertNormalToMilitary(hour, period) {
+		if (hour <= 12) return hour;
+	}
+
+	var hourOptions = exports.hourOptions = createHours(12);
+	var minutesOptions = exports.minutesOptions = createMinutes(15);
 
 	var salinityOptions = exports.salinityOptions = {
 		min: 500,

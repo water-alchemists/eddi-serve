@@ -1,18 +1,33 @@
 'use strict';
 import moment from 'moment';
 
-function createTimeOptions(increment){
-	const timeObjects = [];
-	for(let h = 0; h < 24; h++){
-		for(let m = 0; m < 60; m += increment){
-			timeObjects.push({ h, m });
-		}
+function createHours(num){
+	const hourOptions = [];
+	for(let i = 0; i < num; i++){
+		hourOptions.push(i + 1);
 	}
-
-	return timeObjects.map(timeObj => moment(timeObj));
+	return hourOptions;
 }
 
-export const timeOptions = createTimeOptions(15);
+function createMinutes(increment){
+	const minutesOptions = [];
+	for(let i = 0; i < 60; i++){
+		minutesOptions.push(i * increment);
+	}
+	return minutesOptions;
+}
+
+function convertMiltaryToNormal(){
+
+}
+
+function convertNormalToMilitary(hour, period){
+	if(hour <= 12) return hour;
+	
+}
+
+export const hourOptions = createHours(12);
+export const minutesOptions = createMinutes(15);
 
 export const salinityOptions = {
 	min: 500,
