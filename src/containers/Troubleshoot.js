@@ -17,7 +17,7 @@ class Troubleshoot extends Component {
 	render(){
 		const { eddi } = this.props;
 		return (
-			<div>
+			<div id="troubleshoot" className="page">
 				{'This is the troubleshoot page.'}
 			</div>
 		);

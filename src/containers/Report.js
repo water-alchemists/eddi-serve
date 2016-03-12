@@ -17,7 +17,7 @@ class Report extends Component {
 	render(){
 		const { eddi } = this.props;
 		return (
-			<div>
+			<div id="report" className='page'>
 				{'This is the report page.'}
 			</div>
 		);
