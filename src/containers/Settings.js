@@ -6,16 +6,17 @@ import {
 	assignEddiThunk,
 	setEddiStartThunk,
 	setEddiEndThunk,
-	setEddiSalinityThunk
+	setEddiSalinityThunk,
+	getAllEddiByUserThunk,
 } from '../actions/eddis';
 
 import { modalShow } from '../actions/modal';
 
-import AddEddiForm from '../components/AddEddiForm';
+import SettingsEddi from '../components/SettingsEddi';
 
 function mapStateToProps(state){
 	return {
-		eddis : state.eddis.list
+		eddis : state.eddis.list,
 	};
 }
 
@@ -25,19 +26,34 @@ function mapDispatchToProps(dispatch){
 		updateStart : (eddiId, hour, minutes) => dispatch(setEddiStartThunk(eddiId, hour, minutes)),
 		updateEnd : (eddiId, hour, minutes) => dispatch(setEddiEndThunk(eddiId, hour, minutes)),
 		updateSalinity : (eddiId, salinity) => dispatch(setEddiSalinityThunk(eddiId, salinity)),
+		getAllEddis : () => dispatch(getAllEddiByUserThunk()),
 		openAddForm : () => dispatch(modalShow('AddEddiModal'))
 	};
 }
 
 class Settings extends Component {
+	componentWillMount(){
+		const { getAllEddis } = this.props;
+		getAllEddis();
+	}
+
 	clickAddHandler(){
 		const { openAddForm } = this.props;
-		console.log('this ')
 		openAddForm();
 	}
 
-	render(){
+	_renderEddis(){
 		const { eddis } = this.props;
+		return eddis.map(eddi => {
+			return (
+				<SettingsEddi eddi={eddi}/>
+			)
+		})
+		console.log('these are the eddis', eddis);
+	}
+
+	render(){
+		this._renderEddis();
 		return (
 			<div>
 				<div style={styles.addButton} onClick={() => this.clickAddHandler()}>

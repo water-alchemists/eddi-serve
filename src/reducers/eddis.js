@@ -11,16 +11,15 @@ import {
 } from '../constants';
 
 const initialState = {
-	list : null,
+	list : [],
 	selected : null
 };
 
 export default function(state = initialState, action = {}){
-	const { type, eddis = {} } = action,
-		{ list, selected } = eddis;
+	const { type, list, selected} = action;
 	switch(type){
 	case EDDI_GETALL_SUCCESS : 
-		console.log('eddi got all');
+		console.log('eddi got all', list);
 		return {
 			...state,
 			list

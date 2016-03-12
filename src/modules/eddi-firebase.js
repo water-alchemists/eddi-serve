@@ -12,6 +12,7 @@ const PATHS = {
 	SALINITY_PATH : 'salinity',
 	TIMING_PATH : 'timing',
 	NAME_PATH : 'name',
+	VERSION_PATH : 'version',
 	START_TIME : 'start',
 	END_TIME : 'end',
 	HOUR : 'hour',
@@ -66,7 +67,6 @@ class EddiFire {
 
 	getUserProfile(id){
 		return new Promise((resolve, reject) => {
-			console.log('this is the id', id);
 			this.refs.USER.child(id).once('value', snapshot => {
 				const user = snapshot.val();
 				if(!user) return reject(new Error('Profile does not exist for this user.'));

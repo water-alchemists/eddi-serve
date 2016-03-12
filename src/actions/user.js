@@ -72,10 +72,8 @@ export function userCreateThunk(user){
 		const { email, password } = user;
 		return EddiFire.createUser({ email, password })
 			.then(userSuccess => {
-				console.log('this is the userSuccess', userSuccess);
 				const id = userSuccess.uid;
 				delete user.password;
-				console.log('created a user', userSuccess);
 				return EddiFire.createUserProfile(id, user)
 					.then(userProfile => {
 						dispatch(userGetProfile(userProfile));

@@ -74,7 +74,7 @@ export function getAllEddiByUserThunk(){
 	return dispatch => {
 		return EddiFire.isAuthenticated()
 			.then(user => EddiFire.getAllEddiByUser(user.uid))
-			.then(eddis => console.log('these are all the eddis', eddis))
+			.then(eddis => dispatch(getAllEddiSuccess(eddis)))
 			.catch(err => dispatch(getAllEddiError(err)));
 	}
 }

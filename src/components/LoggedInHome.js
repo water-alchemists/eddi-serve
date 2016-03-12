@@ -4,6 +4,8 @@ import { browserHistory } from 'react-router';
 
 import { PATHS } from '../constants';
 
+import HomeButton from './HomeButton';
+
 const {
 	PropTypes
 } = React;
@@ -22,10 +24,12 @@ class LoggedInHome extends Component {
 	_renderEddiButtons(){
 		const { eddis } = this.props;
 		if(eddis) {
-			return eddis.map(eddi => {
-				const name = eddi.name;
+			return eddis.map((eddi, i) => {
+				const name = eddi.settings.name;
 				return (
-					<div>{name}</div>
+					<HomeButton key={i}
+						name={name}
+					/>
 				);
 			});
 		}
