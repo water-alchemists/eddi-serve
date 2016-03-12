@@ -45311,9 +45311,10 @@
 		}
 
 		_createClass(Home, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				if (this.props.user.email) {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+
+				if (nextProps.user.email) {
 					// user is logged in. go directly to list screen
 					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
 				}

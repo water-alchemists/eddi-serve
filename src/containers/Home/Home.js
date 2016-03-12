@@ -51,8 +51,9 @@ class Home extends Component {
 		};
 	}
 
-  componentWillMount(){
-		if( this.props.user.email ){
+  	componentWillReceiveProps(nextProps){
+
+		if(nextProps.user.email ){
 			// user is logged in. go directly to list screen
 			browserHistory.push(PATHS.LIST);
 		}
