@@ -53,9 +53,12 @@ class Settings extends Component {
 	}
 
 	render(){
-		this._renderEddis();
+		const EddiElements = this._renderEddis();
 		return (
 			<div>
+				<div>
+					{EddiElements}
+				</div>
 				<div style={styles.addButton} onClick={() => this.clickAddHandler()}>
 					<p>add new</p>	
 					<p>+</p>

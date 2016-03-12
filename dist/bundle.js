@@ -31664,10 +31664,15 @@
 			value: function render() {
 				var _this2 = this;
 
-				this._renderEddis();
+				var EddiElements = this._renderEddis();
 				return _react2.default.createElement(
 					'div',
 					null,
+					_react2.default.createElement(
+						'div',
+						null,
+						EddiElements
+					),
 					_react2.default.createElement(
 						'div',
 						{ style: styles.addButton, onClick: function onClick() {
@@ -31748,11 +31753,25 @@
 		_createClass(SettingsEddi, [{
 			key: 'render',
 			value: function render() {
+				var eddi = this.props.eddi;
+				var _eddi$version = eddi.version;
+				var version = _eddi$version === undefined ? {} : _eddi$version;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+
+				console.log('settings eddi', eddi, version, settings);
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_SettingsEddiHeader2.default, null),
-					_react2.default.createElement(SettingEddiVersion, null),
+					_react2.default.createElement(_SettingsEddiHeader2.default, {
+						name: settings.name
+					}),
+					_react2.default.createElement(_SettingsEddiVersion2.default, {
+						artikNumber: version.artik.number,
+						artikDate: new Date(version.artik.updated),
+						eddiNumber: version.eddi.number,
+						eddiDate: new Date(version.eddi.updated)
+					}),
 					_react2.default.createElement('div', null)
 				);
 			}
@@ -31828,7 +31847,7 @@
 			key: 'render',
 			value: function render() {
 				var name = this.props.name;
-				var formattedName = name.toUppercase();
+				var formattedName = name.toUpperCase();
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -31845,7 +31864,7 @@
 	}(_react.Component);
 
 	SettingsEddiHeader.propTypes = {
-		name: PropTypes.string
+		name: PropTypes.string.isRequired
 	};
 
 	exports.default = SettingsEddiHeader;
@@ -31865,6 +31884,10 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _moment = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"moment\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+	var _moment2 = _interopRequireDefault(_moment);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31893,7 +31916,8 @@
 				var artikDate = _props.artikDate;
 				var eddiNumber = _props.eddiNumber;
 				var eddiDate = _props.eddiDate;
-
+				var formattedArtikDate = (0, _moment2.default)(artikDate).format('M/D/YY');
+				var formattedEddiDate = (0, _moment2.default)(eddiDate).format('M/D/YY');
 
 				return _react2.default.createElement(
 					'div',
@@ -31909,7 +31933,7 @@
 						_react2.default.createElement(
 							'p',
 							null,
-							'updated ' + eddiDate
+							'updated ' + formattedEddiDate
 						)
 					),
 					_react2.default.createElement(
@@ -31923,7 +31947,7 @@
 						_react2.default.createElement(
 							'p',
 							null,
-							'released ' + artikDate
+							'released ' + formattedArtikDate
 						)
 					)
 				);
@@ -31934,10 +31958,10 @@
 	}(_react.Component);
 
 	SettingsEddiVersion.propTypes = {
-		artikNumber: PropTypes.string,
-		artikDate: PropTypes.date,
-		eddiNumber: PropTypes.string,
-		eddiDate: PropTypes.date
+		artikNumber: PropTypes.string.isRequired,
+		artikDate: PropTypes.instanceOf(Date).isRequired,
+		eddiNumber: PropTypes.string.isRequired,
+		eddiDate: PropTypes.instanceOf(Date).isRequired
 	};
 
 	var styles = {

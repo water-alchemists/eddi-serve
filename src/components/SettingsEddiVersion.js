@@ -1,5 +1,6 @@
 'use strict';
 import React, { Component } from 'react';
+import moment from 'moment';
 
 const {
 	PropTypes
@@ -7,17 +8,19 @@ const {
 
 class SettingsEddiVersion extends Component {
 	render(){
-		const { artikNumber, artikDate, eddiNumber, eddiDate } = this.props;
+		const { artikNumber, artikDate, eddiNumber, eddiDate } = this.props,
+			formattedArtikDate = moment(artikDate).format('M/D/YY'),
+			formattedEddiDate = moment(eddiDate).format('M/D/YY');
 
 		return (
 			<div>
 				<div style={styles.row}>
 					<p style={styles.bold}>{`EDDI ${eddiNumber}`}</p>
-					<p>{`updated ${eddiDate}`}</p>
+					<p>{`updated ${formattedEddiDate}`}</p>
 				</div>
 				<div style={styles.row}>
 					<p style={styles.bold}>{`ARTIK ${artikNumber}`}</p>
-					<p>{`released ${artikDate}`}</p>
+					<p>{`released ${formattedArtikDate}`}</p>
 				</div>
 			</div>
 		);
@@ -25,10 +28,10 @@ class SettingsEddiVersion extends Component {
 }
 
 SettingsEddiVersion.propTypes = {
-	artikNumber : PropTypes.string,
-	artikDate : PropTypes.date,
-	eddiNumber : PropTypes.string,
-	eddiDate : PropTypes.date
+	artikNumber : PropTypes.string.isRequired,
+	artikDate : PropTypes.instanceOf(Date).isRequired,
+	eddiNumber : PropTypes.string.isRequired,
+	eddiDate : PropTypes.instanceOf(Date).isRequired
 }
 
 const styles = {
