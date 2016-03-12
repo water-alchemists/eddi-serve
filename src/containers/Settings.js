@@ -58,13 +58,14 @@ class Settings extends Component {
 	}
 
 	_renderEddis(){
-		const { eddis } = this.props;
+		const { eddis, updateSalinity, updateEnd, updateStart } = this.props;
 		return eddis.map(eddi => {
+			const eddiId = eddi.id;
 			return (
 				<SettingsEddi eddi={eddi}
-					onSalinityChange={(id, salinity) => onSalinityChange(salinity)}
-					onStartChange={(id, hour, minutes) => onStartChange(id, hour, minutes)}
-					onEndChange={(id, hour, minutes) => onEndChange(id, hour, minutes)}
+					onSalinityChange={salinity => updateSalinity(eddiId, salinity)}
+					onStartChange={(hour, minutes) => updateStart(eddiId, hour, minutes)}
+					onEndChange={(hour, minutes) => updateEnd(eddiId, hour, minutes)}
 				/>
 			)
 		})

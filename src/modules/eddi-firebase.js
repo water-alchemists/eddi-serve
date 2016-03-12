@@ -222,28 +222,30 @@ class EddiFire {
 	}
 
 
-	setSalinity(eddiId, salinity){
-		return this.findByEddi(eddiId)
-			.then(() => this.isEddiOwner(eddiId))
+	setSalinity(id, salinity){
+		return this.findByEddi(id)
+			.then(() => this.isEddiOwner(id))
 			.then(() => {
-				this.refs.EDDI.child(eddiId)
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(id)
 						.child(PATHS.SETTINGS_PATH)
 						.child(PATHS.SALINITY_PATH)
-						.update(
+						.set(
 							salinity, 
 							error => {
 								if(error) return reject(error);
-								resolve();
+								resolve({ id, settings : { salinity } });
 							}
 						);
+				});
 			});
 	}
 
-	setStartTime(eddiId, hours, minutes){
-
+	updateStartTime(eddiId, start){
+		
 	}
 
-	setEndTime(eddiId, hours, minutes){
+	setEndTime(eddiId, end){
 
 	}
 

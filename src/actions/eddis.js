@@ -36,9 +36,11 @@ function assignEddiError(error){
 	};
 }
 
-function updateEddiSuccess(){
+function updateEddiSuccess(id, settings = {}){
 	return {
-		type : EDDI_UPDATE_SUCCESS
+		type : EDDI_UPDATE_SUCCESS,
+		id,
+		settings
 	};
 }
 
@@ -107,7 +109,11 @@ export function setEddiEndThunk(eddiId, hour, minutes){
 
 export function setEddiSalinityThunk(eddiId, salinity){
 	return dispatch => {
-		if(typeof salinity === 'number') throw new Error(`Salinity must be a number.`)
+		if(!(typeof salinity === 'number')) throw new Error(`Salinity must be a number.`);
+		return EddiFire.setSalinity(eddiId, salinity)
+			.then(update => dispatch(updateEddiSuccess(update.id, update.settings)))
+			.catch(error => dispatch(updateEddiError(error)));
+
 	}
 }
 

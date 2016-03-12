@@ -26679,6 +26679,9 @@
 		var type = action.type;
 		var list = action.list;
 		var selected = action.selected;
+		var id = action.id;
+		var _action$settings = action.settings;
+		var settings = _action$settings === undefined ? {} : _action$settings;
 
 		switch (type) {
 			case _constants.EDDI_GETALL_SUCCESS:
@@ -26686,6 +26689,23 @@
 				return _extends({}, state, {
 					list: list
 				});
+			case _constants.EDDI_UPDATE_SUCCESS:
+				{
+					var newList = state.list.map(function (eddi) {
+						if (eddi.id === id) {
+							var updatedEddi = _extends({}, eddi);
+
+							updatedEddi.settings = _extends({}, eddi.settings, settings);
+
+							return updatedEddi;
+						}
+						return eddi;
+					});
+
+					return _extends({}, state, {
+						list: newList
+					});
+				}
 			case _constants.EDDI_SELECT:
 				console.log('eddi selected');
 				return _extends({}, state, {
@@ -29416,9 +29436,13 @@
 		};
 	}
 
-	function updateEddiSuccess() {
+	function updateEddiSuccess(id) {
+		var settings = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
 		return {
-			type: _constants.EDDI_UPDATE_SUCCESS
+			type: _constants.EDDI_UPDATE_SUCCESS,
+			id: id,
+			settings: settings
 		};
 	}
 
@@ -29495,7 +29519,12 @@
 
 	function setEddiSalinityThunk(eddiId, salinity) {
 		return function (dispatch) {
-			if (typeof salinity === 'number') throw new Error('Salinity must be a number.');
+			if (!(typeof salinity === 'number')) throw new Error('Salinity must be a number.');
+			return EddiFire.setSalinity(eddiId, salinity).then(function (update) {
+				return dispatch(updateEddiSuccess(update.id, update.settings));
+			}).catch(function (error) {
+				return dispatch(updateEddiError(error));
+			});
 		};
 	}
 
@@ -29755,24 +29784,26 @@
 			}
 		}, {
 			key: 'setSalinity',
-			value: function setSalinity(eddiId, salinity) {
+			value: function setSalinity(id, salinity) {
 				var _this15 = this;
 
-				return this.findByEddi(eddiId).then(function () {
-					return _this15.isEddiOwner(eddiId);
+				return this.findByEddi(id).then(function () {
+					return _this15.isEddiOwner(id);
 				}).then(function () {
-					_this15.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).update(salinity, function (error) {
-						if (error) return reject(error);
-						resolve();
+					return new Promise(function (resolve, reject) {
+						_this15.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinity, function (error) {
+							if (error) return reject(error);
+							resolve({ id: id, settings: { salinity: salinity } });
+						});
 					});
 				});
 			}
 		}, {
-			key: 'setStartTime',
-			value: function setStartTime(eddiId, hours, minutes) {}
+			key: 'updateStartTime',
+			value: function updateStartTime(eddiId, start) {}
 		}, {
 			key: 'setEndTime',
-			value: function setEndTime(eddiId, hours, minutes) {}
+			value: function setEndTime(eddiId, end) {}
 		}]);
 
 		return EddiFire;
@@ -31633,49 +31664,24 @@
 		}, {
 			key: '_renderEddis',
 			value: function _renderEddis() {
-				var eddis = this.props.eddis;
+				var _props = this.props;
+				var eddis = _props.eddis;
+				var updateSalinity = _props.updateSalinity;
+				var updateEnd = _props.updateEnd;
+				var updateStart = _props.updateStart;
 
 				return eddis.map(function (eddi) {
+					var eddiId = eddi.id;
 					return _react2.default.createElement(_SettingsEddi2.default, { eddi: eddi,
-						onSalinityChange: function (_onSalinityChange) {
-							function onSalinityChange(_x, _x2) {
-								return _onSalinityChange.apply(this, arguments);
-							}
-
-							onSalinityChange.toString = function () {
-								return _onSalinityChange.toString();
-							};
-
-							return onSalinityChange;
-						}(function (id, salinity) {
-							return onSalinityChange(salinity);
-						}),
-						onStartChange: function (_onStartChange) {
-							function onStartChange(_x3, _x4, _x5) {
-								return _onStartChange.apply(this, arguments);
-							}
-
-							onStartChange.toString = function () {
-								return _onStartChange.toString();
-							};
-
-							return onStartChange;
-						}(function (id, hour, minutes) {
-							return onStartChange(id, hour, minutes);
-						}),
-						onEndChange: function (_onEndChange) {
-							function onEndChange(_x6, _x7, _x8) {
-								return _onEndChange.apply(this, arguments);
-							}
-
-							onEndChange.toString = function () {
-								return _onEndChange.toString();
-							};
-
-							return onEndChange;
-						}(function (id, hour, minutes) {
-							return onEndChange(id, hour, minutes);
-						})
+						onSalinityChange: function onSalinityChange(salinity) {
+							return updateSalinity(eddiId, salinity);
+						},
+						onStartChange: function onStartChange(hour, minutes) {
+							return updateStart(eddiId, hour, minutes);
+						},
+						onEndChange: function onEndChange(hour, minutes) {
+							return updateEnd(eddiId, hour, minutes);
+						}
 					});
 				});
 			}
@@ -31786,6 +31792,10 @@
 				var version = _eddi$version === undefined ? {} : _eddi$version;
 				var _eddi$settings = eddi.settings;
 				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+				var name = settings.name;
+				var _settings$timing = settings.timing;
+				var timing = _settings$timing === undefined ? {} : _settings$timing;
+				var salinity = settings.salinity;
 
 				console.log('settings eddi', eddi, version, settings);
 				return _react2.default.createElement(
@@ -31800,15 +31810,18 @@
 						eddiNumber: version.eddi.number,
 						eddiDate: new Date(version.eddi.updated)
 					}),
-					_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(id, salinity) {
-							return _onSalinityChange(id, salinity);
+					_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(salinity) {
+							return _onSalinityChange(salinity);
 						},
-						onEndChange: function onEndChange(id, hour, minutes) {
-							return _onEndChange(id, hour, minutes);
+						onEndChange: function onEndChange(hour, minutes) {
+							return _onEndChange(hour, minutes);
 						},
-						onStartChange: function onStartChange(id, hour, minutes) {
-							return _onStartChange(id, hour, minutes);
-						}
+						onStartChange: function onStartChange(hour, minutes) {
+							return _onStartChange(hour, minutes);
+						},
+						salinityValue: salinity,
+						startValue: timing.start,
+						endValue: timing.end
 					})
 				);
 			}
@@ -45166,7 +45179,7 @@
 				var onStartChange = _props.onStartChange;
 				var onEndChange = _props.onEndChange;
 
-
+				console.log('this is the salinity', salinityValue);
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -45360,8 +45373,8 @@
 				event.preventDefault();
 				var onSalinityChange = this.props.onSalinityChange;
 				var value = event.target.value;
-				console.log('value', value);
-				if (onSalinityChange instanceof Function) return onSalinityChange(value);
+				var formattedValue = parseInt(value);
+				if (onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
 			}
 		}, {
 			key: 'render',

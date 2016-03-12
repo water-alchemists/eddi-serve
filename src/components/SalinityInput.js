@@ -6,9 +6,9 @@ class SalinityInput extends Component {
 	changeHandler(event){
 		event.preventDefault();
 		const { onSalinityChange } = this.props,
-			value = event.target.value;
-		console.log('value', value);
-		if(onSalinityChange instanceof Function) return onSalinityChange(value);
+			value = event.target.value,
+			formattedValue = parseInt(value);
+		if(onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
 	}
 
 	render(){

@@ -12,7 +12,8 @@ class SettingsEddi extends Component {
 
 	render(){
 		const { eddi, onSalinityChange, onEndChange, onStartChange } = this.props,
-			{ version={}, settings={} } = eddi;
+			{ version={}, settings={} } = eddi,
+			{ name, timing={}, salinity } = settings;
 		console.log('settings eddi', eddi, version, settings);
 		return (
 			<div>
@@ -25,9 +26,12 @@ class SettingsEddi extends Component {
 					eddiNumber={version.eddi.number}
 					eddiDate={new Date(version.eddi.updated)}
 				/>
-				<SettingsEddiForm onSalinityChange={(id, salinity) => onSalinityChange(id, salinity)}
-					onEndChange={(id, hour, minutes) => onEndChange(id, hour, minutes)}
-					onStartChange={(id, hour, minutes) => onStartChange(id, hour, minutes)}
+				<SettingsEddiForm onSalinityChange={salinity => onSalinityChange(salinity)}
+					onEndChange={(hour, minutes) => onEndChange(hour, minutes)}
+					onStartChange={(hour, minutes) => onStartChange(hour, minutes)}
+					salinityValue={salinity}
+					startValue={timing.start}
+					endValue={timing.end}
 				/>
 			</div>
 		);

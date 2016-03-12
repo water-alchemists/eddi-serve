@@ -12,7 +12,7 @@ class SettingsEddiForm extends Component {
 			onStartChange, 
 			onEndChange 
 		} = this.props;
-
+		console.log('this is the salinity', salinityValue);
 		return (
 			<div>
 				<SalinityInput value={salinityValue}
