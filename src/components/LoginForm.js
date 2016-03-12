@@ -38,25 +38,19 @@ class LoginForm extends Component {
 		const { email, password } = this.state
 		return (
 			<form onSubmit={event => this.submitHandler(event)}>
-				<div>
-					<div>
-						<label htmlFor='email' >Email : </label>
-						<input onChange={event => this.onEmailChange(event)}
-							type='email'
-							name='email'
-							value={email}
-						/>
-					</div>
-					<div>
-						<label htmlFor='password'>Password : </label>
-						<input onChange={event => this.onPasswordChange(event)} 
-							type='password' 
-							name='password'
-							value={password}
-						/>
-					</div>
-					<button type='submit'>Login</button>
-				</div>
+				<input onChange={event => this.onEmailChange(event)}
+					type='email'
+					name='email'
+					value={email}
+					placeholder="email"
+				/>
+				<input onChange={event => this.onPasswordChange(event)}
+					type='password'
+					name='password'
+					value={password}
+					placeholder="password"
+				/>
+				<button type='submit'>Login</button>
 			</form>
 		);
 	}

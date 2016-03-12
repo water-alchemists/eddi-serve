@@ -26914,19 +26914,23 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Report = exports.Troubleshoot = exports.Settings = exports.Dashboard = exports.Home = exports.App = undefined;
+	exports.Report = exports.Troubleshoot = exports.Settings = exports.List = exports.Dashboard = exports.Home = exports.App = undefined;
 
 	var _App2 = __webpack_require__(252);
 
 	var _App3 = _interopRequireDefault(_App2);
 
-	var _Home2 = __webpack_require__(288);
+	var _Home2 = __webpack_require__(404);
 
 	var _Home3 = _interopRequireDefault(_Home2);
 
-	var _Dashboard2 = __webpack_require__(292);
+	var _Dashboard2 = __webpack_require__(407);
 
 	var _Dashboard3 = _interopRequireDefault(_Dashboard2);
+
+	var _List2 = __webpack_require__(408);
+
+	var _List3 = _interopRequireDefault(_List2);
 
 	var _Settings2 = __webpack_require__(293);
 
@@ -26945,6 +26949,7 @@
 	exports.App = _App3.default;
 	exports.Home = _Home3.default;
 	exports.Dashboard = _Dashboard3.default;
+	exports.List = _List3.default;
 	exports.Settings = _Settings3.default;
 	exports.Troubleshoot = _Troubleshoot3.default;
 	exports.Report = _Report3.default;
@@ -30551,7 +30556,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n.page {\n  padding-top: 48px;\n}\n#home {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 40px;\n  text-align: center;\n}\n#home .content .logo {\n  background-image: url('https://kingsexperience.files.wordpress.com/2015/06/ks-new-logo-bw-blank-bg-off-white-text.png?w=300');\n  height: 80px;\n  margin-bottom: 20px;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n}\n", ""]);
+	exports.push([module.id, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n.page {\n  padding-top: 48px;\n}\n", ""]);
 
 	// exports
 
@@ -30867,183 +30872,7 @@
 
 
 /***/ },
-/* 288 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(169);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _constants = __webpack_require__(244);
-
-	var _HomeButton = __webpack_require__(289);
-
-	var _HomeButton2 = _interopRequireDefault(_HomeButton);
-
-	var _LoginForm = __webpack_require__(290);
-
-	var _LoginForm2 = _interopRequireDefault(_LoginForm);
-
-	var _SignupForm = __webpack_require__(291);
-
-	var _SignupForm2 = _interopRequireDefault(_SignupForm);
-
-	var _eddis = __webpack_require__(278);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Modes = {
-		BASE: 0,
-		LOGIN: 1,
-		SIGNUP: 2
-	};
-
-	function mapStateToProps(state) {
-		return {
-			user: state.user,
-			eddis: state.eddis.list
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			navigateTo: function navigateTo(pathname, query) {
-				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
-			},
-			getEddisByUser: function getEddisByUser() {
-				return dispatch((0, _eddis.getAllEddiByUserThunk)());
-			},
-			login: function login(_ref) {
-				var email = _ref.email;
-				var password = _ref.password;
-				return dispatch(userLoginWithPasswordThunk(email, password));
-			},
-			signup: function signup(user) {
-				return dispatch(userCreateThunk(user));
-			}
-		};
-	}
-
-	var Home = function (_Component) {
-		_inherits(Home, _Component);
-
-		function Home(props) {
-			_classCallCheck(this, Home);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props));
-
-			_this.state = {
-				mode: Modes.BASE
-			};
-			return _this;
-		}
-
-		_createClass(Home, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				if (this.props.user.email) {
-					// user is logged in. go directly to list screen
-					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
-				}
-			}
-		}, {
-			key: 'navigateTo',
-			value: function navigateTo(key) {
-				var destination = _constants.PATHS[key];
-				if (destination) return _reactRouter.browserHistory.push(destination);
-			}
-		}, {
-			key: '_renderBase',
-			value: function _renderBase() {
-				var _this2 = this;
-
-				return [_react2.default.createElement(
-					'div',
-					{ className: 'auth-button',
-						onClick: function onClick() {
-							return _this2.setState({ mode: Modes.LOGIN });
-						} },
-					'Login ›'
-				), _react2.default.createElement(
-					'div',
-					{ className: 'auth-button',
-						onClick: function onClick() {
-							return _this2.setState({ mode: Modes.SIGNUP });
-						} },
-					'Sign Up ›'
-				)];
-			}
-		}, {
-			key: '_renderLogin',
-			value: function _renderLogin() {
-				return _react2.default.createElement(_LoginForm2.default, { onSubmit: this.props.login });
-			}
-		}, {
-			key: '_renderSignup',
-			value: function _renderSignup() {
-				return _react2.default.createElement(_SignupForm2.default, { onSubmit: this.props.signup });
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var modeContent;
-				switch (this.state.mode) {
-					case Modes.BASE:
-						modeContent = this._renderBase();
-						break;
-					case Modes.LOGIN:
-						modeContent = this._renderLogin();
-						break;
-					case Modes.SIGNUP:
-						modeContent = this._renderSignup();
-						break;
-					default:
-						return null;
-				}
-
-				return _react2.default.createElement(
-					'div',
-					{ id: 'home', className: 'page' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'content' },
-						_react2.default.createElement('div', { className: 'logo' }),
-						modeContent
-					)
-				);
-			}
-		}]);
-
-		return Home;
-	}(_react.Component);
-
-	Home.propTypes = {
-		eddis: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-			name: _react.PropTypes.string
-		}))
-	};
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
-
-/***/ },
+/* 288 */,
 /* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31212,46 +31041,26 @@
 					{ onSubmit: function onSubmit(event) {
 							return _this2.submitHandler(event);
 						} },
+					_react2.default.createElement('input', { onChange: function onChange(event) {
+							return _this2.onEmailChange(event);
+						},
+						type: 'email',
+						name: 'email',
+						value: email,
+						placeholder: 'email'
+					}),
+					_react2.default.createElement('input', { onChange: function onChange(event) {
+							return _this2.onPasswordChange(event);
+						},
+						type: 'password',
+						name: 'password',
+						value: password,
+						placeholder: 'password'
+					}),
 					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement(
-								'label',
-								{ htmlFor: 'email' },
-								'Email : '
-							),
-							_react2.default.createElement('input', { onChange: function onChange(event) {
-									return _this2.onEmailChange(event);
-								},
-								type: 'email',
-								name: 'email',
-								value: email
-							})
-						),
-						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement(
-								'label',
-								{ htmlFor: 'password' },
-								'Password : '
-							),
-							_react2.default.createElement('input', { onChange: function onChange(event) {
-									return _this2.onPasswordChange(event);
-								},
-								type: 'password',
-								name: 'password',
-								value: password
-							})
-						),
-						_react2.default.createElement(
-							'button',
-							{ type: 'submit' },
-							'Login'
-						)
+						'button',
+						{ type: 'submit' },
+						'Login'
 					)
 				);
 			}
@@ -31426,69 +31235,7 @@
 	exports.default = SignupForm;
 
 /***/ },
-/* 292 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(169);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddi: state.eddis.eddi
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {};
-	}
-
-	var Dashboard = function (_Component) {
-		_inherits(Dashboard, _Component);
-
-		function Dashboard() {
-			_classCallCheck(this, Dashboard);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).apply(this, arguments));
-		}
-
-		_createClass(Dashboard, [{
-			key: 'render',
-			value: function render() {
-				var eddi = this.props.eddi;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					'This is the dashboard page.'
-				);
-			}
-		}]);
-
-		return Dashboard;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
-
-/***/ },
+/* 292 */,
 /* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -45267,6 +45014,8 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
+/* 400 */,
+/* 401 */,
 /* 402 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -45355,7 +45104,7 @@
 	});
 	exports.salinityOptions = exports.timeOptions = undefined;
 
-	var _moment = __webpack_require__(299);
+	var _moment = __webpack_require__(297);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
@@ -45380,6 +45129,440 @@
 		min: 500,
 		default: 1000
 	};
+
+/***/ },
+/* 404 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	var _HomeButton = __webpack_require__(289);
+
+	var _HomeButton2 = _interopRequireDefault(_HomeButton);
+
+	var _LoginForm = __webpack_require__(290);
+
+	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+
+	var _SignupForm = __webpack_require__(291);
+
+	var _SignupForm2 = _interopRequireDefault(_SignupForm);
+
+	var _eddis = __webpack_require__(278);
+
+	var _Home = __webpack_require__(405);
+
+	var _Home2 = _interopRequireDefault(_Home);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Modes = {
+		BASE: 0,
+		LOGIN: 1,
+		SIGNUP: 2
+	};
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user,
+			eddis: state.eddis.list
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			navigateTo: function navigateTo(pathname, query) {
+				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
+			},
+			getEddisByUser: function getEddisByUser() {
+				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			},
+			login: function login(_ref) {
+				var email = _ref.email;
+				var password = _ref.password;
+				return dispatch(userLoginWithPasswordThunk(email, password));
+			},
+			signup: function signup(user) {
+				return dispatch(userCreateThunk(user));
+			}
+		};
+	}
+
+	var Home = function (_Component) {
+		_inherits(Home, _Component);
+
+		function Home(props) {
+			_classCallCheck(this, Home);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props));
+
+			_this.state = {
+				mode: Modes.BASE
+			};
+			return _this;
+		}
+
+		_createClass(Home, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				if (this.props.user.email) {
+					// user is logged in. go directly to list screen
+					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
+				}
+			}
+		}, {
+			key: 'navigateTo',
+			value: function navigateTo(key) {
+				var destination = _constants.PATHS[key];
+				if (destination) return _reactRouter.browserHistory.push(destination);
+			}
+		}, {
+			key: '_renderBase',
+			value: function _renderBase() {
+				var _this2 = this;
+
+				return [_react2.default.createElement(
+					'div',
+					{ className: 'auth-button',
+						onClick: function onClick() {
+							return _this2.setState({ mode: Modes.LOGIN });
+						} },
+					'Login ›'
+				), _react2.default.createElement(
+					'div',
+					{ className: 'auth-button',
+						onClick: function onClick() {
+							return _this2.setState({ mode: Modes.SIGNUP });
+						} },
+					'Sign Up ›'
+				)];
+			}
+		}, {
+			key: '_renderLogin',
+			value: function _renderLogin() {
+				return _react2.default.createElement(_LoginForm2.default, { onSubmit: this.props.login });
+			}
+		}, {
+			key: '_renderSignup',
+			value: function _renderSignup() {
+				return _react2.default.createElement(_SignupForm2.default, { onSubmit: this.props.signup });
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var modeContent;
+				switch (this.state.mode) {
+					case Modes.BASE:
+						modeContent = this._renderBase();
+						break;
+					case Modes.LOGIN:
+						modeContent = this._renderLogin();
+						break;
+					case Modes.SIGNUP:
+						modeContent = this._renderSignup();
+						break;
+					default:
+						return null;
+				}
+
+				return _react2.default.createElement(
+					'div',
+					{ id: 'home', className: 'page' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'content' },
+						_react2.default.createElement('div', { className: 'logo' }),
+						modeContent
+					)
+				);
+			}
+		}]);
+
+		return Home;
+	}(_react.Component);
+
+	Home.propTypes = {
+		eddis: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			name: _react.PropTypes.string
+		}))
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
+
+/***/ },
+/* 405 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(406);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(287)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Home.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Home.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 406 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(286)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n.page {\n  padding-top: 48px;\n}\n#home {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px;\n  text-align: center;\n}\n#home .content .logo {\n  background-image: url('https://kingsexperience.files.wordpress.com/2015/06/ks-new-logo-bw-blank-bg-off-white-text.png?w=300');\n  height: 80px;\n  margin-bottom: 20px;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n#home .content form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  color: white;\n  border: 0;\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n}\n#home .content form input:focus {\n  opacity: 1;\n}\n#home .content form input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\n#home .content form button {\n  padding: 10px 20px;\n  background-color: rgba(241, 241, 242, 0.9);\n  font-size: 16px;\n  border: 0;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 407 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.eddi
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
+
+	var Dashboard = function (_Component) {
+		_inherits(Dashboard, _Component);
+
+		function Dashboard() {
+			_classCallCheck(this, Dashboard);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).apply(this, arguments));
+		}
+
+		_createClass(Dashboard, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the dashboard page.'
+				);
+			}
+		}]);
+
+		return Dashboard;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
+
+/***/ },
+/* 408 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	var _HomeButton = __webpack_require__(289);
+
+	var _HomeButton2 = _interopRequireDefault(_HomeButton);
+
+	var _eddis = __webpack_require__(278);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user,
+			eddis: state.eddis.list
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			navigateTo: function navigateTo(pathname, query) {
+				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
+			},
+			getEddisByUser: function getEddisByUser() {
+				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			}
+		};
+	}
+
+	var List = function (_Component) {
+		_inherits(List, _Component);
+
+		function List() {
+			_classCallCheck(this, List);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(List).apply(this, arguments));
+		}
+
+		_createClass(List, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var _props = this.props;
+				var user = _props.user;
+				var getEddisByUser = _props.getEddisByUser;
+
+				if (nextProps.user !== user) return getEddisByUser();
+			}
+		}, {
+			key: 'clickHandler',
+			value: function clickHandler(destination, query) {
+				var navigateTo = this.props.navigateTo;
+
+				navigateTo(destination, query);
+			}
+		}, {
+			key: 'navigateTo',
+			value: function navigateTo(key) {
+				var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+				var pathname = _constants.PATHS[key],
+				    destination = {
+					pathname: pathname,
+					query: query
+				};
+
+				if (pathname) return _reactRouter.browserHistory.push(destination);
+			}
+		}, {
+			key: '_renderEddiButtons',
+			value: function _renderEddiButtons() {
+				var eddis = this.props.eddis;
+
+				if (eddis) {
+					return eddis.map(function (eddi, i) {
+						var name = eddi.settings.name;
+						return _react2.default.createElement(_HomeButton2.default, { key: i,
+							name: name
+						});
+					});
+				}
+			}
+		}, {
+			key: '_renderNoEddis',
+			value: function _renderNoEddis() {
+				var _this2 = this;
+
+				return _react2.default.createElement(
+					'p',
+					null,
+					'Currently you are not tracking any eddis. Click ',
+					_react2.default.createElement(
+						'a',
+						{ onClick: function onClick() {
+								return _this2.navigateTo('SETTINGS');
+							} },
+						'here'
+					),
+					' to start tracking one.'
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _props2 = this.props;
+				var user = _props2.user;
+				var eddis = _props2.eddis;
+				var NoEddiElement = this._renderNoEddis();
+				var EddiButtons = this._renderEddiButtons();
+				var showEddi = eddis && eddis.length ? EddiButtons : NoEddiElement;
+
+				console.log('these are teh eddis', eddis);
+
+				return _react2.default.createElement(
+					'div',
+					{ id: 'list' },
+					showEddi
+				);
+			}
+		}]);
+
+		return List;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(List);
 
 /***/ }
 /******/ ]);

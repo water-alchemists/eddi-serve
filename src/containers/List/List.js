@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
-import { PATHS } from '../constants';
+import { PATHS } from '../../constants';
 
-import HomeButton from '../components/HomeButton';
+import HomeButton from '../../components/HomeButton';
 
-import { getAllEddiByUserThunk } from '../actions/eddis';
+import { getAllEddiByUserThunk } from '../../actions/eddis';
 
 function mapStateToProps(state){
 	return {

@@ -3,13 +3,17 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 
-import { PATHS } from '../constants';
+import { PATHS } from '../../constants';
 
-import HomeButton from '../components/HomeButton';
-import LoginForm from '../components/LoginForm';
-import SignupForm from '../components/SignupForm';
+import HomeButton from '../../components/HomeButton';
+import LoginForm from '../../components/LoginForm';
+import SignupForm from '../../components/SignupForm';
 
-import { getAllEddiByUserThunk } from '../actions/eddis';
+import { getAllEddiByUserThunk } from '../../actions/eddis';
+
+import style from './Home.less';
+
+
 
 
 const Modes = {
