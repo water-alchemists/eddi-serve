@@ -198,7 +198,7 @@ class EddiFire {
 	}
 
 	setEndTime(eddiId, hours, minutes){
-		
+
 	}
 
 }

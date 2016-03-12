@@ -29,7 +29,6 @@ class CookieStore {
 			document.cookie = formatCookie("", -1);
 			this.cookie = null;
 		};
-		console.log('this is the document cookie', document.cookie, this.cookie);
 	}
 
 	getCookie(){
