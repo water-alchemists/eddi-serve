@@ -27227,7 +27227,7 @@
 								'Troubleshoot'
 							),
 							_react2.default.createElement(
-								'span',
+								'a',
 								{ onClick: function onClick() {
 										return _this2.logoutHandler();
 									} },

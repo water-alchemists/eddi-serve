@@ -33,7 +33,7 @@ class Menu extends Component {
 						<Link to={PATHS.REPORT}>Report</Link>
 						<Link to={PATHS.SETTINGS}>Settings</Link>
 						<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>
-						<span onClick={() => this.logoutHandler()}>Logout</span>
+						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>
 				</div>
 			</header>
