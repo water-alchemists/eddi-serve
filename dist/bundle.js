@@ -22259,8 +22259,8 @@
 	  var finishTransition = options.finishTransition;
 	  var saveState = options.saveState;
 	  var go = options.go;
-	  var keyLength = options.keyLength;
 	  var getUserConfirmation = options.getUserConfirmation;
+	  var keyLength = options.keyLength;
 
 	  if (typeof keyLength !== 'number') keyLength = DefaultKeyLength;
 
@@ -22645,24 +22645,56 @@
 	"use strict";
 
 	exports.__esModule = true;
+	var _slice = Array.prototype.slice;
 	exports.loopAsync = loopAsync;
 
 	function loopAsync(turns, work, callback) {
-	  var currentTurn = 0;
-	  var isDone = false;
+	  var currentTurn = 0,
+	      isDone = false;
+	  var sync = false,
+	      hasNext = false,
+	      doneArgs = undefined;
 
 	  function done() {
 	    isDone = true;
+	    if (sync) {
+	      // Iterate instead of recursing if possible.
+	      doneArgs = [].concat(_slice.call(arguments));
+	      return;
+	    }
+
 	    callback.apply(this, arguments);
 	  }
 
 	  function next() {
-	    if (isDone) return;
+	    if (isDone) {
+	      return;
+	    }
 
-	    if (currentTurn < turns) {
+	    hasNext = true;
+	    if (sync) {
+	      // Iterate instead of recursing if possible.
+	      return;
+	    }
+
+	    sync = true;
+
+	    while (!isDone && currentTurn < turns && hasNext) {
+	      hasNext = false;
 	      work.call(this, currentTurn++, next, done);
-	    } else {
-	      done.apply(this, arguments);
+	    }
+
+	    sync = false;
+
+	    if (isDone) {
+	      // This means the loop finished synchronously.
+	      callback.apply(this, doneArgs);
+	      return;
+	    }
+
+	    if (currentTurn >= turns && hasNext) {
+	      isDone = true;
+	      callback();
 	    }
 	  }
 
@@ -22793,8 +22825,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 	var _warning = __webpack_require__(183);
 
 	var _warning2 = _interopRequireDefault(_warning);
@@ -22832,12 +22862,11 @@
 	function useQueries(createHistory) {
 	  return function () {
 	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	    var history = createHistory(options);
+
 	    var stringifyQuery = options.stringifyQuery;
 	    var parseQueryString = options.parseQueryString;
-
-	    var historyOptions = _objectWithoutProperties(options, ['stringifyQuery', 'parseQueryString']);
-
-	    var history = createHistory(historyOptions);
 
 	    if (typeof stringifyQuery !== 'function') stringifyQuery = defaultStringifyQuery;
 
@@ -23148,7 +23177,9 @@
 	    _TransitionUtils.runLeaveHooks(leaveRoutes);
 
 	    // Tear down confirmation hooks for left routes
-	    leaveRoutes.forEach(removeListenBeforeHooksForRoute);
+	    leaveRoutes.filter(function (route) {
+	      return enterRoutes.indexOf(route) === -1;
+	    }).forEach(removeListenBeforeHooksForRoute);
 
 	    _TransitionUtils.runEnterHooks(enterRoutes, nextState, function (error, redirectInfo) {
 	      if (error) {
@@ -23417,16 +23448,25 @@
 	  var leaveRoutes = undefined,
 	      enterRoutes = undefined;
 	  if (prevRoutes) {
-	    leaveRoutes = prevRoutes.filter(function (route) {
-	      return nextRoutes.indexOf(route) === -1 || routeParamsChanged(route, prevState, nextState);
-	    });
+	    (function () {
+	      var parentIsLeaving = false;
+	      leaveRoutes = prevRoutes.filter(function (route) {
+	        if (parentIsLeaving) {
+	          return true;
+	        } else {
+	          var isLeaving = nextRoutes.indexOf(route) === -1 || routeParamsChanged(route, prevState, nextState);
+	          if (isLeaving) parentIsLeaving = true;
+	          return isLeaving;
+	        }
+	      });
 
-	    // onLeave hooks start at the leaf route.
-	    leaveRoutes.reverse();
+	      // onLeave hooks start at the leaf route.
+	      leaveRoutes.reverse();
 
-	    enterRoutes = nextRoutes.filter(function (route) {
-	      return prevRoutes.indexOf(route) === -1 || leaveRoutes.indexOf(route) !== -1;
-	    });
+	      enterRoutes = nextRoutes.filter(function (route) {
+	        return prevRoutes.indexOf(route) === -1 || leaveRoutes.indexOf(route) !== -1;
+	      });
+	    })();
 	  } else {
 	    leaveRoutes = [];
 	    enterRoutes = nextRoutes;
@@ -25623,8 +25663,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 	var _ExecutionEnvironment = __webpack_require__(187);
 
 	var _PathUtils = __webpack_require__(186);
@@ -25640,11 +25678,10 @@
 	function useBasename(createHistory) {
 	  return function () {
 	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	    var history = createHistory(options);
+
 	    var basename = options.basename;
-
-	    var historyOptions = _objectWithoutProperties(options, ['basename']);
-
-	    var history = createHistory(historyOptions);
 
 	    // Automatically use the value of <base href> in HTML
 	    // documents as basename if it's not explicitly given.
@@ -25845,19 +25882,20 @@
 
 	  function getCurrentLocation() {
 	    var entry = entries[current];
-	    var key = entry.key;
 	    var basename = entry.basename;
 	    var pathname = entry.pathname;
 	    var search = entry.search;
 
 	    var path = (basename || '') + pathname + (search || '');
 
-	    var state = undefined;
-	    if (key) {
+	    var key = undefined,
+	        state = undefined;
+	    if (entry.key) {
+	      key = entry.key;
 	      state = readState(key);
 	    } else {
-	      state = null;
 	      key = history.createKey();
+	      state = null;
 	      entry.key = key;
 	    }
 
@@ -26928,23 +26966,43 @@
 
 	var _Home3 = _interopRequireDefault(_Home2);
 
+<<<<<<< HEAD
 	var _Dashboard2 = __webpack_require__(408);
 
 	var _Dashboard3 = _interopRequireDefault(_Dashboard2);
 
 	var _List2 = __webpack_require__(409);
+=======
+	var _Login2 = __webpack_require__(292);
+
+	var _Login3 = _interopRequireDefault(_Login2);
+
+	var _Signup2 = __webpack_require__(294);
+
+	var _Signup3 = _interopRequireDefault(_Signup2);
+
+	var _Dashboard2 = __webpack_require__(296);
+>>>>>>> 0abff9a1b4b78d03a0c78ff9b6b48cb2023aef0b
 
 	var _List3 = _interopRequireDefault(_List2);
 
-	var _Settings2 = __webpack_require__(295);
+	var _Settings2 = __webpack_require__(297);
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
+<<<<<<< HEAD
 	var _Troubleshoot2 = __webpack_require__(402);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
 	var _Report2 = __webpack_require__(403);
+=======
+	var _Troubleshoot2 = __webpack_require__(301);
+
+	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
+
+	var _Report2 = __webpack_require__(302);
+>>>>>>> 0abff9a1b4b78d03a0c78ff9b6b48cb2023aef0b
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -29932,7 +29990,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	exports.default = function () {
-		var init = undefined;
+		var init = void 0;
 		if (init) return init;else {
 			init = new EddiFire();
 			return init;
@@ -30542,7 +30600,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	exports.default = function () {
-		var init = undefined;
+		var init = void 0;
 		if (init) return init;else {
 			init = new CookieStore();
 			return init;
@@ -31049,7 +31107,93 @@
 
 /***/ },
 /* 290 */,
+<<<<<<< HEAD
 /* 291 */
+=======
+/* 291 */,
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _user = __webpack_require__(282);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	var _LoginForm = __webpack_require__(293);
+
+	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			login: function login(_ref) {
+				var email = _ref.email;
+				var password = _ref.password;
+				return dispatch((0, _user.userLoginWithPasswordThunk)(email, password));
+			}
+		};
+	}
+
+	var Login = function (_Component) {
+		_inherits(Login, _Component);
+
+		function Login() {
+			_classCallCheck(this, Login);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Login).apply(this, arguments));
+		}
+
+		_createClass(Login, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var login = _props.login;
+				var user = _props.user;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_LoginForm2.default, { onSubmit: login })
+				);
+			}
+		}]);
+
+		return Login;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);
+
+/***/ },
+/* 293 */
+>>>>>>> 0abff9a1b4b78d03a0c78ff9b6b48cb2023aef0b
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31161,8 +31305,88 @@
 	exports.default = LoginForm;
 
 /***/ },
+<<<<<<< HEAD
 /* 292 */,
 /* 293 */
+=======
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	var _user = __webpack_require__(282);
+
+	var _SignupForm = __webpack_require__(295);
+
+	var _SignupForm2 = _interopRequireDefault(_SignupForm);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			signup: function signup(user) {
+				return dispatch((0, _user.userCreateThunk)(user));
+			}
+		};
+	}
+
+	var Signup = function (_Component) {
+		_inherits(Signup, _Component);
+
+		function Signup() {
+			_classCallCheck(this, Signup);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Signup).apply(this, arguments));
+		}
+
+		_createClass(Signup, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var signup = _props.signup;
+				var user = _props.user;
+
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_SignupForm2.default, { onSubmit: signup })
+				);
+			}
+		}]);
+
+		return Signup;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Signup);
+
+/***/ },
+/* 295 */
+>>>>>>> 0abff9a1b4b78d03a0c78ff9b6b48cb2023aef0b
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31321,8 +31545,75 @@
 	exports.default = SignupForm;
 
 /***/ },
+<<<<<<< HEAD
 /* 294 */,
 /* 295 */
+=======
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.eddi
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
+
+	var Dashboard = function (_Component) {
+		_inherits(Dashboard, _Component);
+
+		function Dashboard() {
+			_classCallCheck(this, Dashboard);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).apply(this, arguments));
+		}
+
+		_createClass(Dashboard, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the dashboard page.'
+				);
+			}
+		}]);
+
+		return Dashboard;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
+
+/***/ },
+/* 297 */
+>>>>>>> 0abff9a1b4b78d03a0c78ff9b6b48cb2023aef0b
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31343,7 +31634,7 @@
 
 	var _modal = __webpack_require__(275);
 
-	var _SettingsEddi = __webpack_require__(296);
+	var _SettingsEddi = __webpack_require__(298);
 
 	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
 
@@ -31501,7 +31792,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
 
 /***/ },
-/* 296 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31516,15 +31807,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SettingsEddiHeader = __webpack_require__(297);
+	var _SettingsEddiHeader = __webpack_require__(299);
 
 	var _SettingsEddiHeader2 = _interopRequireDefault(_SettingsEddiHeader);
 
-	var _SettingsEddiVersion = __webpack_require__(298);
+	var _SettingsEddiVersion = __webpack_require__(300);
 
 	var _SettingsEddiVersion2 = _interopRequireDefault(_SettingsEddiVersion);
 
-	var _SettingsEddiForm = __webpack_require__(399);
+	var _SettingsEddiForm = __webpack_require__(303);
 
 	var _SettingsEddiForm2 = _interopRequireDefault(_SettingsEddiForm);
 
@@ -31626,7 +31917,7 @@
 	exports.default = SettingsEddi;
 
 /***/ },
-/* 297 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31687,7 +31978,7 @@
 	exports.default = SettingsEddiHeader;
 
 /***/ },
-/* 298 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31702,7 +31993,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _moment = __webpack_require__(299);
+	var _moment = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"moment\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 	var _moment2 = _interopRequireDefault(_moment);
 
@@ -31796,411 +32087,152 @@
 	exports.default = SettingsEddiVersion;
 
 /***/ },
-/* 299 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
-	//! version : 2.12.0
-	//! authors : Tim Wood, Iskren Chernev, Moment.js contributors
-	//! license : MIT
-	//! momentjs.com
+	'use strict';
 
-	;(function (global, factory) {
-	     true ? module.exports = factory() :
-	    typeof define === 'function' && define.amd ? define(factory) :
-	    global.moment = factory()
-	}(this, function () { 'use strict';
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
-	    var hookCallback;
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	    function utils_hooks__hooks () {
-	        return hookCallback.apply(null, arguments);
-	    }
+	var _react = __webpack_require__(1);
 
-	    // This is done to register the method called with moment()
-	    // without creating circular dependencies.
-	    function setHookCallback (callback) {
-	        hookCallback = callback;
-	    }
+	var _react2 = _interopRequireDefault(_react);
 
-	    function isArray(input) {
-	        return input instanceof Array || Object.prototype.toString.call(input) === '[object Array]';
-	    }
+	var _reactRedux = __webpack_require__(169);
 
-	    function isDate(input) {
-	        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
-	    }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    function map(arr, fn) {
-	        var res = [], i;
-	        for (i = 0; i < arr.length; ++i) {
-	            res.push(fn(arr[i], i));
-	        }
-	        return res;
-	    }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	    function hasOwnProp(a, b) {
-	        return Object.prototype.hasOwnProperty.call(a, b);
-	    }
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	    function extend(a, b) {
-	        for (var i in b) {
-	            if (hasOwnProp(b, i)) {
-	                a[i] = b[i];
-	            }
-	        }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	        if (hasOwnProp(b, 'toString')) {
-	            a.toString = b.toString;
-	        }
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.selected
+		};
+	}
 
-	        if (hasOwnProp(b, 'valueOf')) {
-	            a.valueOf = b.valueOf;
-	        }
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
 
-	        return a;
-	    }
+	var Troubleshoot = function (_Component) {
+		_inherits(Troubleshoot, _Component);
 
-	    function create_utc__createUTC (input, format, locale, strict) {
-	        return createLocalOrUTC(input, format, locale, strict, true).utc();
-	    }
+		function Troubleshoot() {
+			_classCallCheck(this, Troubleshoot);
 
-	    function defaultParsingFlags() {
-	        // We need to deep clone this object.
-	        return {
-	            empty           : false,
-	            unusedTokens    : [],
-	            unusedInput     : [],
-	            overflow        : -2,
-	            charsLeftOver   : 0,
-	            nullInput       : false,
-	            invalidMonth    : null,
-	            invalidFormat   : false,
-	            userInvalidated : false,
-	            iso             : false
-	        };
-	    }
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
+		}
 
-	    function getParsingFlags(m) {
-	        if (m._pf == null) {
-	            m._pf = defaultParsingFlags();
-	        }
-	        return m._pf;
-	    }
+		_createClass(Troubleshoot, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
 
-	    function valid__isValid(m) {
-	        if (m._isValid == null) {
-	            var flags = getParsingFlags(m);
-	            m._isValid = !isNaN(m._d.getTime()) &&
-	                flags.overflow < 0 &&
-	                !flags.empty &&
-	                !flags.invalidMonth &&
-	                !flags.invalidWeekday &&
-	                !flags.nullInput &&
-	                !flags.invalidFormat &&
-	                !flags.userInvalidated;
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the troubleshoot page.'
+				);
+			}
+		}]);
 
-	            if (m._strict) {
-	                m._isValid = m._isValid &&
-	                    flags.charsLeftOver === 0 &&
-	                    flags.unusedTokens.length === 0 &&
-	                    flags.bigHour === undefined;
-	            }
-	        }
-	        return m._isValid;
-	    }
+		return Troubleshoot;
+	}(_react.Component);
 
-	    function valid__createInvalid (flags) {
-	        var m = create_utc__createUTC(NaN);
-	        if (flags != null) {
-	            extend(getParsingFlags(m), flags);
-	        }
-	        else {
-	            getParsingFlags(m).userInvalidated = true;
-	        }
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
 
-	        return m;
-	    }
+/***/ },
+/* 302 */
+/***/ function(module, exports, __webpack_require__) {
 
-	    function isUndefined(input) {
-	        return input === void 0;
-	    }
+	'use strict';
 
-	    // Plugins that add properties should also add the key here (null value),
-	    // so we can properly clone ourselves.
-	    var momentProperties = utils_hooks__hooks.momentProperties = [];
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
-	    function copyConfig(to, from) {
-	        var i, prop, val;
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	        if (!isUndefined(from._isAMomentObject)) {
-	            to._isAMomentObject = from._isAMomentObject;
-	        }
-	        if (!isUndefined(from._i)) {
-	            to._i = from._i;
-	        }
-	        if (!isUndefined(from._f)) {
-	            to._f = from._f;
-	        }
-	        if (!isUndefined(from._l)) {
-	            to._l = from._l;
-	        }
-	        if (!isUndefined(from._strict)) {
-	            to._strict = from._strict;
-	        }
-	        if (!isUndefined(from._tzm)) {
-	            to._tzm = from._tzm;
-	        }
-	        if (!isUndefined(from._isUTC)) {
-	            to._isUTC = from._isUTC;
-	        }
-	        if (!isUndefined(from._offset)) {
-	            to._offset = from._offset;
-	        }
-	        if (!isUndefined(from._pf)) {
-	            to._pf = getParsingFlags(from);
-	        }
-	        if (!isUndefined(from._locale)) {
-	            to._locale = from._locale;
-	        }
+	var _react = __webpack_require__(1);
 
-	        if (momentProperties.length > 0) {
-	            for (i in momentProperties) {
-	                prop = momentProperties[i];
-	                val = from[prop];
-	                if (!isUndefined(val)) {
-	                    to[prop] = val;
-	                }
-	            }
-	        }
+	var _react2 = _interopRequireDefault(_react);
 
-	        return to;
-	    }
+	var _reactRedux = __webpack_require__(169);
 
-	    var updateInProgress = false;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    // Moment prototype object
-	    function Moment(config) {
-	        copyConfig(this, config);
-	        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
-	        // Prevent infinite loop in case updateOffset creates new moment
-	        // objects.
-	        if (updateInProgress === false) {
-	            updateInProgress = true;
-	            utils_hooks__hooks.updateOffset(this);
-	            updateInProgress = false;
-	        }
-	    }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	    function isMoment (obj) {
-	        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
-	    }
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	    function absFloor (number) {
-	        if (number < 0) {
-	            return Math.ceil(number);
-	        } else {
-	            return Math.floor(number);
-	        }
-	    }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	    function toInt(argumentForCoercion) {
-	        var coercedNumber = +argumentForCoercion,
-	            value = 0;
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.eddi
+		};
+	}
 
-	        if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-	            value = absFloor(coercedNumber);
-	        }
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
 
-	        return value;
-	    }
+	var Report = function (_Component) {
+		_inherits(Report, _Component);
 
-	    // compare two arrays, return the number of differences
-	    function compareArrays(array1, array2, dontConvert) {
-	        var len = Math.min(array1.length, array2.length),
-	            lengthDiff = Math.abs(array1.length - array2.length),
-	            diffs = 0,
-	            i;
-	        for (i = 0; i < len; i++) {
-	            if ((dontConvert && array1[i] !== array2[i]) ||
-	                (!dontConvert && toInt(array1[i]) !== toInt(array2[i]))) {
-	                diffs++;
-	            }
-	        }
-	        return diffs + lengthDiff;
-	    }
+		function Report() {
+			_classCallCheck(this, Report);
 
-	    function warn(msg) {
-	        if (utils_hooks__hooks.suppressDeprecationWarnings === false &&
-	                (typeof console !==  'undefined') && console.warn) {
-	            console.warn('Deprecation warning: ' + msg);
-	        }
-	    }
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Report).apply(this, arguments));
+		}
 
-	    function deprecate(msg, fn) {
-	        var firstTime = true;
+		_createClass(Report, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
 
-	        return extend(function () {
-	            if (firstTime) {
-	                warn(msg + '\nArguments: ' + Array.prototype.slice.call(arguments).join(', ') + '\n' + (new Error()).stack);
-	                firstTime = false;
-	            }
-	            return fn.apply(this, arguments);
-	        }, fn);
-	    }
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the report page.'
+				);
+			}
+		}]);
 
-	    var deprecations = {};
+		return Report;
+	}(_react.Component);
 
-	    function deprecateSimple(name, msg) {
-	        if (!deprecations[name]) {
-	            warn(msg);
-	            deprecations[name] = true;
-	        }
-	    }
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
-	    utils_hooks__hooks.suppressDeprecationWarnings = false;
+/***/ },
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
 
-	    function isFunction(input) {
-	        return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
-	    }
+	'use strict';
 
-	    function isObject(input) {
-	        return Object.prototype.toString.call(input) === '[object Object]';
-	    }
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
-	    function locale_set__set (config) {
-	        var prop, i;
-	        for (i in config) {
-	            prop = config[i];
-	            if (isFunction(prop)) {
-	                this[i] = prop;
-	            } else {
-	                this['_' + i] = prop;
-	            }
-	        }
-	        this._config = config;
-	        // Lenient ordinal parsing accepts just a number in addition to
-	        // number + (possibly) stuff coming from _ordinalParseLenient.
-	        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
-	    }
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	    function mergeConfigs(parentConfig, childConfig) {
-	        var res = extend({}, parentConfig), prop;
-	        for (prop in childConfig) {
-	            if (hasOwnProp(childConfig, prop)) {
-	                if (isObject(parentConfig[prop]) && isObject(childConfig[prop])) {
-	                    res[prop] = {};
-	                    extend(res[prop], parentConfig[prop]);
-	                    extend(res[prop], childConfig[prop]);
-	                } else if (childConfig[prop] != null) {
-	                    res[prop] = childConfig[prop];
-	                } else {
-	                    delete res[prop];
-	                }
-	            }
-	        }
-	        return res;
-	    }
+	var _react = __webpack_require__(1);
 
-	    function Locale(config) {
-	        if (config != null) {
-	            this.set(config);
-	        }
-	    }
+	var _react2 = _interopRequireDefault(_react);
 
-	    // internal storage for locale config files
-	    var locales = {};
-	    var globalLocale;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    function normalizeLocale(key) {
-	        return key ? key.toLowerCase().replace('_', '-') : key;
-	    }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	    // pick the locale from the array
-	    // try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
-	    // substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
-	    function chooseLocale(names) {
-	        var i = 0, j, next, locale, split;
-
-	        while (i < names.length) {
-	            split = normalizeLocale(names[i]).split('-');
-	            j = split.length;
-	            next = normalizeLocale(names[i + 1]);
-	            next = next ? next.split('-') : null;
-	            while (j > 0) {
-	                locale = loadLocale(split.slice(0, j).join('-'));
-	                if (locale) {
-	                    return locale;
-	                }
-	                if (next && next.length >= j && compareArrays(split, next, true) >= j - 1) {
-	                    //the next array item is better than a shallower substring of this one
-	                    break;
-	                }
-	                j--;
-	            }
-	            i++;
-	        }
-	        return null;
-	    }
-
-	    function loadLocale(name) {
-	        var oldLocale = null;
-	        // TODO: Find a better way to register and load all the locales in Node
-	        if (!locales[name] && (typeof module !== 'undefined') &&
-	                module && module.exports) {
-	            try {
-	                oldLocale = globalLocale._abbr;
-	                __webpack_require__(301)("./" + name);
-	                // because defineLocale currently also sets the global locale, we
-	                // want to undo that for lazy loaded locales
-	                locale_locales__getSetGlobalLocale(oldLocale);
-	            } catch (e) { }
-	        }
-	        return locales[name];
-	    }
-
-	    // This function will load locale and then set the global locale.  If
-	    // no arguments are passed in, it will simply return the current global
-	    // locale key.
-	    function locale_locales__getSetGlobalLocale (key, values) {
-	        var data;
-	        if (key) {
-	            if (isUndefined(values)) {
-	                data = locale_locales__getLocale(key);
-	            }
-	            else {
-	                data = defineLocale(key, values);
-	            }
-
-	            if (data) {
-	                // moment.duration._locale = moment._locale = data;
-	                globalLocale = data;
-	            }
-	        }
-
-	        return globalLocale._abbr;
-	    }
-
-	    function defineLocale (name, config) {
-	        if (config !== null) {
-	            config.abbr = name;
-	            if (locales[name] != null) {
-	                deprecateSimple('defineLocaleOverride',
-	                        'use moment.updateLocale(localeName, config) to change ' +
-	                        'an existing locale. moment.defineLocale(localeName, ' +
-	                        'config) should only be used for creating a new locale');
-	                config = mergeConfigs(locales[name]._config, config);
-	            } else if (config.parentLocale != null) {
-	                if (locales[config.parentLocale] != null) {
-	                    config = mergeConfigs(locales[config.parentLocale]._config, config);
-	                } else {
-	                    // treat as if there is no base config
-	                    deprecateSimple('parentLocaleUndefined',
-	                            'specified parentLocale is not defined yet');
-	                }
-	            }
-	            locales[name] = new Locale(config);
-
+<<<<<<< HEAD
 	            // backwards compat for now: also set the locale
 	            locale_locales__getSetGlobalLocale(name);
 
@@ -44922,6 +44954,8 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+=======
+>>>>>>> 0abff9a1b4b78d03a0c78ff9b6b48cb2023aef0b
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
@@ -44973,6 +45007,7 @@
 
 	exports.default = SettingsEddiForm;
 
+<<<<<<< HEAD
 /***/ },
 /* 400 */
 /***/ function(module, exports, __webpack_require__) {
@@ -45649,5 +45684,7 @@
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(List);
 
+=======
+>>>>>>> 0abff9a1b4b78d03a0c78ff9b6b48cb2023aef0b
 /***/ }
 /******/ ]);
