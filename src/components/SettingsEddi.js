@@ -10,10 +10,20 @@ const {
 class SettingsEddi extends Component {
 
 	render(){
+		const {eddi} = this.props,
+			{ version={}, settings={} } = eddi;
+		console.log('settings eddi', eddi, version, settings);
 		return (
 			<div>
-				<SettingsEddiHeader />
-				<SettingEddiVersion />
+				<SettingsEddiHeader 
+					name={settings.name}
+				/>
+				<SettingsEddiVersion 
+					artikNumber={version.artik.number}
+					artikDate={new Date(version.artik.updated)}
+					eddiNumber={version.eddi.number}
+					eddiDate={new Date(version.eddi.updated)}
+				/>
 				<div></div>
 			</div>
 		);

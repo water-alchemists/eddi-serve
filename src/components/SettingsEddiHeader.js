@@ -8,7 +8,7 @@ const {
 class SettingsEddiHeader extends Component {
 	render(){
 		const { name } = this.props,
-			formattedName = name.toUppercase();
+			formattedName = name.toUpperCase();
 		return (
 			<div>
 				<p>{formattedName}</p>
@@ -18,7 +18,7 @@ class SettingsEddiHeader extends Component {
 }
 
 SettingsEddiHeader.propTypes = {
-	name : PropTypes.string
+	name : PropTypes.string.isRequired
 };
 
 export default SettingsEddiHeader;

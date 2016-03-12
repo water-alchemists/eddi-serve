@@ -25,6 +25,7 @@ class LoggedInHome extends Component {
 		const { eddis } = this.props;
 		if(eddis) {
 			return eddis.map((eddi, i) => {
+				console.log('this is the eddi', eddi);
 				const name = eddi.settings.name;
 				return (
 					<HomeButton key={i}
