@@ -14,7 +14,7 @@ function createTimeOptions(increment){
 
 export const timeOptions = createTimeOptions(15);
 
-export const salinityOptions = [
-	500,
-	1000
-];
+export const salinityOptions = {
+	min: 500,
+	default : 1000
+};
