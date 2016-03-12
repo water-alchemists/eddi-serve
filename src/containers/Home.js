@@ -1,13 +1,11 @@
 'use strict';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
 import { PATHS } from '../constants';
 
 import HomeButton from '../components/HomeButton';
-import LoggedOutHome from '../components/LoggedOutHome';
-import LoggedInHome from '../components/LoggedInHome';
 
 import { getAllEddiByUserThunk } from '../actions/eddis';
 
@@ -26,30 +24,43 @@ function mapDispatchToProps(dispatch){
 }
 
 class Home extends Component {
-	componentWillReceiveProps(nextProps){
-		const { user, getEddisByUser } = this.props;
-		if(nextProps.user !== user) return getEddisByUser();
+
+  componentWillMount(){
+		if( this.props.user.email ){
+			// user is logged in. go directly to list screen
+			browserHistory.push(PATHS.LIST);
+		}
 	}
 
-	clickHandler(destination, query){
-		const { navigateTo } = this.props;
-		navigateTo(destination, query);
+	navigateTo(key){
+		const destination = PATHS[key];
+		if(destination) return browserHistory.push(destination);
 	}
+
 
 	render(){
-		const { user, eddis } = this.props,
-			{ email } = user,
-			LoggedOutElement = <LoggedOutHome />,
-			LoggedInElement = <LoggedInHome eddis={eddis} />,
-			showHome = email ? LoggedInElement : LoggedOutElement;
-		console.log('these are teh eddis', eddis);
 		return (
-			<div>
-				{showHome}
+			<div id="home">
+				<HomeButton onClick={() => this.navigateTo('LOGIN')}
+					name={'Login'}
+				/>
+				<HomeButton onClick={() => this.navigateTo('SIGNUP')}
+					name={'Signup'}
+				/>
 			</div>
 		);
 	}
 }
+
+
+Home.propTypes = {
+	eddis : PropTypes.arrayOf(
+		PropTypes.shape({
+			name : PropTypes.string
+		})
+	)
+};
+
 
 export default connect(
 	mapStateToProps,
