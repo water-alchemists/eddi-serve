@@ -36,6 +36,7 @@ ReactDOM.render(
 			<Route path={PATHS.HOME} component={App}>
 				<IndexRoute component={Home}/>
 				<Route path={PATHS.DASHBOARD} component={Dashboard}/>
+				<Route path={PATHS.LIST} component={List}/>
 				<Route path={PATHS.REPORT} component={Report}/>
 				<Route path={PATHS.SETTINGS} component={Settings}/>
 				<Route path={PATHS.TROUBLESHOOT} component={Troubleshoot}/>
