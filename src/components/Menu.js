@@ -26,7 +26,7 @@ class Menu extends Component {
 			<header id="navbar">
 				<div 	className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
 							onClick={ () => this.toggleMenu() } >
-					☰
+					<div className="icon">☰</div>
 					<div className='menu-options'>
 						<Link to={PATHS.LIST}>Home</Link>
 						<Link to={PATHS.DASHBOARD}>Dashboard</Link>

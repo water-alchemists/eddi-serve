@@ -27193,7 +27193,11 @@
 							onClick: function onClick() {
 								return _this2.toggleMenu();
 							} },
-						'☰',
+						_react2.default.createElement(
+							'div',
+							{ className: 'icon' },
+							'☰'
+						),
 						_react2.default.createElement(
 							'div',
 							{ className: 'menu-options' },
@@ -30679,7 +30683,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n.page {\n  padding-top: 48px;\n}\n", ""]);
+	exports.push([module.id, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#navbar .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#navbar .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n.page {\n  padding-top: 48px;\n}\n", ""]);
 
 	// exports
 
@@ -45472,7 +45476,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n.page {\n  padding-top: 48px;\n}\n#home {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px;\n  text-align: center;\n}\n#home .content .logo {\n  background-image: url('https://kingsexperience.files.wordpress.com/2015/06/ks-new-logo-bw-blank-bg-off-white-text.png?w=300');\n  height: 80px;\n  margin-bottom: 20px;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n#home .content form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  color: white;\n  border: 0;\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\n#home .content form input:focus {\n  opacity: 1;\n  outline: none;\n}\n#home .content form input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\n#home .content form button {\n  padding: 10px 20px;\n  background-color: rgba(241, 241, 242, 0.9);\n  font-size: 16px;\n  border: 0;\n}\n", ""]);
+	exports.push([module.id, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#navbar .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#navbar .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n.page {\n  padding-top: 48px;\n}\n#home {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px;\n  text-align: center;\n}\n#home .content .logo {\n  background-image: url('https://kingsexperience.files.wordpress.com/2015/06/ks-new-logo-bw-blank-bg-off-white-text.png?w=300');\n  height: 80px;\n  margin-bottom: 20px;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n#home .content form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  color: white;\n  border: 0;\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\n#home .content form input:focus {\n  opacity: 1;\n  outline: none;\n}\n#home .content form input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\n#home .content form button {\n  padding: 10px 20px;\n  background-color: rgba(241, 241, 242, 0.9);\n  font-size: 16px;\n  border: 0;\n}\n", ""]);
 
 	// exports
 
