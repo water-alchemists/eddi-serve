@@ -11,6 +11,7 @@ import middlewares from './middlewares';
 import { PATHS } from './constants';
 import { App,
 	Home,
+	List,
 	Dashboard,
 	Report,
 	Settings,

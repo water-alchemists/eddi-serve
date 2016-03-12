@@ -2,7 +2,7 @@
 
 @background_color:  rgba(13, 14, 31, 1);
 @trim_color:        rgba(0, 109, 96, 1);
-@inactive_color:    rgba(241, 241, 242, 0.9);
+@support_color:     rgba(241, 241, 242, 0.9);
 
 @true_blue:         rgba(42, 191, 208, 1);
 @true_blue_med:     rgba(42, 191, 208, 0.8);
@@ -70,31 +70,4 @@ body {
 
 .page{
   padding-top: @navbar_height;
-}
-
-#home{
-  position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  background: linear-gradient( 0deg, @trim_color, @background_color 30%, @background_color );
-
-  .content{
-    margin: 40px;
-    text-align: center;
-
-    .logo{
-      background-image: url('https://kingsexperience.files.wordpress.com/2015/06/ks-new-logo-bw-blank-bg-off-white-text.png?w=300');
-      height: 80px;
-      margin-bottom: 20px;
-    }
-
-    .auth-button {
-      display: block;
-      padding: 10px 30px;
-      color: white;
-      text-decoration: none;
-    }
-  }
 }
