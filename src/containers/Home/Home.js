@@ -10,6 +10,7 @@ import LoginForm from '../../components/LoginForm';
 import SignupForm from '../../components/SignupForm';
 
 import { getAllEddiByUserThunk } from '../../actions/eddis';
+import { userLoginWithPasswordThunk, userCreateThunk } from '../../actions/user';
 
 import style from './Home.less';
 
