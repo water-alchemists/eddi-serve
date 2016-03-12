@@ -1,29 +1,41 @@
 'use strict';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { PATHS } from '../constants';
 
-const { 
-	PropTypes
-} = React;
+
+
 
 class Menu extends Component {
+
+	constructor(props){
+		super(props);
+		this.state = {
+			optionsOpen: false
+		};
+	}
+
+	toggleMenu(){
+		this.setState({
+			optionsOpen: !this.state.optionsOpen
+		});
+	}
+
 	_renderLoggedIn(){
 		return (
-			<header className={'navbar'}>
-				Links:
-				{' '}
-				<Link to={PATHS.HOME}>Home</Link>
-				{' '}
-				<Link to={PATHS.DASHBOARD}>Dashboard</Link>
-				{' '}
-				<Link to={PATHS.REPORT}>Report</Link>
-				{' '}
-				<Link to={PATHS.SETTINGS}>Settings</Link>
-				{' '}
-				<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>
-				{' '}
-				<span onClick={() => this.logoutHandler()}>Logout</span>
+			<header id="navbar">
+				<div 	className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
+							onClick={ () => this.toggleMenu() } >
+					☰
+					<div className='menu-options'>
+						<Link to={PATHS.HOME}>Home</Link>
+						<Link to={PATHS.DASHBOARD}>Dashboard</Link>
+						<Link to={PATHS.REPORT}>Report</Link>
+						<Link to={PATHS.SETTINGS}>Settings</Link>
+						<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>
+						<span onClick={() => this.logoutHandler()}>Logout</span>
+					</div>
+				</div>
 			</header>
 		);
 	}
@@ -51,8 +63,11 @@ class Menu extends Component {
 		const { user } = this.props,
 			isLoggedIn = !!user.email;
 
-		if(isLoggedIn) return this._renderLoggedIn();
-		else return this._renderLoggedOut();
+		if(isLoggedIn){
+			return this._renderLoggedIn();
+		} else {
+			return null;
+		}
 	}
 }
 
