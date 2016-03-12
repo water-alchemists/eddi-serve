@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import SettingsEddiHeader from './SettingsEddiHeader';
 import SettingsEddiVersion from './SettingsEddiVersion';
+import SettingsEddiForm from './SettingsEddiForm';
 
 const {
 	PropTypes
@@ -10,7 +11,7 @@ const {
 class SettingsEddi extends Component {
 
 	render(){
-		const {eddi} = this.props,
+		const { eddi, onSalinityChange, onEndChange, onStartChange } = this.props,
 			{ version={}, settings={} } = eddi;
 		console.log('settings eddi', eddi, version, settings);
 		return (
@@ -24,16 +25,19 @@ class SettingsEddi extends Component {
 					eddiNumber={version.eddi.number}
 					eddiDate={new Date(version.eddi.updated)}
 				/>
-				<div></div>
+				<SettingsEddiForm onSalinityChange={(id, salinity) => onSalinityChange(id, salinity)}
+					onEndChange={(id, hour, minutes) => onEndChange(id, hour, minutes)}
+					onStartChange={(id, hour, minutes) => onStartChange(id, hour, minutes)}
+				/>
 			</div>
 		);
 	}
 }
 
 SettingsEddi.propTypes = {
-	onSalinityChange : PropTypes.func,
-	onStartChange : PropTypes.func,
-	onEndChange : PropTypes.func,
+	onSalinityChange : PropTypes.func.isRequired,
+	onStartChange : PropTypes.func.isRequired,
+	onEndChange : PropTypes.func.isRequired,
 	eddi : PropTypes.shape({
 		version : PropTypes.shape({
 			eddi : PropTypes.shape({

@@ -42,14 +42,32 @@ class Settings extends Component {
 		openAddForm();
 	}
 
+	onSalinityChange(id, salinity){
+		const { updateSalinity } = this.props;
+		updateSalinity(id, salinity);
+	}
+
+	onStartChange(id, hour, minutes){
+		const { updateStart } = this.props;
+		updateStart(id, hour, minutes);
+	}
+
+	onEndChange(id, hour, minutes){
+		const { updateEnd } = this.props;
+		updateEnd(id, hour, minutes);
+	}
+
 	_renderEddis(){
 		const { eddis } = this.props;
 		return eddis.map(eddi => {
 			return (
-				<SettingsEddi eddi={eddi}/>
+				<SettingsEddi eddi={eddi}
+					onSalinityChange={(id, salinity) => onSalinityChange(salinity)}
+					onStartChange={(id, hour, minutes) => onStartChange(id, hour, minutes)}
+					onEndChange={(id, hour, minutes) => onEndChange(id, hour, minutes)}
+				/>
 			)
 		})
-		console.log('these are the eddis', eddis);
 	}
 
 	render(){

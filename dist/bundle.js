@@ -31446,14 +31446,74 @@
 				openAddForm();
 			}
 		}, {
+			key: 'onSalinityChange',
+			value: function onSalinityChange(id, salinity) {
+				var updateSalinity = this.props.updateSalinity;
+
+				updateSalinity(id, salinity);
+			}
+		}, {
+			key: 'onStartChange',
+			value: function onStartChange(id, hour, minutes) {
+				var updateStart = this.props.updateStart;
+
+				updateStart(id, hour, minutes);
+			}
+		}, {
+			key: 'onEndChange',
+			value: function onEndChange(id, hour, minutes) {
+				var updateEnd = this.props.updateEnd;
+
+				updateEnd(id, hour, minutes);
+			}
+		}, {
 			key: '_renderEddis',
 			value: function _renderEddis() {
 				var eddis = this.props.eddis;
 
 				return eddis.map(function (eddi) {
-					return _react2.default.createElement(_SettingsEddi2.default, { eddi: eddi });
+					return _react2.default.createElement(_SettingsEddi2.default, { eddi: eddi,
+						onSalinityChange: function (_onSalinityChange) {
+							function onSalinityChange(_x, _x2) {
+								return _onSalinityChange.apply(this, arguments);
+							}
+
+							onSalinityChange.toString = function () {
+								return _onSalinityChange.toString();
+							};
+
+							return onSalinityChange;
+						}(function (id, salinity) {
+							return onSalinityChange(salinity);
+						}),
+						onStartChange: function (_onStartChange) {
+							function onStartChange(_x3, _x4, _x5) {
+								return _onStartChange.apply(this, arguments);
+							}
+
+							onStartChange.toString = function () {
+								return _onStartChange.toString();
+							};
+
+							return onStartChange;
+						}(function (id, hour, minutes) {
+							return onStartChange(id, hour, minutes);
+						}),
+						onEndChange: function (_onEndChange) {
+							function onEndChange(_x6, _x7, _x8) {
+								return _onEndChange.apply(this, arguments);
+							}
+
+							onEndChange.toString = function () {
+								return _onEndChange.toString();
+							};
+
+							return onEndChange;
+						}(function (id, hour, minutes) {
+							return onEndChange(id, hour, minutes);
+						})
+					});
 				});
-				console.log('these are the eddis', eddis);
 			}
 		}, {
 			key: 'render',
@@ -31527,6 +31587,10 @@
 
 	var _SettingsEddiVersion2 = _interopRequireDefault(_SettingsEddiVersion);
 
+	var _SettingsEddiForm = __webpack_require__(399);
+
+	var _SettingsEddiForm2 = _interopRequireDefault(_SettingsEddiForm);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31549,7 +31613,11 @@
 		_createClass(SettingsEddi, [{
 			key: 'render',
 			value: function render() {
-				var eddi = this.props.eddi;
+				var _props = this.props;
+				var eddi = _props.eddi;
+				var _onSalinityChange = _props.onSalinityChange;
+				var _onEndChange = _props.onEndChange;
+				var _onStartChange = _props.onStartChange;
 				var _eddi$version = eddi.version;
 				var version = _eddi$version === undefined ? {} : _eddi$version;
 				var _eddi$settings = eddi.settings;
@@ -31568,7 +31636,16 @@
 						eddiNumber: version.eddi.number,
 						eddiDate: new Date(version.eddi.updated)
 					}),
-					_react2.default.createElement('div', null)
+					_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(id, salinity) {
+							return _onSalinityChange(id, salinity);
+						},
+						onEndChange: function onEndChange(id, hour, minutes) {
+							return _onEndChange(id, hour, minutes);
+						},
+						onStartChange: function onStartChange(id, hour, minutes) {
+							return _onStartChange(id, hour, minutes);
+						}
+					})
 				);
 			}
 		}]);
@@ -31577,9 +31654,9 @@
 	}(_react.Component);
 
 	SettingsEddi.propTypes = {
-		onSalinityChange: PropTypes.func,
-		onStartChange: PropTypes.func,
-		onEndChange: PropTypes.func,
+		onSalinityChange: PropTypes.func.isRequired,
+		onStartChange: PropTypes.func.isRequired,
+		onEndChange: PropTypes.func.isRequired,
 		eddi: PropTypes.shape({
 			version: PropTypes.shape({
 				eddi: PropTypes.shape({
@@ -45002,6 +45079,57 @@
 	    return zh_tw;
 
 	}));
+
+/***/ },
+/* 399 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SettingsEddiForm = function (_Component) {
+		_inherits(SettingsEddiForm, _Component);
+
+		function SettingsEddiForm() {
+			_classCallCheck(this, SettingsEddiForm);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddiForm).apply(this, arguments));
+		}
+
+		_createClass(SettingsEddiForm, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement('div', null);
+			}
+		}]);
+
+		return SettingsEddiForm;
+	}(_react.Component);
+
+	SettingsEddiForm.propTypes = {
+		onSalinityChange: _react.PropTypes.func.isRequired,
+		onStartChange: _react.PropTypes.func.isRequired,
+		onEndChange: _react.PropTypes.func.isRequired
+	};
+
+	exports.default = SettingsEddiForm;
 
 /***/ }
 /******/ ]);
