@@ -26641,6 +26641,8 @@
 	var EDDI_GETALL_ERROR = exports.EDDI_GETALL_ERROR = 'EDDI_GETALL_ERROR';
 	var EDDI_UPDATE_SUCCESS = exports.EDDI_UPDATE_SUCCESS = 'EDDI_UPDATE_SUCCESS';
 	var EDDI_UPDATE_ERROR = exports.EDDI_UPDATE_ERROR = 'EDDI_UPDATE_ERROR';
+	var EDDI_UPDATESTART_SUCCESS = exports.EDDI_UPDATESTART_SUCCESS = 'EDDI_UPDATESTART_SUCCESS';
+	var EDDI_UPDATEEND_SUCCESS = exports.EDDI_UPDATEEND_SUCCESS = 'EDDI_UPDATEEND_SUCCESs';
 	var EDDI_GETONE_SUCCESS = exports.EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
@@ -26682,6 +26684,11 @@
 		var id = action.id;
 		var _action$settings = action.settings;
 		var settings = _action$settings === undefined ? {} : _action$settings;
+		var _action$timing = action.timing;
+		var timing = _action$timing === undefined ? {} : _action$timing;
+
+
+		var newList = undefined;
 
 		switch (type) {
 			case _constants.EDDI_GETALL_SUCCESS:
@@ -26690,22 +26697,57 @@
 					list: list
 				});
 			case _constants.EDDI_UPDATE_SUCCESS:
-				{
-					var newList = state.list.map(function (eddi) {
-						if (eddi.id === id) {
-							var updatedEddi = _extends({}, eddi);
+				newList = state.list.map(function (eddi) {
+					if (eddi.id === id) {
+						//update that one eddi
+						var updatedEddi = _extends({}, eddi);
+						updatedEddi.settings = _extends({}, eddi.settings, settings);
 
-							updatedEddi.settings = _extends({}, eddi.settings, settings);
+						//return that eddi
+						return updatedEddi;
+					}
 
-							return updatedEddi;
-						}
-						return eddi;
-					});
+					//if not the right one
+					return eddi;
+				});
 
-					return _extends({}, state, {
-						list: newList
-					});
-				}
+				return _extends({}, state, {
+					list: newList
+				});
+			case _constants.EDDI_UPDATESTART_SUCCESS:
+				newList = state.list.map(function (eddi) {
+					if (eddi.id === id) {
+						//update that one eddi
+						var updatedEddi = _extends({}, eddi);
+
+						updatedEddi.settings.timing.start = _extends({}, eddi.settings.timing.start, timing);
+
+						//return that eddi
+						return updatedEddi;
+					}
+					//if not the right one
+					return eddi;
+				});
+				return _extends({}, state, {
+					list: newList
+				});
+			case _constants.EDDI_UPDATEEND_SUCCESS:
+				newList = state.list.map(function (eddi) {
+					if (eddi.id === id) {
+						//update that one eddi
+						var updatedEddi = _extends({}, eddi);
+
+						updatedEddi.settings.timing.end = _extends({}, eddi.settings.timing.end, timing);
+
+						//return that eddi
+						return updatedEddi;
+					}
+					//if not the right one
+					return eddi;
+				});
+				return _extends({}, state, {
+					list: newList
+				});
 			case _constants.EDDI_SELECT:
 				console.log('eddi selected');
 				return _extends({}, state, {
@@ -26908,11 +26950,11 @@
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(400);
+	var _Troubleshoot2 = __webpack_require__(402);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(401);
+	var _Report2 = __webpack_require__(403);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -26953,7 +26995,7 @@
 
 	var _ModalWrapper2 = _interopRequireDefault(_ModalWrapper);
 
-	var _user = __webpack_require__(282);
+	var _user = __webpack_require__(280);
 
 	var _base = __webpack_require__(284);
 
@@ -29320,7 +29362,7 @@
 
 	var _eddis = __webpack_require__(278);
 
-	var _AddEddiForm = __webpack_require__(281);
+	var _AddEddiForm = __webpack_require__(279);
 
 	var _AddEddiForm2 = _interopRequireDefault(_AddEddiForm);
 
@@ -29403,7 +29445,7 @@
 	exports.setEddiEndThunk = setEddiEndThunk;
 	exports.setEddiSalinityThunk = setEddiSalinityThunk;
 
-	var _eddiFirebase = __webpack_require__(279);
+	var _eddiFirebase = __webpack_require__(281);
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
 
@@ -29450,6 +29492,26 @@
 		return {
 			type: _constants.EDDI_UPDATE_ERROR,
 			error: error
+		};
+	}
+
+	function updateEddiStartTime(id) {
+		var timing = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+		return {
+			type: _constants.EDDI_UPDATESTART_SUCCESS,
+			id: id,
+			timing: timing
+		};
+	}
+
+	function updateEddiEndTime(id) {
+		var timing = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+		return {
+			type: _constants.EDDI_UPDATEEND_SUCCESS,
+			id: id,
+			timing: timing
 		};
 	}
 
@@ -29505,15 +29567,29 @@
 		};
 	}
 
-	function setEddiStartThunk(eddiId, hour, minutes) {
+	function setEddiStartThunk(eddiId) {
+		var start = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
 		return function (dispatch) {
 			if (!(typeof hour === 'undefined' ? 'undefined' : _typeof(hour)) === 'number' || typeof minutes === 'number') throw new Error('Hour and minutes must be numbers.');
+			return EddiFire.setStartTime(eddi, start).then(function (update) {
+				return dispatch(updateEddiStartSuccess(update.id, update.timing));
+			}).catch(function (error) {
+				return dispatch(updateEddiError(error));
+			});
 		};
 	}
 
-	function setEddiEndThunk(eddiId, hour, minutes) {
+	function setEddiEndThunk(eddiId) {
+		var end = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
 		return function (dispatch) {
 			if (!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error('Hour and minutes must be numbers.');
+			return EddiFire.setEndTime(eddiId, end).then(function (update) {
+				return dispatch(updateEddiEndSuccess(update.id, update.timing));
+			}).catch(function (error) {
+				return dispatch(updateEddiError(error));
+			});
 		};
 	}
 
@@ -29538,6 +29614,315 @@
 		value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var AddEddiForm = function (_Component) {
+		_inherits(AddEddiForm, _Component);
+
+		function AddEddiForm(props) {
+			_classCallCheck(this, AddEddiForm);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiForm).call(this, props));
+
+			_this.state = {
+				id: null,
+				name: null
+			};
+			return _this;
+		}
+
+		_createClass(AddEddiForm, [{
+			key: 'onIdChange',
+			value: function onIdChange(event) {
+				var id = event.target.value;
+				event.preventDefault();
+				this.setState({ id: id });
+			}
+		}, {
+			key: 'onNameChange',
+			value: function onNameChange(event) {
+				var name = event.target.value;
+				event.preventDefault();
+				this.setState({ name: name });
+			}
+		}, {
+			key: 'submitHandler',
+			value: function submitHandler(event) {
+				var _state = this.state;
+				var id = _state.id;
+				var name = _state.name;
+				var onSubmit = this.props.onSubmit;
+
+				event.preventDefault();
+				if (onSubmit instanceof Function) return onSubmit(id, { name: name });
+			}
+		}, {
+			key: 'cancelHandler',
+			value: function cancelHandler(event) {
+				var onCancel = this.props.onCancel;
+
+				event.preventDefault();
+				if (onCancel instanceof Function) return onCancel();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _props = this.props;
+				var id = _props.id;
+				var name = _props.name;
+
+
+				return _react2.default.createElement(
+					'form',
+					{ onSubmit: function onSubmit(event) {
+							return _this2.submitHandler(event);
+						} },
+					_react2.default.createElement(
+						'div',
+						{ className: 'form-container' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'input-container' },
+							_react2.default.createElement(
+								'label',
+								{ htmlFor: 'id' },
+								'Eddi Id : '
+							),
+							_react2.default.createElement('input', { type: 'text',
+								name: 'id',
+								onChange: function onChange(event) {
+									return _this2.onIdChange(event);
+								},
+								value: id
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'input-container' },
+							_react2.default.createElement(
+								'label',
+								{ htmlFor: 'name' },
+								'Eddi Name : '
+							),
+							_react2.default.createElement('input', { type: 'text',
+								name: 'name',
+								onChange: function onChange(event) {
+									return _this2.onNameChange(event);
+								},
+								value: name
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'input-container' },
+							_react2.default.createElement(
+								'button',
+								{ type: 'submit' },
+								'Add'
+							),
+							_react2.default.createElement(
+								'button',
+								{ type: 'button', onClick: function onClick(event) {
+										return _this2.cancelHandler(event);
+									} },
+								'Cancel'
+							)
+						)
+					)
+				);
+			}
+		}]);
+
+		return AddEddiForm;
+	}(_react.Component);
+
+	AddEddiForm.propTypes = {
+		onSubmit: PropTypes.func,
+		onCancel: PropTypes.func
+	};
+
+	exports.default = AddEddiForm;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.userLogoutSuccess = userLogoutSuccess;
+	exports.userGetProfile = userGetProfile;
+	exports.userCreateThunk = userCreateThunk;
+	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
+	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
+	exports.userLogout = userLogout;
+
+	var _eddiFirebase = __webpack_require__(281);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	var _cookieStore = __webpack_require__(283);
+
+	var _cookieStore2 = _interopRequireDefault(_cookieStore);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _constants = __webpack_require__(244);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EddiFire = (0, _eddiFirebase2.default)(),
+	    EddiCookie = (0, _cookieStore2.default)();
+
+	function userLoginSuccess(user) {
+		return {
+			type: _constants.USER_LOGIN_SUCCESS,
+			user: user
+		};
+	}
+
+	function userLoginError(error) {
+		return {
+			export: _constants.USER_LOGIN_ERROR,
+			error: error
+		};
+	}
+
+	function userLogoutSuccess() {
+		return {
+			type: _constants.USER_LOGOUT_SUCCESS
+		};
+	}
+
+	function userUpdateSuccess(user) {
+		return {
+			type: _constants.USER_UPDATE_SUCCESS,
+			user: user
+		};
+	}
+
+	function userUpdateError(user) {
+		return {
+			type: _constants.USER_UPDATE_ERROR,
+			user: user
+		};
+	}
+
+	function userGetProfile(user) {
+		return {
+			type: _constants.USER_GETPROFILE_SUCCESS,
+			user: user
+		};
+	}
+
+	function userCreateError(error) {
+		return {
+			type: _constants.USER_CREATE_ERROR,
+			error: error
+		};
+	}
+
+	function userCreateThunk(user) {
+
+		return function (dispatch) {
+			var email = user.email;
+			var password = user.password;
+
+			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
+				var id = userSuccess.uid;
+				delete user.password;
+				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
+				});
+			}).catch(function (err) {
+				return dispatch(userCreateError(err));
+			});
+		};
+	}
+
+	function userLoginWithPasswordThunk(email, password) {
+		return function (dispatch) {
+			return EddiFire.authWithPassword(email, password).then(function (user) {
+				var uid = user.uid;
+				var token = user.token;
+				var expires = user.expires;
+
+				//set the token to cookie
+
+				EddiCookie.setCookie(token, expires);
+
+				//gets the user profile
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
+				});
+			}).catch(function (err) {
+				return dispatch(userLoginError(err));
+			});
+		};
+	}
+
+	function userLoginWithTokenThunk() {
+		return function (dispatch) {
+			var cookie = EddiCookie.getCookie() || {},
+			    token = cookie.token;
+			if (!token) return; //if there is no token, don't do anything
+			return EddiFire.authWithToken(token).then(function (user) {
+				//gets the user profile
+				var uid = user.uid;
+
+
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					return dispatch(userGetProfile(userProfile));
+				});
+			}).catch(function (err) {
+				var code = err.code;
+
+				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
+				dispatch(userLoginError(err));
+			});
+		};
+	}
+
+	function userLogout() {
+		return function (dispatch) {
+			EddiFire.unauthenticate();
+			EddiCookie.deleteCookie();
+
+			//let store know of logout
+			dispatch(userLogoutSuccess());
+		};
+	}
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -29552,7 +29937,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Firebase = __webpack_require__(280);
+	var Firebase = __webpack_require__(282);
 
 	var PATHS = {
 		BASE_PATH: 'https://eddi.firebaseIO.com',
@@ -29800,17 +30185,63 @@
 			}
 		}, {
 			key: 'updateStartTime',
-			value: function updateStartTime(eddiId, start) {}
+			value: function updateStartTime(id, _ref) {
+				var _this16 = this;
+
+				var hour = _ref.hour;
+				var minute = _ref.minute;
+
+				var start = { hour: hour, minute: minute };
+				return this.findByEddi(id).then(function () {
+					return _this16.isEddiOwner(id);
+				}).then(function () {
+					return new Promise(function (resolve, reject) {
+						_this16.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.START_TIME).update(start, function (error) {
+							if (error) return reject(error);
+							resolve({
+								id: id,
+								timing: {
+									hour: hour,
+									minute: minute
+								}
+							});
+						});
+					});
+				});
+			}
 		}, {
 			key: 'setEndTime',
-			value: function setEndTime(eddiId, end) {}
+			value: function setEndTime(id, _ref2) {
+				var _this17 = this;
+
+				var hour = _ref2.hour;
+				var minute = _ref2.minute;
+
+				var end = { hour: hour, minute: minute };
+				return this.findByEddi(id).then(function () {
+					return _this17.isEddiOwner(id);
+				}).then(function () {
+					return new Promise(function (resolve, reject) {
+						_this17.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.END_TIME).update(end, function (error) {
+							if (error) return reject(error);
+							resolve({
+								id: id,
+								timing: {
+									hour: hour,
+									minute: minute
+								}
+							});
+						});
+					});
+				});
+			}
 		}]);
 
 		return EddiFire;
 	}();
 
 /***/ },
-/* 280 */
+/* 282 */
 /***/ function(module, exports) {
 
 	/*! @license Firebase v2.4.1
@@ -30093,315 +30524,6 @@
 
 	module.exports = Firebase;
 
-
-/***/ },
-/* 281 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var AddEddiForm = function (_Component) {
-		_inherits(AddEddiForm, _Component);
-
-		function AddEddiForm(props) {
-			_classCallCheck(this, AddEddiForm);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiForm).call(this, props));
-
-			_this.state = {
-				id: null,
-				name: null
-			};
-			return _this;
-		}
-
-		_createClass(AddEddiForm, [{
-			key: 'onIdChange',
-			value: function onIdChange(event) {
-				var id = event.target.value;
-				event.preventDefault();
-				this.setState({ id: id });
-			}
-		}, {
-			key: 'onNameChange',
-			value: function onNameChange(event) {
-				var name = event.target.value;
-				event.preventDefault();
-				this.setState({ name: name });
-			}
-		}, {
-			key: 'submitHandler',
-			value: function submitHandler(event) {
-				var _state = this.state;
-				var id = _state.id;
-				var name = _state.name;
-				var onSubmit = this.props.onSubmit;
-
-				event.preventDefault();
-				if (onSubmit instanceof Function) return onSubmit(id, { name: name });
-			}
-		}, {
-			key: 'cancelHandler',
-			value: function cancelHandler(event) {
-				var onCancel = this.props.onCancel;
-
-				event.preventDefault();
-				if (onCancel instanceof Function) return onCancel();
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _props = this.props;
-				var id = _props.id;
-				var name = _props.name;
-
-
-				return _react2.default.createElement(
-					'form',
-					{ onSubmit: function onSubmit(event) {
-							return _this2.submitHandler(event);
-						} },
-					_react2.default.createElement(
-						'div',
-						{ className: 'form-container' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'input-container' },
-							_react2.default.createElement(
-								'label',
-								{ htmlFor: 'id' },
-								'Eddi Id : '
-							),
-							_react2.default.createElement('input', { type: 'text',
-								name: 'id',
-								onChange: function onChange(event) {
-									return _this2.onIdChange(event);
-								},
-								value: id
-							})
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'input-container' },
-							_react2.default.createElement(
-								'label',
-								{ htmlFor: 'name' },
-								'Eddi Name : '
-							),
-							_react2.default.createElement('input', { type: 'text',
-								name: 'name',
-								onChange: function onChange(event) {
-									return _this2.onNameChange(event);
-								},
-								value: name
-							})
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'input-container' },
-							_react2.default.createElement(
-								'button',
-								{ type: 'submit' },
-								'Add'
-							),
-							_react2.default.createElement(
-								'button',
-								{ type: 'button', onClick: function onClick(event) {
-										return _this2.cancelHandler(event);
-									} },
-								'Cancel'
-							)
-						)
-					)
-				);
-			}
-		}]);
-
-		return AddEddiForm;
-	}(_react.Component);
-
-	AddEddiForm.propTypes = {
-		onSubmit: PropTypes.func,
-		onCancel: PropTypes.func
-	};
-
-	exports.default = AddEddiForm;
-
-/***/ },
-/* 282 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.userLogoutSuccess = userLogoutSuccess;
-	exports.userGetProfile = userGetProfile;
-	exports.userCreateThunk = userCreateThunk;
-	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
-	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
-	exports.userLogout = userLogout;
-
-	var _eddiFirebase = __webpack_require__(279);
-
-	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
-
-	var _cookieStore = __webpack_require__(283);
-
-	var _cookieStore2 = _interopRequireDefault(_cookieStore);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _constants = __webpack_require__(244);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EddiFire = (0, _eddiFirebase2.default)(),
-	    EddiCookie = (0, _cookieStore2.default)();
-
-	function userLoginSuccess(user) {
-		return {
-			type: _constants.USER_LOGIN_SUCCESS,
-			user: user
-		};
-	}
-
-	function userLoginError(error) {
-		return {
-			export: _constants.USER_LOGIN_ERROR,
-			error: error
-		};
-	}
-
-	function userLogoutSuccess() {
-		return {
-			type: _constants.USER_LOGOUT_SUCCESS
-		};
-	}
-
-	function userUpdateSuccess(user) {
-		return {
-			type: _constants.USER_UPDATE_SUCCESS,
-			user: user
-		};
-	}
-
-	function userUpdateError(user) {
-		return {
-			type: _constants.USER_UPDATE_ERROR,
-			user: user
-		};
-	}
-
-	function userGetProfile(user) {
-		return {
-			type: _constants.USER_GETPROFILE_SUCCESS,
-			user: user
-		};
-	}
-
-	function userCreateError(error) {
-		return {
-			type: _constants.USER_CREATE_ERROR,
-			error: error
-		};
-	}
-
-	function userCreateThunk(user) {
-
-		return function (dispatch) {
-			var email = user.email;
-			var password = user.password;
-
-			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
-				var id = userSuccess.uid;
-				delete user.password;
-				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
-					dispatch(userGetProfile(userProfile));
-					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
-				});
-			}).catch(function (err) {
-				return dispatch(userCreateError(err));
-			});
-		};
-	}
-
-	function userLoginWithPasswordThunk(email, password) {
-		return function (dispatch) {
-			return EddiFire.authWithPassword(email, password).then(function (user) {
-				var uid = user.uid;
-				var token = user.token;
-				var expires = user.expires;
-
-				//set the token to cookie
-
-				EddiCookie.setCookie(token, expires);
-
-				//gets the user profile
-				return EddiFire.getUserProfile(uid).then(function (userProfile) {
-					dispatch(userGetProfile(userProfile));
-					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
-				});
-			}).catch(function (err) {
-				return dispatch(userLoginError(err));
-			});
-		};
-	}
-
-	function userLoginWithTokenThunk() {
-		return function (dispatch) {
-			var cookie = EddiCookie.getCookie() || {},
-			    token = cookie.token;
-			if (!token) return; //if there is no token, don't do anything
-			return EddiFire.authWithToken(token).then(function (user) {
-				//gets the user profile
-				var uid = user.uid;
-
-
-				return EddiFire.getUserProfile(uid).then(function (userProfile) {
-					return dispatch(userGetProfile(userProfile));
-				});
-			}).catch(function (err) {
-				var code = err.code;
-
-				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
-				dispatch(userLoginError(err));
-			});
-		};
-	}
-
-	function userLogout() {
-		return function (dispatch) {
-			EddiFire.unauthenticate();
-			EddiCookie.deleteCookie();
-
-			//let store know of logout
-			dispatch(userLogoutSuccess());
-		};
-	}
 
 /***/ },
 /* 283 */
@@ -31061,7 +31183,7 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _user = __webpack_require__(282);
+	var _user = __webpack_require__(280);
 
 	var _reactRouter = __webpack_require__(180);
 
@@ -31274,7 +31396,7 @@
 
 	var _reactRedux = __webpack_require__(169);
 
-	var _user = __webpack_require__(282);
+	var _user = __webpack_require__(280);
 
 	var _SignupForm = __webpack_require__(293);
 
@@ -45147,7 +45269,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SalinityInput = __webpack_require__(402);
+	var _SalinityInput = __webpack_require__(400);
 
 	var _SalinityInput2 = _interopRequireDefault(_SalinityInput);
 
@@ -45222,133 +45344,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRedux = __webpack_require__(169);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddi: state.eddis.selected
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {};
-	}
-
-	var Troubleshoot = function (_Component) {
-		_inherits(Troubleshoot, _Component);
-
-		function Troubleshoot() {
-			_classCallCheck(this, Troubleshoot);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
-		}
-
-		_createClass(Troubleshoot, [{
-			key: 'render',
-			value: function render() {
-				var eddi = this.props.eddi;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					'This is the troubleshoot page.'
-				);
-			}
-		}]);
-
-		return Troubleshoot;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
-
-/***/ },
-/* 401 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(169);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddi: state.eddis.eddi
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {};
-	}
-
-	var Report = function (_Component) {
-		_inherits(Report, _Component);
-
-		function Report() {
-			_classCallCheck(this, Report);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Report).apply(this, arguments));
-		}
-
-		_createClass(Report, [{
-			key: 'render',
-			value: function render() {
-				var eddi = this.props.eddi;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					'This is the report page.'
-				);
-			}
-		}]);
-
-		return Report;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
-
-/***/ },
-/* 402 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _data = __webpack_require__(403);
+	var _data = __webpack_require__(401);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45411,7 +45407,7 @@
 	exports.default = SalinityInput;
 
 /***/ },
-/* 403 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45446,6 +45442,132 @@
 		min: 500,
 		default: 1000
 	};
+
+/***/ },
+/* 402 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.selected
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
+
+	var Troubleshoot = function (_Component) {
+		_inherits(Troubleshoot, _Component);
+
+		function Troubleshoot() {
+			_classCallCheck(this, Troubleshoot);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
+		}
+
+		_createClass(Troubleshoot, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the troubleshoot page.'
+				);
+			}
+		}]);
+
+		return Troubleshoot;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
+
+/***/ },
+/* 403 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(169);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.eddi
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {};
+	}
+
+	var Report = function (_Component) {
+		_inherits(Report, _Component);
+
+		function Report() {
+			_classCallCheck(this, Report);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Report).apply(this, arguments));
+		}
+
+		_createClass(Report, [{
+			key: 'render',
+			value: function render() {
+				var eddi = this.props.eddi;
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This is the report page.'
+				);
+			}
+		}]);
+
+		return Report;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ }
 /******/ ]);

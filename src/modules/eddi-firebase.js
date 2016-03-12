@@ -241,12 +241,58 @@ class EddiFire {
 			});
 	}
 
-	updateStartTime(eddiId, start){
-		
+	updateStartTime(id, { hour, minute }){
+		const start = { hour, minute };
+		return this.findByEddi(id)
+			.then(() => this.isEddiOwner(id))
+			.then(() => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(id)
+						.child(PATHS.SETTINGS_PATH)
+						.child(PATHS.TIMING_PATH)
+						.child(PATHS.START_TIME)
+						.update(
+							start,
+							error => {
+								if(error) return reject(error);
+								resolve({ 
+									id, 
+									timing : { 
+										hour, 
+										minute 
+									} 
+								});
+							}
+						)
+				})
+			})
 	}
 
-	setEndTime(eddiId, end){
-
+	setEndTime(id, { hour, minute }){
+		const end = { hour, minute };
+		return this.findByEddi(id)
+			.then(() => this.isEddiOwner(id))
+			.then(() => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(id)
+						.child(PATHS.SETTINGS_PATH)
+						.child(PATHS.TIMING_PATH)
+						.child(PATHS.END_TIME)
+						.update(
+							end,
+							error => {
+								if(error) return reject(error);
+								resolve({
+									id,
+									timing : {
+										hour, 
+										minute
+									}
+								});
+							}
+						);
+				})
+			});	
 	}
 
 }

@@ -8,6 +8,8 @@ import {
 	EDDI_GETALL_ERROR,
 	EDDI_UPDATE_SUCCESS,
 	EDDI_UPDATE_ERROR,
+	EDDI_UPDATESTART_SUCCESS,
+	EDDI_UPDATEEND_SUCCESS,
 	EDDI_GETONE_SUCCESS,
 	EDDI_GETONE_ERROR,
 	EDDI_SELECT
@@ -49,6 +51,22 @@ function updateEddiError(error){
 		type : EDDI_UPDATE_ERROR,
 		error
 	};
+}
+
+function updateEddiStartTime(id, timing = {}){
+	return {
+		type : EDDI_UPDATESTART_SUCCESS,
+		id, 
+		timing
+	}
+}
+
+function updateEddiEndTime(id, timing = {}){
+	return {
+		type : EDDI_UPDATEEND_SUCCESS,
+		id,
+		timing
+	}
 }
 
 function getOneEddiSuccess(selected){
@@ -95,16 +113,22 @@ export function assignEddiThunk(eddiId, info = {}){
 	}
 }
 
-export function setEddiStartThunk(eddiId, hour, minutes){
+export function setEddiStartThunk(eddiId, start = {}){
 	return dispatch => {
 		if((!typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
+		return EddiFire.setStartTime(eddi, start)
+			.then(update => dispatch(updateEddiStartSuccess(update.id, update.timing)))
+			.catch(error => dispatch(updateEddiError(error)));
 	}
 }
 
-export function setEddiEndThunk(eddiId, hour, minutes){
+export function setEddiEndThunk(eddiId, end = {}){
 	return dispatch => {
 		if(!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
-	}
+		return EddiFire.setEndTime(eddiId, end)
+			.then(update => dispatch(updateEddiEndSuccess(update.id, update.timing)))
+			.catch(error => dispatch(updateEddiError(error)));
+		}
 }
 
 export function setEddiSalinityThunk(eddiId, salinity){
