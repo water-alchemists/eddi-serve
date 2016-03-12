@@ -84,12 +84,11 @@ export function assignEddiThunk(eddiId, info = {}){
 		return EddiFire.isAuthenticated()
 			.then(user => {
 				const userId = user.uid;
-				console.log('this is hte uid', userId, eddiId);
 				return EddiFire.assignEddiToUser(userId, eddiId)
 					.then(() => EddiFire.updateEddiSettings(eddiId, info))
-					.then(() => EddiFire.getAllEddiByUser(uid));
+					.then(() => EddiFire.getAllEddiByUser(userId));
 			})
-			.then(eddis => console.log('these are all the eddis', eddis))
+			.then(eddis => dispatch(getAllEddiSuccess(eddis)))
 			.catch(err => dispatch(assignEddiError(err)))
 	}
 }

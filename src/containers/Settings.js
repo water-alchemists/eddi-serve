@@ -15,7 +15,7 @@ import AddEddiForm from '../components/AddEddiForm';
 
 function mapStateToProps(state){
 	return {
-		eddi : state.eddis.list
+		eddis : state.eddis.list
 	};
 }
 
@@ -37,7 +37,7 @@ class Settings extends Component {
 	}
 
 	render(){
-		const { eddi } = this.props;
+		const { eddis } = this.props;
 		return (
 			<div>
 				<div style={styles.addButton} onClick={() => this.clickAddHandler()}>

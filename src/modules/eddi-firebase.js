@@ -114,7 +114,7 @@ class EddiFire {
 	getAllEddiByUser(userId){
 		return new Promise((resolve, reject) => {
 			this.refs.EDDI
-				.child(PATHS.USER_PATH)
+				.orderByChild(PATHS.USER_PATH)
 				.equalTo(userId)
 				.once('value', data => {
 					const eddiList = data.val() || [],
@@ -122,7 +122,7 @@ class EddiFire {
 							return eddiList[key];
 						});
 					resolve(eddiIdList);
-				});
+				}, reject);
 		});
 	}
 
@@ -146,7 +146,6 @@ class EddiFire {
 						.set(
 							userId, 
 							error => {
-								console.log('this is assigninguser', error)
 								if(error) return reject(error);
 								resolve();
 							}
@@ -161,7 +160,7 @@ class EddiFire {
 				return new Promise((resolve, reject) => {
 					this.refs.EDDI.child(eddiId)
 						.child(PATHS.USER_PATH)
-						.update(
+						.set(
 							null,
 							error => {
 								if(error) return reject(error);
@@ -179,11 +178,11 @@ class EddiFire {
 				return new Promise((resolve, reject) => {
 					this.refs.EDDI.child(eddiId)
 						.child(PATHS.USER_PATH)
-						.once('value', (error, data) => {
-							if(error) return reject(error);
-							else if(data === userId) return resolve(userId);
+						.once('value', snapshot => {
+							const data = snapshot && snapshot.val();
+							if(data === userId) return resolve(userId);
 							else reject(new Error('User is not the owner of this eddi.'));
-						});
+						}, reject);
 				});
 			});
 	}
@@ -195,7 +194,7 @@ class EddiFire {
 				return new Promise((resolve, reject) => {
 					this.refs.EDDI.child(eddiId)
 						.child(PATHS.SETTINGS_PATH)
-						.update(settings, (error, data) => {
+						.update(settings, error => {
 							if(error) return reject(error);
 							resolve({...settings});
 						})
