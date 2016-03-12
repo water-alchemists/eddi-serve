@@ -28,7 +28,7 @@ class Menu extends Component {
 							onClick={ () => this.toggleMenu() } >
 					☰
 					<div className='menu-options'>
-						<Link to={PATHS.HOME}>Home</Link>
+						<Link to={PATHS.LIST}>Home</Link>
 						<Link to={PATHS.DASHBOARD}>Dashboard</Link>
 						<Link to={PATHS.REPORT}>Report</Link>
 						<Link to={PATHS.SETTINGS}>Settings</Link>

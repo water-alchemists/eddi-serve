@@ -27161,7 +27161,7 @@
 							{ className: 'menu-options' },
 							_react2.default.createElement(
 								_reactRouter.Link,
-								{ to: _constants.PATHS.HOME },
+								{ to: _constants.PATHS.LIST },
 								'Home'
 							),
 							_react2.default.createElement(
