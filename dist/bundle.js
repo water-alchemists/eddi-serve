@@ -104,6 +104,7 @@
 				{ path: _constants.PATHS.HOME, component: _containers.App },
 				_react2.default.createElement(_reactRouter.IndexRoute, { component: _containers.Home }),
 				_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.DASHBOARD, component: _containers.Dashboard }),
+				_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.LIST, component: _containers.List }),
 				_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.REPORT, component: _containers.Report }),
 				_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.SETTINGS, component: _containers.Settings }),
 				_react2.default.createElement(_reactRouter.Route, { path: _constants.PATHS.TROUBLESHOOT, component: _containers.Troubleshoot })
