@@ -1,13 +1,22 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import { PATHS } from '../constants';
 
 import HomeButton from '../components/HomeButton';
+import LoginForm from '../components/LoginForm';
+import SignupForm from '../components/SignupForm';
 
 import { getAllEddiByUserThunk } from '../actions/eddis';
+
+
+const Modes = {
+	BASE: 0,
+	LOGIN: 1,
+	SIGNUP: 2,
+};
 
 function mapStateToProps(state){
 	return {
@@ -18,12 +27,25 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		navigateTo : (pathname, query) => browserHistory.push({ pathname, query }),
-		getEddisByUser : () => dispatch(getAllEddiByUserThunk())
+		navigateTo: 		(pathname, query) 		=> browserHistory.push({ pathname, query }),
+		getEddisByUser: () 										=> dispatch(getAllEddiByUserThunk()),
+		login:		 			({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password)),
+		signup: 				(user) 								=> dispatch(userCreateThunk(user)),
 	};
 }
 
+
+
+
+
 class Home extends Component {
+
+	constructor(props){
+		super(props);
+		this.state = {
+			mode: Modes.BASE
+		};
+	}
 
   componentWillMount(){
 		if( this.props.user.email ){
@@ -37,16 +59,50 @@ class Home extends Component {
 		if(destination) return browserHistory.push(destination);
 	}
 
+	_renderBase(){
+		return [
+			(<div className='auth-button'
+						onClick={ () => this.setState({mode: Modes.LOGIN})}>
+				Login ›
+			</div>),
+			(<div 	className='auth-button'
+						onClick={ () => this.setState({mode: Modes.SIGNUP})}>
+				Sign Up ›
+			</div>)
+		];
+	}
+
+	_renderLogin(){
+		return <LoginForm onSubmit={this.props.login} />;
+	}
+
+	_renderSignup(){
+		return <SignupForm onSubmit={this.props.signup} />;
+	}
+
 
 	render(){
+		var modeContent;
+		switch(this.state.mode){
+			case Modes.BASE:
+				modeContent = this._renderBase();
+				break;
+			case Modes.LOGIN:
+				modeContent = this._renderLogin();
+				break;
+			case Modes.SIGNUP:
+				modeContent = this._renderSignup();
+				break;
+			default:
+				return null;
+		}
+
 		return (
-			<div id="home">
-				<HomeButton onClick={() => this.navigateTo('LOGIN')}
-					name={'Login'}
-				/>
-				<HomeButton onClick={() => this.navigateTo('SIGNUP')}
-					name={'Signup'}
-				/>
+			<div id="home" className="page">
+				<div className="content" >
+					<div className="logo" />
+					{ modeContent }
+				</div>
 			</div>
 		);
 	}

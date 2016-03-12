@@ -62,7 +62,7 @@ class App extends Component {
 					logout={logout}
 					user={user}
 				/>
-				<div style={{ marginTop: '1.5em' }}>{children}</div>
+				{children}
 				<ModalWrapper dispatch={dispatch}
 					modal={modal}
 				/>

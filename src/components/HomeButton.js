@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 
-const { 
+const {
 	PropTypes
 } = React;
 
@@ -12,16 +12,14 @@ class HomeButton extends Component {
 	}
 
 	render(){
-		const { name, image } = this.props,
-			Image = (<div style={styles.textCenter}>{image}</div>),
-			showImage = image ? Image : null;
+		const { name, image } = this.props;
 
 		return (
-			<div onClick={() => this.clickHandler()}>
-				{showImage}
-				<div style={styles.bottomLine}>
-					<p>{name}</p>
-					<p>{'>'}</p>
+			<div className='home-button' onClick={() => this.clickHandler()}>
+				{ image }
+				<div>
+					<p> {name} </p>
+					<p> {'>'} </p>
 				</div>
 			</div>
 		);
@@ -33,17 +31,5 @@ HomeButton.propTypes = {
 	image : PropTypes.string,
 	onClick : PropTypes.func
 };
-
-const styles = {
-	textCenter : {
-		textAlign: 'center'
-	},
-	bottomLine : {
-		display : 'flex',
-		flexDirection : 'row',
-		alignItems : 'center',
-		justifyContent : 'space-between'
-	}
-}
 
 export default HomeButton;
