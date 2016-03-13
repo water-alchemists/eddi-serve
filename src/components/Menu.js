@@ -26,14 +26,14 @@ class Menu extends Component {
 			<header id="navbar">
 				<div 	className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
 							onClick={ () => this.toggleMenu() } >
-					☰
+					<div className="icon">☰</div>
 					<div className='menu-options'>
 						<Link to={PATHS.LIST}>Home</Link>
 						<Link to={PATHS.DASHBOARD}>Dashboard</Link>
 						<Link to={PATHS.REPORT}>Report</Link>
 						<Link to={PATHS.SETTINGS}>Settings</Link>
 						<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>
-						<span onClick={() => this.logoutHandler()}>Logout</span>
+						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>
 				</div>
 			</header>

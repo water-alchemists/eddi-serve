@@ -11,23 +11,36 @@ function createHours(num){
 
 function createMinutes(increment){
 	const minutesOptions = [];
-	for(let i = 0; i < 60; i++){
-		minutesOptions.push(i * increment);
+	let minuteString;
+	for(let i = 0; i < 60; i += increment){
+		minuteString = moment(i, 'm').format('mm');
+		minutesOptions.push(minuteString);
 	}
 	return minutesOptions;
 }
 
-function convertMiltaryToNormal(){
-
+export function convertMilitaryToNormal(hour){
+	const time = moment({ hour });
+	return time.format('h a').split(' ');
 }
 
-function convertNormalToMilitary(hour, period){
-	if(hour <= 12) return hour;
-	
+export function convertNormalToMilitary(hour, a){
+	const time = moment({ hour, a });
+	return parseInt(time.format('H'));
+}
+
+export function convertMinutesToString(minute){
+	const time = moment({ minute });
+	return time.format('mm');
+}
+
+export function convertStringToMinutes(minString){
+	return parseInt(minString);
 }
 
 export const hourOptions = createHours(12);
-export const minutesOptions = createMinutes(15);
+export const minutesOptions = createMinutes(5);
+export const aOptions = ['am', 'pm'];
 
 export const salinityOptions = {
 	min: 500,

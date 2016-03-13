@@ -56,8 +56,14 @@ SettingsEddi.propTypes = {
 		settings : PropTypes.shape({
 			name : PropTypes.string,
 			timing : PropTypes.shape({
-				start : PropTypes.number,
-				end : PropTypes.number
+				start : PropTypes.shape({
+					hour : PropTypes.number,
+					minute : PropTypes.number
+				}),
+				end : PropTypes.shape({
+					hour : PropTypes.number,
+					minute : PropTypes.number
+				})
 			}),
 			salinity : PropTypes.number
 		}),

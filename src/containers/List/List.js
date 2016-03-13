@@ -1,13 +1,17 @@
 'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 
 import { PATHS } from '../../constants';
 
 import HomeButton from '../../components/HomeButton';
 
 import { getAllEddiByUserThunk } from '../../actions/eddis';
+
+import style from './List.less';
+
+
 
 function mapStateToProps(state){
 	return {
@@ -61,21 +65,24 @@ class List extends Component {
 
 	_renderNoEddis(){
 		return (
-			<p>
-				{`Currently you are not tracking any eddis. Click `}
-				<a onClick={() => this.navigateTo('SETTINGS')}>here</a>
-				{` to start tracking one.`}
+			<p className='eddis-empty'>
+				<span> Currently you are not tracking any eddis. </span>
+				<Link to={PATHS.SETTINGS}>Click Here</Link>
+				<span> to start tracking one. </span>
 			</p>
 		);
 	}
 
 	render(){
-		const { user, eddis } = this.props,
-      NoEddiElement = this._renderNoEddis(),
-      EddiButtons = this._renderEddiButtons(),
-      showEddi = eddis && eddis.length ? EddiButtons : NoEddiElement;
+		const { user, eddis } = this.props;
 
-		console.log('these are teh eddis', eddis);
+		var showEddi;
+		if( eddis && eddis.length ){
+			showEddi = this._renderEddiButtons();
+			console.log('these are teh eddis', eddis);
+		} else {
+			showEddi = this._renderNoEddis();
+		}
 
 		return (
 			<div id="list" className="page">
