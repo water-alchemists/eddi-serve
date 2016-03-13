@@ -25,7 +25,6 @@ class TimeSelect extends Component {
 			min,
 			a
 		}
-		console.log('this is the state', this.state, 'this is raw', this.props.hour, this.props.minute)
 	}
 
 	componentWillReceiveProps(nextProps, oldProps){
@@ -34,7 +33,6 @@ class TimeSelect extends Component {
 			hr = parseInt(hourAndAm[0]),
 			min = convertMinutesToString(minute),
 			a = hourAndAm[1];
-		console.log('these are the next props', nextProps, hr, min, a);
 
 		this.setState({ hr, min, a});
 	}
@@ -54,7 +52,7 @@ class TimeSelect extends Component {
 		const { onChange } = this.props,
 			minute = event.target.value,
 			formattedMinute = convertStringToMinutes(minute);
-		console.log('minutes', minute);
+
 		if(onChange) return onChange({ minute : formattedMinute });
 	}
 
@@ -64,6 +62,7 @@ class TimeSelect extends Component {
 			{ hr } = this.state,
 			a = event.target.value,
 			formattedHour = convertNormalToMilitary(hr, a);
+
 		if(onChange) return onChange({ hour : formattedHour });
 	}
 

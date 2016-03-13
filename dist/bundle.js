@@ -45764,7 +45764,7 @@
 	}
 
 	function convertNormalToMilitary(hour, a) {
-		var time = (0, _moment2.default)({ hour: hour, a: a });
+		var time = (0, _moment2.default)(hour + ' ' + a, 'h a');
 		return parseInt(time.format('H'));
 	}
 
@@ -45837,7 +45837,6 @@
 				min: min,
 				a: a
 			};
-			console.log('this is the state', _this.state, 'this is raw', _this.props.hour, _this.props.minute);
 			return _this;
 		}
 
@@ -45850,7 +45849,6 @@
 				var hr = parseInt(hourAndAm[0]);
 				var min = (0, _data.convertMinutesToString)(minute);
 				var a = hourAndAm[1];
-				console.log('these are the next props', nextProps, hr, min, a);
 
 				this.setState({ hr: hr, min: min, a: a });
 			}
@@ -45872,7 +45870,7 @@
 				var onChange = this.props.onChange;
 				var minute = event.target.value;
 				var formattedMinute = (0, _data.convertStringToMinutes)(minute);
-				console.log('minutes', minute);
+
 				if (onChange) return onChange({ minute: formattedMinute });
 			}
 		}, {
@@ -45883,6 +45881,7 @@
 				var hr = this.state.hr;
 				var a = event.target.value;
 				var formattedHour = (0, _data.convertNormalToMilitary)(hr, a);
+
 				if (onChange) return onChange({ hour: formattedHour });
 			}
 		}, {

@@ -25,9 +25,10 @@ export function convertMilitaryToNormal(hour){
 }
 
 export function convertNormalToMilitary(hour, a){
-	const time = moment({ hour, a });
+	const time = moment(`${hour} ${a}`, 'h a')
 	return parseInt(time.format('H'));
 }
+
 
 export function convertMinutesToString(minute){
 	const time = moment({ minute });
