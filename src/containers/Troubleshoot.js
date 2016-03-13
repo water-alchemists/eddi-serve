@@ -23,7 +23,7 @@ function mapDispatchToProps(dispatch){
 class Troubleshoot extends Component {
 	_renderNoEddis(){
 		return (
-			<div className='page'>
+			<div className='eddis-empty'>
 				<p> Currently you are not tracking any eddis. </p>
 				<AddEddiButton />
 			</div>
@@ -32,9 +32,7 @@ class Troubleshoot extends Component {
 
 	_renderNotSelected(){
 		return (
-			<div className='page'>
-				<p> Select an eddi to track. </p>
-			</div>
+			<p> Select an eddi to track. </p>
 		);
 	}
 
@@ -42,20 +40,26 @@ class Troubleshoot extends Component {
 		const { eddi, setEddiState } = this.props,
 			{ state, id } = eddi;
 		return (
-			<div className='page'>
-				<EddiStateButton value={state}
-					onClick={state => setEddiState(eddi.id, state)}
-				/>
-			</div>
+			<EddiStateButton value={state}
+				onClick={state => setEddiState(eddi.id, state)}
+			/>
 		);
 	}
 	render(){
 		const { eddi, eddiList, setEddiState } = this.props,
 			hasEddis = !!eddiList.length;
-		console.log(hasEddis, eddi, setEddiState);
-		if(eddi) return this._renderSelected();
-		else if(!hasEddis) return this._renderNoEddis();
-		else return this._renderNotSelected();
+
+		let TroubleshootElement;
+
+		if(eddi) TroubleshootElement = this._renderSelected();
+		else if(!hasEddis) TroubleshootElement = this._renderNoEddis();
+		else TroubleshootElement = this._renderNotSelected();
+		
+		return (
+			<div className='page'>
+				{TroubleshootElement}
+			</div>
+		);
 	}
 }
 

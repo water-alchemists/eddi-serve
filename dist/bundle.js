@@ -31822,11 +31822,20 @@
 		}
 
 		_createClass(List, [{
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps) {
+			key: 'componentWillMount',
+			value: function componentWillMount() {
 				var _props = this.props;
 				var user = _props.user;
 				var getEddisByUser = _props.getEddisByUser;
+
+				if (user) return getEddisByUser();
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var _props2 = this.props;
+				var user = _props2.user;
+				var getEddisByUser = _props2.getEddisByUser;
 
 				if (nextProps.user !== user) return getEddisByUser();
 			}
@@ -31878,9 +31887,9 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var _props2 = this.props;
-				var user = _props2.user;
-				var eddis = _props2.eddis;
+				var _props3 = this.props;
+				var user = _props3.user;
+				var eddis = _props3.eddis;
 
 
 				var showEddi;
@@ -46163,7 +46172,7 @@
 			value: function _renderNoEddis() {
 				return _react2.default.createElement(
 					'div',
-					{ className: 'page' },
+					{ className: 'eddis-empty' },
 					_react2.default.createElement(
 						'p',
 						null,
@@ -46176,13 +46185,9 @@
 			key: '_renderNotSelected',
 			value: function _renderNotSelected() {
 				return _react2.default.createElement(
-					'div',
-					{ className: 'page' },
-					_react2.default.createElement(
-						'p',
-						null,
-						' Select an eddi to track. '
-					)
+					'p',
+					null,
+					' Select an eddi to track. '
 				);
 			}
 		}, {
@@ -46194,15 +46199,11 @@
 				var state = eddi.state;
 				var id = eddi.id;
 
-				return _react2.default.createElement(
-					'div',
-					{ className: 'page' },
-					_react2.default.createElement(_EddiStateButton2.default, { value: state,
-						onClick: function onClick(state) {
-							return setEddiState(eddi.id, state);
-						}
-					})
-				);
+				return _react2.default.createElement(_EddiStateButton2.default, { value: state,
+					onClick: function onClick(state) {
+						return setEddiState(eddi.id, state);
+					}
+				});
 			}
 		}, {
 			key: 'render',
@@ -46212,8 +46213,16 @@
 				var eddiList = _props2.eddiList;
 				var setEddiState = _props2.setEddiState;
 				var hasEddis = !!eddiList.length;
-				console.log(hasEddis, eddi, setEddiState);
-				if (eddi) return this._renderSelected();else if (!hasEddis) return this._renderNoEddis();else return this._renderNotSelected();
+
+				var TroubleshootElement = undefined;
+
+				if (eddi) TroubleshootElement = this._renderSelected();else if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderNotSelected();
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'page' },
+					TroubleshootElement
+				);
 			}
 		}]);
 

@@ -14,7 +14,6 @@ import { menuNameChange } from '../../actions/menu';
 import style from './List.less';
 
 
-
 function mapStateToProps(state){
 	return {
 		user : state.user,
@@ -24,9 +23,9 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		navigateTo : 		(pathname, query) => browserHistory.push({ pathname, query }),
-		getEddisByUser: () 								=> dispatch(getAllEddiByUserThunk()),
-		menuName:				(name)						=> dispatch(menuNameChange(name)),
+		navigateTo : (pathname, query) => browserHistory.push({ pathname, query }),
+		getEddisByUser: () => dispatch(getAllEddiByUserThunk()),
+		menuName: (name) => dispatch(menuNameChange(name)),
 	};
 }
 
@@ -36,6 +35,11 @@ class List extends Component {
 		super(props);
 		this.state = {};
 		props.menuName("My Eddis");
+	}
+
+	componentWillMount(){
+		const { user, getEddisByUser } = this.props;
+		if(user) return getEddisByUser();
 	}
 
 	componentWillReceiveProps(nextProps){
@@ -48,7 +52,7 @@ class List extends Component {
 		navigateTo(destination, query);
 	}
 
-  navigateTo(key, query = {}){
+  	navigateTo(key, query = {}){
 		const pathname = PATHS[key],
 			destination = {
 				pathname,
