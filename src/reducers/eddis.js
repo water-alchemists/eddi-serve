@@ -36,7 +36,7 @@ export default function(state = initialState, action = {}){
 		newList = state.list.map(eddi => {
 			if(eddi.id === id){
 				//update that one eddi
-				const updatedEddi = {...eddi};
+				const updatedEddi = eddi;
 				updatedEddi.settings = {
 					...eddi.settings,
 					...settings
@@ -59,7 +59,7 @@ export default function(state = initialState, action = {}){
 		newList = state.list.map(eddi => {
 			if(eddi.id === id){
 				//update that one eddi
-				const updatedEddi = {...eddi};
+				const updatedEddi = eddi;
 
 				updatedEddi.settings.timing.start = {
 					...eddi.settings.timing.start,
@@ -80,7 +80,7 @@ export default function(state = initialState, action = {}){
 		newList = state.list.map(eddi => {
 			if(eddi.id === id){
 				//update that one eddi
-				const updatedEddi = {...eddi};
+				const updatedEddi = eddi;
 
 				updatedEddi.settings.timing.end = {
 					...eddi.settings.timing.end,

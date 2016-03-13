@@ -1,6 +1,7 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import SalinityInput from './SalinityInput';
+import TimeSelect from './TimeSelect';
 
 class SettingsEddiForm extends Component {
 	render(){
@@ -12,12 +13,29 @@ class SettingsEddiForm extends Component {
 			onStartChange, 
 			onEndChange 
 		} = this.props;
-		console.log('this is the salinity', salinityValue);
+
 		return (
 			<div>
-				<SalinityInput value={salinityValue}
-					onSalinityChange={salinity => onSalinityChange(salinity)}
-				/>
+				<div>
+					<h5>OPERATING FROM</h5>
+					<div style={styles.row}>
+						<TimeSelect onChange={ ({ hour, minute }) => onStartChange(hour, minute) }
+							hour={startValue.hour}
+							minute={startValue.minute}
+						/>
+						<p>TO</p>
+						<TimeSelect onChange={ ({ hour, minute }) => onEndChange(hour, minute) }
+							hour={endValue.hour}
+							minute={endValue.minute}
+						/>
+					</div>
+				</div>
+				<div>
+					<h5>SALINITY OUTPUT</h5>
+					<SalinityInput value={salinityValue}
+						onSalinityChange={salinity => onSalinityChange(salinity)}
+					/>
+				</div>
 			</div>
 		);
 	}
@@ -28,8 +46,23 @@ SettingsEddiForm.propTypes = {
 	onStartChange : PropTypes.func.isRequired,
 	onEndChange : PropTypes.func.isRequired,
 	salinityValue : PropTypes.number,
-	startValue : PropTypes.number, 
-	endValue : PropTypes. number
+	startValue : PropTypes.shape({
+		hour : PropTypes.number,
+		minute : PropTypes.number
+	}), 
+	endValue : PropTypes.shape({
+		hour : PropTypes.number,
+		minute : PropTypes.number
+	})
 };
+
+const styles = {
+	row : {
+		display : 'flex', 
+		flexDirection : 'row', 
+		justifyContent : 'space-between',
+		alignItems : 'center'
+	}
+}
 
 export default SettingsEddiForm;

@@ -26741,7 +26741,7 @@
 				newList = state.list.map(function (eddi) {
 					if (eddi.id === id) {
 						//update that one eddi
-						var updatedEddi = _extends({}, eddi);
+						var updatedEddi = eddi;
 						updatedEddi.settings = _extends({}, eddi.settings, settings);
 
 						//return that eddi
@@ -26759,7 +26759,7 @@
 				newList = state.list.map(function (eddi) {
 					if (eddi.id === id) {
 						//update that one eddi
-						var updatedEddi = _extends({}, eddi);
+						var updatedEddi = eddi;
 
 						updatedEddi.settings.timing.start = _extends({}, eddi.settings.timing.start, timing);
 
@@ -26776,7 +26776,7 @@
 				newList = state.list.map(function (eddi) {
 					if (eddi.id === id) {
 						//update that one eddi
-						var updatedEddi = _extends({}, eddi);
+						var updatedEddi = eddi;
 
 						updatedEddi.settings.timing.end = _extends({}, eddi.settings.timing.end, timing);
 
@@ -29534,7 +29534,7 @@
 		};
 	}
 
-	function updateEddiStartTime(id) {
+	function updateEddiStartSuccess(id) {
 		var timing = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 		return {
@@ -29544,7 +29544,7 @@
 		};
 	}
 
-	function updateEddiEndTime(id) {
+	function updateEddiEndSuccess(id) {
 		var timing = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 		return {
@@ -29616,12 +29616,15 @@
 		};
 	}
 
-	function setEddiStartThunk(eddiId) {
-		var start = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	function setEddiStartThunk(eddiId, hour, minute) {
+		var start = {};
+		if (hour) start.hour = hour;
+		if (minute) start.minute = minute;
+		console.log('this is the start', start);
 
 		return function (dispatch) {
 			if (!(typeof hour === 'undefined' ? 'undefined' : _typeof(hour)) === 'number' || typeof minutes === 'number') throw new Error('Hour and minutes must be numbers.');
-			return EddiFire.setStartTime(eddi, start).then(function (update) {
+			return EddiFire.setStartTime(eddiId, start).then(function (update) {
 				return dispatch(updateEddiStartSuccess(update.id, update.timing));
 			}).catch(function (error) {
 				return dispatch(updateEddiError(error));
@@ -29629,8 +29632,11 @@
 		};
 	}
 
-	function setEddiEndThunk(eddiId) {
-		var end = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	function setEddiEndThunk(eddiId, hour, minute) {
+		var end = {};
+		if (hour) end.hour = hour;
+		if (minute) end.minute = minute;
+		console.log('this is the end', end);
 
 		return function (dispatch) {
 			if (!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error('Hour and minutes must be numbers.');
@@ -29646,7 +29652,7 @@
 		return function (dispatch) {
 			if (!(typeof salinity === 'number')) throw new Error('Salinity must be a number.');
 			return EddiFire.setSalinity(eddiId, salinity).then(function (update) {
-				return dispatch(updateEddiSuccess(update.id, update.settings));
+				return dispatch(updateEddiSalinitySuccess(update.id, update.settings));
 			}).catch(function (error) {
 				return dispatch(updateEddiError(error));
 			});
@@ -29924,14 +29930,12 @@
 				});
 			}
 		}, {
-			key: 'updateStartTime',
-			value: function updateStartTime(id, _ref) {
+			key: 'setStartTime',
+			value: function setStartTime(id) {
 				var _this16 = this;
 
-				var hour = _ref.hour;
-				var minute = _ref.minute;
+				var start = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-				var start = { hour: hour, minute: minute };
 				return this.findByEddi(id).then(function () {
 					return _this16.isEddiOwner(id);
 				}).then(function () {
@@ -29940,10 +29944,7 @@
 							if (error) return reject(error);
 							resolve({
 								id: id,
-								timing: {
-									hour: hour,
-									minute: minute
-								}
+								timing: start
 							});
 						});
 					});
@@ -29951,13 +29952,11 @@
 			}
 		}, {
 			key: 'setEndTime',
-			value: function setEndTime(id, _ref2) {
+			value: function setEndTime(id) {
 				var _this17 = this;
 
-				var hour = _ref2.hour;
-				var minute = _ref2.minute;
+				var end = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-				var end = { hour: hour, minute: minute };
 				return this.findByEddi(id).then(function () {
 					return _this17.isEddiOwner(id);
 				}).then(function () {
@@ -29966,10 +29965,7 @@
 							if (error) return reject(error);
 							resolve({
 								id: id,
-								timing: {
-									hour: hour,
-									minute: minute
-								}
+								timing: end
 							});
 						});
 					});
@@ -32118,7 +32114,7 @@
 				var timing = _settings$timing === undefined ? {} : _settings$timing;
 				var salinity = settings.salinity;
 
-				console.log('settings eddi', eddi, version, settings);
+
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -32169,8 +32165,14 @@
 			settings: PropTypes.shape({
 				name: PropTypes.string,
 				timing: PropTypes.shape({
-					start: PropTypes.number,
-					end: PropTypes.number
+					start: PropTypes.shape({
+						hour: PropTypes.number,
+						minute: PropTypes.number
+					}),
+					end: PropTypes.shape({
+						hour: PropTypes.number,
+						minute: PropTypes.number
+					})
 				}),
 				salinity: PropTypes.number
 			})
@@ -45472,6 +45474,10 @@
 
 	var _SalinityInput2 = _interopRequireDefault(_SalinityInput);
 
+	var _TimeSelect = __webpack_require__(426);
+
+	var _TimeSelect2 = _interopRequireDefault(_TimeSelect);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45500,15 +45506,58 @@
 				var onStartChange = _props.onStartChange;
 				var onEndChange = _props.onEndChange;
 
-				console.log('this is the salinity', salinityValue);
+
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_SalinityInput2.default, { value: salinityValue,
-						onSalinityChange: function onSalinityChange(salinity) {
-							return _onSalinityChange(salinity);
-						}
-					})
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'h5',
+							null,
+							'OPERATING FROM'
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: styles.row },
+							_react2.default.createElement(_TimeSelect2.default, { onChange: function onChange(_ref) {
+									var hour = _ref.hour;
+									var minute = _ref.minute;
+									return onStartChange(hour, minute);
+								},
+								hour: startValue.hour,
+								minute: startValue.minute
+							}),
+							_react2.default.createElement(
+								'p',
+								null,
+								'TO'
+							),
+							_react2.default.createElement(_TimeSelect2.default, { onChange: function onChange(_ref2) {
+									var hour = _ref2.hour;
+									var minute = _ref2.minute;
+									return onEndChange(hour, minute);
+								},
+								hour: endValue.hour,
+								minute: endValue.minute
+							})
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'h5',
+							null,
+							'SALINITY OUTPUT'
+						),
+						_react2.default.createElement(_SalinityInput2.default, { value: salinityValue,
+							onSalinityChange: function onSalinityChange(salinity) {
+								return _onSalinityChange(salinity);
+							}
+						})
+					)
 				);
 			}
 		}]);
@@ -45521,8 +45570,23 @@
 		onStartChange: _react.PropTypes.func.isRequired,
 		onEndChange: _react.PropTypes.func.isRequired,
 		salinityValue: _react.PropTypes.number,
-		startValue: _react.PropTypes.number,
-		endValue: _react.PropTypes.number
+		startValue: _react.PropTypes.shape({
+			hour: _react.PropTypes.number,
+			minute: _react.PropTypes.number
+		}),
+		endValue: _react.PropTypes.shape({
+			hour: _react.PropTypes.number,
+			minute: _react.PropTypes.number
+		})
+	};
+
+	var styles = {
+		row: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center'
+		}
 	};
 
 	exports.default = SettingsEddiForm;
@@ -45614,7 +45678,11 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.salinityOptions = exports.timeOptions = undefined;
+	exports.salinityOptions = exports.aOptions = exports.minutesOptions = exports.hourOptions = undefined;
+	exports.convertMilitaryToNormal = convertMilitaryToNormal;
+	exports.convertNormalToMilitary = convertNormalToMilitary;
+	exports.convertMinutesToString = convertMinutesToString;
+	exports.convertStringToMinutes = convertStringToMinutes;
 
 	var _moment = __webpack_require__(304);
 
@@ -45622,20 +45690,46 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function createTimeOptions(increment) {
-		var timeObjects = [];
-		for (var h = 0; h < 24; h++) {
-			for (var m = 0; m < 60; m += increment) {
-				timeObjects.push({ h: h, m: m });
-			}
+	function createHours(num) {
+		var hourOptions = [];
+		for (var i = 0; i < num; i++) {
+			hourOptions.push(i + 1);
 		}
-
-		return timeObjects.map(function (timeObj) {
-			return (0, _moment2.default)(timeObj);
-		});
+		return hourOptions;
 	}
 
-	var timeOptions = exports.timeOptions = createTimeOptions(15);
+	function createMinutes(increment) {
+		var minutesOptions = [];
+		var minuteString = void 0;
+		for (var i = 0; i < 60; i += increment) {
+			minuteString = (0, _moment2.default)(i, 'm').format('mm');
+			minutesOptions.push(minuteString);
+		}
+		return minutesOptions;
+	}
+
+	function convertMilitaryToNormal(hour) {
+		var time = (0, _moment2.default)({ hour: hour });
+		return time.format('h a').split(' ');
+	}
+
+	function convertNormalToMilitary(hour, a) {
+		var time = (0, _moment2.default)(hour + ' ' + a, 'h a');
+		return parseInt(time.format('H'));
+	}
+
+	function convertMinutesToString(minute) {
+		var time = (0, _moment2.default)({ minute: minute });
+		return time.format('mm');
+	}
+
+	function convertStringToMinutes(minString) {
+		return parseInt(minString);
+	}
+
+	var hourOptions = exports.hourOptions = createHours(12);
+	var minutesOptions = exports.minutesOptions = createMinutes(5);
+	var aOptions = exports.aOptions = ['am', 'pm'];
 
 	var salinityOptions = exports.salinityOptions = {
 		min: 500,
@@ -46087,6 +46181,207 @@
 
 	// exports
 
+
+/***/ },
+/* 426 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _moment = __webpack_require__(304);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	var _data = __webpack_require__(406);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TimeSelect = function (_Component) {
+		_inherits(TimeSelect, _Component);
+
+		function TimeSelect(props) {
+			_classCallCheck(this, TimeSelect);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSelect).call(this, props));
+
+			var _this$props = _this.props;
+			var hour = _this$props.hour;
+			var minute = _this$props.minute;
+			var hourAndAm = (0, _data.convertMilitaryToNormal)(hour);
+			var hr = parseInt(hourAndAm[0]);
+			var min = (0, _data.convertMinutesToString)(minute);
+			var a = hourAndAm[1];
+
+			_this.state = {
+				hr: hr,
+				min: min,
+				a: a
+			};
+			return _this;
+		}
+
+		_createClass(TimeSelect, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps, oldProps) {
+				var hour = nextProps.hour;
+				var minute = nextProps.minute;
+				var hourAndAm = (0, _data.convertMilitaryToNormal)(hour);
+				var hr = parseInt(hourAndAm[0]);
+				var min = (0, _data.convertMinutesToString)(minute);
+				var a = hourAndAm[1];
+
+				this.setState({ hr: hr, min: min, a: a });
+			}
+		}, {
+			key: 'onHourChanges',
+			value: function onHourChanges(event) {
+				event.preventDefault();
+
+				var onChange = this.props.onChange;
+				var a = this.state.a;
+				var hour = event.target.value;
+				var formattedHour = (0, _data.convertNormalToMilitary)(hour, a);
+				if (onChange) return onChange({ hour: formattedHour });
+			}
+		}, {
+			key: 'onMinuteChanges',
+			value: function onMinuteChanges(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var minute = event.target.value;
+				var formattedMinute = (0, _data.convertStringToMinutes)(minute);
+
+				if (onChange) return onChange({ minute: formattedMinute });
+			}
+		}, {
+			key: 'onAmPmChanges',
+			value: function onAmPmChanges(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var hr = this.state.hr;
+				var a = event.target.value;
+				var formattedHour = (0, _data.convertNormalToMilitary)(hr, a);
+
+				if (onChange) return onChange({ hour: formattedHour });
+			}
+		}, {
+			key: '_renderHours',
+			value: function _renderHours() {
+				var hr = this.state.hr;
+
+				return _data.hourOptions.map(function (h, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: h, key: h },
+						h
+					);
+				});
+			}
+		}, {
+			key: '_renderMinutes',
+			value: function _renderMinutes() {
+				var min = this.state.min;
+
+				return _data.minutesOptions.map(function (m, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: m, key: m },
+						m
+					);
+				});
+			}
+		}, {
+			key: '_renderAmPm',
+			value: function _renderAmPm() {
+				var a = this.state.a;
+
+				return _data.aOptions.map(function (am, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: am, key: am },
+						am
+					);
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _state = this.state;
+				var hr = _state.hr;
+				var min = _state.min;
+				var a = _state.a;
+				var HourElements = this._renderHours();
+				var MinuteElements = this._renderMinutes();
+				var AmPmElements = this._renderAmPm();
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'select',
+						{ value: hr,
+							onChange: function onChange(event) {
+								return _this2.onHourChanges(event);
+							}
+						},
+						HourElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ value: min,
+							onChange: function onChange(event) {
+								return _this2.onMinuteChanges(event);
+							}
+
+						},
+						MinuteElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ defaultValue: a,
+							onChange: function onChange(event) {
+								return _this2.onAmPmChanges(event);
+							}
+						},
+						AmPmElements
+					)
+				);
+			}
+		}]);
+
+		return TimeSelect;
+	}(_react.Component);
+
+	TimeSelect.propTypes = {
+		onChange: _react.PropTypes.func,
+		hour: _react.PropTypes.number,
+		minute: _react.PropTypes.number
+	};
+
+	TimeSelect.defaultProps = {
+		hour: 1,
+		minute: 0
+	};
+
+	exports.default = TimeSelect;
 
 /***/ }
 /******/ ]);

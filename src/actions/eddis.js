@@ -53,7 +53,7 @@ function updateEddiError(error){
 	};
 }
 
-function updateEddiStartTime(id, timing = {}){
+function updateEddiStartSuccess(id, timing = {}){
 	return {
 		type : EDDI_UPDATESTART_SUCCESS,
 		id,
@@ -61,7 +61,7 @@ function updateEddiStartTime(id, timing = {}){
 	}
 }
 
-function updateEddiEndTime(id, timing = {}){
+function updateEddiEndSuccess(id, timing = {}){
 	return {
 		type : EDDI_UPDATEEND_SUCCESS,
 		id,
@@ -121,16 +121,26 @@ export function assignEddiThunk(eddiId, info = {}){
 	}
 }
 
-export function setEddiStartThunk(eddiId, start = {}){
+export function setEddiStartThunk(eddiId, hour, minute){
+	const start = {};
+	if(hour) start.hour = hour;
+	if(minute) start.minute = minute;
+	console.log('this is the start', start);
+
 	return dispatch => {
 		if((!typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
-		return EddiFire.setStartTime(eddi, start)
+		return EddiFire.setStartTime(eddiId, start)
 			.then(update => dispatch(updateEddiStartSuccess(update.id, update.timing)))
 			.catch(error => dispatch(updateEddiError(error)));
 	}
 }
 
-export function setEddiEndThunk(eddiId, end = {}){
+export function setEddiEndThunk(eddiId, hour, minute){
+	const end = {};
+	if(hour) end.hour = hour;
+	if(minute) end.minute = minute;
+	console.log('this is the end', end);
+
 	return dispatch => {
 		if(!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
 		return EddiFire.setEndTime(eddiId, end)
@@ -143,7 +153,7 @@ export function setEddiSalinityThunk(eddiId, salinity){
 	return dispatch => {
 		if(!(typeof salinity === 'number')) throw new Error(`Salinity must be a number.`);
 		return EddiFire.setSalinity(eddiId, salinity)
-			.then(update => dispatch(updateEddiSuccess(update.id, update.settings)))
+			.then(update => dispatch(updateEddiSalinitySuccess(update.id, update.settings)))
 			.catch(error => dispatch(updateEddiError(error)));
 
 	}
