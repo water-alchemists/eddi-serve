@@ -6,6 +6,7 @@ import { browserHistory, Link } from 'react-router';
 import { PATHS } from '../../constants';
 
 import HomeButton from '../../components/HomeButton';
+import AddEddiButton from '../../components/AddEddiButton';
 
 import { getAllEddiByUserThunk } from '../../actions/eddis';
 
@@ -64,13 +65,10 @@ class List extends Component {
 	}
 
 	_renderNoEddis(){
-		return (
-			<p className='eddis-empty'>
-				<span> Currently you are not tracking any eddis. </span>
-				<Link to={PATHS.SETTINGS}>Click Here</Link>
-				<span> to start tracking one. </span>
-			</p>
-		);
+		return <div className='eddis-empty'>
+			<p> Currently you are not tracking any eddis. </p>
+			<AddEddiButton />
+		</div>;
 	}
 
 	render(){

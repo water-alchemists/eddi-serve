@@ -104,7 +104,7 @@ class Home extends Component {
 		}
 
 		return (
-			<div id="home" className="page">
+			<div id="home" className="page dark">
 				<div className="content" >
 					<div className="logo" />
 					{ modeContent }

@@ -5,12 +5,10 @@ const initialState = {
 	on : false,
 	component : '',
 	props : {},
-	context : {},
-	overlay : {}
 };
 
 export default function(state = initialState, action = {}){
-	const { type, component, props={}, context={}, overlay={} } = action;
+	const { type, component, props={} } = action;
 	switch(type){
 	case MODAL_ON:
 		return {
@@ -18,8 +16,6 @@ export default function(state = initialState, action = {}){
 			on : true,
 			props : {...props},
 			component,
-			context,
-			overlay
 		};
 	case MODAL_OFF:
 		return {

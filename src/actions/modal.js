@@ -5,7 +5,7 @@ export function modalShow(component, props){
 	return {
 		type : MODAL_ON,
 		component,
-		props,
+		props
 	};
 }
 

@@ -7,7 +7,7 @@ import ModalWrapper from '../components/ModalWrapper';
 
 import { userLogout, userLoginWithTokenThunk } from '../actions/user';
 
-import style from './base.less';
+import style from '../less/base.less';
 
 
 

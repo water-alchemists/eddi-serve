@@ -1,6 +1,10 @@
 'use strict';
 import React, { Component } from 'react';
 
+import style from '../less/AddEddiForm.less';
+
+
+
 const {
 	PropTypes
 } = React;
@@ -43,30 +47,26 @@ class AddEddiForm extends Component {
 		const { id, name } = this.props;
 
 		return (
-			<form onSubmit={event => this.submitHandler(event)}>
-				<div className={'form-container'}>
-					<div className={'input-container'}>
-						<label htmlFor='id'>Eddi Id : </label>
-						<input type='text' 
-							name='id'
-							onChange={event => this.onIdChange(event)}
-							value={id}
-						/>
-					</div>
-					<div className={'input-container'}>
-						<label htmlFor='name'>Eddi Name : </label>
-						<input type='text'
-							name='name'
-							onChange={event => this.onNameChange(event)}
-							value={name}
-						/>
-					</div>
-					<div className={'input-container'}>
-						<button type='submit'>Add</button>
-						<button type='button' onClick={event => this.cancelHandler(event)}>
-							Cancel
-						</button>
-					</div>
+			<form className='eddi-add light' onSubmit={event => this.submitHandler(event)}>
+				<div className='input-container'>
+					<input type='text'
+						name='id'
+						onChange={event => this.onIdChange(event)}
+						value={id}
+						placeholder="eddi id"
+					/>
+					<input type='text'
+						name='name'
+						onChange={event => this.onNameChange(event)}
+						value={name}
+						placeholder="nickname"
+					/>
+				</div>
+				<div className='button-container'>
+					<button className='cancel' type='button' onClick={event => this.cancelHandler(event)}>
+						Cancel
+					</button>
+					<button type='submit'>Add</button>
 				</div>
 			</form>
 		)

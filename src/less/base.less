@@ -1,22 +1,6 @@
-// COLORS
+@import './vars';
 
-@background_color:  rgba(13, 14, 31, 1);
-@trim_color:        rgba(0, 109, 96, 1);
-@support_color:     rgba(241, 241, 242, 0.9);
-
-@true_blue:         rgba(42, 191, 208, 1);
-@true_blue_med:     rgba(42, 191, 208, 0.8);
-@true_blue_lite:    rgba(42, 191, 208, 0.5);
-
-@salt_red:          rgba(42, 191, 208, 1);
-@salt_red_med:      rgba(42, 191, 208, 0.8);
-@salt_red_lite:     rgba(42, 191, 208, 0.5);
-
-
-
-// DIMENSIONS
-
-@navbar_height: 48px;
+@import './forms';
 
 
 
@@ -91,4 +75,13 @@ body {
 
 .page{
   padding-top: @navbar_height;
+}
+
+
+.dark{
+  background-color: @background_color;
+}
+
+.light {
+  background-color: @support_color;
 }
