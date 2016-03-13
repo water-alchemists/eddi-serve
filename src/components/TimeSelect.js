@@ -87,12 +87,12 @@ class TimeSelect extends Component {
 		console.log('this is hte min', min);
 		return (
 			<div>
-				<select defaultValue={hr}
+				<select value={hr}
 					onChange={event => this.onHourChanges(event)}
 				>
 					{HourElements}
 				</select>
-				<select defaultValue={min}
+				<select value={min}
 					onChange={event => this.onMinuteChanges(event)}
 				
 				>
