@@ -25,7 +25,7 @@ function mapDispatchToProps(dispatch){
 	return {
 		navigateTo : (pathname, query) => browserHistory.push({ pathname, query }),
 		getEddisByUser: () => dispatch(getAllEddiByUserThunk()),
-		menuName: (name) => dispatch(menuNameChange(name)),
+		updateMenuName: (name) => dispatch(menuNameChange(name)),
 	};
 }
 
@@ -34,12 +34,12 @@ class List extends Component {
 	constructor(props){
 		super(props);
 		this.state = {};
-		props.menuName("My Eddis");
 	}
 
 	componentWillMount(){
-		const { user, getEddisByUser } = this.props;
-		if(user) return getEddisByUser();
+		const { user, getEddisByUser, updateMenuName } = this.props;
+		updateMenuName('my eddis');
+		if(user) getEddisByUser();
 	}
 
 	componentWillReceiveProps(nextProps){
@@ -79,10 +79,9 @@ class List extends Component {
 	render(){
 		const { user, eddis } = this.props;
 
-		var showEddi;
+		let showEddi;
 		if( eddis && eddis.length ){
 			showEddi = this._renderEddis();
-			console.log('these are teh eddis', eddis);
 		} else {
 			showEddi = this._renderNoEddis();
 		}

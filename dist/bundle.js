@@ -27750,7 +27750,8 @@
 						onRequestClose: function onRequestClose() {
 							return _this3.closeModal();
 						},
-						style: customStyles },
+						style: customStyles
+					},
 					ContentElement
 				);
 			}
@@ -31904,7 +31905,7 @@
 			getEddisByUser: function getEddisByUser() {
 				return dispatch((0, _eddis.getAllEddiByUserThunk)());
 			},
-			menuName: function menuName(name) {
+			updateMenuName: function updateMenuName(name) {
 				return dispatch((0, _menu.menuNameChange)(name));
 			}
 		};
@@ -31919,7 +31920,6 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(List).call(this, props));
 
 			_this.state = {};
-			props.menuName("My Eddis");
 			return _this;
 		}
 
@@ -31929,8 +31929,10 @@
 				var _props = this.props;
 				var user = _props.user;
 				var getEddisByUser = _props.getEddisByUser;
+				var updateMenuName = _props.updateMenuName;
 
-				if (user) return getEddisByUser();
+				updateMenuName('my eddis');
+				if (user) getEddisByUser();
 			}
 		}, {
 			key: 'componentWillReceiveProps',
@@ -31994,10 +31996,9 @@
 				var eddis = _props3.eddis;
 
 
-				var showEddi;
+				var showEddi = undefined;
 				if (eddis && eddis.length) {
 					showEddi = this._renderEddis();
-					console.log('these are teh eddis', eddis);
 				} else {
 					showEddi = this._renderNoEddis();
 				}
@@ -46386,19 +46387,11 @@
 				);
 			}
 		}, {
-			key: '_renderNotSelected',
-			value: function _renderNotSelected() {
-				return _react2.default.createElement(
-					'p',
-					null,
-					' Select an eddi to track. '
-				);
-			}
-		}, {
 			key: '_renderSelected',
 			value: function _renderSelected() {
 				var _props = this.props;
-				var eddi = _props.eddi;
+				var _props$eddi = _props.eddi;
+				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 				var setEddiState = _props.setEddiState;
 				var _eddi$settings = eddi.settings;
 				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
@@ -46423,7 +46416,7 @@
 
 				var TroubleshootElement = undefined;
 
-				if (eddi) TroubleshootElement = this._renderSelected();else if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderNotSelected();
+				if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderSelected();
 
 				return _react2.default.createElement(
 					'div',

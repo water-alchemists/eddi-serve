@@ -30,14 +30,8 @@ class Troubleshoot extends Component {
 		);
 	}
 
-	_renderNotSelected(){
-		return (
-			<p> Select an eddi to track. </p>
-		);
-	}
-
 	_renderSelected(){
-		const { eddi, setEddiState } = this.props,
+		const { eddi={} , setEddiState } = this.props,
 			{ settings={} , id } = eddi,
 			{ state } = settings;
 
@@ -53,9 +47,8 @@ class Troubleshoot extends Component {
 
 		let TroubleshootElement;
 
-		if(eddi) TroubleshootElement = this._renderSelected();
-		else if(!hasEddis) TroubleshootElement = this._renderNoEddis();
-		else TroubleshootElement = this._renderNotSelected();
+		if(!hasEddis) TroubleshootElement = this._renderNoEddis();
+		else TroubleshootElement = this._renderSelected();
 		
 		return (
 			<div className='page'>

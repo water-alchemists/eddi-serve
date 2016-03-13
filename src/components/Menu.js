@@ -15,7 +15,6 @@ function mapStateToProps(state){
 	};
 }
 
-
 class Menu extends Component {
 
 	constructor(props){
