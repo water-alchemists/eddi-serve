@@ -7,6 +7,7 @@ const PATHS = {
 	EDDI_PATH : 'eddis',
 	METRIC_PATH : 'metrics',
 	STATE_PATH : 'state',
+	SNOOZE_PATH : 'snooze',
 	PIN_PATH : 'pins',
 	SETTINGS_PATH : 'settings',
 	SALINITY_PATH : 'salinity',
@@ -223,6 +224,7 @@ class EddiFire {
 
 
 	setSalinity(id, salinity){
+		if(typeof salinity !== 'number') throw new Error(`Salinity must be a number.`);
 		return this.findByEddi(id)
 			.then(() => this.isEddiOwner(id))
 			.then(() => {
@@ -287,6 +289,57 @@ class EddiFire {
 			});	
 	}
 
+	setEddiState(id, state){
+		if(typeof state !== 'number') throw new Error('State must be a number.');
+		if(!(state === 0 || state === 1)) throw new Error('State must be a number either: 0 = off, 1 = on.');
+		return this.findByEddi(id)
+			.then(() => this.isEddiOwner(id))
+			.then(() => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(id)
+						.child(PATHS.SETTINGS_PATH)
+						.child(PATHS.STATE_PATH)
+						.set(
+							state,
+							error => {
+								if(error) return reject(error);
+								resolve({
+									id,
+									settings : { state }
+								});
+							}
+						);
+				});
+			});
+	}
+
+	setEddiSnooze(id, minute){
+		if(typeof minute !== 'number') throw new Error('Minutes must be a number.');
+		const snooze = {
+			minute, 
+			requested : new Date()
+		}
+		return this.findByEddi(id)
+			.then(() => this.isEddiOwner(id))
+			.then(() => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(id)
+						.child(PATHS.SETTINGS_PATH)
+						.child(PATHS.STATE_PATH)
+						.set(
+							snooze, 
+							error => {
+								if(error) return reject(error);
+								resolve({
+									id,
+									snooze
+								})
+							}
+						);
+				});
+			});
+	}
+ 
 }
 
 

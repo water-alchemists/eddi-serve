@@ -97,7 +97,7 @@ export function userLoginWithPasswordThunk(email, password){
 				return EddiFire.getUserProfile(uid)
 					.then(userProfile => {
 						dispatch(userGetProfile(userProfile));
-						browserHistory.push(PATHS.HOME);
+						browserHistory.push(PATHS.LIST);
 					});
 			})
 			.catch(err => dispatch(userLoginError(err)));
@@ -134,5 +134,6 @@ export function userLogout(){
 
 		//let store know of logout
 		dispatch(userLogoutSuccess());
+		browserHistory.push(PATHS.HOME);
 	}
 }
