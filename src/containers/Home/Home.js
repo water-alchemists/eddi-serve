@@ -70,11 +70,13 @@ class Home extends Component {
 	_renderBase(){
 		return [
 			(<div className='auth-button'
-						onClick={ () => this.setState({mode: Modes.LOGIN})}>
+				onClick={ () => this.setState({mode: Modes.LOGIN})}
+			>
 				Login ›
 			</div>),
-			(<div 	className='auth-button'
-						onClick={ () => this.setState({mode: Modes.SIGNUP})}>
+			(<div className='auth-button'
+				onClick={ () => this.setState({mode: Modes.SIGNUP})}
+				>
 				Sign Up ›
 			</div>)
 		];

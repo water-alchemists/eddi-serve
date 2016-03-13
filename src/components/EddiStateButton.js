@@ -8,9 +8,9 @@ class EddiStateButton extends Component {
 	}
 
 	_renderOff(){
-		const { onSetOn } = this.props;
+		const { onClick } = this.props;
 		return (
-			<button onClick={event => this.clickHandler(event, 1, onSetOn, )}
+			<button onClick={ event => this.clickHandler(event, 1, onClick) }
 				type='button'
 			>
 				ON
@@ -19,10 +19,10 @@ class EddiStateButton extends Component {
 	}
 
 	_renderOn(){
-		const { onSetOff } = this.props;
+		const { onClick } = this.props;
 
 		return (
-			<button onClick={event => this.clickHandler(event, 0, onSetOff)}
+			<button onClick={ event => this.clickHandler(event, 0, onClick) }
 				type='button'
 			>
 				OFF
@@ -31,14 +31,14 @@ class EddiStateButton extends Component {
 	}
 	render(){
 		const { value } = this.props;
+		console.log('this is hte value', value);
 		return value ? this._renderOn() : this._renderOff();
 	}
 }
 
 EddiStateButton.propTypes = {
 	value : PropTypes.bool.isRequired,
-	onSetOff : PropTypes.func,
-	onSetOn : PropTypes.func
+	onClick: PropTypes.func.isRequired
 };
 
 export default EddiStateButton;

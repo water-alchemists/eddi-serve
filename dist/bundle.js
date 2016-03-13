@@ -31283,14 +31283,16 @@
 					{ className: 'auth-button',
 						onClick: function onClick() {
 							return _this2.setState({ mode: Modes.LOGIN });
-						} },
+						}
+					},
 					'Login ›'
 				), _react2.default.createElement(
 					'div',
 					{ className: 'auth-button',
 						onClick: function onClick() {
 							return _this2.setState({ mode: Modes.SIGNUP });
-						} },
+						}
+					},
 					'Sign Up ›'
 				)];
 			}
@@ -46398,10 +46400,12 @@
 				var _props = this.props;
 				var eddi = _props.eddi;
 				var setEddiState = _props.setEddiState;
-				var state = eddi.state;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 				var id = eddi.id;
+				var state = settings.state;
 
-				console.log('this is the value', state);
+
 				return _react2.default.createElement(_EddiStateButton2.default, { value: !!state,
 					onClick: function onClick(state) {
 						return setEddiState(eddi.id, state);
@@ -46478,12 +46482,12 @@
 			value: function _renderOff() {
 				var _this2 = this;
 
-				var onSetOn = this.props.onSetOn;
+				var _onClick = this.props.onClick;
 
 				return _react2.default.createElement(
 					'button',
 					{ onClick: function onClick(event) {
-							return _this2.clickHandler(event, 1, onSetOn);
+							return _this2.clickHandler(event, 1, _onClick);
 						},
 						type: 'button'
 					},
@@ -46495,13 +46499,13 @@
 			value: function _renderOn() {
 				var _this3 = this;
 
-				var onSetOff = this.props.onSetOff;
+				var _onClick2 = this.props.onClick;
 
 
 				return _react2.default.createElement(
 					'button',
 					{ onClick: function onClick(event) {
-							return _this3.clickHandler(event, 0, onSetOff);
+							return _this3.clickHandler(event, 0, _onClick2);
 						},
 						type: 'button'
 					},
@@ -46513,6 +46517,7 @@
 			value: function render() {
 				var value = this.props.value;
 
+				console.log('this is hte value', value);
 				return value ? this._renderOn() : this._renderOff();
 			}
 		}]);
@@ -46522,8 +46527,7 @@
 
 	EddiStateButton.propTypes = {
 		value: _react.PropTypes.bool.isRequired,
-		onSetOff: _react.PropTypes.func,
-		onSetOn: _react.PropTypes.func
+		onClick: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = EddiStateButton;
