@@ -1,4 +1,15 @@
 'use strict';
+
+//paths
+export const PATHS = {
+	HOME : '/',
+	LIST : '/list',
+	SETTINGS : '/settings',
+	REPORT : '/report',
+	DASHBOARD : '/dashboard',
+	TROUBLESHOOT : '/troubleshoot',
+};
+
 //User Related
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 export const USER_LOGIN_ERROR = 'USER_LOGIN_ERROR';
@@ -19,17 +30,8 @@ export const EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 export const EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 export const EDDI_SELECT = 'EDDI_SELECT';
 
-//paths
-export const PATHS = {
-	HOME : '/',
-	LOGIN : '/login',
-	SIGNUP : '/signup',
-	LIST : '/list',
-	SETTINGS : '/settings',
-	REPORT : '/report',
-	DASHBOARD : '/dashboard',
-	TROUBLESHOOT : '/troubleshoot',
-};
+// Menu Related
+export const MENU_NAME_CHANGE = 'MENU_NAME_CHANGE';
 
 //Modal Related
 export const MODAL_ON = 'MODAL_ON';

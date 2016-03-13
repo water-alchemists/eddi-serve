@@ -5,10 +5,11 @@ import { browserHistory, Link } from 'react-router';
 
 import { PATHS } from '../../constants';
 
-import HomeButton from '../../components/HomeButton';
+import EddiListItem from '../../components/EddiListItem';
 import AddEddiButton from '../../components/AddEddiButton';
 
 import { getAllEddiByUserThunk } from '../../actions/eddis';
+import { menuNameChange } from '../../actions/menu';
 
 import style from './List.less';
 
@@ -23,12 +24,19 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		navigateTo : (pathname, query) => browserHistory.push({ pathname, query }),
-		getEddisByUser : () => dispatch(getAllEddiByUserThunk())
+		navigateTo : 		(pathname, query) => browserHistory.push({ pathname, query }),
+		getEddisByUser: () 								=> dispatch(getAllEddiByUserThunk()),
+		menuName:				(name)						=> dispatch(menuNameChange(name)),
 	};
 }
 
 class List extends Component {
+
+	constructor(props){
+		super(props);
+		this.state = {};
+		props.menuName("My Eddis");
+	}
 
 	componentWillReceiveProps(nextProps){
 		const { user, getEddisByUser } = this.props;
@@ -50,17 +58,10 @@ class List extends Component {
 		if(pathname) return browserHistory.push(destination);
 	}
 
-	_renderEddiButtons(){
+	_renderEddis(){
 		const { eddis } = this.props;
 		if(eddis) {
-			return eddis.map((eddi, i) => {
-				const name = eddi.settings.name;
-				return (
-					<HomeButton key={i}
-						name={name}
-					/>
-				);
-			});
+			return eddis.map((eddi, i) => <EddiListItem key={eddi.id} eddi={eddi} />);
 		}
 	}
 
@@ -76,7 +77,7 @@ class List extends Component {
 
 		var showEddi;
 		if( eddis && eddis.length ){
-			showEddi = this._renderEddiButtons();
+			showEddi = this._renderEddis();
 			console.log('these are teh eddis', eddis);
 		} else {
 			showEddi = this._renderNoEddis();

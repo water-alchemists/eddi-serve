@@ -1,9 +1,18 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 import { PATHS } from '../constants';
 
+import style from '../less/Menu.less';
 
+
+
+function mapStateToProps(state){
+	return {
+		menu : state.menu
+	};
+}
 
 
 class Menu extends Component {
@@ -23,7 +32,7 @@ class Menu extends Component {
 
 	_renderLoggedIn(){
 		return (
-			<header id="navbar">
+			<header id="menu">
 				<div 	className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
 							onClick={ () => this.toggleMenu() } >
 					<div className="icon">☰</div>
@@ -36,20 +45,7 @@ class Menu extends Component {
 						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>
 				</div>
-			</header>
-		);
-	}
-
-	_renderLoggedOut(){
-		return (
-			<header className={'navbar'}>
-				Links:
-				{' '}
-				<Link to={PATHS.HOME}>Home</Link>
-				{' '}
-				<Link to={PATHS.LOGIN}>Login</Link>
-				{' '}
-				<Link to={PATHS.SIGNUP}>Signup</Link>
+				<h1>{ this.props.menu.name }</h1>
 			</header>
 		);
 	}
@@ -79,4 +75,7 @@ Menu.propTypes = {
 	})
 };
 
-export default Menu;
+export default connect(
+	mapStateToProps,
+	null
+)(Menu);

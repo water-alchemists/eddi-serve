@@ -15,10 +15,10 @@ const initialState = {
 };
 
 export default function(state = initialState, action = {}){
-	const { type, 
-		list, 
-		selected, 
-		id, 
+	const { type,
+		list,
+		selected,
+		id,
 		settings={},
 		timing={}
 	} = action;
@@ -26,7 +26,7 @@ export default function(state = initialState, action = {}){
 	let newList;
 
 	switch(type){
-	case EDDI_GETALL_SUCCESS : 
+	case EDDI_GETALL_SUCCESS :
 		console.log('eddi got all', list);
 		return {
 			...state,
@@ -55,7 +55,7 @@ export default function(state = initialState, action = {}){
 			...state,
 			list : newList
 		}
-	case EDDI_UPDATESTART_SUCCESS : 
+	case EDDI_UPDATESTART_SUCCESS :
 		newList = state.list.map(eddi => {
 			if(eddi.id === id){
 				//update that one eddi
@@ -97,13 +97,13 @@ export default function(state = initialState, action = {}){
 			...state,
 			list : newList
 		}
-	case EDDI_SELECT : 
+	case EDDI_SELECT :
 		console.log('eddi selected');
 		return {
 			...state,
 			selected
 		};
-	case USER_LOGOUT : 
+	case USER_LOGOUT :
 		console.log('eddis cleared');
 		return {
 			... initialState

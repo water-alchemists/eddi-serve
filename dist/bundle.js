@@ -26560,7 +26560,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.modal = exports.eddis = exports.user = undefined;
+	exports.menu = exports.modal = exports.eddis = exports.user = undefined;
 
 	var _user2 = __webpack_require__(245);
 
@@ -26574,11 +26574,16 @@
 
 	var _modal3 = _interopRequireDefault(_modal2);
 
+	var _menu2 = __webpack_require__(415);
+
+	var _menu3 = _interopRequireDefault(_menu2);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.user = _user3.default;
 	exports.eddis = _eddis3.default;
 	exports.modal = _modal3.default;
+	exports.menu = _menu3.default;
 
 /***/ },
 /* 245 */
@@ -26620,11 +26625,22 @@
 /***/ function(module, exports) {
 
 	'use strict';
-	//User Related
+
+	//paths
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	var PATHS = exports.PATHS = {
+		HOME: '/',
+		LIST: '/list',
+		SETTINGS: '/settings',
+		REPORT: '/report',
+		DASHBOARD: '/dashboard',
+		TROUBLESHOOT: '/troubleshoot'
+	};
+
+	//User Related
 	var USER_LOGIN_SUCCESS = exports.USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 	var USER_LOGIN_ERROR = exports.USER_LOGIN_ERROR = 'USER_LOGIN_ERROR';
 	var USER_LOGOUT_SUCCESS = exports.USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS';
@@ -26644,17 +26660,8 @@
 	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
 
-	//paths
-	var PATHS = exports.PATHS = {
-		HOME: '/',
-		LOGIN: '/login',
-		SIGNUP: '/signup',
-		LIST: '/list',
-		SETTINGS: '/settings',
-		REPORT: '/report',
-		DASHBOARD: '/dashboard',
-		TROUBLESHOOT: '/troubleshoot'
-	};
+	// Menu Related
+	var MENU_NAME_CHANGE = exports.MENU_NAME_CHANGE = 'MENU_NAME_CHANGE';
 
 	//Modal Related
 	var MODAL_ON = exports.MODAL_ON = 'MODAL_ON';
@@ -27104,7 +27111,13 @@
 
 	var _reactRouter = __webpack_require__(182);
 
+	var _reactRedux = __webpack_require__(171);
+
 	var _constants = __webpack_require__(246);
+
+	var _Menu = __webpack_require__(416);
+
+	var _Menu2 = _interopRequireDefault(_Menu);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27113,6 +27126,12 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			menu: state.menu
+		};
+	}
 
 	var Menu = function (_Component) {
 		_inherits(Menu, _Component);
@@ -27142,7 +27161,7 @@
 
 				return _react2.default.createElement(
 					'header',
-					{ id: 'navbar' },
+					{ id: 'menu' },
 					_react2.default.createElement(
 						'div',
 						{ className: "burger-menu" + (this.state.optionsOpen ? ' open' : ''),
@@ -27190,33 +27209,11 @@
 								'Logout'
 							)
 						)
-					)
-				);
-			}
-		}, {
-			key: '_renderLoggedOut',
-			value: function _renderLoggedOut() {
-				return _react2.default.createElement(
-					'header',
-					{ className: 'navbar' },
-					'Links:',
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.HOME },
-						'Home'
 					),
-					' ',
 					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.LOGIN },
-						'Login'
-					),
-					' ',
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: _constants.PATHS.SIGNUP },
-						'Signup'
+						'h1',
+						null,
+						this.props.menu.name
 					)
 				);
 			}
@@ -27252,7 +27249,7 @@
 		})
 	};
 
-	exports.default = Menu;
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(Menu);
 
 /***/ },
 /* 256 */
@@ -29379,8 +29376,6 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var PropTypes = _react2.default.PropTypes;
-
 	var AddEddiModal = function (_Component) {
 		_inherits(AddEddiModal, _Component);
 
@@ -29426,8 +29421,8 @@
 	}(_react.Component);
 
 	AddEddiModal.propTypes = {
-		closeModal: PropTypes.func.isRequired,
-		dispatch: PropTypes.func.isRequired
+		closeModal: _react.PropTypes.func.isRequired,
+		dispatch: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = AddEddiModal;
@@ -29444,6 +29439,8 @@
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
+	exports.selectEddi = selectEddi;
+	exports.selectEddiById = selectEddiById;
 	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
 	exports.assignEddiThunk = assignEddiThunk;
 	exports.setEddiStartThunk = setEddiStartThunk;
@@ -29538,6 +29535,16 @@
 		return {
 			type: _constants.EDDI_SELECT,
 			selected: selected
+		};
+	}
+
+	function selectEddiById(eddiId) {
+		return function (dispatch) {
+			return EddiFire.findByEddi(eddiId).then(function (eddi) {
+				return dispatch(selectEddi(eddi));
+			}).catch(function (err) {
+				return dispatch(getOneEddiError(err));
+			});
 		};
 	}
 
@@ -31022,7 +31029,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n#navbar {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#navbar .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: relative;\n}\n#navbar .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#navbar .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#navbar .burger-menu.open .menu-options {\n  display: block;\n}\n#navbar .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#navbar .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
 
 	// exports
 
@@ -31065,6 +31072,8 @@
 
 	var _user = __webpack_require__(288);
 
+	var _menu = __webpack_require__(418);
+
 	var _Home = __webpack_require__(296);
 
 	var _Home2 = _interopRequireDefault(_Home);
@@ -31095,9 +31104,6 @@
 			navigateTo: function navigateTo(pathname, query) {
 				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
 			},
-			getEddisByUser: function getEddisByUser() {
-				return dispatch((0, _eddis.getAllEddiByUserThunk)());
-			},
 			login: function login(_ref) {
 				var email = _ref.email;
 				var password = _ref.password;
@@ -31105,6 +31111,9 @@
 			},
 			signup: function signup(user) {
 				return dispatch((0, _user.userCreateThunk)(user));
+			},
+			menuName: function menuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
 			}
 		};
 	}
@@ -31120,6 +31129,7 @@
 			_this.state = {
 				mode: Modes.BASE
 			};
+			props.menuName("Home");
 			return _this;
 		}
 
@@ -31631,6 +31641,10 @@
 
 	var _reactRedux = __webpack_require__(171);
 
+	var _menu = __webpack_require__(418);
+
+	var _eddis = __webpack_require__(280);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31641,31 +31655,49 @@
 
 	function mapStateToProps(state) {
 		return {
-			eddi: state.eddis.eddi
+			eddi: state.eddis.selected
 		};
 	}
 
 	function mapDispatchToProps(dispatch) {
-		return {};
+		return {
+			menuName: function menuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			},
+			selectEddiById: function selectEddiById(eddi) {
+				return dispatch((0, _eddis.selectEddiById)(eddi));
+			}
+		};
 	}
 
 	var Dashboard = function (_Component) {
 		_inherits(Dashboard, _Component);
 
-		function Dashboard() {
+		function Dashboard(props) {
 			_classCallCheck(this, Dashboard);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).call(this, props));
+
+			_this.state = {};
+			_this.props.selectEddiById(props.location.query.id);
+			return _this;
 		}
 
 		_createClass(Dashboard, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(newProps) {
+				if (newProps.eddi) {
+					newProps.menuName(newProps.eddi.settings.name);
+				}
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var eddi = this.props.eddi;
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ id: 'dashboard', className: 'page' },
 					'This is the dashboard page.'
 				);
 			}
@@ -31698,15 +31730,17 @@
 
 	var _constants = __webpack_require__(246);
 
-	var _HomeButton = __webpack_require__(293);
+	var _EddiListItem = __webpack_require__(419);
 
-	var _HomeButton2 = _interopRequireDefault(_HomeButton);
+	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
 
 	var _AddEddiButton = __webpack_require__(300);
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
 	var _eddis = __webpack_require__(280);
+
+	var _menu = __webpack_require__(418);
 
 	var _List = __webpack_require__(303);
 
@@ -31734,6 +31768,9 @@
 			},
 			getEddisByUser: function getEddisByUser() {
 				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			},
+			menuName: function menuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
 			}
 		};
 	}
@@ -31741,10 +31778,14 @@
 	var List = function (_Component) {
 		_inherits(List, _Component);
 
-		function List() {
+		function List(props) {
 			_classCallCheck(this, List);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(List).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(List).call(this, props));
+
+			_this.state = {};
+			props.menuName("My Eddis");
+			return _this;
 		}
 
 		_createClass(List, [{
@@ -31777,16 +31818,13 @@
 				if (pathname) return _reactRouter.browserHistory.push(destination);
 			}
 		}, {
-			key: '_renderEddiButtons',
-			value: function _renderEddiButtons() {
+			key: '_renderEddis',
+			value: function _renderEddis() {
 				var eddis = this.props.eddis;
 
 				if (eddis) {
 					return eddis.map(function (eddi, i) {
-						var name = eddi.settings.name;
-						return _react2.default.createElement(_HomeButton2.default, { key: i,
-							name: name
-						});
+						return _react2.default.createElement(_EddiListItem2.default, { key: eddi.id, eddi: eddi });
 					});
 				}
 			}
@@ -31814,7 +31852,7 @@
 
 				var showEddi;
 				if (eddis && eddis.length) {
-					showEddi = this._renderEddiButtons();
+					showEddi = this._renderEddis();
 					console.log('these are teh eddis', eddis);
 				} else {
 					showEddi = this._renderNoEddis();
@@ -46152,6 +46190,202 @@
 	}(_react.Component);
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
+
+/***/ },
+/* 415 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.default = function () {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+		var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+		var type = action.type;
+		var name = action.name;
+
+		switch (type) {
+			case _constants.MENU_NAME_CHANGE:
+				return _extends({}, state, {
+					name: name
+				});
+			default:
+				return state;
+		}
+	};
+
+	var _constants = __webpack_require__(246);
+
+	var initialState = {
+		name: ""
+	};
+
+/***/ },
+/* 416 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(417);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(287)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./Menu.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./Menu.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 417 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(286)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 418 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.menuNameChange = menuNameChange;
+
+	var _constants = __webpack_require__(246);
+
+	function menuNameChange(newName) {
+		return {
+			type: _constants.MENU_NAME_CHANGE,
+			name: newName
+		};
+	}
+
+/***/ },
+/* 419 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _constants = __webpack_require__(246);
+
+	var _reactRouter = __webpack_require__(182);
+
+	var _EddiListItem = __webpack_require__(420);
+
+	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EddiListItem = function (_Component) {
+	  _inherits(EddiListItem, _Component);
+
+	  function EddiListItem() {
+	    _classCallCheck(this, EddiListItem);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(EddiListItem).apply(this, arguments));
+	  }
+
+	  _createClass(EddiListItem, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        _reactRouter.Link,
+	        { to: { pathname: _constants.PATHS.DASHBOARD, query: { id: this.props.eddi.id } },
+	          className: 'eddi-list-item', style: { backgroundImage: "url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')" } },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'eddi-item-overlay' },
+	          this.props.eddi.settings.name
+	        )
+	      );
+	    }
+	  }]);
+
+	  return EddiListItem;
+	}(_react.Component);
+
+	exports.default = EddiListItem;
+
+/***/ },
+/* 420 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(421);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(287)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiListItem.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiListItem.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 421 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(286)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".eddi-list-item {\n  display: block;\n  background-position: center;\n  background-size: cover;\n  text-decoration: none;\n  color: white;\n  font-size: 17px;\n  text-shadow: 1px 1px 4px black;\n}\n.eddi-list-item .eddi-item-overlay {\n  width: 100%;\n  height: 100px;\n  background-color: rgba(0, 0, 0, 0.2);\n  line-height: 100px;\n  text-align: center;\n}\n", ""]);
+
+	// exports
+
 
 /***/ }
 /******/ ]);

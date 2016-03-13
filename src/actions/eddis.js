@@ -2,7 +2,7 @@ import EddiFireStarter from '../modules/eddi-firebase';
 
 import { browserHistory } from 'react-router';
 
-import { 
+import {
 	PATHS,
 	EDDI_GETALL_SUCCESS,
 	EDDI_GETALL_ERROR,
@@ -19,7 +19,7 @@ const EddiFire = EddiFireStarter();
 
 function getAllEddiSuccess(list){
 	return {
-		type : EDDI_GETALL_SUCCESS, 
+		type : EDDI_GETALL_SUCCESS,
 		list
 	};
 }
@@ -56,7 +56,7 @@ function updateEddiError(error){
 function updateEddiStartSuccess(id, timing = {}){
 	return {
 		type : EDDI_UPDATESTART_SUCCESS,
-		id, 
+		id,
 		timing
 	}
 }
@@ -83,11 +83,19 @@ function getOneEddiError(error){
 	}
 }
 
-function selectEddi(selected){
+export function selectEddi(selected){
 	return {
 		type : EDDI_SELECT,
 		selected
 	};
+}
+
+export function selectEddiById(eddiId){
+	return dispatch => {
+		return EddiFire.findByEddi(eddiId)
+			.then( eddi => dispatch(selectEddi(eddi)) )
+			.catch( err => dispatch(getOneEddiError(err)) )
+	}
 }
 
 export function getAllEddiByUserThunk(){
@@ -150,4 +158,3 @@ export function setEddiSalinityThunk(eddiId, salinity){
 
 	}
 }
-
