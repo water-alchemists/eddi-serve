@@ -14,7 +14,7 @@ class SettingsEddi extends Component {
 		const { eddi, onSalinityChange, onEndChange, onStartChange } = this.props,
 			{ version={}, settings={} } = eddi,
 			{ name, timing={}, salinity } = settings;
-		console.log('settings eddi', eddi, version, settings);
+
 		return (
 			<div>
 				<SettingsEddiHeader 

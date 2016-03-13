@@ -241,8 +241,7 @@ class EddiFire {
 			});
 	}
 
-	updateStartTime(id, { hour, minute }){
-		const start = { hour, minute };
+	setStartTime(id, start={}){
 		return this.findByEddi(id)
 			.then(() => this.isEddiOwner(id))
 			.then(() => {
@@ -257,10 +256,7 @@ class EddiFire {
 								if(error) return reject(error);
 								resolve({ 
 									id, 
-									timing : { 
-										hour, 
-										minute 
-									} 
+									timing : start
 								});
 							}
 						)
@@ -268,8 +264,7 @@ class EddiFire {
 			})
 	}
 
-	setEndTime(id, { hour, minute }){
-		const end = { hour, minute };
+	setEndTime(id, end={}){
 		return this.findByEddi(id)
 			.then(() => this.isEddiOwner(id))
 			.then(() => {
@@ -284,10 +279,7 @@ class EddiFire {
 								if(error) return reject(error);
 								resolve({
 									id,
-									timing : {
-										hour, 
-										minute
-									}
+									timing : end
 								});
 							}
 						);

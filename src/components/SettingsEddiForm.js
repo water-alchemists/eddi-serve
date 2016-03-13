@@ -19,12 +19,12 @@ class SettingsEddiForm extends Component {
 				<div>
 					<h5>OPERATING FROM</h5>
 					<div style={styles.row}>
-						<TimeSelect onChange={ ({ hr, min }) => onStartChange(hr, min) }
+						<TimeSelect onChange={ ({ hour, minute }) => onStartChange(hour, minute) }
 							hour={startValue.hour}
 							minute={startValue.minute}
 						/>
 						<p>TO</p>
-						<TimeSelect onChange={ ({ hr, min }) => onEndChange(hr, min) }
+						<TimeSelect onChange={ ({ hour, minute }) => onEndChange(hour, minute) }
 							hour={endValue.hour}
 							minute={endValue.minute}
 						/>
