@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { modalShow } from '../actions/modal';
 
+import style from '../less/AddEddiButton.less';
+
 
 
 function mapDispatchToProps(dispatch){
@@ -15,7 +17,7 @@ function mapDispatchToProps(dispatch){
 class AddEddiButton extends Component {
 
   render(){
-    return <div onClick={() => this.props.openAddForm()}>
+    return <div className='add-eddi-button' onClick={() => this.props.openAddForm()}>
       <span>add new +</span>
     </div>
   }
