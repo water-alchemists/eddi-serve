@@ -1,13 +1,12 @@
 'use strict';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import { assignEddiThunk } from '../actions/eddis';
 
 import AddEddiForm from '../components/AddEddiForm';
 
-const {
-	PropTypes
-} = React;
+
+
 
 class AddEddiModal extends Component {
 	_onCancel(){

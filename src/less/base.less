@@ -20,59 +20,6 @@ body {
   box-sizing: border-box;
 }
 
-#navbar{
-  background-color: @background_color;
-  height: @navbar_height;
-  position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-
-  .burger-menu{
-    width: @navbar_height;
-    height: @navbar_height;
-    font-size: @navbar_height - 12px;
-    position: relative;
-
-    .icon{
-      display: block;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      line-height: 48px;
-      cursor: pointer;
-    }
-
-    &.open{
-      .icon{
-        background-color: white;
-        color: black;
-      }
-      .menu-options{
-        display: block;
-      }
-    }
-
-    .menu-options{
-      display: none;
-      position: absolute;
-        top: @navbar_height;
-        left: 0;
-      width: 180px;
-      background-color: white;
-      color: black;
-
-      a{
-        font-size: 20px;
-        text-decoration: none;
-        color: black;
-        display: block;
-        padding: 8px;
-      }
-    }
-  }
-}
-
 .page{
   padding-top: @navbar_height;
 }

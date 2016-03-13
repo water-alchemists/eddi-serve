@@ -11,6 +11,7 @@ import SignupForm from '../../components/SignupForm';
 
 import { getAllEddiByUserThunk } from '../../actions/eddis';
 import { userLoginWithPasswordThunk, userCreateThunk } from '../../actions/user';
+import { menuNameChange } from '../../actions/menu';
 
 import style from './Home.less';
 
@@ -33,9 +34,9 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
 	return {
 		navigateTo: 		(pathname, query) 		=> browserHistory.push({ pathname, query }),
-		getEddisByUser: () 										=> dispatch(getAllEddiByUserThunk()),
 		login:		 			({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password)),
 		signup: 				(user) 								=> dispatch(userCreateThunk(user)),
+		menuName:				(name)								=> dispatch(menuNameChange(name)),
 	};
 }
 
@@ -50,9 +51,10 @@ class Home extends Component {
 		this.state = {
 			mode: Modes.BASE
 		};
+		props.menuName("Home");
 	}
 
-  	componentWillReceiveProps(nextProps){
+	componentWillReceiveProps(nextProps){
 
 		if(nextProps.user.email ){
 			// user is logged in. go directly to list screen
