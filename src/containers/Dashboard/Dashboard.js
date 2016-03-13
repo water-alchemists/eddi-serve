@@ -26,7 +26,7 @@ class Dashboard extends Component {
 	constructor(props){
 		super(props);
 		this.state = {};
-		this.props.selectEddiById(props.location.query.id);
+		// this.props.selectEddiById(props.location.query.id);
 	}
 
 	componentWillReceiveProps(newProps){

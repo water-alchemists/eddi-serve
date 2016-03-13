@@ -78,6 +78,7 @@ class EddiFire {
 
 	createUser(email, password){
 		const submission = { email, password };
+		console.log('this is the submission', submission);
 		return new Promise((resolve, reject) => {
 			this.refs.BASE.createUser(
 				submission, 

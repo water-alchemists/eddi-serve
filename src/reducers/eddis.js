@@ -28,9 +28,19 @@ export default function(state = initialState, action = {}){
 	switch(type){
 	case EDDI_GETALL_SUCCESS :
 		console.log('eddi got all', list);
+		let newSelected;
+		if( list.length > 0 ){
+			if(!state.selected) {
+				newSelected = list[0];
+			} else {
+				newSelected = list.filter(eddi => eddi.id === state.selected.id)[0];
+			}
+		}
+
 		return {
 			...state,
-			list
+			list,
+			selected : newSelected
 		};
 	case EDDI_UPDATE_SUCCESS:
 		newList = state.list.map(eddi => {

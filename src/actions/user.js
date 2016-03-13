@@ -70,14 +70,16 @@ export function userCreateThunk(user){
 
 	return dispatch => {
 		const { email, password } = user;
-		return EddiFire.createUser({ email, password })
+
+		return EddiFire.createUser(email, password)
 			.then(userSuccess => {
 				const id = userSuccess.uid;
 				delete user.password;
 				return EddiFire.createUserProfile(id, user)
 					.then(userProfile => {
+
 						dispatch(userGetProfile(userProfile));
-						browserHistory.push(PATHS.HOME);
+						browserHistory.push(PATHS.LIST);
 					});
 			})
 			.catch(err => dispatch(userCreateError(err)));

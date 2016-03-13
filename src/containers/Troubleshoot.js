@@ -39,8 +39,9 @@ class Troubleshoot extends Component {
 	_renderSelected(){
 		const { eddi, setEddiState } = this.props,
 			{ state, id } = eddi;
+		console.log('this is the value', state);
 		return (
-			<EddiStateButton value={state}
+			<EddiStateButton value={!!state}
 				onClick={state => setEddiState(eddi.id, state)}
 			/>
 		);

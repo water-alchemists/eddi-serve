@@ -10,7 +10,8 @@ import style from '../less/Menu.less';
 
 function mapStateToProps(state){
 	return {
-		menu : state.menu
+		menu : state.menu,
+		eddis: state.eddis.list
 	};
 }
 
@@ -31,17 +32,25 @@ class Menu extends Component {
 	}
 
 	_renderLoggedIn(){
+		var menuOptions;
+		if( this.props.eddis ){
+		  	menuOptions = [
+				<Link to={PATHS.LIST}>Home</Link>,
+				<Link to={PATHS.DASHBOARD}>Dashboard</Link>,
+				<Link to={PATHS.REPORT}>Report</Link>,
+				<Link to={PATHS.SETTINGS}>Settings</Link>,
+				<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>,
+		  	];
+		} else {
+		}
+
 		return (
 			<header id="menu">
-				<div 	className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
+				<div className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
 							onClick={ () => this.toggleMenu() } >
 					<div className="icon">☰</div>
 					<div className='menu-options'>
-						<Link to={PATHS.LIST}>Home</Link>
-						<Link to={PATHS.DASHBOARD}>Dashboard</Link>
-						<Link to={PATHS.REPORT}>Report</Link>
-						<Link to={PATHS.SETTINGS}>Settings</Link>
-						<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>
+						{ menuOptions }
 						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>
 				</div>
