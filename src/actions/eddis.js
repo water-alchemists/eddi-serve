@@ -143,7 +143,7 @@ export function setEddiEndThunk(eddiId, hour, minute){
 
 export function setEddiSalinityThunk(eddiId, salinity){
 	return dispatch => {
-		if(!(typeof salinity === 'number')) throw new Error(`Salinity must be a number.`);
+		if(typeof salinity !== 'number') throw new Error(`Salinity must be a number.`);
 		return EddiFire.setSalinity(eddiId, salinity)
 			.then(update => dispatch(updateEddiSalinitySuccess(update.id, update.settings)))
 			.catch(error => dispatch(updateEddiError(error)));
