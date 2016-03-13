@@ -111,7 +111,7 @@ export function getAllEddiByUserThunk(){
 	return dispatch => {
 		return EddiFire.isAuthenticated()
 			.then(user => EddiFire.getAllEddiByUser(user.uid))
-			.then(eddis => dispatch(getAllEddiSuccess(eddis)))
+			.then( eddis => dispatch(getAllEddiSuccess(eddis)))
 			.catch(err => dispatch(getAllEddiError(err)));
 	}
 }
@@ -169,6 +169,7 @@ export function setEddiSalinityThunk(eddiId, salinity){
 
 export function setEddiStateThunk(eddiId, state){
 	return dispatch => {
+		console.log('eddiID', eddiId, state)
 		return EddiFire.setEddiState(eddiId, state)
 			.then(update => dispatch(updateEddiSuccess(update.id, update.settings)))
 			.catch(error => dispatch(updateEddiError(error)));

@@ -26698,8 +26698,20 @@
 		switch (type) {
 			case _constants.EDDI_GETALL_SUCCESS:
 				console.log('eddi got all', list);
+				var newSelected = undefined;
+				if (list.length > 0) {
+					if (!state.selected) {
+						newSelected = list[0];
+					} else {
+						newSelected = list.filter(function (eddi) {
+							return eddi.id === state.selected.id;
+						})[0];
+					}
+				}
+
 				return _extends({}, state, {
-					list: list
+					list: list,
+					selected: newSelected
 				});
 			case _constants.EDDI_UPDATE_SUCCESS:
 				newList = state.list.map(function (eddi) {
@@ -27164,7 +27176,8 @@
 
 	function mapStateToProps(state) {
 		return {
-			menu: state.menu
+			menu: state.menu,
+			eddis: state.eddis.list
 		};
 	}
 
@@ -27194,6 +27207,31 @@
 			value: function _renderLoggedIn() {
 				var _this2 = this;
 
+				var menuOptions;
+				if (this.props.eddis) {
+					menuOptions = [_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.LIST },
+						'Home'
+					), _react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.DASHBOARD },
+						'Dashboard'
+					), _react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.REPORT },
+						'Report'
+					), _react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SETTINGS },
+						'Settings'
+					), _react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.TROUBLESHOOT },
+						'Troubleshoot'
+					)];
+				} else {}
+
 				return _react2.default.createElement(
 					'header',
 					{ id: 'menu' },
@@ -27211,31 +27249,7 @@
 						_react2.default.createElement(
 							'div',
 							{ className: 'menu-options' },
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: _constants.PATHS.LIST },
-								'Home'
-							),
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: _constants.PATHS.DASHBOARD },
-								'Dashboard'
-							),
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: _constants.PATHS.REPORT },
-								'Report'
-							),
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: _constants.PATHS.SETTINGS },
-								'Settings'
-							),
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: _constants.PATHS.TROUBLESHOOT },
-								'Troubleshoot'
-							),
+							menuOptions,
 							_react2.default.createElement(
 								'a',
 								{ onClick: function onClick() {
@@ -30020,6 +30034,7 @@
 
 	function setEddiStateThunk(eddiId, state) {
 		return function (dispatch) {
+			console.log('eddiID', eddiId, state);
 			return EddiFire.setEddiState(eddiId, state).then(function (update) {
 				return dispatch(updateEddiSuccess(update.id, update.settings));
 			}).catch(function (error) {
@@ -30157,6 +30172,7 @@
 				var _this5 = this;
 
 				var submission = { email: email, password: password };
+				console.log('this is the submission', submission);
 				return new Promise(function (resolve, reject) {
 					_this5.refs.BASE.createUser(submission, function (error, user) {
 						if (error) return reject(error);
@@ -30957,12 +30973,14 @@
 			var email = user.email;
 			var password = user.password;
 
-			return EddiFire.createUser({ email: email, password: password }).then(function (userSuccess) {
+
+			return EddiFire.createUser(email, password).then(function (userSuccess) {
 				var id = userSuccess.uid;
 				delete user.password;
 				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
+
 					dispatch(userGetProfile(userProfile));
-					_reactRouter.browserHistory.push(_constants.PATHS.HOME);
+					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
 				});
 			}).catch(function (err) {
 				return dispatch(userCreateError(err));
@@ -31136,7 +31154,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n}\n* {\n  box-sizing: border-box;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
 
 	// exports
 
@@ -31623,51 +31641,39 @@
 						_react2.default.createElement(
 							'div',
 							null,
-							_react2.default.createElement(
-								'label',
-								{ htmlFor: 'email' },
-								'Email : '
-							),
 							_react2.default.createElement('input', {
 								onChange: function onChange(event) {
 									return _this2.onEmailChange(event);
 								},
 								name: 'email',
 								type: 'text',
+								placeholder: 'email',
 								value: email
 							})
 						),
 						_react2.default.createElement(
 							'div',
 							null,
-							_react2.default.createElement(
-								'label',
-								{ htmlFor: 'password' },
-								'Password : '
-							),
 							_react2.default.createElement('input', {
 								onChange: function onChange(event) {
 									return _this2.onPasswordChange(event);
 								},
 								name: 'password',
 								type: 'password',
+								placeholder: 'password',
 								value: password
 							})
 						),
 						_react2.default.createElement(
 							'div',
 							null,
-							_react2.default.createElement(
-								'label',
-								{ htmlFor: 'name' },
-								'Name : '
-							),
 							_react2.default.createElement('input', {
 								onChange: function onChange(event) {
 									return _this2.onNameChange(event);
 								},
 								name: 'name',
 								type: 'text',
+								placeholder: 'name',
 								value: name
 							})
 						),
@@ -31806,7 +31812,7 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).call(this, props));
 
 			_this.state = {};
-			_this.props.selectEddiById(props.location.query.id);
+			// this.props.selectEddiById(props.location.query.id);
 			return _this;
 		}
 
@@ -46395,7 +46401,8 @@
 				var state = eddi.state;
 				var id = eddi.id;
 
-				return _react2.default.createElement(_EddiStateButton2.default, { value: state,
+				console.log('this is the value', state);
+				return _react2.default.createElement(_EddiStateButton2.default, { value: !!state,
 					onClick: function onClick(state) {
 						return setEddiState(eddi.id, state);
 					}

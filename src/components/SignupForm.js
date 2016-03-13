@@ -46,29 +46,29 @@ class SignupForm extends Component {
 			<form onSubmit={event => this.submitHandler(event)}>
 				<div>
 					<div>
-						<label htmlFor='email'>Email : </label>
 						<input 
 							onChange={event => this.onEmailChange(event)}
 							name='email' 
 							type='text'
+							placeholder='email'
 							value={email}
 						/>
 					</div>
 					<div>
-						<label htmlFor='password'>Password : </label>
 						<input 
 							onChange={event => this.onPasswordChange(event)}
 							name='password'
 							type='password'
+							placeholder='password'
 							value={password}
 						/>
 					</div>
 					<div>
-						<label htmlFor='name'>Name : </label>
 						<input
 							onChange={event => this.onNameChange(event)}
 							name='name'
 							type='text'
+							placeholder='name'
 							value={name}
 						/>
 					</div>
