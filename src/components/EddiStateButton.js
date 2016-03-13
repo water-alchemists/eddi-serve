@@ -2,16 +2,15 @@
 import React, { Component, PropTypes } from 'react';
 
 class EddiStateButton extends Component {
-	clickHandler(event, cb){
+	clickHandler(event, value, cb){
 		event.preventDefault();
-		const value = event.target.value;
 		if(cb instanceof Function) return cb(value);
 	}
 
 	_renderOff(){
 		const { onSetOn } = this.props;
 		return (
-			<button onClick={event => this.clickHandler(event, onSetOn)}
+			<button onClick={event => this.clickHandler(event, 1, onSetOn, )}
 				type='button'
 			>
 				ON
@@ -23,7 +22,7 @@ class EddiStateButton extends Component {
 		const { onSetOff } = this.props;
 
 		return (
-			<button onClick={event => this.clickHandler(event, onSetOff)}
+			<button onClick={event => this.clickHandler(event, 0, onSetOff)}
 				type='button'
 			>
 				OFF

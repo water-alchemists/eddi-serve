@@ -26655,7 +26655,8 @@
 	var EDDI_UPDATE_SUCCESS = exports.EDDI_UPDATE_SUCCESS = 'EDDI_UPDATE_SUCCESS';
 	var EDDI_UPDATE_ERROR = exports.EDDI_UPDATE_ERROR = 'EDDI_UPDATE_ERROR';
 	var EDDI_UPDATESTART_SUCCESS = exports.EDDI_UPDATESTART_SUCCESS = 'EDDI_UPDATESTART_SUCCESS';
-	var EDDI_UPDATEEND_SUCCESS = exports.EDDI_UPDATEEND_SUCCESS = 'EDDI_UPDATEEND_SUCCESs';
+	var EDDI_UPDATEEND_SUCCESS = exports.EDDI_UPDATEEND_SUCCESS = 'EDDI_UPDATEEND_SUCCESS';
+	var EDDI_UPDATESNOOZE_SUCCESS = exports.EDDI_UPDATESNOOZE_SUCCESS = 'EDDI_UPDATESNOOZE_SUCCESS';
 	var EDDI_GETONE_SUCCESS = exports.EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
@@ -29446,6 +29447,8 @@
 	exports.setEddiStartThunk = setEddiStartThunk;
 	exports.setEddiEndThunk = setEddiEndThunk;
 	exports.setEddiSalinityThunk = setEddiSalinityThunk;
+	exports.setEddiStateThunk = setEddiStateThunk;
+	exports.setEddiSnoozeThunk = setEddiSnoozeThunk;
 
 	var _eddiFirebase = __webpack_require__(281);
 
@@ -29514,6 +29517,16 @@
 			type: _constants.EDDI_UPDATEEND_SUCCESS,
 			id: id,
 			timing: timing
+		};
+	}
+
+	function updateEddiSnoozeSuccess(id) {
+		var snooze = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+		return {
+			type: _constants.EDDI_UPDATESNOOZE_SUCCESS,
+			id: id,
+			snooze: snooze
 		};
 	}
 
@@ -29613,9 +29626,28 @@
 
 	function setEddiSalinityThunk(eddiId, salinity) {
 		return function (dispatch) {
-			if (typeof salinity !== 'number') throw new Error('Salinity must be a number.');
 			return EddiFire.setSalinity(eddiId, salinity).then(function (update) {
-				return dispatch(updateEddiSalinitySuccess(update.id, update.settings));
+				return dispatch(updateEddiSuccess(update.id, update.settings));
+			}).catch(function (error) {
+				return dispatch(updateEddiError(error));
+			});
+		};
+	}
+
+	function setEddiStateThunk(eddiId, state) {
+		return function (dispatch) {
+			return EddiFire.setEddiState(eddiId, state).then(function (update) {
+				return dispatch(updateEddiSuccess(update.id, update.settings));
+			}).catch(function (error) {
+				return dispatch(updateEddiError(error));
+			});
+		};
+	}
+
+	function setEddiSnoozeThunk(eddiId, minute) {
+		return function (dispatch) {
+			return EddiFire.setEddiSnooze(eddiId, minute).then(function (update) {
+				return dispatch(updateEddiSnoozeSuccess(updated.id, updated.snooze));
 			}).catch(function (error) {
 				return dispatch(updateEddiError(error));
 			});
@@ -29882,6 +29914,7 @@
 			value: function setSalinity(id, salinity) {
 				var _this15 = this;
 
+				if (typeof salinity !== 'number') throw new Error('Salinity must be a number.');
 				return this.findByEddi(id).then(function () {
 					return _this15.isEddiOwner(id);
 				}).then(function () {
@@ -46083,6 +46116,16 @@
 
 	var _reactRedux = __webpack_require__(171);
 
+	var _eddis = __webpack_require__(280);
+
+	var _EddiStateButton = __webpack_require__(422);
+
+	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
+
+	var _AddEddiButton = __webpack_require__(300);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -46093,12 +46136,17 @@
 
 	function mapStateToProps(state) {
 		return {
+			eddiList: state.eddis.list,
 			eddi: state.eddis.selected
 		};
 	}
 
 	function mapDispatchToProps(dispatch) {
-		return {};
+		return {
+			setEddiState: function setEddiState(eddiId, state) {
+				return dispatch((0, _eddis.setEddiStateThunk)(eddiId, state));
+			}
+		};
 	}
 
 	var Troubleshoot = function (_Component) {
@@ -46111,15 +46159,61 @@
 		}
 
 		_createClass(Troubleshoot, [{
-			key: 'render',
-			value: function render() {
-				var eddi = this.props.eddi;
+			key: '_renderNoEddis',
+			value: function _renderNoEddis() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'page' },
+					_react2.default.createElement(
+						'p',
+						null,
+						' Currently you are not tracking any eddis. '
+					),
+					_react2.default.createElement(_AddEddiButton2.default, null)
+				);
+			}
+		}, {
+			key: '_renderNotSelected',
+			value: function _renderNotSelected() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'page' },
+					_react2.default.createElement(
+						'p',
+						null,
+						' Select an eddi to track. '
+					)
+				);
+			}
+		}, {
+			key: '_renderSelected',
+			value: function _renderSelected() {
+				var _props = this.props;
+				var eddi = _props.eddi;
+				var setEddiState = _props.setEddiState;
+				var state = eddi.state;
+				var id = eddi.id;
 
 				return _react2.default.createElement(
 					'div',
-					{ id: 'troubleshoot', className: 'page' },
-					'This is the troubleshoot page.'
+					{ className: 'page' },
+					_react2.default.createElement(_EddiStateButton2.default, { value: state,
+						onClick: function onClick(state) {
+							return setEddiState(eddi.id, state);
+						}
+					})
 				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _props2 = this.props;
+				var eddi = _props2.eddi;
+				var eddiList = _props2.eddiList;
+				var setEddiState = _props2.setEddiState;
+				var hasEddis = !!eddiList.length;
+				console.log(hasEddis, eddi, setEddiState);
+				if (eddi) return this._renderSelected();else if (!hasEddis) return this._renderNoEddis();else return this._renderNotSelected();
 			}
 		}]);
 
@@ -46386,6 +46480,100 @@
 
 	// exports
 
+
+/***/ },
+/* 422 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EddiStateButton = function (_Component) {
+		_inherits(EddiStateButton, _Component);
+
+		function EddiStateButton() {
+			_classCallCheck(this, EddiStateButton);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(EddiStateButton).apply(this, arguments));
+		}
+
+		_createClass(EddiStateButton, [{
+			key: 'clickHandler',
+			value: function clickHandler(event, value, cb) {
+				event.preventDefault();
+				if (cb instanceof Function) return cb(value);
+			}
+		}, {
+			key: '_renderOff',
+			value: function _renderOff() {
+				var _this2 = this;
+
+				var onSetOn = this.props.onSetOn;
+
+				return _react2.default.createElement(
+					'button',
+					{ onClick: function onClick(event) {
+							return _this2.clickHandler(event, 1, onSetOn);
+						},
+						type: 'button'
+					},
+					'ON'
+				);
+			}
+		}, {
+			key: '_renderOn',
+			value: function _renderOn() {
+				var _this3 = this;
+
+				var onSetOff = this.props.onSetOff;
+
+
+				return _react2.default.createElement(
+					'button',
+					{ onClick: function onClick(event) {
+							return _this3.clickHandler(event, 0, onSetOff);
+						},
+						type: 'button'
+					},
+					'OFF'
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var value = this.props.value;
+
+				return value ? this._renderOn() : this._renderOff();
+			}
+		}]);
+
+		return EddiStateButton;
+	}(_react.Component);
+
+	EddiStateButton.propTypes = {
+		value: _react.PropTypes.bool.isRequired,
+		onSetOff: _react.PropTypes.func,
+		onSetOn: _react.PropTypes.func
+	};
+
+	exports.default = EddiStateButton;
 
 /***/ }
 /******/ ]);

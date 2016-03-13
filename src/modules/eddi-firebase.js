@@ -224,6 +224,7 @@ class EddiFire {
 
 
 	setSalinity(id, salinity){
+		if(typeof salinity !== 'number') throw new Error(`Salinity must be a number.`);
 		return this.findByEddi(id)
 			.then(() => this.isEddiOwner(id))
 			.then(() => {

@@ -10,6 +10,7 @@ import {
 	EDDI_UPDATE_ERROR,
 	EDDI_UPDATESTART_SUCCESS,
 	EDDI_UPDATEEND_SUCCESS,
+	EDDI_UPDATESNOOZE_SUCCESS,
 	EDDI_GETONE_SUCCESS,
 	EDDI_GETONE_ERROR,
 	EDDI_SELECT
@@ -66,6 +67,14 @@ function updateEddiEndSuccess(id, timing = {}){
 		type : EDDI_UPDATEEND_SUCCESS,
 		id,
 		timing
+	}
+}
+
+function updateEddiSnoozeSuccess(id, snooze={}){
+	return {
+		type : EDDI_UPDATESNOOZE_SUCCESS,
+		id,
+		snooze
 	}
 }
 
@@ -151,10 +160,25 @@ export function setEddiEndThunk(eddiId, hour, minute){
 
 export function setEddiSalinityThunk(eddiId, salinity){
 	return dispatch => {
-		if(typeof salinity !== 'number') throw new Error(`Salinity must be a number.`);
 		return EddiFire.setSalinity(eddiId, salinity)
-			.then(update => dispatch(updateEddiSalinitySuccess(update.id, update.settings)))
+			.then(update => dispatch(updateEddiSuccess(update.id, update.settings)))
 			.catch(error => dispatch(updateEddiError(error)));
 
+	}
+}
+
+export function setEddiStateThunk(eddiId, state){
+	return dispatch => {
+		return EddiFire.setEddiState(eddiId, state)
+			.then(update => dispatch(updateEddiSuccess(update.id, update.settings)))
+			.catch(error => dispatch(updateEddiError(error)));
+	}
+}
+
+export function setEddiSnoozeThunk(eddiId, minute){
+	return dispatch => {
+		return EddiFire.setEddiSnooze(eddiId, minute)
+			.then(update => dispatch(updateEddiSnoozeSuccess(updated.id, updated.snooze)))
+			.catch(error => dispatch(updateEddiError(error)));
 	}
 }
