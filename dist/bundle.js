@@ -27050,7 +27050,10 @@
 	function mapStateToProps(state) {
 		return {
 			user: state.user,
-			modal: state.modal
+			modal: state.modal,
+			menu: state.menu,
+			eddiList: state.eddis.list,
+			eddi: state.eddis.selected
 		};
 	}
 
@@ -27115,8 +27118,10 @@
 			value: function render() {
 				var _props = this.props;
 				var user = _props.user;
-				var logout = _props.logout;
 				var modal = _props.modal;
+				var menu = _props.menu;
+				var eddiList = _props.eddiList;
+				var logout = _props.logout;
 				var dispatch = _props.dispatch;
 				var isOpen = this.state.isOpen;
 				var children = this._cloneChildrenWithToggle();
@@ -27125,7 +27130,9 @@
 					null,
 					_react2.default.createElement(_Menu2.default, { isOpen: isOpen,
 						logout: logout,
-						user: user
+						user: user,
+						eddis: eddiList,
+						menu: menu
 					}),
 					children,
 					_react2.default.createElement(_ModalWrapper2.default, { dispatch: dispatch,
@@ -27158,8 +27165,6 @@
 
 	var _reactRouter = __webpack_require__(182);
 
-	var _reactRedux = __webpack_require__(171);
-
 	var _constants = __webpack_require__(246);
 
 	var _Menu = __webpack_require__(257);
@@ -27173,13 +27178,6 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			menu: state.menu,
-			eddis: state.eddis.list
-		};
-	}
 
 	var Menu = function (_Component) {
 		_inherits(Menu, _Component);
@@ -27208,7 +27206,12 @@
 				var _this2 = this;
 
 				var menuOptions;
-				if (this.props.eddis) {
+				var _props = this.props;
+				var menu = _props.menu;
+				var eddis = _props.eddis;
+
+
+				if (eddis instanceof Array && eddis.length) {
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: _constants.PATHS.LIST },
@@ -27230,7 +27233,7 @@
 						{ to: _constants.PATHS.TROUBLESHOOT },
 						'Troubleshoot'
 					)];
-				} else {}
+				}
 
 				return _react2.default.createElement(
 					'header',
@@ -27262,7 +27265,7 @@
 					_react2.default.createElement(
 						'h1',
 						null,
-						this.props.menu.name
+						menu.name
 					)
 				);
 			}
@@ -27295,10 +27298,16 @@
 		logout: _react.PropTypes.func.isRequired,
 		user: _react.PropTypes.shape({
 			email: _react.PropTypes.string
+		}),
+		eddis: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			id: _react.PropTypes.string
+		})),
+		menu: _react.PropTypes.shape({
+			name: _react.PropTypes.string
 		})
 	};
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(Menu);
+	exports.default = Menu;
 
 /***/ },
 /* 257 */

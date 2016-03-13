@@ -14,7 +14,10 @@ import style from '../less/base.less';
 function mapStateToProps(state){
 	return {
 		user : state.user,
-		modal : state.modal
+		modal : state.modal,
+		menu : state.menu,
+		eddiList : state.eddis.list,
+		eddi : state.eddis.selected
 	};
 }
 
@@ -53,7 +56,7 @@ class App extends Component {
 	}
 
 	render(){
-		const { user, logout, modal, dispatch } = this.props,
+		const { user, modal, menu, eddiList, logout,  dispatch } = this.props,
 			{ isOpen } = this.state,
 			children = this._cloneChildrenWithToggle();
 		return (
@@ -61,6 +64,8 @@ class App extends Component {
 				<Menu isOpen={isOpen}
 					logout={logout}
 					user={user}
+					eddis={eddiList}
+					menu={menu}
 				/>
 				{children}
 				<ModalWrapper dispatch={dispatch}

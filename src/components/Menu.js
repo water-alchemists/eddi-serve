@@ -1,19 +1,9 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
-import { connect } from 'react-redux';
 import { PATHS } from '../constants';
 
 import style from '../less/Menu.less';
-
-
-
-function mapStateToProps(state){
-	return {
-		menu : state.menu,
-		eddis: state.eddis.list
-	};
-}
 
 class Menu extends Component {
 
@@ -32,7 +22,9 @@ class Menu extends Component {
 
 	_renderLoggedIn(){
 		var menuOptions;
-		if( this.props.eddis ){
+		const { menu, eddis } = this.props;
+
+		if( eddis instanceof Array && eddis.length ){
 		  	menuOptions = [
 				<Link to={PATHS.LIST}>Home</Link>,
 				<Link to={PATHS.DASHBOARD}>Dashboard</Link>,
@@ -40,7 +32,6 @@ class Menu extends Component {
 				<Link to={PATHS.SETTINGS}>Settings</Link>,
 				<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>,
 		  	];
-		} else {
 		}
 
 		return (
@@ -53,7 +44,7 @@ class Menu extends Component {
 						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>
 				</div>
-				<h1>{ this.props.menu.name }</h1>
+				<h1>{ menu.name }</h1>
 			</header>
 		);
 	}
@@ -80,10 +71,15 @@ Menu.propTypes = {
 	logout : PropTypes.func.isRequired,
 	user : PropTypes.shape({
 		email : PropTypes.string
+	}),
+	eddis : PropTypes.arrayOf(
+		PropTypes.shape({
+			id : PropTypes.string
+		})
+	),
+	menu : PropTypes.shape({
+		name : PropTypes.string
 	})
 };
 
-export default connect(
-	mapStateToProps,
-	null
-)(Menu);
+export default Menu;
