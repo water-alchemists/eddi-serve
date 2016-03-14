@@ -9,6 +9,7 @@ import {
 	setEddiSalinityThunk,
 	getAllEddiByUserThunk,
 } from '../actions/eddis';
+import { menuNameChange } from '../actions/menu';
 
 import AddEddiButton from '../components/AddEddiButton';
 
@@ -28,14 +29,17 @@ function mapDispatchToProps(dispatch){
 		updateStart : (eddiId, hour, minutes) => dispatch(setEddiStartThunk(eddiId, hour, minutes)),
 		updateEnd : (eddiId, hour, minutes) => dispatch(setEddiEndThunk(eddiId, hour, minutes)),
 		updateSalinity : (eddiId, salinity) => dispatch(setEddiSalinityThunk(eddiId, salinity)),
-		getAllEddis : () => dispatch(getAllEddiByUserThunk())
+		getAllEddis : () => dispatch(getAllEddiByUserThunk()),
+		updateMenuName: name => dispatch(menuNameChange(name)),
 	};
 }
 
 class Settings extends Component {
 	componentWillMount(){
-		const { getAllEddis } = this.props;
+		const { getAllEddis, updateMenuName } = this.props;
 		getAllEddis();
+		updateMenuName('Settings');
+
 	}
 
 	onSalinityChange(id, salinity){

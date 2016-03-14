@@ -26,13 +26,16 @@ class Dashboard extends Component {
 		this.state = {};
 	}
 
+	componentWillMount(){
+		const { updateMenuName, eddi={} } = this.props;
+		if( eddi.id ) updateMenuName(eddi.settings.name);
+	}
+	
 	componentWillReceiveProps(newProps){
-		const { updateMenuName } = this.props,
+		const { updateMenuName, eddi:oldEddi={} } = this.props,
 			{ eddi } = newProps;
 
-		if( eddi ){
-			updateMenuName(eddi.settings.name);
-		}
+		if( eddi.id !== oldEddi.id ) updateMenuName(eddi.settings.name);
 	}
 
 	render(){

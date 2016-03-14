@@ -340,7 +340,7 @@ class EddiFire {
 				});
 			});
 	}
- 
+
 }
 
 

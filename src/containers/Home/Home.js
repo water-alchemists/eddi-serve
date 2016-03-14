@@ -33,10 +33,10 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		navigateTo: 		(pathname, query) 		=> browserHistory.push({ pathname, query }),
-		login:		 			({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password)),
-		signup: 				(user) 								=> dispatch(userCreateThunk(user)),
-		menuName:				(name)								=> dispatch(menuNameChange(name)),
+		navigateTo: (pathname, query) => browserHistory.push({ pathname, query }),
+		login: ({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password)),
+		signup: (user) => dispatch(userCreateThunk(user)),
+		updateMenuName: (name) => dispatch(menuNameChange(name)),
 	};
 }
 
@@ -45,13 +45,14 @@ function mapDispatchToProps(dispatch){
 
 
 class Home extends Component {
-
 	constructor(props){
 		super(props);
+		const { updateMenuName } = this.props;
+		updateMenuName('Home');
+		
 		this.state = {
 			mode: Modes.BASE
 		};
-		props.menuName("Home");
 	}
 
 	componentWillReceiveProps(nextProps){

@@ -26606,13 +26606,10 @@
 
 		switch (type) {
 			case _constants.APP_START_SUCCESS:
-				console.log('app start');
 				return _extends({}, state, user);
 			case _constants.USER_GETPROFILE_SUCCESS:
-				console.log('user logged in');
 				return _extends({}, state, user);
 			case _constants.USER_LOGOUT_SUCCESS:
-				console.log('user logged out');
 				return _extends({}, initialState);
 			default:
 				return state;
@@ -26716,7 +26713,6 @@
 					selected: selected
 				});
 			case _constants.EDDI_GETALL_SUCCESS:
-				console.log('eddi got all', list);
 				var newSelected = undefined;
 				if (list.length > 0) {
 					if (!state.selected) {
@@ -26785,12 +26781,10 @@
 					list: newList
 				});
 			case _constants.EDDI_SELECT:
-				console.log('eddi selected');
 				return _extends({}, state, {
 					selected: selected
 				});
 			case _constants.USER_LOGOUT:
-				console.log('eddis cleared');
 				return _extends({}, initialState);
 			default:
 				return state;
@@ -27232,6 +27226,8 @@
 				var _props = this.props;
 				var menu = _props.menu;
 				var eddis = _props.eddis;
+				var _menu$name = menu.name;
+				var name = _menu$name === undefined ? '' : _menu$name;
 				var list = eddis.list;
 				var _eddis$selected = eddis.selected;
 				var selected = _eddis$selected === undefined ? {} : _eddis$selected;
@@ -27242,7 +27238,6 @@
 				var menuOptions = undefined;
 
 				if (list instanceof Array && list.length) {
-					console.log(list);
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: _constants.PATHS.LIST },
@@ -27296,7 +27291,7 @@
 					_react2.default.createElement(
 						'h1',
 						null,
-						menu.name
+						name
 					)
 				);
 			}
@@ -31283,7 +31278,7 @@
 			signup: function signup(user) {
 				return dispatch((0, _user.userCreateThunk)(user));
 			},
-			menuName: function menuName(name) {
+			updateMenuName: function updateMenuName(name) {
 				return dispatch((0, _menu.menuNameChange)(name));
 			}
 		};
@@ -31297,10 +31292,13 @@
 
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props));
 
+			var updateMenuName = _this.props.updateMenuName;
+
+			updateMenuName('Home');
+
 			_this.state = {
 				mode: Modes.BASE
 			};
-			props.menuName("Home");
 			return _this;
 		}
 
@@ -31864,15 +31862,26 @@
 		}
 
 		_createClass(Dashboard, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _props = this.props;
+				var updateMenuName = _props.updateMenuName;
+				var _props$eddi = _props.eddi;
+				var eddi = _props$eddi === undefined ? {} : _props$eddi;
+
+				if (eddi.id) updateMenuName(eddi.settings.name);
+			}
+		}, {
 			key: 'componentWillReceiveProps',
 			value: function componentWillReceiveProps(newProps) {
-				var updateMenuName = this.props.updateMenuName;
+				var _props2 = this.props;
+				var updateMenuName = _props2.updateMenuName;
+				var _props2$eddi = _props2.eddi;
+				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
 				var eddi = newProps.eddi;
 
 
-				if (eddi) {
-					updateMenuName(eddi.settings.name);
-				}
+				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
 			}
 		}, {
 			key: 'render',
@@ -32339,6 +32348,8 @@
 
 	var _eddis = __webpack_require__(285);
 
+	var _menu = __webpack_require__(299);
+
 	var _AddEddiButton = __webpack_require__(307);
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
@@ -32377,6 +32388,9 @@
 			},
 			getAllEddis: function getAllEddis() {
 				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			},
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
 			}
 		};
 	}
@@ -32393,9 +32407,12 @@
 		_createClass(Settings, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				var getAllEddis = this.props.getAllEddis;
+				var _props = this.props;
+				var getAllEddis = _props.getAllEddis;
+				var updateMenuName = _props.updateMenuName;
 
 				getAllEddis();
+				updateMenuName('Settings');
 			}
 		}, {
 			key: 'onSalinityChange',
@@ -32421,11 +32438,11 @@
 		}, {
 			key: '_renderEddis',
 			value: function _renderEddis() {
-				var _props = this.props;
-				var eddis = _props.eddis;
-				var updateSalinity = _props.updateSalinity;
-				var updateEnd = _props.updateEnd;
-				var updateStart = _props.updateStart;
+				var _props2 = this.props;
+				var eddis = _props2.eddis;
+				var updateSalinity = _props2.updateSalinity;
+				var updateEnd = _props2.updateEnd;
+				var updateStart = _props2.updateStart;
 
 				return eddis.map(function (eddi) {
 					var eddiId = eddi.id;
@@ -46380,6 +46397,8 @@
 
 	var _eddis = __webpack_require__(285);
 
+	var _menu = __webpack_require__(299);
+
 	var _EddiStateButton = __webpack_require__(421);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
@@ -46407,6 +46426,9 @@
 		return {
 			setEddiState: function setEddiState(eddiId, state) {
 				return dispatch((0, _eddis.setEddiStateThunk)(eddiId, state));
+			},
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
 			}
 		};
 	}
@@ -46421,6 +46443,13 @@
 		}
 
 		_createClass(Troubleshoot, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var updateMenuName = this.props.updateMenuName;
+
+				updateMenuName('Troubleshoot');
+			}
+		}, {
 			key: '_renderNoEddis',
 			value: function _renderNoEddis() {
 				return _react2.default.createElement(
@@ -46591,6 +46620,8 @@
 
 	var _reactRedux = __webpack_require__(171);
 
+	var _menu = __webpack_require__(299);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -46601,12 +46632,16 @@
 
 	function mapStateToProps(state) {
 		return {
-			eddi: state.eddis.eddi
+			eddi: state.eddis.selected
 		};
 	}
 
 	function mapDispatchToProps(dispatch) {
-		return {};
+		return {
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			}
+		};
 	}
 
 	var Report = function (_Component) {
@@ -46619,6 +46654,13 @@
 		}
 
 		_createClass(Report, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var updateMenuName = this.props.updateMenuName;
+
+				updateMenuName('Report');
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var eddi = this.props.eddi;

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { setEddiStateThunk } from '../actions/eddis';
+import { menuNameChange } from '../actions/menu';
 
 import EddiStateButton from '../components/EddiStateButton';
 import AddEddiButton from '../components/AddEddiButton';
@@ -16,11 +17,17 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		setEddiState : (eddiId, state) => dispatch(setEddiStateThunk(eddiId, state))
+		setEddiState : (eddiId, state) => dispatch(setEddiStateThunk(eddiId, state)),
+		updateMenuName: name => dispatch(menuNameChange(name)),
 	};
 }
 
 class Troubleshoot extends Component {
+	componentWillMount(){
+		const { updateMenuName } = this.props;
+		updateMenuName('Troubleshoot');
+	}
+
 	_renderNoEddis(){
 		return (
 			<div className='eddis-empty'>

@@ -34,7 +34,6 @@ export default function(state = initialState, action = {}){
 			selected
 		};
 	case EDDI_GETALL_SUCCESS :
-		console.log('eddi got all', list);
 		let newSelected;
 		if( list.length > 0 ){
 			if(!state.selected) {
@@ -115,13 +114,11 @@ export default function(state = initialState, action = {}){
 			list : newList
 		}
 	case EDDI_SELECT :
-		console.log('eddi selected');
 		return {
 			...state,
 			selected
 		};
 	case USER_LOGOUT :
-		console.log('eddis cleared');
 		return {
 			... initialState
 		};

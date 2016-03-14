@@ -22,17 +22,15 @@ class Menu extends Component {
 
 	_renderLoggedIn(){
 		const { menu, eddis } = this.props,
-			{ list, selected = {} }  = eddis,
+			{ name='' } = menu,
+			{ list, selected={} }  = eddis,
 			query = {
 				id : selected.id
 			};
 
-
 		let menuOptions;
 
-
 		if( list instanceof Array && list.length ){
-			console.log(list);
 		  	menuOptions = [
 				<Link to={PATHS.LIST}>Home</Link>,
 				<Link to={{ pathname : PATHS.DASHBOARD, query }}>Dashboard</Link>,
@@ -52,7 +50,7 @@ class Menu extends Component {
 						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>
 				</div>
-				<h1>{ menu.name }</h1>
+				<h1>{ name }</h1>
 			</header>
 		);
 	}
