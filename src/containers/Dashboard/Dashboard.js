@@ -6,8 +6,6 @@ import { menuNameChange } from '../../actions/menu';
 import { selectEddiById } from '../../actions/eddis';
 
 
-
-
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.selected
@@ -16,7 +14,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		menuName:	(name) => dispatch(menuNameChange(name)),
+		updateMenuName:	(name) => dispatch(menuNameChange(name)),
 		selectEddiById: (eddi) => dispatch(selectEddiById(eddi)),
 	};
 }
@@ -30,8 +28,11 @@ class Dashboard extends Component {
 	}
 
 	componentWillReceiveProps(newProps){
-		if( newProps.eddi ){
-			newProps.menuName(newProps.eddi.settings.name);
+		const { updateMenuName } = this.props,
+			{ eddi } = newProps;
+
+		if( eddi ){
+			updateMenuName(eddi.settings.name);
 		}
 	}
 

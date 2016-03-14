@@ -21,23 +21,31 @@ class Menu extends Component {
 	}
 
 	_renderLoggedIn(){
-		var menuOptions;
-		const { menu, eddis } = this.props;
+		const { menu, eddis } = this.props,
+			{ list, selected = {} }  = eddis,
+			query = {
+				id : selected.id
+			};
 
-		if( eddis instanceof Array && eddis.length ){
+
+		let menuOptions;
+
+
+		if( list instanceof Array && list.length ){
+			console.log(list);
 		  	menuOptions = [
 				<Link to={PATHS.LIST}>Home</Link>,
-				<Link to={PATHS.DASHBOARD}>Dashboard</Link>,
-				<Link to={PATHS.REPORT}>Report</Link>,
-				<Link to={PATHS.SETTINGS}>Settings</Link>,
-				<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>,
+				<Link to={{ pathname : PATHS.DASHBOARD, query }}>Dashboard</Link>,
+				<Link to={{ pathname : PATHS.REPORT, query }}>Report</Link>,
+				<Link to={ PATHS.SETTINGS }>Settings</Link>,
+				<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}>Troubleshoot</Link>,
 		  	];
 		}
 
 		return (
 			<header id="menu">
 				<div className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
-							onClick={ () => this.toggleMenu() } >
+					onClick={ () => this.toggleMenu() } >
 					<div className="icon">☰</div>
 					<div className='menu-options'>
 						{ menuOptions }
@@ -72,11 +80,16 @@ Menu.propTypes = {
 	user : PropTypes.shape({
 		email : PropTypes.string
 	}),
-	eddis : PropTypes.arrayOf(
-		PropTypes.shape({
+	eddis : PropTypes.shape({
+		list : PropTypes.arrayOf(
+			PropTypes.shape({
+				id : PropTypes.string
+			})
+		),
+		selected : PropTypes.shape({
 			id : PropTypes.string
 		})
-	),
+	}), 
 	menu : PropTypes.shape({
 		name : PropTypes.string
 	})

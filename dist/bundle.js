@@ -26782,7 +26782,7 @@
 
 	var initialState = {
 		list: [],
-		selected: null
+		selected: undefined
 	};
 
 /***/ },
@@ -27052,8 +27052,7 @@
 			user: state.user,
 			modal: state.modal,
 			menu: state.menu,
-			eddiList: state.eddis.list,
-			eddi: state.eddis.selected
+			eddis: state.eddis
 		};
 	}
 
@@ -27120,7 +27119,7 @@
 				var user = _props.user;
 				var modal = _props.modal;
 				var menu = _props.menu;
-				var eddiList = _props.eddiList;
+				var eddis = _props.eddis;
 				var logout = _props.logout;
 				var dispatch = _props.dispatch;
 				var isOpen = this.state.isOpen;
@@ -27131,7 +27130,7 @@
 					_react2.default.createElement(_Menu2.default, { isOpen: isOpen,
 						logout: logout,
 						user: user,
-						eddis: eddiList,
+						eddis: eddis,
 						menu: menu
 					}),
 					children,
@@ -27205,24 +27204,31 @@
 			value: function _renderLoggedIn() {
 				var _this2 = this;
 
-				var menuOptions;
 				var _props = this.props;
 				var menu = _props.menu;
 				var eddis = _props.eddis;
+				var list = eddis.list;
+				var _eddis$selected = eddis.selected;
+				var selected = _eddis$selected === undefined ? {} : _eddis$selected;
+				var query = {
+					id: selected.id
+				};
 
+				var menuOptions = undefined;
 
-				if (eddis instanceof Array && eddis.length) {
+				if (list instanceof Array && list.length) {
+					console.log(list);
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: _constants.PATHS.LIST },
 						'Home'
 					), _react2.default.createElement(
 						_reactRouter.Link,
-						{ to: _constants.PATHS.DASHBOARD },
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: query } },
 						'Dashboard'
 					), _react2.default.createElement(
 						_reactRouter.Link,
-						{ to: _constants.PATHS.REPORT },
+						{ to: { pathname: _constants.PATHS.REPORT, query: query } },
 						'Report'
 					), _react2.default.createElement(
 						_reactRouter.Link,
@@ -27230,7 +27236,7 @@
 						'Settings'
 					), _react2.default.createElement(
 						_reactRouter.Link,
-						{ to: _constants.PATHS.TROUBLESHOOT },
+						{ to: { pathname: _constants.PATHS.TROUBLESHOOT, query: query } },
 						'Troubleshoot'
 					)];
 				}
@@ -27299,9 +27305,14 @@
 		user: _react.PropTypes.shape({
 			email: _react.PropTypes.string
 		}),
-		eddis: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-			id: _react.PropTypes.string
-		})),
+		eddis: _react.PropTypes.shape({
+			list: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+				id: _react.PropTypes.string
+			})),
+			selected: _react.PropTypes.shape({
+				id: _react.PropTypes.string
+			})
+		}),
 		menu: _react.PropTypes.shape({
 			name: _react.PropTypes.string
 		})
@@ -31806,7 +31817,7 @@
 
 	function mapDispatchToProps(dispatch) {
 		return {
-			menuName: function menuName(name) {
+			updateMenuName: function updateMenuName(name) {
 				return dispatch((0, _menu.menuNameChange)(name));
 			},
 			selectEddiById: function selectEddiById(eddi) {
@@ -31831,8 +31842,12 @@
 		_createClass(Dashboard, [{
 			key: 'componentWillReceiveProps',
 			value: function componentWillReceiveProps(newProps) {
-				if (newProps.eddi) {
-					newProps.menuName(newProps.eddi.settings.name);
+				var updateMenuName = this.props.updateMenuName;
+				var eddi = newProps.eddi;
+
+
+				if (eddi) {
+					updateMenuName(eddi.settings.name);
 				}
 			}
 		}, {

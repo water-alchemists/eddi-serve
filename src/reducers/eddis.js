@@ -11,7 +11,7 @@ import {
 
 const initialState = {
 	list : [],
-	selected : null
+	selected : undefined
 };
 
 export default function(state = initialState, action = {}){
