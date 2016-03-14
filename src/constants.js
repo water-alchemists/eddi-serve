@@ -10,6 +10,13 @@ export const PATHS = {
 	TROUBLESHOOT : '/troubleshoot',
 };
 
+export const QUERY = {
+	SALINITY_IN : 'in',
+	SALINITY_OUT : 'out',
+	FLOW : 'flow',
+	POWER : 'power',
+};
+
 //User Related
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 export const USER_LOGIN_ERROR = 'USER_LOGIN_ERROR';
@@ -30,6 +37,10 @@ export const EDDI_UPDATESNOOZE_SUCCESS = 'EDDI_UPDATESNOOZE_SUCCESS';
 export const EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 export const EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 export const EDDI_SELECT = 'EDDI_SELECT';
+
+// App Related
+export const APP_START_SUCCESS = 'APP_START_SUCCESS';
+export const APP_START_ERROR = 'APP_START_ERROR';
 
 // Menu Related
 export const MENU_NAME_CHANGE = 'MENU_NAME_CHANGE';

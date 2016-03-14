@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import Menu from '../components/Menu';
 import ModalWrapper from '../components/ModalWrapper';
 
-import { userLogout, userLoginWithTokenThunk } from '../actions/user';
+import { userLogout } from '../actions/user';
+import { appStartThunk } from '../actions/app';
 
 import style from '../less/base.less';
 
@@ -16,13 +17,13 @@ function mapStateToProps(state){
 		user : state.user,
 		modal : state.modal,
 		menu : state.menu,
-		eddis : state.eddis
+		eddis : state.eddis,
 	};
 }
 
 function mapDispatchToProps(dispatch){
 	return {
-		loginWithToken : () => dispatch(userLoginWithTokenThunk()),
+		getInitialData : (eddiId) => dispatch(appStartThunk(eddiId)),
 		logout : () => dispatch(userLogout()),
 		dispatch : action => dispatch(action)
 	}
@@ -37,8 +38,9 @@ class App extends Component {
 	}
 
 	componentWillMount(){
-		const { loginWithToken } = this.props;
-		loginWithToken();
+		const { getInitialData, location } = this.props,
+			{ query={} } = location;
+		getInitialData(query.id);
 	}
 
 	_toggleMenu(isOpen){

@@ -2,7 +2,8 @@
 import {
 	USER_LOGIN,
 	USER_LOGOUT_SUCCESS,
-	USER_GETPROFILE_SUCCESS
+	USER_GETPROFILE_SUCCESS,
+	APP_START_SUCCESS
 } from '../constants';
 
 const initialState = {
@@ -10,8 +11,14 @@ const initialState = {
 };
 
 export default function(state = initialState, action = {}){
-	const { type, user = {} } = action;
+	const { type, user={} } = action;
 	switch(type){
+	case APP_START_SUCCESS: 
+		console.log('app start');
+		return {
+			...state,
+			...user
+		};
 	case USER_GETPROFILE_SUCCESS : 
 		console.log('user logged in');
 		return {

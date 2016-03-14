@@ -26605,6 +26605,9 @@
 		var user = _action$user === undefined ? {} : _action$user;
 
 		switch (type) {
+			case _constants.APP_START_SUCCESS:
+				console.log('app start');
+				return _extends({}, state, user);
 			case _constants.USER_GETPROFILE_SUCCESS:
 				console.log('user logged in');
 				return _extends({}, state, user);
@@ -26640,6 +26643,13 @@
 		TROUBLESHOOT: '/troubleshoot'
 	};
 
+	var QUERY = exports.QUERY = {
+		SALINITY_IN: 'in',
+		SALINITY_OUT: 'out',
+		FLOW: 'flow',
+		POWER: 'power'
+	};
+
 	//User Related
 	var USER_LOGIN_SUCCESS = exports.USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 	var USER_LOGIN_ERROR = exports.USER_LOGIN_ERROR = 'USER_LOGIN_ERROR';
@@ -26660,6 +26670,10 @@
 	var EDDI_GETONE_SUCCESS = exports.EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
+
+	// App Related
+	var APP_START_SUCCESS = exports.APP_START_SUCCESS = 'APP_START_SUCCESS';
+	var APP_START_ERROR = exports.APP_START_ERROR = 'APP_START_ERROR';
 
 	// Menu Related
 	var MENU_NAME_CHANGE = exports.MENU_NAME_CHANGE = 'MENU_NAME_CHANGE';
@@ -26696,6 +26710,11 @@
 		var newList = undefined;
 
 		switch (type) {
+			case _constants.APP_START_SUCCESS:
+				return _extends({}, state, {
+					list: list,
+					selected: selected
+				});
 			case _constants.EDDI_GETALL_SUCCESS:
 				console.log('eddi got all', list);
 				var newSelected = undefined;
@@ -27035,6 +27054,8 @@
 
 	var _user = __webpack_require__(291);
 
+	var _app = __webpack_require__(423);
+
 	var _base = __webpack_require__(293);
 
 	var _base2 = _interopRequireDefault(_base);
@@ -27058,8 +27079,8 @@
 
 	function mapDispatchToProps(_dispatch) {
 		return {
-			loginWithToken: function loginWithToken() {
-				return _dispatch((0, _user.userLoginWithTokenThunk)());
+			getInitialData: function getInitialData(eddiId) {
+				return _dispatch((0, _app.appStartThunk)(eddiId));
 			},
 			logout: function logout() {
 				return _dispatch((0, _user.userLogout)());
@@ -27087,9 +27108,13 @@
 		_createClass(App, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				var loginWithToken = this.props.loginWithToken;
+				var _props = this.props;
+				var getInitialData = _props.getInitialData;
+				var location = _props.location;
+				var _location$query = location.query;
+				var query = _location$query === undefined ? {} : _location$query;
 
-				loginWithToken();
+				getInitialData(query.id);
 			}
 		}, {
 			key: '_toggleMenu',
@@ -27115,13 +27140,13 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var _props = this.props;
-				var user = _props.user;
-				var modal = _props.modal;
-				var menu = _props.menu;
-				var eddis = _props.eddis;
-				var logout = _props.logout;
-				var dispatch = _props.dispatch;
+				var _props2 = this.props;
+				var user = _props2.user;
+				var modal = _props2.modal;
+				var menu = _props2.menu;
+				var eddis = _props2.eddis;
+				var logout = _props2.logout;
+				var dispatch = _props2.dispatch;
 				var isOpen = this.state.isOpen;
 				var children = this._cloneChildrenWithToggle();
 				return _react2.default.createElement(
@@ -31835,7 +31860,6 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).call(this, props));
 
 			_this.state = {};
-			// this.props.selectEddiById(props.location.query.id);
 			return _this;
 		}
 
@@ -46611,6 +46635,81 @@
 	}(_react.Component);
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
+
+/***/ },
+/* 423 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.appStartThunk = appStartThunk;
+
+	var _eddiFirebase = __webpack_require__(286);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	var _cookieStore = __webpack_require__(292);
+
+	var _cookieStore2 = _interopRequireDefault(_cookieStore);
+
+	var _constants = __webpack_require__(246);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EddiFire = (0, _eddiFirebase2.default)(),
+	    EddiCookie = (0, _cookieStore2.default)();
+
+	function appStartSuccess(user, list, selected) {
+		return {
+			type: _constants.APP_START_SUCCESS,
+			user: user,
+			list: list,
+			selected: selected
+		};
+	}
+
+	function appStartError(error) {
+		return {
+			type: _constants.APP_START_ERROR,
+			error: error
+		};
+	}
+
+	function appStartThunk(eddiId) {
+		return function (dispatch) {
+			var cookie = EddiCookie.getCookie() || {},
+			    token = cookie.token;
+			if (!token) return; //if there is no token, don't do anything
+			return EddiFire.authWithToken(token).then(function (user) {
+				//gets the user profile and eddis
+				var uid = user.uid;
+				var promises = [EddiFire.getUserProfile(uid), EddiFire.getAllEddiByUser(uid)];
+
+				return Promise.all(promises);
+			}).then(function (data) {
+				//after you got them all, dispatch for update all
+				var profile = data[0],
+				    list = data[1];
+				var selected = undefined;
+				if (list.length) {
+					var potential = list.filter(function (eddi) {
+						return eddi.id === eddiId;
+					})[0];
+					if (!potential) selected = list[0];else selected = potential;
+				}
+
+				dispatch(appStartSuccess(profile, list, selected));
+			}).catch(function (err) {
+				var code = err.code;
+
+				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
+				dispatch(appStartError(err));
+			});
+		};
+	}
 
 /***/ }
 /******/ ]);
