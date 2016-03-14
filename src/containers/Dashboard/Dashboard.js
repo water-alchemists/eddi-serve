@@ -41,10 +41,12 @@ class Dashboard extends Component {
 	}
 
 	render(){
-		const { eddi } = this.props;
+		console.log('this is he eddi', eddi);
+		const { eddi={} } = this.props,
+			{ id } = eddi;
 		return (
 			<div id="dashboard" className="page">
-				{'This is the dashboard page.'}
+				<DashboardMenu id={id} />
 				<SalinityGraph salinity={2000} />
 			</div>
 		);

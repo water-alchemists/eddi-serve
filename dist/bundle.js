@@ -31894,12 +31894,15 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var eddi = this.props.eddi;
+				console.log('this is he eddi', eddi);
+				var _props$eddi2 = this.props.eddi;
+				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
+				var id = eddi.id;
 
 				return _react2.default.createElement(
 					'div',
 					{ id: 'dashboard', className: 'page' },
-					'This is the dashboard page.',
+					_react2.default.createElement(_DashboardMenu2.default, { id: id }),
 					_react2.default.createElement(_SalinityGraph2.default, { salinity: 2000 })
 				);
 			}
@@ -46869,11 +46872,19 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(3);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(182);
+
+	var _constants = __webpack_require__(246);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46895,7 +46906,49 @@
 		_createClass(DashboardMenu, [{
 			key: 'render',
 			value: function render() {
-				return _react2.default.createElement('div', null);
+				var id = this.props.id;
+
+				console.log('this is the id', id);
+				return _react2.default.createElement(
+					'div',
+					{ style: styles.row },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } } },
+						_react2.default.createElement(
+							'div',
+							null,
+							'in'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } } },
+						_react2.default.createElement(
+							'div',
+							null,
+							'out'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } } },
+						_react2.default.createElement(
+							'div',
+							null,
+							'flow'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } } },
+						_react2.default.createElement(
+							'div',
+							null,
+							'power'
+						)
+					)
+				);
 			}
 		}]);
 
@@ -46903,10 +46956,19 @@
 	}(_react.Component);
 
 	DashboardMenu.propTypes = {
-		eddi: _react.PropTypes.shape({
-			id: _react.PropTypes.string.isRequired
-		}).isRequired
+		id: _react.PropTypes.string
 	};
+
+	var styles = {
+		row: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center'
+		}
+	};
+
+	exports.default = DashboardMenu;
 
 /***/ }
 /******/ ]);
