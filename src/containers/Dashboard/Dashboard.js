@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { menuNameChange } from '../../actions/menu';
 import { selectEddiById } from '../../actions/eddis';
 
+import SalinityGraph from '../../components/graphs/SalinityGraph';
+
 
 function mapStateToProps(state){
 	return {
@@ -40,6 +42,7 @@ class Dashboard extends Component {
 		return (
 			<div id="dashboard" className="page">
 				{'This is the dashboard page.'}
+				<SalinityGraph salinity={2000} />
 			</div>
 		);
 	}
