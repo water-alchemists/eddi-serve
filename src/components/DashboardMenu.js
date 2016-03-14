@@ -7,7 +7,6 @@ import { PATHS, QUERY } from '../constants';
 class DashboardMenu extends Component { 
 	render(){
 		const { id } = this.props;
-		console.log('this is the id', id);
  		return (
 			<div style={styles.row}>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_IN }} }>

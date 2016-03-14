@@ -46908,7 +46908,6 @@
 			value: function render() {
 				var id = this.props.id;
 
-				console.log('this is the id', id);
 				return _react2.default.createElement(
 					'div',
 					{ style: styles.row },
