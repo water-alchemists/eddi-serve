@@ -8,6 +8,10 @@ import { selectEddiById } from '../../actions/eddis';
 import SalinityGraph from '../../components/graphs/SalinityGraph';
 import DashboardMenu from '../../components/DashboardMenu';
 
+import style from './Dashboard.less';
+
+
+
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.selected
@@ -32,7 +36,7 @@ class Dashboard extends Component {
 		const { updateMenuName, eddi={} } = this.props;
 		if( eddi.id ) updateMenuName(eddi.settings.name);
 	}
-	
+
 	componentWillReceiveProps(newProps){
 		const { updateMenuName, eddi:oldEddi={} } = this.props,
 			{ eddi } = newProps;
