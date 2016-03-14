@@ -46468,9 +46468,24 @@
 		_createClass(Troubleshoot, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				var updateMenuName = this.props.updateMenuName;
+				var _props = this.props;
+				var updateMenuName = _props.updateMenuName;
+				var _props$eddi = _props.eddi;
+				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 
-				updateMenuName('Troubleshoot');
+				if (eddi.id) updateMenuName(eddi.settings.name);
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(newProps) {
+				var _props2 = this.props;
+				var updateMenuName = _props2.updateMenuName;
+				var _props2$eddi = _props2.eddi;
+				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
+				var eddi = newProps.eddi;
+
+
+				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
 			}
 		}, {
 			key: '_renderNoEddis',
@@ -46489,10 +46504,10 @@
 		}, {
 			key: '_renderSelected',
 			value: function _renderSelected() {
-				var _props = this.props;
-				var _props$eddi = _props.eddi;
-				var eddi = _props$eddi === undefined ? {} : _props$eddi;
-				var setEddiState = _props.setEddiState;
+				var _props3 = this.props;
+				var _props3$eddi = _props3.eddi;
+				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
+				var setEddiState = _props3.setEddiState;
 				var _eddi$settings = eddi.settings;
 				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 				var id = eddi.id;
@@ -46508,10 +46523,10 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var _props2 = this.props;
-				var eddi = _props2.eddi;
-				var eddiList = _props2.eddiList;
-				var setEddiState = _props2.setEddiState;
+				var _props4 = this.props;
+				var eddi = _props4.eddi;
+				var eddiList = _props4.eddiList;
+				var setEddiState = _props4.setEddiState;
 				var hasEddis = !!eddiList.length;
 
 				var TroubleshootElement = undefined;
@@ -46679,9 +46694,24 @@
 		_createClass(Report, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				var updateMenuName = this.props.updateMenuName;
+				var _props = this.props;
+				var updateMenuName = _props.updateMenuName;
+				var _props$eddi = _props.eddi;
+				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 
-				updateMenuName('Report');
+				if (eddi.id) updateMenuName(eddi.settings.name);
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(newProps) {
+				var _props2 = this.props;
+				var updateMenuName = _props2.updateMenuName;
+				var _props2$eddi = _props2.eddi;
+				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
+				var eddi = newProps.eddi;
+
+
+				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
 			}
 		}, {
 			key: 'render',

@@ -24,8 +24,15 @@ function mapDispatchToProps(dispatch){
 
 class Troubleshoot extends Component {
 	componentWillMount(){
-		const { updateMenuName } = this.props;
-		updateMenuName('Troubleshoot');
+		const { updateMenuName, eddi={} } = this.props;
+		if( eddi.id ) updateMenuName(eddi.settings.name);
+	}
+
+	componentWillReceiveProps(newProps){
+		const { updateMenuName, eddi:oldEddi={} } = this.props,
+			{ eddi } = newProps;
+
+		if( eddi.id !== oldEddi.id ) updateMenuName(eddi.settings.name);
 	}
 
 	_renderNoEddis(){
