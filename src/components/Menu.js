@@ -32,11 +32,22 @@ class Menu extends Component {
 
 		if( list instanceof Array && list.length ){
 		  	menuOptions = [
-				<Link to={PATHS.LIST}>Home</Link>,
-				<Link to={{ pathname : PATHS.DASHBOARD, query }}>Dashboard</Link>,
-				<Link to={{ pathname : PATHS.REPORT, query }}>Report</Link>,
 				<Link to={ PATHS.SETTINGS }>Settings</Link>,
-				<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}>Troubleshoot</Link>,
+				(<Link to={{ pathname : PATHS.DASHBOARD, query }}
+					activeClassName='active'
+				>
+					Dashboard
+				</Link>),
+				(<Link to={{ pathname : PATHS.REPORT, query }}
+					activeClassName='active'
+				>
+					Report
+				</Link>),
+				(<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}
+					activeClassName='active'
+				>
+					Troubleshoot
+				</Link>),
 		  	];
 		}
 
@@ -46,6 +57,7 @@ class Menu extends Component {
 					onClick={ () => this.toggleMenu() } >
 					<div className="icon">☰</div>
 					<div className='menu-options'>
+						<Link to={PATHS.LIST}>Home</Link>
 						{ menuOptions }
 						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>

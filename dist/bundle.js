@@ -27240,23 +27240,25 @@
 				if (list instanceof Array && list.length) {
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: _constants.PATHS.LIST },
-						'Home'
-					), _react2.default.createElement(
-						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: query } },
-						'Dashboard'
-					), _react2.default.createElement(
-						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.REPORT, query: query } },
-						'Report'
-					), _react2.default.createElement(
-						_reactRouter.Link,
 						{ to: _constants.PATHS.SETTINGS },
 						'Settings'
 					), _react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.TROUBLESHOOT, query: query } },
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: query },
+							activeClassName: 'active'
+						},
+						'Dashboard'
+					), _react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.REPORT, query: query },
+							activeClassName: 'active'
+						},
+						'Report'
+					), _react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.TROUBLESHOOT, query: query },
+							activeClassName: 'active'
+						},
 						'Troubleshoot'
 					)];
 				}
@@ -27278,6 +27280,11 @@
 						_react2.default.createElement(
 							'div',
 							{ className: 'menu-options' },
+							_react2.default.createElement(
+								_reactRouter.Link,
+								{ to: _constants.PATHS.LIST },
+								'Home'
+							),
 							menuOptions,
 							_react2.default.createElement(
 								'a',
@@ -27375,7 +27382,7 @@
 
 
 	// module
-	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu .burger-menu .menu-options a.active {\n  color: white;\n  background-color: rgba(42, 191, 208, 0.5);\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
@@ -31831,6 +31838,10 @@
 	var _DashboardMenu = __webpack_require__(425);
 
 	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
+
+	var _Dashboard = __webpack_require__(426);
+
+	var _Dashboard2 = _interopRequireDefault(_Dashboard);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46910,10 +46921,12 @@
 
 				return _react2.default.createElement(
 					'div',
-					{ style: styles.row },
+					{ className: 'dashboard-menu' },
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } } },
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } },
+							activeClassName: 'active'
+						},
 						_react2.default.createElement(
 							'div',
 							null,
@@ -46922,7 +46935,9 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } } },
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_OUT } },
+							activeClassName: 'active'
+						},
 						_react2.default.createElement(
 							'div',
 							null,
@@ -46931,7 +46946,9 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } } },
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } },
+							activeClassName: 'active'
+						},
 						_react2.default.createElement(
 							'div',
 							null,
@@ -46940,7 +46957,9 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } } },
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } },
+							activeClassName: 'active'
+						},
 						_react2.default.createElement(
 							'div',
 							null,
@@ -46958,16 +46977,47 @@
 		id: _react.PropTypes.string
 	};
 
-	var styles = {
-		row: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'center'
-		}
-	};
-
 	exports.default = DashboardMenu;
+
+/***/ },
+/* 426 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(427);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(260)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Dashboard.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Dashboard.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 427 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(259)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 56px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #0d0e1f;\n  text-decoration: none;\n  text-align: center;\n  padding-top: 32px;\n  background-image: url('http://orig14.deviantart.net/f231/f/2015/030/6/c/salt_shaker_pixel_by_alfvie-d8g1phq.png');\n  background-size: 12px 20px;\n  background-position: center 6px;\n  background-repeat: no-repeat;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n", ""]);
+
+	// exports
+
 
 /***/ }
 /******/ ]);
