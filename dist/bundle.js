@@ -31824,6 +31824,14 @@
 
 	var _eddis = __webpack_require__(285);
 
+	var _SalinityGraph = __webpack_require__(424);
+
+	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
+
+	var _DashboardMenu = __webpack_require__(425);
+
+	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31891,7 +31899,8 @@
 				return _react2.default.createElement(
 					'div',
 					{ id: 'dashboard', className: 'page' },
-					'This is the dashboard page.'
+					'This is the dashboard page.',
+					_react2.default.createElement(_SalinityGraph2.default, { salinity: 2000 })
 				);
 			}
 		}]);
@@ -46752,6 +46761,152 @@
 			});
 		};
 	}
+
+/***/ },
+/* 424 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SIZE = 200;
+	var CENTER = SIZE / 2;
+
+	var DANGEROUS_SALINITY = 2000;
+
+	function colorAtPPM(ppm) {
+	  var ppmFactor = Math.min(1, ppm / DANGEROUS_SALINITY);
+	  var red = Math.round(42 + 129 * ppmFactor);
+	  var green = Math.round(191 - 138 * ppmFactor);
+	  var blue = Math.round(208 - 172 * ppmFactor);
+	  return 'rgba(' + red + ', ' + green + ', ' + blue + ', 1)';
+	}
+
+	var SalinityGraph = function (_Component) {
+	  _inherits(SalinityGraph, _Component);
+
+	  function SalinityGraph() {
+	    _classCallCheck(this, SalinityGraph);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(SalinityGraph).apply(this, arguments));
+	  }
+
+	  _createClass(SalinityGraph, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.canvas = this.refs.canvas;
+	      this.context = this.canvas.getContext('2d');
+	      this.paint(this.props.salinity);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps) {
+	      this.paint(newProps.salinity);
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate() {
+	      return false;
+	    }
+	  }, {
+	    key: 'paint',
+	    value: function paint(ppm) {
+	      var context = this.context;
+	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	      var density = ppm / 200;
+	      for (var ix = 0; ix < density; ix++) {
+	        var radius = ix * (CENTER / density);
+	        var angleIncr = 60 / ix;
+	        var color = colorAtPPM(radius / CENTER * ppm);
+	        console.log("color: " + color);
+	        for (var ir = 0; ir < 360; ir += angleIncr) {
+	          var centerX = CENTER + radius * Math.sin(Math.PI * ((ix * 2 + ir) / 180));
+	          var centerY = CENTER + radius * Math.cos(Math.PI * ((ix * 2 + ir) / 180));
+	          context.beginPath();
+	          context.arc(centerX, centerY, 2, 0, 2 * Math.PI, false);
+	          context.fillStyle = color;
+	          context.fill();
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('canvas', { ref: 'canvas', height: SIZE, width: SIZE });
+	    }
+	  }]);
+
+	  return SalinityGraph;
+	}(_react.Component);
+
+	exports.default = SalinityGraph;
+
+
+	SalinityGraph.defaultProps = {
+	  salinity: 0
+	};
+
+/***/ },
+/* 425 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DashboardMenu = function (_Component) {
+		_inherits(DashboardMenu, _Component);
+
+		function DashboardMenu() {
+			_classCallCheck(this, DashboardMenu);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardMenu).apply(this, arguments));
+		}
+
+		_createClass(DashboardMenu, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement('div', null);
+			}
+		}]);
+
+		return DashboardMenu;
+	}(_react.Component);
+
+	DashboardMenu.propTypes = {
+		eddi: _react.PropTypes.shape({
+			id: _react.PropTypes.string.isRequired
+		}).isRequired
+	};
 
 /***/ }
 /******/ ]);
