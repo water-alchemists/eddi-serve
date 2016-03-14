@@ -27,7 +27,7 @@ class Menu extends Component {
 			query = {
 				id : selected.id
 			};
-
+			console.log('this is the menu', menu, name);
 		let menuOptions;
 
 		if( list instanceof Array && list.length ){

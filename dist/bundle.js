@@ -27234,7 +27234,7 @@
 				var query = {
 					id: selected.id
 				};
-
+				console.log('this is the menu', menu, name);
 				var menuOptions = undefined;
 
 				if (list instanceof Array && list.length) {
@@ -31905,7 +31905,6 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				console.log('this is he eddi', eddi);
 				var _props$eddi2 = this.props.eddi;
 				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
 				var id = eddi.id;
@@ -46742,6 +46741,8 @@
 	});
 	exports.appStartThunk = appStartThunk;
 
+	var _reactRouter = __webpack_require__(182);
+
 	var _eddiFirebase = __webpack_require__(286);
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
@@ -46777,7 +46778,7 @@
 		return function (dispatch) {
 			var cookie = EddiCookie.getCookie() || {},
 			    token = cookie.token;
-			if (!token) return; //if there is no token, don't do anything
+			if (!token) return _reactRouter.browserHistory.push(_constants.PATHS.HOME); //if there is no token, return the user to home
 			return EddiFire.authWithToken(token).then(function (user) {
 				//gets the user profile and eddis
 				var uid = user.uid;
@@ -46802,6 +46803,7 @@
 
 				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
 				dispatch(appStartError(err));
+				dispatch();
 			});
 		};
 	}

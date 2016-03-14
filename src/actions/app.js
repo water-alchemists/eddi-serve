@@ -1,6 +1,10 @@
 'use strict';
+import { browserHistory } from 'react-router';
+
 import EddiFireStarter from '../modules/eddi-firebase';
 import CookieStoreMaker from '../modules/cookie-store';
+
+import { PATHS } from '../constants';
 
 import { 
 	APP_START_SUCCESS,
@@ -30,7 +34,7 @@ export function appStartThunk(eddiId){
 	return dispatch => {
 		const cookie = EddiCookie.getCookie() || {},
 			token = cookie.token;
-		if(!token) return; //if there is no token, don't do anything
+		if(!token) return browserHistory.push(PATHS.HOME); //if there is no token, return the user to home
 		return EddiFire.authWithToken(token)
 			.then(user => {
 				//gets the user profile and eddis
@@ -59,7 +63,8 @@ export function appStartThunk(eddiId){
 			.catch(err => {
 				const { code } = err;
 				if(code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
-				dispatch(appStartError(err))
+				dispatch(appStartError(err));
+				dispatch()
 			});
 		
 	}

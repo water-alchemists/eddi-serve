@@ -45,7 +45,6 @@ class Dashboard extends Component {
 	}
 
 	render(){
-		console.log('this is he eddi', eddi);
 		const { eddi={} } = this.props,
 			{ id } = eddi;
 		return (
