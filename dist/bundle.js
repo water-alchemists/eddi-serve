@@ -32187,6 +32187,7 @@
 	  }, {
 	    key: 'paint',
 	    value: function paint(ppm) {
+	      ppm = Math.min(ppm, 4000);
 	      var context = this.context;
 	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	      var density = ppm / 200;
