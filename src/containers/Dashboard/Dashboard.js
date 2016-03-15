@@ -82,7 +82,8 @@ class Dashboard extends Component {
 			threshold = eddi.settings.salinity;
 
 		return (
-			<DashboardSalinity threshold={threshold}
+			<DashboardSalinity key={direction} 
+				threshold={threshold}
 				current={current}
 				direction={direction}
 			/>

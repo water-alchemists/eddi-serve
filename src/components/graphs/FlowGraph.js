@@ -98,7 +98,7 @@ export default class FlowGraph extends Component {
   }
 
   render(){
-    return <canvas ref="canvas" height={SIZE} width={SIZE} />
+    return <canvas ref="canvas" className='flow-graph' height={SIZE} width={SIZE} />
   }
 
 }
