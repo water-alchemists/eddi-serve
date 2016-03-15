@@ -7,9 +7,9 @@ import { selectEddiById } from '../../actions/eddis';
 
 import { QUERY } from '../../constants';
 
-import FlowGraph from '../../components/graphs/FlowGraph';
 import DashboardMenu from '../../components/DashboardMenu';
-import DashboardSalinityOut from '../../components/DashboardSalinityOut';
+import DashboardSalinity from '../../components/DashboardSalinity';
+import DashboardFlow from '../../components/DashboardFlow';
 
 import style from './Dashboard.less';
 
@@ -77,14 +77,21 @@ class Dashboard extends Component {
 		}
 	}
 
-	_renderSalinity(current){
+	_renderSalinity(current, direction){
 		const { eddi={} } = this.props,
 			threshold = eddi.settings.salinity;
 
 		return (
-			<DashboardSalinityOut threshold={threshold}
+			<DashboardSalinity threshold={threshold}
 				current={current}
+				direction={direction}
 			/>
+		);
+	}
+
+	_renderFlow(){
+		return (
+			<DashboardFlow />
 		);
 	}
 
@@ -94,10 +101,11 @@ class Dashboard extends Component {
 		if(eddi.settings){
 			switch(view){
 			case QUERY.SALINITY_OUT:
-				return this._renderSalinity(current.ppmOut);
-				break;
+				return this._renderSalinity(current.ppmOut, 'output');
 			case QUERY.SALINITY_IN:
-				return this._renderSalinity(current.ppmIn)
+				return this._renderSalinity(current.ppmIn, 'input');
+			case QUERY.FLOW:
+				return this._renderFlow();
 			default:
 				return null;
 			}
@@ -111,12 +119,11 @@ class Dashboard extends Component {
 			{ view } = location.query;
 
 		let DashboardElement = this._renderViewBasedQuery(view);
-
 		return (
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} />
 				{ DashboardElement }
-				<FlowGraph rate={3} />
+				
 			</div>
 		);
 	}
