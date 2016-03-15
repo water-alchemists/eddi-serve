@@ -32145,7 +32145,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var SIZE = 200;
+	var SIZE = 120;
 	var CENTER = SIZE / 2;
 
 	var DANGEROUS_SALINITY = 2000;
@@ -32190,7 +32190,7 @@
 	      ppm = Math.min(ppm, 4000);
 	      var context = this.context;
 	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	      var density = ppm / 200;
+	      var density = ppm / 400;
 	      for (var ix = 0; ix < density; ix++) {
 	        var radius = ix * (CENTER / density);
 	        var angleIncr = 60 / ix;
@@ -32208,7 +32208,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('canvas', { ref: 'canvas', height: SIZE, width: SIZE });
+	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'salinity-graph', height: SIZE, width: SIZE });
 	    }
 	  }]);
 
@@ -32347,7 +32347,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('canvas', { ref: 'canvas', height: SIZE, width: SIZE });
+	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'flow-graph', height: SIZE, width: SIZE });
 	    }
 	  }]);
 
@@ -32498,7 +32498,7 @@
 
 
 	// module
-	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 56px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #0d0e1f;\n  text-decoration: none;\n  text-align: center;\n  padding-top: 32px;\n  background-image: url('http://orig14.deviantart.net/f231/f/2015/030/6/c/salt_shaker_pixel_by_alfvie-d8g1phq.png');\n  background-size: 12px 20px;\n  background-position: center 6px;\n  background-repeat: no-repeat;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n", ""]);
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #006d60;\n  text-decoration: none;\n  text-align: center;\n  padding-top: 42px;\n  background-image: url('http://orig14.deviantart.net/f231/f/2015/030/6/c/salt_shaker_pixel_by_alfvie-d8g1phq.png');\n  background-size: 12px 20px;\n  background-position: center 16px;\n  background-repeat: no-repeat;\n  text-transform: uppercase;\n  font-size: 15px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n", ""]);
 
 	// exports
 
@@ -47364,22 +47364,17 @@
 				var status = current > threshold ? generateBadText() : generateGoodText();
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'dashboard-view salinity' },
 					_react2.default.createElement(
 						'div',
-						{ style: styles.row },
+						{ className: 'dashboard-current' },
 						_react2.default.createElement(
 							'div',
-							null,
+							{ className: 'dashboard-current-numbers' },
 							_react2.default.createElement(
 								'h1',
 								null,
-								'SALINITY'
-							),
-							_react2.default.createElement(
-								'h1',
-								null,
-								'OUTPUT'
+								'Salinity Output'
 							),
 							_react2.default.createElement(
 								'h3',
@@ -47392,24 +47387,24 @@
 								'parts per million'
 							)
 						),
-						_react2.default.createElement(_SalinityGraph2.default, { salinity: current })
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Your current level of salinity for the water your EDDI is pushing out is',
+						_react2.default.createElement(_SalinityGraph2.default, { salinity: current }),
 						_react2.default.createElement(
-							'span',
-							null,
-							' ' + current + ' ppm. '
-						),
-						'Your current threshold is set at',
-						_react2.default.createElement(
-							'span',
-							null,
-							' ' + threshold + ' ppm, '
-						),
-						'' + status
+							'p',
+							{ className: 'dashboard-note' },
+							'Your current level of salinity for the water your EDDI is pushing out is',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + current + ' ppm. '
+							),
+							'Your current threshold is set at',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + threshold + ' ppm, '
+							),
+							'' + status
+						)
 					)
 				);
 			}
@@ -47421,15 +47416,6 @@
 	DashboardSalinityOut.propTypes = {
 		threshold: _react.PropTypes.number.isRequired,
 		current: _react.PropTypes.number.isRequired
-	};
-
-	var styles = {
-		row: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'flex-start'
-		}
 	};
 
 	exports.default = DashboardSalinityOut;

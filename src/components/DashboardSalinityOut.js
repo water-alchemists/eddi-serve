@@ -15,24 +15,24 @@ class DashboardSalinityOut extends Component {
 		const { threshold, current } = this.props,
 			status = current > threshold ? generateBadText() : generateGoodText();
 		return (
-			<div>
-				<div style={styles.row}>
-					<div>
-						<h1>SALINITY</h1>
-						<h1>OUTPUT</h1>
+			<div className='dashboard-view salinity'>
+				<div className='dashboard-current'>
+					<div className='dashboard-current-numbers'>
+						<h1>Salinity Output</h1>
 						<h3>{`${current}`}</h3>
 						<p>parts per million</p>
 					</div>
 					<SalinityGraph salinity={current}/>
+					<p className='dashboard-note'>
+						Your current level of salinity for the water your EDDI
+						is pushing out is
+						<span>{` ${current} ppm. `}</span>
+						Your current threshold is set at
+						<span>{` ${threshold} ppm, `}</span>
+						{`${status}`}
+					</p>
 				</div>
-				<p>
-					Your current level of salinity for the water your EDDI
-					is pushing out is 
-					<span>{` ${current} ppm. `}</span>
-					Your current threshold is set at
-					<span>{` ${threshold} ppm, `}</span>
-					{`${status}`}
-				</p>
+
 			</div>
 		);
 	}
@@ -43,13 +43,5 @@ DashboardSalinityOut.propTypes = {
 	current : PropTypes.number.isRequired,
 };
 
-const styles = {
-	row : {
-		display : 'flex', 
-		flexDirection : 'row',
-		justifyContent : 'space-between',
-		alignItems : 'flex-start'
-	}
-}
 
 export default DashboardSalinityOut;
