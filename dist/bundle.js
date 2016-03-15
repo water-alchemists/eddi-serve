@@ -31245,8 +31245,6 @@
 
 	var _user = __webpack_require__(291);
 
-	var _menu = __webpack_require__(299);
-
 	var _Home = __webpack_require__(300);
 
 	var _Home2 = _interopRequireDefault(_Home);
@@ -31284,9 +31282,6 @@
 			},
 			signup: function signup(user) {
 				return dispatch((0, _user.userCreateThunk)(user));
-			},
-			updateMenuName: function updateMenuName(name) {
-				return dispatch((0, _menu.menuNameChange)(name));
 			}
 		};
 	}
@@ -31298,10 +31293,6 @@
 			_classCallCheck(this, Home);
 
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props));
-
-			var updateMenuName = _this.props.updateMenuName;
-
-			updateMenuName('Home');
 
 			_this.state = {
 				mode: Modes.BASE

@@ -11,7 +11,6 @@ import SignupForm from '../../components/SignupForm';
 
 import { getAllEddiByUserThunk } from '../../actions/eddis';
 import { userLoginWithPasswordThunk, userCreateThunk } from '../../actions/user';
-import { menuNameChange } from '../../actions/menu';
 
 import style from './Home.less';
 
@@ -36,7 +35,6 @@ function mapDispatchToProps(dispatch){
 		navigateTo: (pathname, query) => browserHistory.push({ pathname, query }),
 		login: ({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password)),
 		signup: (user) => dispatch(userCreateThunk(user)),
-		updateMenuName: (name) => dispatch(menuNameChange(name)),
 	};
 }
 
@@ -47,9 +45,6 @@ function mapDispatchToProps(dispatch){
 class Home extends Component {
 	constructor(props){
 		super(props);
-		const { updateMenuName } = this.props;
-		updateMenuName('Home');
-		
 		this.state = {
 			mode: Modes.BASE
 		};

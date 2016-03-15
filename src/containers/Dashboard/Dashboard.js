@@ -10,8 +10,6 @@ import DashboardMenu from '../../components/DashboardMenu';
 
 import style from './Dashboard.less';
 
-
-
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.selected
@@ -51,6 +49,7 @@ class Dashboard extends Component {
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} />
 				<SalinityGraph salinity={2000} />
+
 			</div>
 		);
 	}
