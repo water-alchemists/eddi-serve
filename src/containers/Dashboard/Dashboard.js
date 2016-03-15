@@ -65,7 +65,7 @@ class Dashboard extends Component {
 		const { updateMenuName, eddi:oldEddi={}, location } = this.props,
 			{ eddi } = newProps;
 
-		if( eddi.id !== oldEddi.id ) { 
+		if( eddi.id !== oldEddi.id ) {
 			updateMenuName(eddi.settings.name);
 			if(eddi.readings){
 				//format the readings into an array for data handling
@@ -89,7 +89,7 @@ class Dashboard extends Component {
 		);
 	}
 
-	_renderFlow(){
+	_renderFlow(current){
 		return (
 			<DashboardFlow />
 		);
@@ -102,10 +102,13 @@ class Dashboard extends Component {
 			switch(view){
 			case QUERY.SALINITY_OUT:
 				return this._renderSalinity(current.ppmOut, 'output');
+				break;
 			case QUERY.SALINITY_IN:
 				return this._renderSalinity(current.ppmIn, 'input');
+				break;
 			case QUERY.FLOW:
-				return this._renderFlow();
+				return this._renderFlow(current.qOut);
+				break;
 			default:
 				return null;
 			}
@@ -123,7 +126,6 @@ class Dashboard extends Component {
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} />
 				{ DashboardElement }
-				
 			</div>
 		);
 	}
