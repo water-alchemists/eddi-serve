@@ -42,7 +42,6 @@ export default class SalinityGraph extends Component {
       let radius = (ix * ((CENTER)/density));
       let angleIncr = 60 / ix;
       let color = colorAtPPM((radius / CENTER) * ppm);
-      console.log("color: "+color);
       for( let ir=0; ir < 360; ir += angleIncr ){
         var centerX = CENTER + (radius * Math.sin(Math.PI * (((ix*2)+ir)/180)));
         var centerY = CENTER + (radius * Math.cos(Math.PI * (((ix*2)+ir)/180)));

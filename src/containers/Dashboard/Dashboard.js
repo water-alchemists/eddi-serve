@@ -6,6 +6,7 @@ import { menuNameChange } from '../../actions/menu';
 import { selectEddiById } from '../../actions/eddis';
 
 import SalinityGraph from '../../components/graphs/SalinityGraph';
+import FlowGraph from '../../components/graphs/FlowGraph';
 import DashboardMenu from '../../components/DashboardMenu';
 
 import style from './Dashboard.less';
@@ -51,6 +52,7 @@ class Dashboard extends Component {
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} />
 				<SalinityGraph salinity={2000} />
+				<FlowGraph rate={3} />
 			</div>
 		);
 	}
