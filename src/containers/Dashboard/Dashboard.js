@@ -7,6 +7,7 @@ import { selectEddiById } from '../../actions/eddis';
 
 import { QUERY } from '../../constants';
 
+import FlowGraph from '../../components/graphs/FlowGraph';
 import DashboardMenu from '../../components/DashboardMenu';
 import DashboardSalinityOut from '../../components/DashboardSalinityOut';
 
@@ -115,6 +116,7 @@ class Dashboard extends Component {
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} />
 				{ DashboardElement }
+				<FlowGraph rate={3} />
 			</div>
 		);
 	}

@@ -48,3 +48,6 @@ export const MENU_NAME_CHANGE = 'MENU_NAME_CHANGE';
 //Modal Related
 export const MODAL_ON = 'MODAL_ON';
 export const MODAL_OFF = 'MODAL_OFF';
+
+// Style Related
+export const BACKGROUND_COLOR = "rgba(13,14,31,1)";

@@ -26679,6 +26679,9 @@
 	var MODAL_ON = exports.MODAL_ON = 'MODAL_ON';
 	var MODAL_OFF = exports.MODAL_OFF = 'MODAL_OFF';
 
+	// Style Related
+	var BACKGROUND_COLOR = exports.BACKGROUND_COLOR = "rgba(13,14,31,1)";
+
 /***/ },
 /* 247 */
 /***/ function(module, exports, __webpack_require__) {
@@ -31826,6 +31829,10 @@
 
 	var _constants = __webpack_require__(246);
 
+	var _FlowGraph = __webpack_require__(429);
+
+	var _FlowGraph2 = _interopRequireDefault(_FlowGraph);
+
 	var _DashboardMenu = __webpack_require__(425);
 
 	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
@@ -31979,7 +31986,8 @@
 					'div',
 					{ id: 'dashboard', className: 'page' },
 					_react2.default.createElement(_DashboardMenu2.default, { id: id }),
-					DashboardElement
+					DashboardElement,
+					_react2.default.createElement(_FlowGraph2.default, { rate: 3 })
 				);
 			}
 		}]);
@@ -46947,7 +46955,6 @@
 	        var radius = ix * (CENTER / density);
 	        var angleIncr = 60 / ix;
 	        var color = colorAtPPM(radius / CENTER * ppm);
-	        console.log("color: " + color);
 	        for (var ir = 0; ir < 360; ir += angleIncr) {
 	          var centerX = CENTER + radius * Math.sin(Math.PI * ((ix * 2 + ir) / 180));
 	          var centerY = CENTER + radius * Math.cos(Math.PI * ((ix * 2 + ir) / 180));
@@ -47240,6 +47247,145 @@
 	};
 
 	exports.default = DashboardSalinityOut;
+
+/***/ },
+/* 429 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _constants = __webpack_require__(246);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SIZE = 200;
+	var CENTER = SIZE / 2;
+	var LINE_THICKNESS = 30;
+	var BASE10 = Math.log(10);
+
+	//slow is 0.3, medium is 3, fast is 30
+
+	function colorForRate(rate) {
+	  if (rate < 0.3) {
+	    rate = 0.3;
+	  } else if (rate > 30) {
+	    rate = 30;
+	  }
+	  var rateFactor = Math.abs(Math.log(rate / 3) / BASE10);
+	  return colorForFactor(rateFactor);
+	}
+
+	function colorForAnglePi(anglePi) {
+	  // angle without pi factor
+	  //var angleFactor = Math.abs(anglePi - 1.5) / 0.7;
+	  var angleFactor = (anglePi - 0.8) / 1.4;
+	  return colorForFactor(angleFactor);
+	}
+
+	function colorForFactor(factor) {
+	  // factor is 0 to 1
+	  var red = Math.round(42 + 129 * factor);
+	  var green = Math.round(191 - 138 * factor);
+	  var blue = Math.round(208 - 172 * factor);
+	  return 'rgba(' + red + ', ' + green + ', ' + blue + ', 1)';
+	}
+
+	function angleForRate(rate) {
+	  if (rate < 0.3) {
+	    rate = 0.3;
+	  } else if (rate > 30) {
+	    rate = 30;
+	  }
+
+	  var logMult = (Math.log(rate / 3) / BASE10 + 1) / 2; // goes from 0 to 1
+	  return (logMult * 1.4 + 0.8) * Math.PI;
+	}
+
+	var FlowGraph = function (_Component) {
+	  _inherits(FlowGraph, _Component);
+
+	  function FlowGraph() {
+	    _classCallCheck(this, FlowGraph);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(FlowGraph).apply(this, arguments));
+	  }
+
+	  _createClass(FlowGraph, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.canvas = this.refs.canvas;
+	      this.context = this.canvas.getContext('2d');
+	      this.paint(this.props.rate);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps) {
+	      this.paint(newProps.rate);
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate() {
+	      return false;
+	    }
+	  }, {
+	    key: 'paint',
+	    value: function paint(rate) {
+	      var context = this.context;
+	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+	      context.lineWidth = LINE_THICKNESS;
+	      for (var ix = 0.9; ix < 2.3; ix += 0.2) {
+	        context.strokeStyle = colorForAnglePi(ix);
+	        context.beginPath();
+	        context.arc(CENTER, CENTER, 0.8 * CENTER, (ix - 0.1) * Math.PI, (ix + 0.1) * Math.PI, false);
+	        context.stroke();
+	      }
+
+	      var pointEdge = 0.8 * CENTER - 4;
+	      var baseEdge = 0.8 * CENTER - LINE_THICKNESS / 1.9;
+	      var angle = angleForRate(rate);
+	      var baseAngleA = angle - 0.2;
+	      var baseAngleB = angle + 0.2;
+	      context.fillStyle = _constants.BACKGROUND_COLOR;
+	      context.beginPath();
+	      context.moveTo(CENTER + pointEdge * Math.cos(angle), CENTER + pointEdge * Math.sin(angle));
+	      context.lineTo(CENTER + baseEdge * Math.cos(baseAngleA), CENTER + baseEdge * Math.sin(baseAngleA));
+	      context.lineTo(CENTER + baseEdge * Math.cos(baseAngleB), CENTER + baseEdge * Math.sin(baseAngleB));
+	      context.closePath();
+	      context.fill();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('canvas', { ref: 'canvas', height: SIZE, width: SIZE });
+	    }
+	  }]);
+
+	  return FlowGraph;
+	}(_react.Component);
+
+	exports.default = FlowGraph;
+
+
+	FlowGraph.defaultProps = {
+	  salinity: 0
+	};
 
 /***/ }
 /******/ ]);
