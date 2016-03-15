@@ -32060,7 +32060,8 @@
 				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
 				var threshold = eddi.settings.salinity;
 
-				return _react2.default.createElement(_DashboardSalinity2.default, { threshold: threshold,
+				return _react2.default.createElement(_DashboardSalinity2.default, { key: direction,
+					threshold: threshold,
 					current: current,
 					direction: direction
 				});
