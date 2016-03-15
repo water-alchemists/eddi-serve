@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import Menu from '../components/Menu';
 import ModalWrapper from '../components/ModalWrapper';
 
-import { userLogout, userLoginWithTokenThunk } from '../actions/user';
+import { userLogout } from '../actions/user';
+import { appStartThunk } from '../actions/app';
 
 import style from '../less/base.less';
 
@@ -14,13 +15,15 @@ import style from '../less/base.less';
 function mapStateToProps(state){
 	return {
 		user : state.user,
-		modal : state.modal
+		modal : state.modal,
+		menu : state.menu,
+		eddis : state.eddis,
 	};
 }
 
 function mapDispatchToProps(dispatch){
 	return {
-		loginWithToken : () => dispatch(userLoginWithTokenThunk()),
+		getInitialData : (eddiId) => dispatch(appStartThunk(eddiId)),
 		logout : () => dispatch(userLogout()),
 		dispatch : action => dispatch(action)
 	}
@@ -35,8 +38,9 @@ class App extends Component {
 	}
 
 	componentWillMount(){
-		const { loginWithToken } = this.props;
-		loginWithToken();
+		const { getInitialData, location } = this.props,
+			{ query={} } = location;
+		getInitialData(query.id);
 	}
 
 	_toggleMenu(isOpen){
@@ -53,7 +57,7 @@ class App extends Component {
 	}
 
 	render(){
-		const { user, logout, modal, dispatch } = this.props,
+		const { user, modal, menu, eddis, logout,  dispatch } = this.props,
 			{ isOpen } = this.state,
 			children = this._cloneChildrenWithToggle();
 		return (
@@ -61,6 +65,8 @@ class App extends Component {
 				<Menu isOpen={isOpen}
 					logout={logout}
 					user={user}
+					eddis={eddis}
+					menu={menu}
 				/>
 				{children}
 				<ModalWrapper dispatch={dispatch}

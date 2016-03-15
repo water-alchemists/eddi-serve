@@ -1,7 +1,7 @@
 @import './vars';
 
 #menu{
-  background-color: @background_color;
+  background-color: @dark_color;
   height: @navbar_height;
   position: fixed;
     top: 0;
@@ -50,6 +50,10 @@
         color: black;
         display: block;
         padding: 8px;
+        &.active{
+          color: white;
+          background-color: @true_blue_lite;
+        }
       }
     }
   }

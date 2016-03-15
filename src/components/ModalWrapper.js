@@ -43,8 +43,9 @@ class ModalWrapper extends Component {
 
 		return (
 			<Modal 	isOpen={on}
-							onRequestClose={() => this.closeModal()}
-							style={customStyles}>
+				onRequestClose={() => this.closeModal()}
+				style={customStyles}
+			>
 				{ContentElement}
 			</Modal>
 		);

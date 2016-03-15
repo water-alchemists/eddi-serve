@@ -5,41 +5,127 @@ import { connect } from 'react-redux';
 import { menuNameChange } from '../../actions/menu';
 import { selectEddiById } from '../../actions/eddis';
 
+import { QUERY } from '../../constants';
 
+import DashboardMenu from '../../components/DashboardMenu';
+import DashboardSalinity from '../../components/DashboardSalinity';
+import DashboardFlow from '../../components/DashboardFlow';
 
+import style from './Dashboard.less';
 
 function mapStateToProps(state){
 	return {
-		eddi : state.eddis.selected
+		eddi : state.eddis.selected,
 	};
 }
 
 function mapDispatchToProps(dispatch){
 	return {
-		menuName:	(name) => dispatch(menuNameChange(name)),
+		updateMenuName:	(name) => dispatch(menuNameChange(name)),
 		selectEddiById: (eddi) => dispatch(selectEddiById(eddi)),
 	};
 }
 
-class Dashboard extends Component {
+function mapDateToReadings(readings){
+	return Object.keys(readings)
+		.map(utc => {
+			return {
+				...readings[utc],
+				date : new Date(utc * 1000)
+			}
+		})
+		.sort((a,b) => a.date > b.date);
+}
 
+class Dashboard extends Component {
 	constructor(props){
 		super(props);
-		this.state = {};
-		// this.props.selectEddiById(props.location.query.id);
+		this.state = {
+			readings : [],
+			current : {}
+		};
 	}
 
-	componentWillReceiveProps(newProps){
-		if( newProps.eddi ){
-			newProps.menuName(newProps.eddi.settings.name);
+	componentWillMount(){
+		const { updateMenuName, eddi={} } = this.props;
+		if( eddi.id ) {
+			console.log('i am here');
+			updateMenuName(eddi.settings.name);
+			if(eddi.readings){
+				//format the readings into an array for data handling
+				const readings = mapDateToReadings(eddi.readings),
+					current = readings[readings.length - 1];
+				console.log('these are the readings', readings, current);
+				this.setState({ readings, current });
+			}
 		}
 	}
 
+	componentWillReceiveProps(newProps){
+		const { updateMenuName, eddi:oldEddi={}, location } = this.props,
+			{ eddi } = newProps;
+
+		if( eddi.id !== oldEddi.id ) {
+			updateMenuName(eddi.settings.name);
+			if(eddi.readings){
+				//format the readings into an array for data handling
+				const readings = mapDateToReadings(eddi.readings),
+					current = readings[readings.length - 1];
+				console.log('these are the readings', readings, current);
+				this.setState({ readings, current });
+			}
+		}
+	}
+
+	_renderSalinity(current, direction){
+		const { eddi={} } = this.props,
+			threshold = eddi.settings.salinity;
+
+		return (
+			<DashboardSalinity threshold={threshold}
+				current={current}
+				direction={direction}
+			/>
+		);
+	}
+
+	_renderFlow(current){
+		return (
+			<DashboardFlow />
+		);
+	}
+
+	_renderViewBasedQuery(view){
+		const { eddi={} } = this.props,
+			{ current } = this.state;
+		if(eddi.settings){
+			switch(view){
+			case QUERY.SALINITY_OUT:
+				return this._renderSalinity(current.ppmOut, 'output');
+				break;
+			case QUERY.SALINITY_IN:
+				return this._renderSalinity(current.ppmIn, 'input');
+				break;
+			case QUERY.FLOW:
+				return this._renderFlow(current.qOut);
+				break;
+			default:
+				return null;
+			}
+		}
+		return null;
+	}
+
 	render(){
-		const { eddi } = this.props;
+		const { eddi={}, location={} } = this.props,
+			{ id } = eddi,
+			{ view } = location.query;
+
+		let DashboardElement = this._renderViewBasedQuery(view);
 		return (
 			<div id="dashboard" className="page">
-				{'This is the dashboard page.'}
+				<DashboardMenu id={id} />
+				{ DashboardElement }
 			</div>
 		);
 	}

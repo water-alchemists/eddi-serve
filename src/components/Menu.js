@@ -1,20 +1,9 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
-import { connect } from 'react-redux';
 import { PATHS } from '../constants';
 
 import style from '../less/Menu.less';
-
-
-
-function mapStateToProps(state){
-	return {
-		menu : state.menu,
-		eddis: state.eddis.list
-	};
-}
-
 
 class Menu extends Component {
 
@@ -32,29 +21,48 @@ class Menu extends Component {
 	}
 
 	_renderLoggedIn(){
-		var menuOptions;
-		if( this.props.eddis ){
+		const { menu, eddis } = this.props,
+			{ name='' } = menu,
+			{ list, selected={} }  = eddis,
+			query = {
+				id : selected.id
+			};
+			console.log('this is the menu', menu, name);
+		let menuOptions;
+
+		if( list instanceof Array && list.length ){
 		  	menuOptions = [
-				<Link to={PATHS.LIST}>Home</Link>,
-				<Link to={PATHS.DASHBOARD}>Dashboard</Link>,
-				<Link to={PATHS.REPORT}>Report</Link>,
-				<Link to={PATHS.SETTINGS}>Settings</Link>,
-				<Link to={PATHS.TROUBLESHOOT}>Troubleshoot</Link>,
+				<Link to={ PATHS.SETTINGS }>Settings</Link>,
+				(<Link to={{ pathname : PATHS.DASHBOARD, query }}
+					activeClassName='active'
+				>
+					Dashboard
+				</Link>),
+				(<Link to={{ pathname : PATHS.REPORT, query }}
+					activeClassName='active'
+				>
+					Report
+				</Link>),
+				(<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}
+					activeClassName='active'
+				>
+					Troubleshoot
+				</Link>),
 		  	];
-		} else {
 		}
 
 		return (
 			<header id="menu">
 				<div className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
-							onClick={ () => this.toggleMenu() } >
+					onClick={ () => this.toggleMenu() } >
 					<div className="icon">☰</div>
 					<div className='menu-options'>
+						<Link to={PATHS.LIST}>Home</Link>
 						{ menuOptions }
 						<a onClick={() => this.logoutHandler()}>Logout</a>
 					</div>
 				</div>
-				<h1>{ this.props.menu.name }</h1>
+				<h1>{ name }</h1>
 			</header>
 		);
 	}
@@ -81,10 +89,20 @@ Menu.propTypes = {
 	logout : PropTypes.func.isRequired,
 	user : PropTypes.shape({
 		email : PropTypes.string
+	}),
+	eddis : PropTypes.shape({
+		list : PropTypes.arrayOf(
+			PropTypes.shape({
+				id : PropTypes.string
+			})
+		),
+		selected : PropTypes.shape({
+			id : PropTypes.string
+		})
+	}), 
+	menu : PropTypes.shape({
+		name : PropTypes.string
 	})
 };
 
-export default connect(
-	mapStateToProps,
-	null
-)(Menu);
+export default Menu;

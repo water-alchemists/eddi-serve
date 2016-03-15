@@ -10,8 +10,8 @@ export default function(state = initialState, action = {}){
 	switch(type){
 	case MENU_NAME_CHANGE:
 		return {
-      ...state,
-			name: name
+      		...state,
+			name
 		};
 	default:
 		return state;

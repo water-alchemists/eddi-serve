@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { setEddiStateThunk } from '../actions/eddis';
+import { menuNameChange } from '../actions/menu';
 
 import EddiStateButton from '../components/EddiStateButton';
 import AddEddiButton from '../components/AddEddiButton';
@@ -16,11 +17,24 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		setEddiState : (eddiId, state) => dispatch(setEddiStateThunk(eddiId, state))
+		setEddiState : (eddiId, state) => dispatch(setEddiStateThunk(eddiId, state)),
+		updateMenuName: name => dispatch(menuNameChange(name)),
 	};
 }
 
 class Troubleshoot extends Component {
+	componentWillMount(){
+		const { updateMenuName, eddi={} } = this.props;
+		if( eddi.id ) updateMenuName(eddi.settings.name);
+	}
+
+	componentWillReceiveProps(newProps){
+		const { updateMenuName, eddi:oldEddi={} } = this.props,
+			{ eddi } = newProps;
+
+		if( eddi.id !== oldEddi.id ) updateMenuName(eddi.settings.name);
+	}
+
 	_renderNoEddis(){
 		return (
 			<div className='eddis-empty'>
@@ -30,16 +44,11 @@ class Troubleshoot extends Component {
 		);
 	}
 
-	_renderNotSelected(){
-		return (
-			<p> Select an eddi to track. </p>
-		);
-	}
-
 	_renderSelected(){
-		const { eddi, setEddiState } = this.props,
-			{ state, id } = eddi;
-		console.log('this is the value', state);
+		const { eddi={} , setEddiState } = this.props,
+			{ settings={} , id } = eddi,
+			{ state } = settings;
+
 		return (
 			<EddiStateButton value={!!state}
 				onClick={state => setEddiState(eddi.id, state)}
@@ -52,9 +61,8 @@ class Troubleshoot extends Component {
 
 		let TroubleshootElement;
 
-		if(eddi) TroubleshootElement = this._renderSelected();
-		else if(!hasEddis) TroubleshootElement = this._renderNoEddis();
-		else TroubleshootElement = this._renderNotSelected();
+		if(!hasEddis) TroubleshootElement = this._renderNoEddis();
+		else TroubleshootElement = this._renderSelected();
 		
 		return (
 			<div className='page'>

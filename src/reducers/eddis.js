@@ -6,12 +6,13 @@ import {
 	EDDI_UPDATESTART_SUCCESS ,
 	EDDI_UPDATEEND_SUCCESS,
 	EDDI_GETONE_SUCCESS,
-	EDDI_SELECT
+	EDDI_SELECT,
+	APP_START_SUCCESS
 } from '../constants';
 
 const initialState = {
 	list : [],
-	selected : null
+	selected : undefined
 };
 
 export default function(state = initialState, action = {}){
@@ -26,8 +27,13 @@ export default function(state = initialState, action = {}){
 	let newList;
 
 	switch(type){
+	case APP_START_SUCCESS : 
+		return {
+			...state,
+			list,
+			selected
+		};
 	case EDDI_GETALL_SUCCESS :
-		console.log('eddi got all', list);
 		let newSelected;
 		if( list.length > 0 ){
 			if(!state.selected) {
@@ -108,13 +114,11 @@ export default function(state = initialState, action = {}){
 			list : newList
 		}
 	case EDDI_SELECT :
-		console.log('eddi selected');
 		return {
 			...state,
 			selected
 		};
 	case USER_LOGOUT :
-		console.log('eddis cleared');
 		return {
 			... initialState
 		};

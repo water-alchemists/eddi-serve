@@ -11,7 +11,6 @@ import SignupForm from '../../components/SignupForm';
 
 import { getAllEddiByUserThunk } from '../../actions/eddis';
 import { userLoginWithPasswordThunk, userCreateThunk } from '../../actions/user';
-import { menuNameChange } from '../../actions/menu';
 
 import style from './Home.less';
 
@@ -33,10 +32,9 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		navigateTo: 		(pathname, query) 		=> browserHistory.push({ pathname, query }),
-		login:		 			({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password)),
-		signup: 				(user) 								=> dispatch(userCreateThunk(user)),
-		menuName:				(name)								=> dispatch(menuNameChange(name)),
+		navigateTo: (pathname, query) => browserHistory.push({ pathname, query }),
+		login: ({ email, password }) => dispatch(userLoginWithPasswordThunk(email, password)),
+		signup: (user) => dispatch(userCreateThunk(user)),
 	};
 }
 
@@ -45,13 +43,11 @@ function mapDispatchToProps(dispatch){
 
 
 class Home extends Component {
-
 	constructor(props){
 		super(props);
 		this.state = {
 			mode: Modes.BASE
 		};
-		props.menuName("Home");
 	}
 
 	componentWillReceiveProps(nextProps){
@@ -70,11 +66,13 @@ class Home extends Component {
 	_renderBase(){
 		return [
 			(<div className='auth-button'
-						onClick={ () => this.setState({mode: Modes.LOGIN})}>
+				onClick={ () => this.setState({mode: Modes.LOGIN})}
+			>
 				Login ›
 			</div>),
-			(<div 	className='auth-button'
-						onClick={ () => this.setState({mode: Modes.SIGNUP})}>
+			(<div className='auth-button'
+				onClick={ () => this.setState({mode: Modes.SIGNUP})}
+				>
 				Sign Up ›
 			</div>)
 		];
