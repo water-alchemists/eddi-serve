@@ -1,6 +1,8 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import SalinityGraph from './graphs/SalinityGraph';
+import HistoricalGraph from './graphs/HistoricalGraph';
+
 
 function generateBadText(){
 	return 'which is not well. Please check your settings for your eddi.';
@@ -32,6 +34,7 @@ class DashboardSalinity extends Component {
 						{`${status}`}
 					</p>
 				</div>
+				<HistoricalGraph />
 			</div>
 		);
 	}
