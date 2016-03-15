@@ -12,18 +12,18 @@ function generateStatusText(rate){
 class DashboardFlow extends Component {
 	render(){
 		const { rate } = this.props;
-		
+
 		return (
-			<div className='dashboard-view'>
-				<div className='dashboard-current'>
-					<div className='dashboard-current-numbers'>
+			<div >
+				<div>
+					<div >
 						<h1>WATER FLOW</h1>
 						<h3>{`${rate}`}</h3>
 						<p>liters per minute</p>
 					</div>
 					<FlowGraph rate={rate} />
 				</div>
-				<p className='dashboard-note'>
+				<p>
 					Your current level of water flow is 
 					<span>{` ${rate} lpm, `}</span>
 					which is a

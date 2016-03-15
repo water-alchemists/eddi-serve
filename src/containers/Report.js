@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { menuNameChange } from '../actions/menu';
 
+import ReportTime from '../components/ReportTime';
+
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.selected
@@ -33,7 +35,11 @@ class Report extends Component {
 		const { eddi } = this.props;
 		return (
 			<div id="report" className='page'>
-				{'This is the report page.'}
+				<div>
+					<ReportTime title={'Start Report'}/>
+					<ReportTime title={'End Report'}/>
+				</div>
+				<button>EXPORT</button>
 			</div>
 		);
 	}
