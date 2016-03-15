@@ -90,20 +90,18 @@ class Dashboard extends Component {
 		);
 	}
 
-	_renderFlow(current){
+	_renderFlow(rate){
 		return (
-			<DashboardFlow />
+			<DashboardFlow rate={rate}/>
 		);
 	}
 
 	_renderViewBasedQuery(view){
 		const { eddi={} } = this.props,
 			{ current } = this.state;
+		//defaults to salinity out
 		if(eddi.settings){
 			switch(view){
-			case QUERY.SALINITY_OUT:
-				return this._renderSalinity(current.ppmOut, 'output');
-				break;
 			case QUERY.SALINITY_IN:
 				return this._renderSalinity(current.ppmIn, 'input');
 				break;
@@ -111,7 +109,7 @@ class Dashboard extends Component {
 				return this._renderFlow(current.qOut);
 				break;
 			default:
-				return null;
+				return this._renderSalinity(current.ppmOut, 'output');
 			}
 		}
 		return null;
@@ -125,7 +123,9 @@ class Dashboard extends Component {
 		let DashboardElement = this._renderViewBasedQuery(view);
 		return (
 			<div id="dashboard" className="page">
-				<DashboardMenu id={id} />
+				<DashboardMenu id={id} 
+					view={view}
+				/>
 				{ DashboardElement }
 			</div>
 		);

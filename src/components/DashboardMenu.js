@@ -6,7 +6,12 @@ import { PATHS, QUERY } from '../constants';
 
 class DashboardMenu extends Component {
 	render(){
-		const { id } = this.props;
+		const { id, view } = this.props;
+
+		//handles appearance of default tab
+		let classString = '';
+		if(!view) classString = 'active';
+
  		return (
 			<div className='dashboard-menu'>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_IN }} }
@@ -16,6 +21,7 @@ class DashboardMenu extends Component {
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_OUT }} }
 					activeClassName='active'
+					className={classString}
 				>
 					<div>out</div>
 				</Link>
@@ -35,7 +41,8 @@ class DashboardMenu extends Component {
 }
 
 DashboardMenu.propTypes = {
-	id : PropTypes.string
+	id : PropTypes.string,
+	view : PropTypes.string
 };
 
 
