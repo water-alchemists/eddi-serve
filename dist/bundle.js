@@ -31824,13 +31824,15 @@
 
 	var _eddis = __webpack_require__(285);
 
-	var _SalinityGraph = __webpack_require__(424);
-
-	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
+	var _constants = __webpack_require__(246);
 
 	var _DashboardMenu = __webpack_require__(425);
 
 	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
+
+	var _DashboardSalinityOut = __webpack_require__(428);
+
+	var _DashboardSalinityOut2 = _interopRequireDefault(_DashboardSalinityOut);
 
 	var _Dashboard = __webpack_require__(426);
 
@@ -31880,7 +31882,8 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).call(this, props));
 
 			_this.state = {
-				readings: []
+				readings: [],
+				current: {}
 			};
 			return _this;
 		}
@@ -31894,12 +31897,14 @@
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 
 				if (eddi.id) {
+					console.log('i am here');
 					updateMenuName(eddi.settings.name);
 					if (eddi.readings) {
 						//format the readings into an array for data handling
-						var readings = mapDateToReadings(eddi.readings);
-						console.log('these are the readings', readings);
-						this.setState({ readings: readings });
+						var readings = mapDateToReadings(eddi.readings),
+						    current = readings[readings.length - 1];
+						console.log('these are the readings', readings, current);
+						this.setState({ readings: readings, current: current });
 					}
 				}
 			}
@@ -31918,30 +31923,63 @@
 					updateMenuName(eddi.settings.name);
 					if (eddi.readings) {
 						//format the readings into an array for data handling
-						var readings = mapDateToReadings(eddi.readings);
-						console.log('these are the readings', readings);
-						this.setState({ readings: readings });
+						var readings = mapDateToReadings(eddi.readings),
+						    current = readings[readings.length - 1];
+						console.log('these are the readings', readings, current);
+						this.setState({ readings: readings, current: current });
 					}
 				}
 			}
 		}, {
-			key: '_renderSalinityOut',
-			value: function _renderSalinityOut() {
+			key: '_renderSalinity',
+			value: function _renderSalinity(current) {
 				var _props$eddi2 = this.props.eddi;
 				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
+				var threshold = eddi.settings.salinity;
+
+				return _react2.default.createElement(_DashboardSalinityOut2.default, { threshold: threshold,
+					current: current
+				});
+			}
+		}, {
+			key: '_renderViewBasedQuery',
+			value: function _renderViewBasedQuery(view) {
+				var _props$eddi3 = this.props.eddi;
+				var eddi = _props$eddi3 === undefined ? {} : _props$eddi3;
+				var current = this.state.current;
+
+				if (eddi.settings) {
+					switch (view) {
+						case _constants.QUERY.SALINITY_OUT:
+							return this._renderSalinity(current.ppmOut);
+							break;
+						case _constants.QUERY.SALINITY_IN:
+							return this._renderSalinity(current.ppmIn);
+						default:
+							return null;
+					}
+				}
+				return null;
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var _props$eddi3 = this.props.eddi;
-				var eddi = _props$eddi3 === undefined ? {} : _props$eddi3;
+				var _props3 = this.props;
+				var _props3$eddi = _props3.eddi;
+				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
+				var _props3$location = _props3.location;
+				var location = _props3$location === undefined ? {} : _props3$location;
 				var id = eddi.id;
+				var view = location.query.view;
+
+
+				var DashboardElement = this._renderViewBasedQuery(view);
 
 				return _react2.default.createElement(
 					'div',
 					{ id: 'dashboard', className: 'page' },
 					_react2.default.createElement(_DashboardMenu2.default, { id: id }),
-					_react2.default.createElement(_SalinityGraph2.default, { salinity: 2000 })
+					DashboardElement
 				);
 			}
 		}]);
@@ -47078,6 +47116,130 @@
 
 	// exports
 
+
+/***/ },
+/* 428 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _SalinityGraph = __webpack_require__(424);
+
+	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function generateBadText() {
+		return 'which is not well. Please check your settings for your eddi.';
+	}
+
+	function generateGoodText() {
+		return 'so everything is doing well.';
+	}
+
+	var DashboardSalinityOut = function (_Component) {
+		_inherits(DashboardSalinityOut, _Component);
+
+		function DashboardSalinityOut() {
+			_classCallCheck(this, DashboardSalinityOut);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinityOut).apply(this, arguments));
+		}
+
+		_createClass(DashboardSalinityOut, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var threshold = _props.threshold;
+				var current = _props.current;
+				var status = current > threshold ? generateBadText() : generateGoodText();
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: styles.row },
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'h1',
+								null,
+								'SALINITY'
+							),
+							_react2.default.createElement(
+								'h1',
+								null,
+								'OUTPUT'
+							),
+							_react2.default.createElement(
+								'h3',
+								null,
+								'' + current
+							),
+							_react2.default.createElement(
+								'p',
+								null,
+								'parts per million'
+							)
+						),
+						_react2.default.createElement(_SalinityGraph2.default, { salinity: current })
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Your current level of salinity for the water your EDDI is pushing out is',
+						_react2.default.createElement(
+							'span',
+							null,
+							' ' + current + ' ppm. '
+						),
+						'Your current threshold is set at',
+						_react2.default.createElement(
+							'span',
+							null,
+							' ' + threshold + ' ppm, '
+						),
+						'' + status
+					)
+				);
+			}
+		}]);
+
+		return DashboardSalinityOut;
+	}(_react.Component);
+
+	DashboardSalinityOut.propTypes = {
+		threshold: _react.PropTypes.number.isRequired,
+		current: _react.PropTypes.number.isRequired
+	};
+
+	var styles = {
+		row: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'flex-start'
+		}
+	};
+
+	exports.default = DashboardSalinityOut;
 
 /***/ }
 /******/ ]);

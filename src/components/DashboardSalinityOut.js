@@ -1,13 +1,13 @@
 'use strict';
-import React, { Component } from 'react';
-import SalinityGraph from '../../components/graphs/SalinityGraph';
+import React, { Component, PropTypes } from 'react';
+import SalinityGraph from './graphs/SalinityGraph';
 
 function generateBadText(){
-	return 'which is not well. Please check your settings for your eddi.'.
+	return 'which is not well. Please check your settings for your eddi.';
 }
 
 function generateGoodText(){
-	return 'so everything is doing well.'
+	return 'so everything is doing well.';
 }
 
 class DashboardSalinityOut extends Component {
@@ -23,14 +23,14 @@ class DashboardSalinityOut extends Component {
 						<h3>{`${current}`}</h3>
 						<p>parts per million</p>
 					</div>
-					<SalinityGraph />
+					<SalinityGraph salinity={current}/>
 				</div>
 				<p>
 					Your current level of salinity for the water your EDDI
 					is pushing out is 
-					<span>{`${current} ppm. `}</span>
+					<span>{` ${current} ppm. `}</span>
 					Your current threshold is set at
-					<span>{`${threshold} ppm, `}</span>
+					<span>{` ${threshold} ppm, `}</span>
 					{`${status}`}
 				</p>
 			</div>
