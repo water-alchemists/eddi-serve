@@ -10,15 +10,15 @@ function generateGoodText(){
 	return 'so everything is doing well.';
 }
 
-class DashboardSalinityOut extends Component {
+class DashboardSalinity extends Component {
 	render(){
-		const { threshold, current } = this.props,
+		const { threshold, current, direction } = this.props,
 			status = current > threshold ? generateBadText() : generateGoodText();
 		return (
 			<div className='dashboard-view salinity'>
 				<div className='dashboard-current'>
 					<div className='dashboard-current-numbers'>
-						<h1>Salinity Output</h1>
+						<h1>Salinity {direction.toUpperCase()}</h1>
 						<h3>{`${current}`}</h3>
 						<p>parts per million</p>
 					</div>
@@ -32,16 +32,19 @@ class DashboardSalinityOut extends Component {
 						{`${status}`}
 					</p>
 				</div>
-
 			</div>
 		);
 	}
 }
 
-DashboardSalinityOut.propTypes = {
+DashboardSalinity.propTypes = {
 	threshold : PropTypes.number.isRequired,
 	current : PropTypes.number.isRequired,
+	direction : PropTypes.string.isRequired
 };
 
+DashboardSalinity.defaultProps = {
+	threshold : 1000
+};
 
-export default DashboardSalinityOut;
+export default DashboardSalinity;

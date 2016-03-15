@@ -31945,17 +31945,17 @@
 
 	var _constants = __webpack_require__(246);
 
-	var _FlowGraph = __webpack_require__(305);
-
-	var _FlowGraph2 = _interopRequireDefault(_FlowGraph);
-
 	var _DashboardMenu = __webpack_require__(306);
 
 	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
 
-	var _DashboardSalinityOut = __webpack_require__(429);
+	var _DashboardSalinity = __webpack_require__(430);
 
-	var _DashboardSalinityOut2 = _interopRequireDefault(_DashboardSalinityOut);
+	var _DashboardSalinity2 = _interopRequireDefault(_DashboardSalinity);
+
+	var _DashboardFlow = __webpack_require__(431);
+
+	var _DashboardFlow2 = _interopRequireDefault(_DashboardFlow);
 
 	var _Dashboard = __webpack_require__(307);
 
@@ -32055,19 +32055,20 @@
 			}
 		}, {
 			key: '_renderSalinity',
-			value: function _renderSalinity(current) {
+			value: function _renderSalinity(current, direction) {
 				var _props$eddi2 = this.props.eddi;
 				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
 				var threshold = eddi.settings.salinity;
 
-				return _react2.default.createElement(_DashboardSalinityOut2.default, { threshold: threshold,
-					current: current
+				return _react2.default.createElement(_DashboardSalinity2.default, { threshold: threshold,
+					current: current,
+					direction: direction
 				});
 			}
 		}, {
 			key: '_renderFlow',
 			value: function _renderFlow(current) {
-				return _react2.default.createElement(_FlowGraph2.default, { rate: 3 });
+				return _react2.default.createElement(_DashboardFlow2.default, null);
 			}
 		}, {
 			key: '_renderViewBasedQuery',
@@ -32079,10 +32080,10 @@
 				if (eddi.settings) {
 					switch (view) {
 						case _constants.QUERY.SALINITY_OUT:
-							return this._renderSalinity(current.ppmOut);
+							return this._renderSalinity(current.ppmOut, 'output');
 							break;
 						case _constants.QUERY.SALINITY_IN:
-							return this._renderSalinity(current.ppmIn);
+							return this._renderSalinity(current.ppmIn, 'input');
 							break;
 						case _constants.QUERY.FLOW:
 							return this._renderFlow(current.qOut);
@@ -32106,7 +32107,6 @@
 
 
 				var DashboardElement = this._renderViewBasedQuery(view);
-
 				return _react2.default.createElement(
 					'div',
 					{ id: 'dashboard', className: 'page' },
@@ -47311,7 +47311,8 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 429 */
+/* 429 */,
+/* 430 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47346,21 +47347,22 @@
 		return 'so everything is doing well.';
 	}
 
-	var DashboardSalinityOut = function (_Component) {
-		_inherits(DashboardSalinityOut, _Component);
+	var DashboardSalinity = function (_Component) {
+		_inherits(DashboardSalinity, _Component);
 
-		function DashboardSalinityOut() {
-			_classCallCheck(this, DashboardSalinityOut);
+		function DashboardSalinity() {
+			_classCallCheck(this, DashboardSalinity);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinityOut).apply(this, arguments));
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinity).apply(this, arguments));
 		}
 
-		_createClass(DashboardSalinityOut, [{
+		_createClass(DashboardSalinity, [{
 			key: 'render',
 			value: function render() {
 				var _props = this.props;
 				var threshold = _props.threshold;
 				var current = _props.current;
+				var direction = _props.direction;
 				var status = current > threshold ? generateBadText() : generateGoodText();
 				return _react2.default.createElement(
 					'div',
@@ -47374,7 +47376,8 @@
 							_react2.default.createElement(
 								'h1',
 								null,
-								'Salinity Output'
+								'Salinity ',
+								direction.toUpperCase()
 							),
 							_react2.default.createElement(
 								'h3',
@@ -47410,15 +47413,75 @@
 			}
 		}]);
 
-		return DashboardSalinityOut;
+		return DashboardSalinity;
 	}(_react.Component);
 
-	DashboardSalinityOut.propTypes = {
+	DashboardSalinity.propTypes = {
 		threshold: _react.PropTypes.number.isRequired,
-		current: _react.PropTypes.number.isRequired
+		current: _react.PropTypes.number.isRequired,
+		direction: _react.PropTypes.string.isRequired
 	};
 
-	exports.default = DashboardSalinityOut;
+	DashboardSalinity.defaultProps = {
+		threshold: 1000
+	};
+
+	exports.default = DashboardSalinity;
+
+/***/ },
+/* 431 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FlowGraph = __webpack_require__(305);
+
+	var _FlowGraph2 = _interopRequireDefault(_FlowGraph);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DashboardFlow = function (_Component) {
+		_inherits(DashboardFlow, _Component);
+
+		function DashboardFlow() {
+			_classCallCheck(this, DashboardFlow);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).apply(this, arguments));
+		}
+
+		_createClass(DashboardFlow, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_FlowGraph2.default, { rate: 3 })
+				);
+			}
+		}]);
+
+		return DashboardFlow;
+	}(_react.Component);
+
+	DashboardFlow.propTypes = {};
+
+	exports.default = DashboardFlow;
 
 /***/ }
 /******/ ]);
