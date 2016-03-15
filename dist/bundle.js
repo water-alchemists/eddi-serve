@@ -31812,6 +31812,8 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _react = __webpack_require__(3);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -31859,6 +31861,16 @@
 		};
 	}
 
+	function mapDateToReadings(readings) {
+		return Object.keys(readings).map(function (utc) {
+			return _extends({}, readings[utc], {
+				date: new Date(utc * 1000)
+			});
+		}).sort(function (a, b) {
+			return a.date > b.date;
+		});
+	}
+
 	var Dashboard = function (_Component) {
 		_inherits(Dashboard, _Component);
 
@@ -31867,7 +31879,9 @@
 
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).call(this, props));
 
-			_this.state = {};
+			_this.state = {
+				readings: []
+			};
 			return _this;
 		}
 
@@ -31879,7 +31893,15 @@
 				var _props$eddi = _props.eddi;
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 
-				if (eddi.id) updateMenuName(eddi.settings.name);
+				if (eddi.id) {
+					updateMenuName(eddi.settings.name);
+					if (eddi.readings) {
+						//format the readings into an array for data handling
+						var readings = mapDateToReadings(eddi.readings);
+						console.log('these are the readings', readings);
+						this.setState({ readings: readings });
+					}
+				}
 			}
 		}, {
 			key: 'componentWillReceiveProps',
@@ -31888,16 +31910,31 @@
 				var updateMenuName = _props2.updateMenuName;
 				var _props2$eddi = _props2.eddi;
 				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
+				var location = _props2.location;
 				var eddi = newProps.eddi;
 
 
-				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
+				if (eddi.id !== oldEddi.id) {
+					updateMenuName(eddi.settings.name);
+					if (eddi.readings) {
+						//format the readings into an array for data handling
+						var readings = mapDateToReadings(eddi.readings);
+						console.log('these are the readings', readings);
+						this.setState({ readings: readings });
+					}
+				}
+			}
+		}, {
+			key: '_renderSalinityOut',
+			value: function _renderSalinityOut() {
+				var _props$eddi2 = this.props.eddi;
+				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var _props$eddi2 = this.props.eddi;
-				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
+				var _props$eddi3 = this.props.eddi;
+				var eddi = _props$eddi3 === undefined ? {} : _props$eddi3;
 				var id = eddi.id;
 
 				return _react2.default.createElement(

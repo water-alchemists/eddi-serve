@@ -23,23 +23,55 @@ function mapDispatchToProps(dispatch){
 	};
 }
 
-class Dashboard extends Component {
+function mapDateToReadings(readings){
+	return Object.keys(readings)
+		.map(utc => {
+			return {
+				...readings[utc],
+				date : new Date(utc * 1000)
+			}
+		})
+		.sort((a,b) => a.date > b.date);
+}
 
+class Dashboard extends Component {
 	constructor(props){
 		super(props);
-		this.state = {};
+		this.state = {
+			readings : []
+		};
 	}
 
 	componentWillMount(){
 		const { updateMenuName, eddi={} } = this.props;
-		if( eddi.id ) updateMenuName(eddi.settings.name);
+		if( eddi.id ) {
+			updateMenuName(eddi.settings.name);
+			if(eddi.readings){
+				//format the readings into an array for data handling
+				const readings = mapDateToReadings(eddi.readings);
+				console.log('these are the readings', readings);
+				this.setState({ readings });
+			}
+		}
 	}
 
 	componentWillReceiveProps(newProps){
-		const { updateMenuName, eddi:oldEddi={} } = this.props,
+		const { updateMenuName, eddi:oldEddi={}, location } = this.props,
 			{ eddi } = newProps;
 
-		if( eddi.id !== oldEddi.id ) updateMenuName(eddi.settings.name);
+		if( eddi.id !== oldEddi.id ) { 
+			updateMenuName(eddi.settings.name);
+			if(eddi.readings){
+				//format the readings into an array for data handling
+				const readings = mapDateToReadings(eddi.readings);
+				console.log('these are the readings', readings);
+				this.setState({ readings });
+			}
+		}
+	}
+
+	_renderSalinityOut(){
+		const { eddi={} } = this.props;
 	}
 
 	render(){
