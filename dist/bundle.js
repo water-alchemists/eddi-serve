@@ -46302,6 +46302,9 @@
 		value: true
 	});
 	exports.salinityOptions = exports.aOptions = exports.minutesOptions = exports.hourOptions = undefined;
+	exports.createDays = createDays;
+	exports.createMonths = createMonths;
+	exports.createYears = createYears;
 	exports.convertMilitaryToNormal = convertMilitaryToNormal;
 	exports.convertNormalToMilitary = convertNormalToMilitary;
 	exports.convertMinutesToString = convertMinutesToString;
@@ -46312,6 +46315,8 @@
 	var _moment2 = _interopRequireDefault(_moment);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_moment2.default.locale('en');
 
 	function createHours(num) {
 		var hourOptions = [];
@@ -46329,6 +46334,31 @@
 			minutesOptions.push(minuteString);
 		}
 		return minutesOptions;
+	}
+
+	function createDays(month, year) {
+		//month is supposed to be zero-based
+		if (typeof month === 'string') month = _moment2.default.month(month);
+		var max = new Date(year, month, 0).getDate(),
+		    days = [];
+		for (var i = 0; i < max; i++) {
+			days.push(i + 1);
+		}
+		return days;
+	}
+
+	function createMonths() {
+		return _moment2.default.months();
+	}
+
+	function createYears(start) {
+		var years = [],
+		    current = new Date().getFullYear();
+		for (var i = start; i <= current; i++) {
+			years.push(i);
+		}
+
+		return years;
 	}
 
 	function convertMilitaryToNormal(hour) {
@@ -47675,6 +47705,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _constants = __webpack_require__(246);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -47682,6 +47714,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MONTHS = (0, _constants.createMonths)();
 
 	var DateSelect = function (_Component) {
 		_inherits(DateSelect, _Component);
@@ -47693,9 +47727,107 @@
 		}
 
 		_createClass(DateSelect, [{
+			key: 'onDayChange',
+			value: function onDayChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var day = event.target.value;
+
+				if (onChange instanceof Function) onChange({ day: day });
+			}
+		}, {
+			key: 'onMonthChange',
+			value: function onMonthChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var month = event.target.value;
+				if (onChange instanceof Function) onChange({ month: month });
+			}
+		}, {
+			key: 'onYearChange',
+			value: function onYearChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var year = event.target.value;
+
+				if (onChange instanceof Function) onChange({ year: year });
+			}
+		}, {
+			key: '_renderDays',
+			value: function _renderDays() {
+				var _state = this.state;
+				var month = _state.month;
+				var year = _state.year;
+				var days = (0, _constants.createDays)(month, year);
+
+				return days.map(function (day) {
+					return _react2.default.createElement(
+						'option',
+						{ value: day, key: day },
+						day
+					);
+				});
+			}
+		}, {
+			key: '_renderMonths',
+			value: function _renderMonths() {
+				var months = MONTHS;
+				return months.map(function (month, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: i, key: month },
+						month
+					);
+				});
+			}
+		}, {
+			key: '_renderYears',
+			value: function _renderYears() {
+				var startYear = this.props.startYear;
+				var years = (0, _constants.createYears)(start);
+
+				return years.map(function (year) {
+					return _react2.default.createElement(
+						'option',
+						{ value: year, key: year },
+						year
+					);
+				});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				return _react2.default.createElement('div', null);
+				var _this2 = this;
+
+				var YearElements = this._renderYears(),
+				    MonthElements = this._renderMonths(),
+				    DayElements = this._renderDays();
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onDayChange(event);
+							} },
+						DayElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onMonthChange(event);
+							} },
+						MonthElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onYearChange(event);
+							} },
+						YearElements
+					)
+				);
 			}
 		}]);
 
@@ -47703,7 +47835,15 @@
 	}(_react.Component);
 
 	DateSelect.propTypes = {
-		onChange: _react.PropTypes.func
+		onChange: _react.PropTypes.func.isRequired,
+		startYear: _react.PropTypes.number,
+		year: _react.PropTypes.number.isRequired,
+		day: _react.PropTypes.number.isRequired,
+		month: _react.PropTypes.number.isRequired
+	};
+
+	DateSelect.defaultProps = {
+		startYear: 2014
 	};
 
 	exports.default = DateSelect;

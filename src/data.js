@@ -1,5 +1,6 @@
 'use strict';
 import moment from 'moment';
+moment.locale('en');
 
 function createHours(num){
 	const hourOptions = [];
@@ -17,6 +18,31 @@ function createMinutes(increment){
 		minutesOptions.push(minuteString);
 	}
 	return minutesOptions;
+}
+
+export function createDays(month, year){
+	//month is supposed to be zero-based
+	if(typeof month === 'string') month = moment.month(month);
+	const max = new Date(year, month, 0).getDate(),
+		days = [];
+	for(let i = 0; i < max; i++){
+		days.push(i + 1);
+	}
+	return days;
+}
+
+export function createMonths(){
+	return moment.months();
+}
+
+export function createYears(start){
+	const years = [],
+		current = new Date().getFullYear();
+	for(let i = start; i <= current; i++){
+		years.push(i);
+	}
+
+	return years;
 }
 
 export function convertMilitaryToNormal(hour){
@@ -42,6 +68,7 @@ export function convertStringToMinutes(minString){
 export const hourOptions = createHours(12);
 export const minutesOptions = createMinutes(5);
 export const aOptions = ['am', 'pm'];
+
 
 export const salinityOptions = {
 	min: 500,
