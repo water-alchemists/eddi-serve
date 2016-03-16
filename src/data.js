@@ -65,6 +65,17 @@ export function convertStringToMinutes(minString){
 	return parseInt(minString);
 }
 
+export function mapDateToReadings(readings){
+	return Object.keys(readings)
+		.map(utc => {
+			return {
+				...readings[utc],
+				date : new Date(utc * 1000)
+			}
+		})
+		.sort((a,b) => a.date > b.date);
+}
+
 export const hourOptions = createHours(12);
 export const minutesOptions = createMinutes(5);
 export const aOptions = ['am', 'pm'];

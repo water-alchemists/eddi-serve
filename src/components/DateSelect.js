@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 
-import { createDays, createMonths, createYears } from '../constants';
+import { createDays, createMonths, createYears } from '../data';
 
 const MONTHS = createMonths();
 
@@ -29,7 +29,7 @@ class DateSelect extends Component {
 	}
 
 	_renderDays(){
-		const { month, year } = this.state,
+		const { month, year } = this.props,
 			days = createDays(month, year);
 
 		return days.map(day => (<option value={day} key={day}>{day}</option>));
@@ -41,26 +41,33 @@ class DateSelect extends Component {
 	}
 
 	_renderYears(){
-		const {startYear} = this.props,
-			years = createYears(start);
+		const { startYear } = this.props,
+			years = createYears(startYear);
 
 		return years.map(year => (<option value={year} key={year}>{year}</option>));
 	}
 
 	render(){
-		const YearElements = this._renderYears(),
+		const { year, day, month } = this.props,
+			YearElements = this._renderYears(),
 			MonthElements = this._renderMonths(),
 			DayElements = this._renderDays();
 
 		return (
 			<div>
-				<select onChange={event => this.onDayChange(event)}>
+				<select onChange={event => this.onDayChange(event)}
+					value={day}
+				>
 					{DayElements}
 				</select>
-				<select onChange={event => this.onMonthChange(event)}>
+				<select onChange={event => this.onMonthChange(event)}
+					value={month}
+				>
 					{MonthElements}
 				</select>
-				<select onChange={event => this.onYearChange(event)}>
+				<select onChange={event => this.onYearChange(event)}
+					value={year}
+				>
 					{YearElements}
 				</select>
 			</div>

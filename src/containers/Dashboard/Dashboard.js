@@ -7,6 +7,8 @@ import { selectEddiById } from '../../actions/eddis';
 
 import { QUERY } from '../../constants';
 
+import { mapDateToReadings } from '../../data';
+
 import DashboardMenu from '../../components/DashboardMenu';
 import DashboardSalinity from '../../components/DashboardSalinity';
 import DashboardFlow from '../../components/DashboardFlow';
@@ -24,17 +26,6 @@ function mapDispatchToProps(dispatch){
 		updateMenuName:	(name) => dispatch(menuNameChange(name)),
 		selectEddiById: (eddi) => dispatch(selectEddiById(eddi)),
 	};
-}
-
-function mapDateToReadings(readings){
-	return Object.keys(readings)
-		.map(utc => {
-			return {
-				...readings[utc],
-				date : new Date(utc * 1000)
-			}
-		})
-		.sort((a,b) => a.date > b.date);
 }
 
 class Dashboard extends Component {

@@ -31873,8 +31873,6 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 	var _react = __webpack_require__(3);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -31886,6 +31884,8 @@
 	var _eddis = __webpack_require__(285);
 
 	var _constants = __webpack_require__(246);
+
+	var _data = __webpack_require__(419);
 
 	var _DashboardMenu = __webpack_require__(424);
 
@@ -31928,16 +31928,6 @@
 		};
 	}
 
-	function mapDateToReadings(readings) {
-		return Object.keys(readings).map(function (utc) {
-			return _extends({}, readings[utc], {
-				date: new Date(utc * 1000)
-			});
-		}).sort(function (a, b) {
-			return a.date > b.date;
-		});
-	}
-
 	var Dashboard = function (_Component) {
 		_inherits(Dashboard, _Component);
 
@@ -31966,7 +31956,7 @@
 					updateMenuName(eddi.settings.name);
 					if (eddi.readings) {
 						//format the readings into an array for data handling
-						var readings = mapDateToReadings(eddi.readings),
+						var readings = (0, _data.mapDateToReadings)(eddi.readings),
 						    current = readings[readings.length - 1];
 						console.log('these are the readings', readings, current);
 						this.setState({ readings: readings, current: current });
@@ -31988,7 +31978,7 @@
 					updateMenuName(eddi.settings.name);
 					if (eddi.readings) {
 						//format the readings into an array for data handling
-						var readings = mapDateToReadings(eddi.readings),
+						var readings = (0, _data.mapDateToReadings)(eddi.readings),
 						    current = readings[readings.length - 1];
 						console.log('these are the readings', readings, current);
 						this.setState({ readings: readings, current: current });
@@ -46302,6 +46292,9 @@
 		value: true
 	});
 	exports.salinityOptions = exports.aOptions = exports.minutesOptions = exports.hourOptions = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	exports.createDays = createDays;
 	exports.createMonths = createMonths;
 	exports.createYears = createYears;
@@ -46309,6 +46302,7 @@
 	exports.convertNormalToMilitary = convertNormalToMilitary;
 	exports.convertMinutesToString = convertMinutesToString;
 	exports.convertStringToMinutes = convertStringToMinutes;
+	exports.mapDateToReadings = mapDateToReadings;
 
 	var _moment = __webpack_require__(317);
 
@@ -46378,6 +46372,16 @@
 
 	function convertStringToMinutes(minString) {
 		return parseInt(minString);
+	}
+
+	function mapDateToReadings(readings) {
+		return Object.keys(readings).map(function (utc) {
+			return _extends({}, readings[utc], {
+				date: new Date(utc * 1000)
+			});
+		}).sort(function (a, b) {
+			return a.date > b.date;
+		});
 	}
 
 	var hourOptions = exports.hourOptions = createHours(12);
@@ -46840,6 +46844,8 @@
 		value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(3);
@@ -46850,9 +46856,9 @@
 
 	var _menu = __webpack_require__(310);
 
-	var _ReportTime = __webpack_require__(432);
+	var _DateSelect = __webpack_require__(433);
 
-	var _ReportTime2 = _interopRequireDefault(_ReportTime);
+	var _DateSelect2 = _interopRequireDefault(_DateSelect);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46879,10 +46885,29 @@
 	var Report = function (_Component) {
 		_inherits(Report, _Component);
 
-		function Report() {
+		function Report(props) {
 			_classCallCheck(this, Report);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Report).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Report).call(this, props));
+
+			var today = new Date(),
+			    day = today.getDate(),
+			    month = today.getMonth(),
+			    year = today.getFullYear();
+
+			_this.state = {
+				start: {
+					month: null,
+					day: null,
+					year: null
+				},
+				end: {
+					month: month,
+					day: day,
+					year: year
+				}
+			};
+			return _this;
 		}
 
 		_createClass(Report, [{
@@ -46908,9 +46933,36 @@
 				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
 			}
 		}, {
+			key: 'onStartChange',
+			value: function onStartChange(value) {
+				var start = this.state.start;
+				var newStart = _extends({}, start, value);
+				this.setState({ start: newStart });
+			}
+		}, {
+			key: 'onEndChange',
+			value: function onEndChange(value) {
+				var end = this.state.end;
+				var newEnd = _extends({}, end, value);
+				this.setState({ end: newEnd });
+			}
+		}, {
+			key: 'clickHandler',
+			value: function clickHandler(event) {
+				event.preventDefault();
+				var _props3 = this.props;
+				var start = _props3.start;
+				var end = _props3.end;
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
 				var eddi = this.props.eddi;
+				var _state = this.state;
+				var start = _state.start;
+				var end = _state.end;
 
 				return _react2.default.createElement(
 					'div',
@@ -46918,8 +46970,38 @@
 					_react2.default.createElement(
 						'div',
 						null,
-						_react2.default.createElement(_ReportTime2.default, { title: 'Start Report' }),
-						_react2.default.createElement(_ReportTime2.default, { title: 'End Report' })
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'h3',
+								null,
+								'Start Report'
+							),
+							_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
+									return _this2.onStartChange(value);
+								},
+								year: start.year,
+								month: start.month,
+								day: start.day
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'h3',
+								null,
+								'End Report'
+							),
+							_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
+									return _this2.onEndChange(value);
+								},
+								year: end.year,
+								month: end.month,
+								day: end.day
+							})
+						)
 					),
 					_react2.default.createElement(
 						'button',
@@ -47621,75 +47703,7 @@
 	exports.default = HistoricalGraph;
 
 /***/ },
-/* 432 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _DateSelect = __webpack_require__(433);
-
-	var _DateSelect2 = _interopRequireDefault(_DateSelect);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ReportTime = function (_Component) {
-		_inherits(ReportTime, _Component);
-
-		function ReportTime() {
-			_classCallCheck(this, ReportTime);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(ReportTime).apply(this, arguments));
-		}
-
-		_createClass(ReportTime, [{
-			key: 'render',
-			value: function render() {
-				var title = this.props.title;
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'h3',
-						null,
-						'' + title.toUpperCase()
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(_DateSelect2.default, null)
-					)
-				);
-			}
-		}]);
-
-		return ReportTime;
-	}(_react.Component);
-
-	ReportTime.propTypes = {
-		title: _react.PropTypes.string,
-		onChange: _react.PropTypes.func
-	};
-
-	exports.default = ReportTime;
-
-/***/ },
+/* 432 */,
 /* 433 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -47705,7 +47719,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _constants = __webpack_require__(246);
+	var _data = __webpack_require__(419);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47715,7 +47729,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var MONTHS = (0, _constants.createMonths)();
+	var MONTHS = (0, _data.createMonths)();
 
 	var DateSelect = function (_Component) {
 		_inherits(DateSelect, _Component);
@@ -47755,10 +47769,10 @@
 		}, {
 			key: '_renderDays',
 			value: function _renderDays() {
-				var _state = this.state;
-				var month = _state.month;
-				var year = _state.year;
-				var days = (0, _constants.createDays)(month, year);
+				var _props = this.props;
+				var month = _props.month;
+				var year = _props.year;
+				var days = (0, _data.createDays)(month, year);
 
 				return days.map(function (day) {
 					return _react2.default.createElement(
@@ -47784,7 +47798,7 @@
 			key: '_renderYears',
 			value: function _renderYears() {
 				var startYear = this.props.startYear;
-				var years = (0, _constants.createYears)(start);
+				var years = (0, _data.createYears)(startYear);
 
 				return years.map(function (year) {
 					return _react2.default.createElement(
@@ -47799,9 +47813,13 @@
 			value: function render() {
 				var _this2 = this;
 
-				var YearElements = this._renderYears(),
-				    MonthElements = this._renderMonths(),
-				    DayElements = this._renderDays();
+				var _props2 = this.props;
+				var year = _props2.year;
+				var day = _props2.day;
+				var month = _props2.month;
+				var YearElements = this._renderYears();
+				var MonthElements = this._renderMonths();
+				var DayElements = this._renderDays();
 
 				return _react2.default.createElement(
 					'div',
@@ -47810,21 +47828,27 @@
 						'select',
 						{ onChange: function onChange(event) {
 								return _this2.onDayChange(event);
-							} },
+							},
+							value: day
+						},
 						DayElements
 					),
 					_react2.default.createElement(
 						'select',
 						{ onChange: function onChange(event) {
 								return _this2.onMonthChange(event);
-							} },
+							},
+							value: month
+						},
 						MonthElements
 					),
 					_react2.default.createElement(
 						'select',
 						{ onChange: function onChange(event) {
 								return _this2.onYearChange(event);
-							} },
+							},
+							value: year
+						},
 						YearElements
 					)
 				);
