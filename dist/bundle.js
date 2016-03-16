@@ -46912,6 +46912,11 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var OPTIONS = {
+		CSV: 'csv',
+		PDF: 'pdf'
+	};
+
 	function mapStateToProps(state) {
 		return {
 			eddi: state.eddis.selected
@@ -46933,6 +46938,10 @@
 			month: date.getMonth(),
 			year: date.getFullYear()
 		};
+	}
+
+	function isActive(compare, value) {
+		return compare === value ? 'active' : '';
 	}
 
 	var Report = function (_Component) {
@@ -46960,7 +46969,8 @@
 					month: month,
 					day: day,
 					year: year
-				}
+				},
+				type: OPTIONS.CSV
 			};
 			return _this;
 		}
@@ -47012,6 +47022,12 @@
 				}
 			}
 		}, {
+			key: 'clickOption',
+			value: function clickOption(event, type) {
+				event.preventDefault();
+				this.setState({ type: type });
+			}
+		}, {
 			key: 'onStartChange',
 			value: function onStartChange(value) {
 				var start = this.state.start;
@@ -47026,20 +47042,21 @@
 				this.setState({ end: newEnd });
 			}
 		}, {
-			key: 'clickHandler',
-			value: function clickHandler(event) {
+			key: 'submitHandler',
+			value: function submitHandler(event) {
 				event.preventDefault();
 				var _state = this.state;
 				var start = _state.start;
 				var end = _state.end;
 				var readings = _state.readings;
+				var type = _state.type;
 				var focus = readings.filter(function (reading) {
 					var date = reading.date;
 					var startDate = new Date(start.year, start.month, start.day);
 					var endDate = new Date(end.year, end.month, end.day);
 					return date >= startDate && date <= endDate;
 				});
-				console.log((0, _data.formatReadingsToCsv)(focus));
+				if (isActive(OPTIONS.CSV, type)) console.log((0, _data.formatReadingsToCsv)(focus));
 			}
 		}, {
 			key: 'render',
@@ -47050,52 +47067,87 @@
 				var _state2 = this.state;
 				var start = _state2.start;
 				var end = _state2.end;
+				var type = _state2.type;
 
 				return _react2.default.createElement(
 					'div',
 					{ id: 'report', className: 'page' },
 					_react2.default.createElement(
-						'div',
-						null,
+						'form',
+						{ onSubmit: function onSubmit(event) {
+								return _this2.submitHandler(event);
+							} },
 						_react2.default.createElement(
 							'div',
 							null,
 							_react2.default.createElement(
-								'h3',
+								'div',
 								null,
-								'Start Report'
+								_react2.default.createElement(
+									'h3',
+									null,
+									'Start Report'
+								),
+								_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
+										return _this2.onStartChange(value);
+									},
+									year: start.year,
+									month: start.month,
+									day: start.day
+								})
 							),
-							_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
-									return _this2.onStartChange(value);
-								},
-								year: start.year,
-								month: start.month,
-								day: start.day
-							})
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement(
+									'h3',
+									null,
+									'End Report'
+								),
+								_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
+										return _this2.onEndChange(value);
+									},
+									year: end.year,
+									month: end.month,
+									day: end.day
+								})
+							),
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement(
+									'div',
+									{ className: isActive(OPTIONS.CSV, type),
+										onClick: function onClick(event) {
+											return _this2.clickOption(event, OPTIONS.CSV);
+										}
+									},
+									_react2.default.createElement(
+										'p',
+										null,
+										'CSV'
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: isActive(OPTIONS.PDF, type),
+										onClick: function onClick(event) {
+											return _this2.clickOption(event, OPTIONS.PDF);
+										}
+									},
+									_react2.default.createElement(
+										'p',
+										null,
+										'PDF'
+									)
+								)
+							)
 						),
 						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement(
-								'h3',
-								null,
-								'End Report'
-							),
-							_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
-									return _this2.onEndChange(value);
-								},
-								year: end.year,
-								month: end.month,
-								day: end.day
-							})
+							'button',
+							{ type: 'submit' },
+							'EXPORT'
 						)
-					),
-					_react2.default.createElement(
-						'button',
-						{ type: 'button', onClick: function onClick(event) {
-								return _this2.clickHandler(event);
-							} },
-						'EXPORT'
 					)
 				);
 			}
@@ -47951,9 +48003,9 @@
 	DateSelect.propTypes = {
 		onChange: _react.PropTypes.func.isRequired,
 		startYear: _react.PropTypes.number,
-		year: _react.PropTypes.number.isRequired,
-		day: _react.PropTypes.number.isRequired,
-		month: _react.PropTypes.number.isRequired
+		year: _react.PropTypes.number,
+		day: _react.PropTypes.number,
+		month: _react.PropTypes.number
 	};
 
 	DateSelect.defaultProps = {

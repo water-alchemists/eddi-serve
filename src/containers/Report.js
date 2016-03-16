@@ -8,6 +8,11 @@ import { mapDateToReadings, formatReadingsToCsv } from '../data';
 
 import DateSelect from '../components/DateSelect';
 
+const OPTIONS = {
+	CSV : 'csv',
+	PDF : 'pdf'
+}
+
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.selected
@@ -29,6 +34,10 @@ function getDateObject(date){
 	};
 }
 
+function isActive(compare, value){
+	return compare === value ? 'active' : '';
+}
+
 class Report extends Component {
 	constructor(props){
 		super(props);
@@ -48,7 +57,8 @@ class Report extends Component {
 				month,
 				day,
 				year
-			}
+			},
+			type : OPTIONS.CSV
 		};
 	}
 	componentWillMount(){
@@ -83,6 +93,11 @@ class Report extends Component {
 		}
 	}
 
+	clickOption(event, type){
+		event.preventDefault();
+		this.setState({ type });
+	}
+
 	onStartChange(value){
 		const { start } = this.state,
 			newStart = {
@@ -101,44 +116,58 @@ class Report extends Component {
 		this.setState({ end : newEnd });
 	}
 
-	clickHandler(event){
+	submitHandler(event){
 		event.preventDefault();
-		const { start, end, readings } = this.state,
+		const { start, end, readings, type } = this.state,
 			focus = readings.filter(reading => {
 				const { date } = reading,
 					startDate = new Date(start.year, start.month, start.day),
 					endDate = new Date(end.year, end.month, end.day);
 				return date >= startDate && date <= endDate;
 			});
-		console.log(formatReadingsToCsv(focus));
+		if(isActive(OPTIONS.CSV, type)) console.log(formatReadingsToCsv(focus));
 	}
 
 	render(){
 		const { eddi } = this.props,
-			{ start, end } = this.state;
+			{ start, end, type } = this.state;
 		return (
 			<div id="report" className='page'>
-				<div>
+				<form onSubmit={event => this.submitHandler(event)}>
 					<div>
-						<h3>Start Report</h3>
-						<DateSelect onChange={value => this.onStartChange(value)}
-							year={start.year}
-							month={start.month}
-							day={start.day}
-						/>
+						<div>
+							<h3>Start Report</h3>
+							<DateSelect onChange={value => this.onStartChange(value)}
+								year={start.year}
+								month={start.month}
+								day={start.day}
+							/>
+						</div>
+						<div>
+							<h3>End Report</h3>
+							<DateSelect onChange={value => this.onEndChange(value)}
+								year={end.year}
+								month={end.month}
+								day={end.day}
+							/>
+						</div>
+						<div>
+							<div className={isActive(OPTIONS.CSV, type)}
+								onClick={event => this.clickOption(event, OPTIONS.CSV)}
+							>
+								<p>CSV</p>
+							</div>
+							<div className={isActive(OPTIONS.PDF, type)}
+								onClick={event => this.clickOption(event, OPTIONS.PDF)}
+							>
+								<p>PDF</p>
+							</div>
+						</div>
 					</div>
-					<div>
-						<h3>End Report</h3>
-						<DateSelect onChange={value => this.onEndChange(value)}
-							year={end.year}
-							month={end.month}
-							day={end.day}
-						/>
-					</div>
-				</div>
-				<button type='button' onClick={event => this.clickHandler(event)}>
-					EXPORT
-				</button>
+					<button type='submit'>
+						EXPORT
+					</button>
+				</form>
 			</div>
 		);
 	}

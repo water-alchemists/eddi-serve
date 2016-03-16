@@ -79,9 +79,9 @@ class DateSelect extends Component {
 DateSelect.propTypes = {
 	onChange : PropTypes.func.isRequired,
 	startYear : PropTypes.number,
-	year : PropTypes.number.isRequired,
-	day : PropTypes.number.isRequired,
-	month : PropTypes.number.isRequired
+	year : PropTypes.number,
+	day : PropTypes.number,
+	month : PropTypes.number
 };
 
 DateSelect.defaultProps = {
