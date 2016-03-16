@@ -27243,15 +27243,18 @@
 				if (list instanceof Array && list.length) {
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: _constants.PATHS.SETTINGS, key: 'settings' },
-						'Settings'
-					), _react2.default.createElement(
-						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: query },
 							activeClassName: 'active',
 							key: 'dashboard'
 						},
 						'Dashboard'
+					), _react2.default.createElement(
+						_reactRouter.Link,
+						{ to: _constants.PATHS.SETTINGS,
+							activeClassName: 'active',
+							key: 'settings'
+						},
+						'Settings'
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.REPORT, query: query },
@@ -27288,7 +27291,9 @@
 							{ className: 'menu-options' },
 							_react2.default.createElement(
 								_reactRouter.Link,
-								{ to: _constants.PATHS.LIST },
+								{ to: _constants.PATHS.LIST,
+									activeClassName: 'active'
+								},
 								'Home'
 							),
 							menuOptions,
@@ -27388,7 +27393,7 @@
 
 
 	// module
-	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu .burger-menu .menu-options a.active {\n  color: white;\n  background-color: rgba(42, 191, 208, 0.5);\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
