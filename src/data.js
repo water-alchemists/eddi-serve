@@ -65,6 +65,16 @@ export function convertStringToMinutes(minString){
 	return parseInt(minString);
 }
 
+export const hourOptions = createHours(12);
+export const minutesOptions = createMinutes(5);
+export const aOptions = ['am', 'pm'];
+
+export const salinityOptions = {
+	min: 500,
+	default : 1000
+};
+
+//readings
 export function mapDateToReadings(readings){
 	return Object.keys(readings)
 		.map(utc => {
@@ -76,12 +86,3 @@ export function mapDateToReadings(readings){
 		.sort((a,b) => a.date > b.date);
 }
 
-export const hourOptions = createHours(12);
-export const minutesOptions = createMinutes(5);
-export const aOptions = ['am', 'pm'];
-
-
-export const salinityOptions = {
-	min: 500,
-	default : 1000
-};

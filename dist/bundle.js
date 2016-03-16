@@ -27243,24 +27243,27 @@
 				if (list instanceof Array && list.length) {
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: _constants.PATHS.SETTINGS },
+						{ to: _constants.PATHS.SETTINGS, key: 'settings' },
 						'Settings'
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: query },
-							activeClassName: 'active'
+							activeClassName: 'active',
+							key: 'dashboard'
 						},
 						'Dashboard'
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.REPORT, query: query },
-							activeClassName: 'active'
+							activeClassName: 'active',
+							key: 'report'
 						},
 						'Report'
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.TROUBLESHOOT, query: query },
-							activeClassName: 'active'
+							activeClassName: 'active',
+							key: 'troubleshoot'
 						},
 						'Troubleshoot'
 					)];
@@ -46374,6 +46377,16 @@
 		return parseInt(minString);
 	}
 
+	var hourOptions = exports.hourOptions = createHours(12);
+	var minutesOptions = exports.minutesOptions = createMinutes(5);
+	var aOptions = exports.aOptions = ['am', 'pm'];
+
+	var salinityOptions = exports.salinityOptions = {
+		min: 500,
+		default: 1000
+	};
+
+	//readings
 	function mapDateToReadings(readings) {
 		return Object.keys(readings).map(function (utc) {
 			return _extends({}, readings[utc], {
@@ -46383,15 +46396,6 @@
 			return a.date > b.date;
 		});
 	}
-
-	var hourOptions = exports.hourOptions = createHours(12);
-	var minutesOptions = exports.minutesOptions = createMinutes(5);
-	var aOptions = exports.aOptions = ['am', 'pm'];
-
-	var salinityOptions = exports.salinityOptions = {
-		min: 500,
-		default: 1000
-	};
 
 /***/ },
 /* 420 */
@@ -46856,6 +46860,8 @@
 
 	var _menu = __webpack_require__(310);
 
+	var _data = __webpack_require__(419);
+
 	var _DateSelect = __webpack_require__(433);
 
 	var _DateSelect2 = _interopRequireDefault(_DateSelect);
@@ -46882,11 +46888,22 @@
 		};
 	}
 
+	function getDateObject(date) {
+		if (!(date instanceof Date)) return;
+		return {
+			day: date.getDate(),
+			month: date.getMonth(),
+			year: date.getFullYear()
+		};
+	}
+
 	var Report = function (_Component) {
 		_inherits(Report, _Component);
 
 		function Report(props) {
 			_classCallCheck(this, Report);
+
+			// todays
 
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Report).call(this, props));
 
@@ -46897,8 +46914,8 @@
 
 			_this.state = {
 				start: {
-					month: null,
 					day: null,
+					month: null,
 					year: null
 				},
 				end: {
@@ -46917,8 +46934,19 @@
 				var updateMenuName = _props.updateMenuName;
 				var _props$eddi = _props.eddi;
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
+				var id = eddi.id;
+				var readings = eddi.readings;
+				var settings = eddi.settings;
 
-				if (eddi.id) updateMenuName(eddi.settings.name);
+				if (id) updateMenuName(settings.name);
+				if (readings) {
+					var formattedReadings = (0, _data.mapDateToReadings)(readings),
+					    start = getDateObject(formattedReadings[0].date);
+					this.setState({
+						start: start,
+						readings: formattedReadings
+					});
+				}
 			}
 		}, {
 			key: 'componentWillReceiveProps',
@@ -46928,9 +46956,22 @@
 				var _props2$eddi = _props2.eddi;
 				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
 				var eddi = newProps.eddi;
+				var id = eddi.id;
+				var readings = eddi.readings;
+				var settings = eddi.settings;
 
 
-				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
+				if (id !== oldEddi.id) {
+					updateMenuName(settings.name);
+					if (readings) {
+						var formattedReadings = (0, _data.mapDateToReadings)(readings),
+						    start = getDateObject(formattedReadings[0].date);
+						this.setState({
+							start: start,
+							readings: formattedReadings
+						});
+					}
+				}
 			}
 		}, {
 			key: 'onStartChange',
@@ -46953,6 +46994,7 @@
 				var _props3 = this.props;
 				var start = _props3.start;
 				var end = _props3.end;
+				var readings = _props3.readings;
 			}
 		}, {
 			key: 'render',
@@ -47005,7 +47047,9 @@
 					),
 					_react2.default.createElement(
 						'button',
-						null,
+						{ type: 'button', onClick: function onClick(event) {
+								return _this2.clickHandler(event);
+							} },
 						'EXPORT'
 					)
 				);
@@ -47730,6 +47774,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var MONTHS = (0, _data.createMonths)();
+	console.log(MONTHS);
 
 	var DateSelect = function (_Component) {
 		_inherits(DateSelect, _Component);
@@ -47745,7 +47790,7 @@
 			value: function onDayChange(event) {
 				event.preventDefault();
 				var onChange = this.props.onChange;
-				var day = event.target.value;
+				var day = parseInt(event.target.value);
 
 				if (onChange instanceof Function) onChange({ day: day });
 			}
@@ -47754,7 +47799,7 @@
 			value: function onMonthChange(event) {
 				event.preventDefault();
 				var onChange = this.props.onChange;
-				var month = event.target.value;
+				var month = parseInt(event.target.value);
 				if (onChange instanceof Function) onChange({ month: month });
 			}
 		}, {
@@ -47762,7 +47807,7 @@
 			value: function onYearChange(event) {
 				event.preventDefault();
 				var onChange = this.props.onChange;
-				var year = event.target.value;
+				var year = parseInt(event.target.value);
 
 				if (onChange instanceof Function) onChange({ year: year });
 			}

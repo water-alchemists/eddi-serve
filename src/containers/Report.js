@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { menuNameChange } from '../actions/menu';
 
+import { mapDateToReadings } from '../data';
+
 import DateSelect from '../components/DateSelect';
 
 function mapStateToProps(state){
@@ -18,9 +20,19 @@ function mapDispatchToProps(dispatch){
 	};
 }
 
+function getDateObject(date){
+	if(!(date instanceof Date)) return;
+	return {
+		day: date.getDate(),
+		month : date.getMonth(),
+		year : date.getFullYear()
+	};
+}
+
 class Report extends Component {
 	constructor(props){
 		super(props);
+		// todays
 		const today = new Date(),
 			day = today.getDate(),
 			month = today.getMonth(),
@@ -28,9 +40,9 @@ class Report extends Component {
 
 		this.state = {
 			start : {
-				month : null,
 				day : null,
-				year : null
+				month : null,
+				year : null,
 			}, 
 			end : {
 				month,
@@ -40,15 +52,35 @@ class Report extends Component {
 		};
 	}
 	componentWillMount(){
-		const { updateMenuName, eddi={} } = this.props;
-		if( eddi.id ) updateMenuName(eddi.settings.name);
+		const { updateMenuName, eddi={} } = this.props,
+			{ id, readings, settings } = eddi;
+		if( id ) updateMenuName(settings.name);
+		if(readings) {
+			const formattedReadings = mapDateToReadings(readings),
+				start = getDateObject(formattedReadings[0].date);
+			this.setState({
+				start,
+				readings : formattedReadings
+			});
+		}
 	}
 
 	componentWillReceiveProps(newProps){
 		const { updateMenuName, eddi:oldEddi={} } = this.props,
-			{ eddi } = newProps;
+			{ eddi } = newProps,
+			{ id, readings, settings } = eddi;
 
-		if( eddi.id !== oldEddi.id ) updateMenuName(eddi.settings.name);
+		if( id !== oldEddi.id ) {
+			updateMenuName(settings.name);
+			if(readings) {
+				const formattedReadings = mapDateToReadings(readings),
+					start = getDateObject(formattedReadings[0].date);
+				this.setState({
+					start,
+					readings: formattedReadings
+				});
+			}
+		}
 	}
 
 	onStartChange(value){
@@ -71,7 +103,8 @@ class Report extends Component {
 
 	clickHandler(event){
 		event.preventDefault();
-		const { start, end } = this.props;
+		const { start, end, readings } = this.props;
+		
 	}
 
 	render(){
@@ -97,7 +130,9 @@ class Report extends Component {
 						/>
 					</div>
 				</div>
-				<button>EXPORT</button>
+				<button type='button' onClick={event => this.clickHandler(event)}>
+					EXPORT
+				</button>
 			</div>
 		);
 	}

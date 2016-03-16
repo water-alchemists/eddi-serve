@@ -4,26 +4,27 @@ import React, { Component, PropTypes } from 'react';
 import { createDays, createMonths, createYears } from '../data';
 
 const MONTHS = createMonths();
+console.log(MONTHS);
 
 class DateSelect extends Component {
 	onDayChange(event){
 		event.preventDefault();
 		const { onChange } = this.props,
-			day = event.target.value;
+			day = parseInt(event.target.value);
 
 		if(onChange instanceof Function) onChange({ day });
 	}
 	onMonthChange(event){
 		event.preventDefault();
 		const { onChange } = this.props,
-			month = event.target.value;
+			month = parseInt(event.target.value);
 		if(onChange instanceof Function) onChange({ month });
 	}
 
 	onYearChange(event){
 		event.preventDefault();
 		const { onChange } = this.props,
-			year = event.target.value;
+			year = parseInt(event.target.value);
 
 		if(onChange instanceof Function) onChange({ year });
 	}
