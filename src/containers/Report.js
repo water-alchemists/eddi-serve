@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { menuNameChange } from '../actions/menu';
 
-import { mapDateToReadings } from '../data';
+import { mapDateToReadings, formatReadingsToCsv } from '../data';
 
 import DateSelect from '../components/DateSelect';
 
@@ -103,8 +103,14 @@ class Report extends Component {
 
 	clickHandler(event){
 		event.preventDefault();
-		const { start, end, readings } = this.props;
-		
+		const { start, end, readings } = this.state,
+			focus = readings.filter(reading => {
+				const { date } = reading,
+					startDate = new Date(start.year, start.month, start.day),
+					endDate = new Date(end.year, end.month, end.day);
+				return date >= startDate && date <= endDate;
+			});
+		console.log(formatReadingsToCsv(focus));
 	}
 
 	render(){

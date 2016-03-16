@@ -86,3 +86,43 @@ export function mapDateToReadings(readings){
 		.sort((a,b) => a.date > b.date);
 }
 
+export function formatReadingsToCsv(readings){
+	const mapping = [
+		{
+			key : 'date',
+			name : 'Date'
+		},
+		{
+			key : 'ppmIn',
+			name : 'Salinity In'
+		},
+		{
+			key : 'ppmOut',
+			name : 'Salinity Out'
+		},
+		{
+			key : 'ppmRec',
+			name : 'Salinity Recycled'
+		},
+		{
+			key : 'qDump',
+			name : 'Dump Flow'
+		},
+		{
+			key : 'qOut',
+			name : 'Water Flow'
+		}
+	],
+	first = mapping.map(map => map.name)
+				.reduce((row, header) => `${row},${header}`);
+
+	return readings
+		.map(reading => {
+			return mapping.reduce((row, map, i) => {
+				let value = reading[map.key]
+				if(!i) return moment(value).format('MM-DD-YYYY HH:mm');
+				return`${row},${value}`;
+			},'');
+		})
+		.reduce((body, row) => `${body}\n${row}`, first);
+}

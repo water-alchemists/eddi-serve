@@ -46306,6 +46306,7 @@
 	exports.convertMinutesToString = convertMinutesToString;
 	exports.convertStringToMinutes = convertStringToMinutes;
 	exports.mapDateToReadings = mapDateToReadings;
+	exports.formatReadingsToCsv = formatReadingsToCsv;
 
 	var _moment = __webpack_require__(317);
 
@@ -46395,6 +46396,43 @@
 		}).sort(function (a, b) {
 			return a.date > b.date;
 		});
+	}
+
+	function formatReadingsToCsv(readings) {
+		var mapping = [{
+			key: 'date',
+			name: 'Date'
+		}, {
+			key: 'ppmIn',
+			name: 'Salinity In'
+		}, {
+			key: 'ppmOut',
+			name: 'Salinity Out'
+		}, {
+			key: 'ppmRec',
+			name: 'Salinity Recycled'
+		}, {
+			key: 'qDump',
+			name: 'Dump Flow'
+		}, {
+			key: 'qOut',
+			name: 'Water Flow'
+		}],
+		    first = mapping.map(function (map) {
+			return map.name;
+		}).reduce(function (row, header) {
+			return row + ',' + header;
+		});
+
+		return readings.map(function (reading) {
+			return mapping.reduce(function (row, map, i) {
+				var value = reading[map.key];
+				if (!i) return (0, _moment2.default)(value).format('MM-DD-YYYY HH:mm');
+				return row + ',' + value;
+			}, '');
+		}).reduce(function (body, row) {
+			return body + '\n' + row;
+		}, first);
 	}
 
 /***/ },
@@ -46991,10 +47029,17 @@
 			key: 'clickHandler',
 			value: function clickHandler(event) {
 				event.preventDefault();
-				var _props3 = this.props;
-				var start = _props3.start;
-				var end = _props3.end;
-				var readings = _props3.readings;
+				var _state = this.state;
+				var start = _state.start;
+				var end = _state.end;
+				var readings = _state.readings;
+				var focus = readings.filter(function (reading) {
+					var date = reading.date;
+					var startDate = new Date(start.year, start.month, start.day);
+					var endDate = new Date(end.year, end.month, end.day);
+					return date >= startDate && date <= endDate;
+				});
+				console.log((0, _data.formatReadingsToCsv)(focus));
 			}
 		}, {
 			key: 'render',
@@ -47002,9 +47047,9 @@
 				var _this2 = this;
 
 				var eddi = this.props.eddi;
-				var _state = this.state;
-				var start = _state.start;
-				var end = _state.end;
+				var _state2 = this.state;
+				var start = _state2.start;
+				var end = _state2.end;
 
 				return _react2.default.createElement(
 					'div',
