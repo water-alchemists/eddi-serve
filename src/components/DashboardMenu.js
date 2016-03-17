@@ -15,24 +15,24 @@ class DashboardMenu extends Component {
  		return (
 			<div className='dashboard-menu'>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_IN }} }
-					activeClassName='active'
-				>
+							activeClassName='active'>
+					<div className='sprite salinityIn' />
 					<div>in</div>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_OUT }} }
-					activeClassName='active'
-					className={classString}
-				>
+							activeClassName='active'
+					className={classString}>
+					<div className='sprite salinityOut' />
 					<div>out</div>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.FLOW }} }
-					activeClassName='active'
-				>
+							activeClassName='active'>
+					<div className='sprite flow' />
 					<div>flow</div>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.POWER }} }
-					activeClassName='active'
-				>
+							activeClassName='active'>
+					<div className='sprite power' />							
 					<div>power</div>
 				</Link>
 			</div>

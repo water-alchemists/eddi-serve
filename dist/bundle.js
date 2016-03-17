@@ -22262,8 +22262,8 @@
 	  var finishTransition = options.finishTransition;
 	  var saveState = options.saveState;
 	  var go = options.go;
-	  var keyLength = options.keyLength;
 	  var getUserConfirmation = options.getUserConfirmation;
+	  var keyLength = options.keyLength;
 
 	  if (typeof keyLength !== 'number') keyLength = DefaultKeyLength;
 
@@ -22648,24 +22648,56 @@
 	"use strict";
 
 	exports.__esModule = true;
+	var _slice = Array.prototype.slice;
 	exports.loopAsync = loopAsync;
 
 	function loopAsync(turns, work, callback) {
-	  var currentTurn = 0;
-	  var isDone = false;
+	  var currentTurn = 0,
+	      isDone = false;
+	  var sync = false,
+	      hasNext = false,
+	      doneArgs = undefined;
 
 	  function done() {
 	    isDone = true;
+	    if (sync) {
+	      // Iterate instead of recursing if possible.
+	      doneArgs = [].concat(_slice.call(arguments));
+	      return;
+	    }
+
 	    callback.apply(this, arguments);
 	  }
 
 	  function next() {
-	    if (isDone) return;
+	    if (isDone) {
+	      return;
+	    }
 
-	    if (currentTurn < turns) {
+	    hasNext = true;
+	    if (sync) {
+	      // Iterate instead of recursing if possible.
+	      return;
+	    }
+
+	    sync = true;
+
+	    while (!isDone && currentTurn < turns && hasNext) {
+	      hasNext = false;
 	      work.call(this, currentTurn++, next, done);
-	    } else {
-	      done.apply(this, arguments);
+	    }
+
+	    sync = false;
+
+	    if (isDone) {
+	      // This means the loop finished synchronously.
+	      callback.apply(this, doneArgs);
+	      return;
+	    }
+
+	    if (currentTurn >= turns && hasNext) {
+	      isDone = true;
+	      callback();
 	    }
 	  }
 
@@ -22796,8 +22828,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 	var _warning = __webpack_require__(185);
 
 	var _warning2 = _interopRequireDefault(_warning);
@@ -22835,12 +22865,11 @@
 	function useQueries(createHistory) {
 	  return function () {
 	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	    var history = createHistory(options);
+
 	    var stringifyQuery = options.stringifyQuery;
 	    var parseQueryString = options.parseQueryString;
-
-	    var historyOptions = _objectWithoutProperties(options, ['stringifyQuery', 'parseQueryString']);
-
-	    var history = createHistory(historyOptions);
 
 	    if (typeof stringifyQuery !== 'function') stringifyQuery = defaultStringifyQuery;
 
@@ -23151,7 +23180,9 @@
 	    _TransitionUtils.runLeaveHooks(leaveRoutes);
 
 	    // Tear down confirmation hooks for left routes
-	    leaveRoutes.forEach(removeListenBeforeHooksForRoute);
+	    leaveRoutes.filter(function (route) {
+	      return enterRoutes.indexOf(route) === -1;
+	    }).forEach(removeListenBeforeHooksForRoute);
 
 	    _TransitionUtils.runEnterHooks(enterRoutes, nextState, function (error, redirectInfo) {
 	      if (error) {
@@ -23420,16 +23451,25 @@
 	  var leaveRoutes = undefined,
 	      enterRoutes = undefined;
 	  if (prevRoutes) {
-	    leaveRoutes = prevRoutes.filter(function (route) {
-	      return nextRoutes.indexOf(route) === -1 || routeParamsChanged(route, prevState, nextState);
-	    });
+	    (function () {
+	      var parentIsLeaving = false;
+	      leaveRoutes = prevRoutes.filter(function (route) {
+	        if (parentIsLeaving) {
+	          return true;
+	        } else {
+	          var isLeaving = nextRoutes.indexOf(route) === -1 || routeParamsChanged(route, prevState, nextState);
+	          if (isLeaving) parentIsLeaving = true;
+	          return isLeaving;
+	        }
+	      });
 
-	    // onLeave hooks start at the leaf route.
-	    leaveRoutes.reverse();
+	      // onLeave hooks start at the leaf route.
+	      leaveRoutes.reverse();
 
-	    enterRoutes = nextRoutes.filter(function (route) {
-	      return prevRoutes.indexOf(route) === -1 || leaveRoutes.indexOf(route) !== -1;
-	    });
+	      enterRoutes = nextRoutes.filter(function (route) {
+	        return prevRoutes.indexOf(route) === -1 || leaveRoutes.indexOf(route) !== -1;
+	      });
+	    })();
 	  } else {
 	    leaveRoutes = [];
 	    enterRoutes = nextRoutes;
@@ -25626,8 +25666,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 	var _ExecutionEnvironment = __webpack_require__(189);
 
 	var _PathUtils = __webpack_require__(188);
@@ -25643,11 +25681,10 @@
 	function useBasename(createHistory) {
 	  return function () {
 	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	    var history = createHistory(options);
+
 	    var basename = options.basename;
-
-	    var historyOptions = _objectWithoutProperties(options, ['basename']);
-
-	    var history = createHistory(historyOptions);
 
 	    // Automatically use the value of <base href> in HTML
 	    // documents as basename if it's not explicitly given.
@@ -25848,19 +25885,20 @@
 
 	  function getCurrentLocation() {
 	    var entry = entries[current];
-	    var key = entry.key;
 	    var basename = entry.basename;
 	    var pathname = entry.pathname;
 	    var search = entry.search;
 
 	    var path = (basename || '') + pathname + (search || '');
 
-	    var state = undefined;
-	    if (key) {
+	    var key = undefined,
+	        state = undefined;
+	    if (entry.key) {
+	      key = entry.key;
 	      state = readState(key);
 	    } else {
-	      state = null;
 	      key = history.createKey();
+	      state = null;
 	      entry.key = key;
 	    }
 
@@ -26707,7 +26745,7 @@
 		var timing = _action$timing === undefined ? {} : _action$timing;
 
 
-		var newList = undefined;
+		var newList = void 0;
 
 		switch (type) {
 			case _constants.APP_START_SUCCESS:
@@ -26716,7 +26754,7 @@
 					selected: selected
 				});
 			case _constants.EDDI_GETALL_SUCCESS:
-				var newSelected = undefined;
+				var newSelected = void 0;
 				if (list.length > 0) {
 					if (!state.selected) {
 						newSelected = list[0];
@@ -26997,19 +27035,19 @@
 
 	var _Dashboard3 = _interopRequireDefault(_Dashboard2);
 
-	var _List2 = __webpack_require__(303);
+	var _List2 = __webpack_require__(413);
 
 	var _List3 = _interopRequireDefault(_List2);
 
-	var _Settings2 = __webpack_require__(313);
+	var _Settings2 = __webpack_require__(422);
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(421);
+	var _Troubleshoot2 = __webpack_require__(429);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(423);
+	var _Report2 = __webpack_require__(431);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -27238,7 +27276,7 @@
 					id: selected.id
 				};
 				console.log('this is the menu', menu, name);
-				var menuOptions = undefined;
+				var menuOptions = void 0;
 
 				if (list instanceof Array && list.length) {
 					menuOptions = [_react2.default.createElement(
@@ -30127,7 +30165,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	exports.default = function () {
-		var init = undefined;
+		var init = void 0;
 		if (init) return init;else {
 			init = new EddiFire();
 			return init;
@@ -31115,7 +31153,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	exports.default = function () {
-		var init = undefined;
+		var init = void 0;
 		if (init) return init;else {
 			init = new CookieStore();
 			return init;
@@ -31237,7 +31275,7 @@
 				//after you got them all, dispatch for update all
 				var profile = data[0],
 				    list = data[1];
-				var selected = undefined;
+				var selected = void 0;
 				if (list.length) {
 					var potential = list.filter(function (eddi) {
 						return eddi.id === eddiId;
@@ -31291,7 +31329,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n}\n.sprite.home {\n  background-position: 0 0;\n}\n.sprite.home.green {\n  background-position: 20px 0px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
 
 	// exports
 
@@ -31887,27 +31925,27 @@
 
 	var _reactRedux = __webpack_require__(171);
 
-	var _menu = __webpack_require__(310);
+	var _menu = __webpack_require__(303);
 
 	var _eddis = __webpack_require__(285);
 
 	var _constants = __webpack_require__(246);
 
-	var _data = __webpack_require__(419);
+	var _data = __webpack_require__(304);
 
-	var _DashboardMenu = __webpack_require__(424);
+	var _DashboardMenu = __webpack_require__(405);
 
 	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
 
-	var _DashboardSalinity = __webpack_require__(425);
+	var _DashboardSalinity = __webpack_require__(406);
 
 	var _DashboardSalinity2 = _interopRequireDefault(_DashboardSalinity);
 
-	var _DashboardFlow = __webpack_require__(427);
+	var _DashboardFlow = __webpack_require__(409);
 
 	var _DashboardFlow2 = _interopRequireDefault(_DashboardFlow);
 
-	var _Dashboard = __webpack_require__(429);
+	var _Dashboard = __webpack_require__(411);
 
 	var _Dashboard2 = _interopRequireDefault(_Dashboard);
 
@@ -32071,393 +32109,6 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(171);
-
-	var _reactRouter = __webpack_require__(182);
-
-	var _constants = __webpack_require__(246);
-
-	var _EddiListItem = __webpack_require__(304);
-
-	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
-
-	var _AddEddiButton = __webpack_require__(307);
-
-	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
-
-	var _eddis = __webpack_require__(285);
-
-	var _menu = __webpack_require__(310);
-
-	var _List = __webpack_require__(311);
-
-	var _List2 = _interopRequireDefault(_List);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			user: state.user,
-			eddis: state.eddis.list
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			navigateTo: function navigateTo(pathname, query) {
-				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
-			},
-			getEddisByUser: function getEddisByUser() {
-				return dispatch((0, _eddis.getAllEddiByUserThunk)());
-			},
-			updateMenuName: function updateMenuName(name) {
-				return dispatch((0, _menu.menuNameChange)(name));
-			}
-		};
-	}
-
-	var List = function (_Component) {
-		_inherits(List, _Component);
-
-		function List(props) {
-			_classCallCheck(this, List);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(List).call(this, props));
-
-			_this.state = {};
-			return _this;
-		}
-
-		_createClass(List, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _props = this.props;
-				var user = _props.user;
-				var getEddisByUser = _props.getEddisByUser;
-				var updateMenuName = _props.updateMenuName;
-
-				updateMenuName('my eddis');
-				if (user) getEddisByUser();
-			}
-		}, {
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps) {
-				var _props2 = this.props;
-				var user = _props2.user;
-				var getEddisByUser = _props2.getEddisByUser;
-
-				if (nextProps.user !== user) return getEddisByUser();
-			}
-		}, {
-			key: 'clickHandler',
-			value: function clickHandler(destination, query) {
-				var navigateTo = this.props.navigateTo;
-
-				navigateTo(destination, query);
-			}
-		}, {
-			key: 'navigateTo',
-			value: function navigateTo(key) {
-				var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-				var pathname = _constants.PATHS[key],
-				    destination = {
-					pathname: pathname,
-					query: query
-				};
-
-				if (pathname) return _reactRouter.browserHistory.push(destination);
-			}
-		}, {
-			key: '_renderEddis',
-			value: function _renderEddis() {
-				var eddis = this.props.eddis;
-
-				if (eddis) {
-					return eddis.map(function (eddi, i) {
-						return _react2.default.createElement(_EddiListItem2.default, { key: eddi.id, eddi: eddi });
-					});
-				}
-			}
-		}, {
-			key: '_renderNoEddis',
-			value: function _renderNoEddis() {
-				return _react2.default.createElement(
-					'div',
-					{ className: 'eddis-empty' },
-					_react2.default.createElement(
-						'p',
-						null,
-						' Currently you are not tracking any eddis. '
-					),
-					_react2.default.createElement(_AddEddiButton2.default, null)
-				);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _props3 = this.props;
-				var user = _props3.user;
-				var eddis = _props3.eddis;
-
-
-				var showEddi = undefined;
-				if (eddis && eddis.length) {
-					showEddi = this._renderEddis();
-				} else {
-					showEddi = this._renderNoEddis();
-				}
-
-				return _react2.default.createElement(
-					'div',
-					{ id: 'list', className: 'page' },
-					showEddi
-				);
-			}
-		}]);
-
-		return List;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(List);
-
-/***/ },
-/* 304 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _constants = __webpack_require__(246);
-
-	var _reactRouter = __webpack_require__(182);
-
-	var _EddiListItem = __webpack_require__(305);
-
-	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var EddiListItem = function (_Component) {
-	  _inherits(EddiListItem, _Component);
-
-	  function EddiListItem() {
-	    _classCallCheck(this, EddiListItem);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(EddiListItem).apply(this, arguments));
-	  }
-
-	  _createClass(EddiListItem, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        _reactRouter.Link,
-	        { to: { pathname: _constants.PATHS.DASHBOARD, query: { id: this.props.eddi.id } },
-	          className: 'eddi-list-item', style: { backgroundImage: "url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')" } },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'eddi-item-overlay' },
-	          this.props.eddi.settings.name
-	        )
-	      );
-	    }
-	  }]);
-
-	  return EddiListItem;
-	}(_react.Component);
-
-	exports.default = EddiListItem;
-
-/***/ },
-/* 305 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(306);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(260)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiListItem.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiListItem.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 306 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(259)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".eddi-list-item {\n  display: block;\n  background-position: center;\n  background-size: cover;\n  text-decoration: none;\n  color: white;\n  font-size: 17px;\n  text-shadow: 1px 1px 4px black;\n}\n.eddi-list-item .eddi-item-overlay {\n  width: 100%;\n  height: 100px;\n  background-color: rgba(0, 0, 0, 0.2);\n  line-height: 100px;\n  text-align: center;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 307 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(171);
-
-	var _modal = __webpack_require__(282);
-
-	var _AddEddiButton = __webpack_require__(308);
-
-	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapDispatchToProps(dispatch) {
-	  return {
-	    openAddForm: function openAddForm() {
-	      return dispatch((0, _modal.modalShow)('AddEddiModal'));
-	    }
-	  };
-	}
-
-	var AddEddiButton = function (_Component) {
-	  _inherits(AddEddiButton, _Component);
-
-	  function AddEddiButton() {
-	    _classCallCheck(this, AddEddiButton);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiButton).apply(this, arguments));
-	  }
-
-	  _createClass(AddEddiButton, [{
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'add-eddi-button', onClick: function onClick() {
-	            return _this2.props.openAddForm();
-	          } },
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          'add new +'
-	        )
-	      );
-	    }
-	  }]);
-
-	  return AddEddiButton;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(AddEddiButton);
-
-/***/ },
-/* 308 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(309);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(260)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiButton.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiButton.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 309 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(259)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".add-eddi-button {\n  background-color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  color: white;\n  width: 160px;\n  margin: 0 auto;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 310 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
 	exports.menuNameChange = menuNameChange;
 
 	var _constants = __webpack_require__(246);
@@ -32470,47 +32121,7 @@
 	}
 
 /***/ },
-/* 311 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(312);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(260)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./List.less", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./List.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 312 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(259)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "#list .eddis-empty {\n  margin: 40px;\n  text-align: center;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 313 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32518,462 +32129,149 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(171);
-
-	var _eddis = __webpack_require__(285);
-
-	var _menu = __webpack_require__(310);
-
-	var _AddEddiButton = __webpack_require__(307);
-
-	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
-
-	var _SettingsEddi = __webpack_require__(314);
-
-	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddis: state.eddis.list
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			assignEddi: function assignEddi(eddiId) {
-				return dispatch((0, _eddis.assignEddiThunk)(eddiId));
-			},
-			updateStart: function updateStart(eddiId, hour, minutes) {
-				return dispatch((0, _eddis.setEddiStartThunk)(eddiId, hour, minutes));
-			},
-			updateEnd: function updateEnd(eddiId, hour, minutes) {
-				return dispatch((0, _eddis.setEddiEndThunk)(eddiId, hour, minutes));
-			},
-			updateSalinity: function updateSalinity(eddiId, salinity) {
-				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
-			},
-			getAllEddis: function getAllEddis() {
-				return dispatch((0, _eddis.getAllEddiByUserThunk)());
-			},
-			updateMenuName: function updateMenuName(name) {
-				return dispatch((0, _menu.menuNameChange)(name));
-			}
-		};
-	}
-
-	var Settings = function (_Component) {
-		_inherits(Settings, _Component);
-
-		function Settings() {
-			_classCallCheck(this, Settings);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Settings).apply(this, arguments));
-		}
-
-		_createClass(Settings, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _props = this.props;
-				var getAllEddis = _props.getAllEddis;
-				var updateMenuName = _props.updateMenuName;
-
-				getAllEddis();
-				updateMenuName('Settings');
-			}
-		}, {
-			key: 'onSalinityChange',
-			value: function onSalinityChange(id, salinity) {
-				var updateSalinity = this.props.updateSalinity;
-
-				updateSalinity(id, salinity);
-			}
-		}, {
-			key: 'onStartChange',
-			value: function onStartChange(id, hour, minutes) {
-				var updateStart = this.props.updateStart;
-
-				updateStart(id, hour, minutes);
-			}
-		}, {
-			key: 'onEndChange',
-			value: function onEndChange(id, hour, minutes) {
-				var updateEnd = this.props.updateEnd;
-
-				updateEnd(id, hour, minutes);
-			}
-		}, {
-			key: '_renderEddis',
-			value: function _renderEddis() {
-				var _props2 = this.props;
-				var eddis = _props2.eddis;
-				var updateSalinity = _props2.updateSalinity;
-				var updateEnd = _props2.updateEnd;
-				var updateStart = _props2.updateStart;
-
-				return eddis.map(function (eddi) {
-					var eddiId = eddi.id;
-					return _react2.default.createElement(_SettingsEddi2.default, { eddi: eddi,
-						onSalinityChange: function onSalinityChange(salinity) {
-							return updateSalinity(eddiId, salinity);
-						},
-						onStartChange: function onStartChange(hour, minutes) {
-							return updateStart(eddiId, hour, minutes);
-						},
-						onEndChange: function onEndChange(hour, minutes) {
-							return updateEnd(eddiId, hour, minutes);
-						}
-					});
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var EddiElements = this._renderEddis();
-				return _react2.default.createElement(
-					'div',
-					{ id: 'settings', className: 'page' },
-					_react2.default.createElement(
-						'div',
-						null,
-						EddiElements
-					),
-					_react2.default.createElement(_AddEddiButton2.default, null)
-				);
-			}
-		}]);
-
-		return Settings;
-	}(_react.Component);
-
-	var styles = {
-		addButton: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'center'
-		}
-	};
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
-
-/***/ },
-/* 314 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _SettingsEddiHeader = __webpack_require__(315);
-
-	var _SettingsEddiHeader2 = _interopRequireDefault(_SettingsEddiHeader);
-
-	var _SettingsEddiVersion = __webpack_require__(316);
-
-	var _SettingsEddiVersion2 = _interopRequireDefault(_SettingsEddiVersion);
-
-	var _SettingsEddiForm = __webpack_require__(417);
-
-	var _SettingsEddiForm2 = _interopRequireDefault(_SettingsEddiForm);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var SettingsEddi = function (_Component) {
-		_inherits(SettingsEddi, _Component);
-
-		function SettingsEddi() {
-			_classCallCheck(this, SettingsEddi);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddi).apply(this, arguments));
-		}
-
-		_createClass(SettingsEddi, [{
-			key: 'render',
-			value: function render() {
-				var _props = this.props;
-				var eddi = _props.eddi;
-				var _onSalinityChange = _props.onSalinityChange;
-				var _onEndChange = _props.onEndChange;
-				var _onStartChange = _props.onStartChange;
-				var _eddi$version = eddi.version;
-				var version = _eddi$version === undefined ? {} : _eddi$version;
-				var _eddi$settings = eddi.settings;
-				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
-				var name = settings.name;
-				var _settings$timing = settings.timing;
-				var timing = _settings$timing === undefined ? {} : _settings$timing;
-				var salinity = settings.salinity;
-
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_SettingsEddiHeader2.default, {
-						name: settings.name
-					}),
-					_react2.default.createElement(_SettingsEddiVersion2.default, {
-						artikNumber: version.artik.number,
-						artikDate: new Date(version.artik.updated),
-						eddiNumber: version.eddi.number,
-						eddiDate: new Date(version.eddi.updated)
-					}),
-					_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(salinity) {
-							return _onSalinityChange(salinity);
-						},
-						onEndChange: function onEndChange(hour, minutes) {
-							return _onEndChange(hour, minutes);
-						},
-						onStartChange: function onStartChange(hour, minutes) {
-							return _onStartChange(hour, minutes);
-						},
-						salinityValue: salinity,
-						startValue: timing.start,
-						endValue: timing.end
-					})
-				);
-			}
-		}]);
-
-		return SettingsEddi;
-	}(_react.Component);
-
-	SettingsEddi.propTypes = {
-		onSalinityChange: PropTypes.func.isRequired,
-		onStartChange: PropTypes.func.isRequired,
-		onEndChange: PropTypes.func.isRequired,
-		eddi: PropTypes.shape({
-			version: PropTypes.shape({
-				eddi: PropTypes.shape({
-					number: PropTypes.string,
-					updated: PropTypes.string
-				}),
-				artik: PropTypes.shape({
-					number: PropTypes.string,
-					updated: PropTypes.string
-				})
-			}),
-			settings: PropTypes.shape({
-				name: PropTypes.string,
-				timing: PropTypes.shape({
-					start: PropTypes.shape({
-						hour: PropTypes.number,
-						minute: PropTypes.number
-					}),
-					end: PropTypes.shape({
-						hour: PropTypes.number,
-						minute: PropTypes.number
-					})
-				}),
-				salinity: PropTypes.number
-			})
-		}).isRequired
-	};
-
-	exports.default = SettingsEddi;
-
-/***/ },
-/* 315 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var SettingsEddiHeader = function (_Component) {
-		_inherits(SettingsEddiHeader, _Component);
-
-		function SettingsEddiHeader() {
-			_classCallCheck(this, SettingsEddiHeader);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddiHeader).apply(this, arguments));
-		}
-
-		_createClass(SettingsEddiHeader, [{
-			key: 'render',
-			value: function render() {
-				var name = this.props.name;
-				var formattedName = name.toUpperCase();
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'p',
-						null,
-						formattedName
-					)
-				);
-			}
-		}]);
-
-		return SettingsEddiHeader;
-	}(_react.Component);
-
-	SettingsEddiHeader.propTypes = {
-		name: PropTypes.string.isRequired
-	};
-
-	exports.default = SettingsEddiHeader;
-
-/***/ },
-/* 316 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _moment = __webpack_require__(317);
+	exports.salinityOptions = exports.aOptions = exports.minutesOptions = exports.hourOptions = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.createDays = createDays;
+	exports.createMonths = createMonths;
+	exports.createYears = createYears;
+	exports.convertMilitaryToNormal = convertMilitaryToNormal;
+	exports.convertNormalToMilitary = convertNormalToMilitary;
+	exports.convertMinutesToString = convertMinutesToString;
+	exports.convertStringToMinutes = convertStringToMinutes;
+	exports.mapDateToReadings = mapDateToReadings;
+	exports.formatReadingsToCsv = formatReadingsToCsv;
+
+	var _moment = __webpack_require__(305);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	_moment2.default.locale('en');
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	function createHours(num) {
+		var hourOptions = [];
+		for (var i = 0; i < num; i++) {
+			hourOptions.push(i + 1);
+		}
+		return hourOptions;
+	}
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function createMinutes(increment) {
+		var minutesOptions = [];
+		var minuteString = void 0;
+		for (var i = 0; i < 60; i += increment) {
+			minuteString = (0, _moment2.default)(i, 'm').format('mm');
+			minutesOptions.push(minuteString);
+		}
+		return minutesOptions;
+	}
 
-	var PropTypes = _react2.default.PropTypes;
+	function createDays(month, year) {
+		//month is supposed to be zero-based
+		if (typeof month === 'string') month = _moment2.default.month(month);
+		var max = new Date(year, month, 0).getDate(),
+		    days = [];
+		for (var i = 0; i < max; i++) {
+			days.push(i + 1);
+		}
+		return days;
+	}
 
-	var SettingsEddiVersion = function (_Component) {
-		_inherits(SettingsEddiVersion, _Component);
+	function createMonths() {
+		return _moment2.default.months();
+	}
 
-		function SettingsEddiVersion() {
-			_classCallCheck(this, SettingsEddiVersion);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddiVersion).apply(this, arguments));
+	function createYears(start) {
+		var years = [],
+		    current = new Date().getFullYear();
+		for (var i = start; i <= current; i++) {
+			years.push(i);
 		}
 
-		_createClass(SettingsEddiVersion, [{
-			key: 'render',
-			value: function render() {
-				var _props = this.props;
-				var artikNumber = _props.artikNumber;
-				var artikDate = _props.artikDate;
-				var eddiNumber = _props.eddiNumber;
-				var eddiDate = _props.eddiDate;
-				var formattedArtikDate = (0, _moment2.default)(artikDate).format('M/D/YY');
-				var formattedEddiDate = (0, _moment2.default)(eddiDate).format('M/D/YY');
+		return years;
+	}
 
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						{ style: styles.row },
-						_react2.default.createElement(
-							'p',
-							{ style: styles.bold },
-							'EDDI ' + eddiNumber
-						),
-						_react2.default.createElement(
-							'p',
-							null,
-							'updated ' + formattedEddiDate
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ style: styles.row },
-						_react2.default.createElement(
-							'p',
-							{ style: styles.bold },
-							'ARTIK ' + artikNumber
-						),
-						_react2.default.createElement(
-							'p',
-							null,
-							'released ' + formattedArtikDate
-						)
-					)
-				);
-			}
-		}]);
+	function convertMilitaryToNormal(hour) {
+		var time = (0, _moment2.default)({ hour: hour });
+		return time.format('h a').split(' ');
+	}
 
-		return SettingsEddiVersion;
-	}(_react.Component);
+	function convertNormalToMilitary(hour, a) {
+		var time = (0, _moment2.default)(hour + ' ' + a, 'h a');
+		return parseInt(time.format('H'));
+	}
 
-	SettingsEddiVersion.propTypes = {
-		artikNumber: PropTypes.string.isRequired,
-		artikDate: PropTypes.instanceOf(Date).isRequired,
-		eddiNumber: PropTypes.string.isRequired,
-		eddiDate: PropTypes.instanceOf(Date).isRequired
+	function convertMinutesToString(minute) {
+		var time = (0, _moment2.default)({ minute: minute });
+		return time.format('mm');
+	}
+
+	function convertStringToMinutes(minString) {
+		return parseInt(minString);
+	}
+
+	var hourOptions = exports.hourOptions = createHours(12);
+	var minutesOptions = exports.minutesOptions = createMinutes(5);
+	var aOptions = exports.aOptions = ['am', 'pm'];
+
+	var salinityOptions = exports.salinityOptions = {
+		min: 500,
+		default: 1000
 	};
 
-	var styles = {
-		row: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'center'
-		},
-		bold: {
-			fontWeight: 'bold'
-		}
-	};
+	//readings
+	function mapDateToReadings(readings) {
+		return Object.keys(readings).map(function (utc) {
+			return _extends({}, readings[utc], {
+				date: new Date(utc * 1000)
+			});
+		}).sort(function (a, b) {
+			return a.date > b.date;
+		});
+	}
 
-	exports.default = SettingsEddiVersion;
+	function formatReadingsToCsv(readings) {
+		var mapping = [{
+			key: 'date',
+			name: 'Date'
+		}, {
+			key: 'ppmIn',
+			name: 'Salinity In'
+		}, {
+			key: 'ppmOut',
+			name: 'Salinity Out'
+		}, {
+			key: 'ppmRec',
+			name: 'Salinity Recycled'
+		}, {
+			key: 'qDump',
+			name: 'Dump Flow'
+		}, {
+			key: 'qOut',
+			name: 'Water Flow'
+		}],
+		    first = mapping.map(function (map) {
+			return map.name;
+		}).reduce(function (row, header) {
+			return row + ',' + header;
+		});
+
+		return readings.map(function (reading) {
+			return mapping.reduce(function (row, map, i) {
+				var value = reading[map.key];
+				if (!i) return (0, _moment2.default)(value).format('MM-DD-YYYY HH:mm');
+				return row + ',' + value;
+			}, '');
+		}).reduce(function (body, row) {
+			return body + '\n' + row;
+		}, first);
+	}
 
 /***/ },
-/* 317 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -33327,7 +32625,7 @@
 	                module && module.exports) {
 	            try {
 	                oldLocale = globalLocale._abbr;
-	                __webpack_require__(319)("./" + name);
+	                __webpack_require__(307)("./" + name);
 	                // because defineLocale currently also sets the global locale, we
 	                // want to undo that for lazy loaded locales
 	                locale_locales__getSetGlobalLocale(oldLocale);
@@ -36664,10 +35962,10 @@
 	    return _moment;
 
 	}));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(318)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(306)(module)))
 
 /***/ },
-/* 318 */
+/* 306 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -36683,204 +35981,204 @@
 
 
 /***/ },
-/* 319 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./af": 320,
-		"./af.js": 320,
-		"./ar": 321,
-		"./ar-ma": 322,
-		"./ar-ma.js": 322,
-		"./ar-sa": 323,
-		"./ar-sa.js": 323,
-		"./ar-tn": 324,
-		"./ar-tn.js": 324,
-		"./ar.js": 321,
-		"./az": 325,
-		"./az.js": 325,
-		"./be": 326,
-		"./be.js": 326,
-		"./bg": 327,
-		"./bg.js": 327,
-		"./bn": 328,
-		"./bn.js": 328,
-		"./bo": 329,
-		"./bo.js": 329,
-		"./br": 330,
-		"./br.js": 330,
-		"./bs": 331,
-		"./bs.js": 331,
-		"./ca": 332,
-		"./ca.js": 332,
-		"./cs": 333,
-		"./cs.js": 333,
-		"./cv": 334,
-		"./cv.js": 334,
-		"./cy": 335,
-		"./cy.js": 335,
-		"./da": 336,
-		"./da.js": 336,
-		"./de": 337,
-		"./de-at": 338,
-		"./de-at.js": 338,
-		"./de.js": 337,
-		"./dv": 339,
-		"./dv.js": 339,
-		"./el": 340,
-		"./el.js": 340,
-		"./en-au": 341,
-		"./en-au.js": 341,
-		"./en-ca": 342,
-		"./en-ca.js": 342,
-		"./en-gb": 343,
-		"./en-gb.js": 343,
-		"./en-ie": 344,
-		"./en-ie.js": 344,
-		"./en-nz": 345,
-		"./en-nz.js": 345,
-		"./eo": 346,
-		"./eo.js": 346,
-		"./es": 347,
-		"./es.js": 347,
-		"./et": 348,
-		"./et.js": 348,
-		"./eu": 349,
-		"./eu.js": 349,
-		"./fa": 350,
-		"./fa.js": 350,
-		"./fi": 351,
-		"./fi.js": 351,
-		"./fo": 352,
-		"./fo.js": 352,
-		"./fr": 353,
-		"./fr-ca": 354,
-		"./fr-ca.js": 354,
-		"./fr-ch": 355,
-		"./fr-ch.js": 355,
-		"./fr.js": 353,
-		"./fy": 356,
-		"./fy.js": 356,
-		"./gd": 357,
-		"./gd.js": 357,
-		"./gl": 358,
-		"./gl.js": 358,
-		"./he": 359,
-		"./he.js": 359,
-		"./hi": 360,
-		"./hi.js": 360,
-		"./hr": 361,
-		"./hr.js": 361,
-		"./hu": 362,
-		"./hu.js": 362,
-		"./hy-am": 363,
-		"./hy-am.js": 363,
-		"./id": 364,
-		"./id.js": 364,
-		"./is": 365,
-		"./is.js": 365,
-		"./it": 366,
-		"./it.js": 366,
-		"./ja": 367,
-		"./ja.js": 367,
-		"./jv": 368,
-		"./jv.js": 368,
-		"./ka": 369,
-		"./ka.js": 369,
-		"./kk": 370,
-		"./kk.js": 370,
-		"./km": 371,
-		"./km.js": 371,
-		"./ko": 372,
-		"./ko.js": 372,
-		"./lb": 373,
-		"./lb.js": 373,
-		"./lo": 374,
-		"./lo.js": 374,
-		"./lt": 375,
-		"./lt.js": 375,
-		"./lv": 376,
-		"./lv.js": 376,
-		"./me": 377,
-		"./me.js": 377,
-		"./mk": 378,
-		"./mk.js": 378,
-		"./ml": 379,
-		"./ml.js": 379,
-		"./mr": 380,
-		"./mr.js": 380,
-		"./ms": 381,
-		"./ms-my": 382,
-		"./ms-my.js": 382,
-		"./ms.js": 381,
-		"./my": 383,
-		"./my.js": 383,
-		"./nb": 384,
-		"./nb.js": 384,
-		"./ne": 385,
-		"./ne.js": 385,
-		"./nl": 386,
-		"./nl.js": 386,
-		"./nn": 387,
-		"./nn.js": 387,
-		"./pa-in": 388,
-		"./pa-in.js": 388,
-		"./pl": 389,
-		"./pl.js": 389,
-		"./pt": 390,
-		"./pt-br": 391,
-		"./pt-br.js": 391,
-		"./pt.js": 390,
-		"./ro": 392,
-		"./ro.js": 392,
-		"./ru": 393,
-		"./ru.js": 393,
-		"./se": 394,
-		"./se.js": 394,
-		"./si": 395,
-		"./si.js": 395,
-		"./sk": 396,
-		"./sk.js": 396,
-		"./sl": 397,
-		"./sl.js": 397,
-		"./sq": 398,
-		"./sq.js": 398,
-		"./sr": 399,
-		"./sr-cyrl": 400,
-		"./sr-cyrl.js": 400,
-		"./sr.js": 399,
-		"./sv": 401,
-		"./sv.js": 401,
-		"./sw": 402,
-		"./sw.js": 402,
-		"./ta": 403,
-		"./ta.js": 403,
-		"./te": 404,
-		"./te.js": 404,
-		"./th": 405,
-		"./th.js": 405,
-		"./tl-ph": 406,
-		"./tl-ph.js": 406,
-		"./tlh": 407,
-		"./tlh.js": 407,
-		"./tr": 408,
-		"./tr.js": 408,
-		"./tzl": 409,
-		"./tzl.js": 409,
-		"./tzm": 410,
-		"./tzm-latn": 411,
-		"./tzm-latn.js": 411,
-		"./tzm.js": 410,
-		"./uk": 412,
-		"./uk.js": 412,
-		"./uz": 413,
-		"./uz.js": 413,
-		"./vi": 414,
-		"./vi.js": 414,
-		"./zh-cn": 415,
-		"./zh-cn.js": 415,
-		"./zh-tw": 416,
-		"./zh-tw.js": 416
+		"./af": 308,
+		"./af.js": 308,
+		"./ar": 309,
+		"./ar-ma": 310,
+		"./ar-ma.js": 310,
+		"./ar-sa": 311,
+		"./ar-sa.js": 311,
+		"./ar-tn": 312,
+		"./ar-tn.js": 312,
+		"./ar.js": 309,
+		"./az": 313,
+		"./az.js": 313,
+		"./be": 314,
+		"./be.js": 314,
+		"./bg": 315,
+		"./bg.js": 315,
+		"./bn": 316,
+		"./bn.js": 316,
+		"./bo": 317,
+		"./bo.js": 317,
+		"./br": 318,
+		"./br.js": 318,
+		"./bs": 319,
+		"./bs.js": 319,
+		"./ca": 320,
+		"./ca.js": 320,
+		"./cs": 321,
+		"./cs.js": 321,
+		"./cv": 322,
+		"./cv.js": 322,
+		"./cy": 323,
+		"./cy.js": 323,
+		"./da": 324,
+		"./da.js": 324,
+		"./de": 325,
+		"./de-at": 326,
+		"./de-at.js": 326,
+		"./de.js": 325,
+		"./dv": 327,
+		"./dv.js": 327,
+		"./el": 328,
+		"./el.js": 328,
+		"./en-au": 329,
+		"./en-au.js": 329,
+		"./en-ca": 330,
+		"./en-ca.js": 330,
+		"./en-gb": 331,
+		"./en-gb.js": 331,
+		"./en-ie": 332,
+		"./en-ie.js": 332,
+		"./en-nz": 333,
+		"./en-nz.js": 333,
+		"./eo": 334,
+		"./eo.js": 334,
+		"./es": 335,
+		"./es.js": 335,
+		"./et": 336,
+		"./et.js": 336,
+		"./eu": 337,
+		"./eu.js": 337,
+		"./fa": 338,
+		"./fa.js": 338,
+		"./fi": 339,
+		"./fi.js": 339,
+		"./fo": 340,
+		"./fo.js": 340,
+		"./fr": 341,
+		"./fr-ca": 342,
+		"./fr-ca.js": 342,
+		"./fr-ch": 343,
+		"./fr-ch.js": 343,
+		"./fr.js": 341,
+		"./fy": 344,
+		"./fy.js": 344,
+		"./gd": 345,
+		"./gd.js": 345,
+		"./gl": 346,
+		"./gl.js": 346,
+		"./he": 347,
+		"./he.js": 347,
+		"./hi": 348,
+		"./hi.js": 348,
+		"./hr": 349,
+		"./hr.js": 349,
+		"./hu": 350,
+		"./hu.js": 350,
+		"./hy-am": 351,
+		"./hy-am.js": 351,
+		"./id": 352,
+		"./id.js": 352,
+		"./is": 353,
+		"./is.js": 353,
+		"./it": 354,
+		"./it.js": 354,
+		"./ja": 355,
+		"./ja.js": 355,
+		"./jv": 356,
+		"./jv.js": 356,
+		"./ka": 357,
+		"./ka.js": 357,
+		"./kk": 358,
+		"./kk.js": 358,
+		"./km": 359,
+		"./km.js": 359,
+		"./ko": 360,
+		"./ko.js": 360,
+		"./lb": 361,
+		"./lb.js": 361,
+		"./lo": 362,
+		"./lo.js": 362,
+		"./lt": 363,
+		"./lt.js": 363,
+		"./lv": 364,
+		"./lv.js": 364,
+		"./me": 365,
+		"./me.js": 365,
+		"./mk": 366,
+		"./mk.js": 366,
+		"./ml": 367,
+		"./ml.js": 367,
+		"./mr": 368,
+		"./mr.js": 368,
+		"./ms": 369,
+		"./ms-my": 370,
+		"./ms-my.js": 370,
+		"./ms.js": 369,
+		"./my": 371,
+		"./my.js": 371,
+		"./nb": 372,
+		"./nb.js": 372,
+		"./ne": 373,
+		"./ne.js": 373,
+		"./nl": 374,
+		"./nl.js": 374,
+		"./nn": 375,
+		"./nn.js": 375,
+		"./pa-in": 376,
+		"./pa-in.js": 376,
+		"./pl": 377,
+		"./pl.js": 377,
+		"./pt": 378,
+		"./pt-br": 379,
+		"./pt-br.js": 379,
+		"./pt.js": 378,
+		"./ro": 380,
+		"./ro.js": 380,
+		"./ru": 381,
+		"./ru.js": 381,
+		"./se": 382,
+		"./se.js": 382,
+		"./si": 383,
+		"./si.js": 383,
+		"./sk": 384,
+		"./sk.js": 384,
+		"./sl": 385,
+		"./sl.js": 385,
+		"./sq": 386,
+		"./sq.js": 386,
+		"./sr": 387,
+		"./sr-cyrl": 388,
+		"./sr-cyrl.js": 388,
+		"./sr.js": 387,
+		"./sv": 389,
+		"./sv.js": 389,
+		"./sw": 390,
+		"./sw.js": 390,
+		"./ta": 391,
+		"./ta.js": 391,
+		"./te": 392,
+		"./te.js": 392,
+		"./th": 393,
+		"./th.js": 393,
+		"./tl-ph": 394,
+		"./tl-ph.js": 394,
+		"./tlh": 395,
+		"./tlh.js": 395,
+		"./tr": 396,
+		"./tr.js": 396,
+		"./tzl": 397,
+		"./tzl.js": 397,
+		"./tzm": 398,
+		"./tzm-latn": 399,
+		"./tzm-latn.js": 399,
+		"./tzm.js": 398,
+		"./uk": 400,
+		"./uk.js": 400,
+		"./uz": 401,
+		"./uz.js": 401,
+		"./vi": 402,
+		"./vi.js": 402,
+		"./zh-cn": 403,
+		"./zh-cn.js": 403,
+		"./zh-tw": 404,
+		"./zh-tw.js": 404
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -36893,11 +36191,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 319;
+	webpackContext.id = 307;
 
 
 /***/ },
-/* 320 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36905,7 +36203,7 @@
 	//! author : Werner Mollentze : https://github.com/wernerm
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36974,7 +36272,7 @@
 	}));
 
 /***/ },
-/* 321 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36984,7 +36282,7 @@
 	//! Native plural forms: forabi https://github.com/forabi
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37114,7 +36412,7 @@
 	}));
 
 /***/ },
-/* 322 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37123,7 +36421,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37177,7 +36475,7 @@
 	}));
 
 /***/ },
-/* 323 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37185,7 +36483,7 @@
 	//! author : Suhail Alkowaileet : https://github.com/xsoh
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37284,14 +36582,14 @@
 	}));
 
 /***/ },
-/* 324 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale  : Tunisian Arabic (ar-tn)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37345,7 +36643,7 @@
 	}));
 
 /***/ },
-/* 325 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37353,7 +36651,7 @@
 	//! author : topchiyev : https://github.com/topchiyev
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37453,7 +36751,7 @@
 	}));
 
 /***/ },
-/* 326 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37463,7 +36761,7 @@
 	//! Author : Menelion Elensúle : https://github.com/Oire
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37591,7 +36889,7 @@
 	}));
 
 /***/ },
-/* 327 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37599,7 +36897,7 @@
 	//! author : Krasen Borisov : https://github.com/kraz
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37685,7 +36983,7 @@
 	}));
 
 /***/ },
-/* 328 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37693,7 +36991,7 @@
 	//! author : Kaushik Gandhi : https://github.com/kaushikgandhi
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37808,7 +37106,7 @@
 	}));
 
 /***/ },
-/* 329 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37816,7 +37114,7 @@
 	//! author : Thupten N. Chakrishar : https://github.com/vajradog
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37931,7 +37229,7 @@
 	}));
 
 /***/ },
-/* 330 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37939,7 +37237,7 @@
 	//! author : Jean-Baptiste Le Duigou : https://github.com/jbleduigou
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38042,7 +37340,7 @@
 	}));
 
 /***/ },
-/* 331 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38051,7 +37349,7 @@
 	//! based on (hr) translation by Bojan Marković
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38187,7 +37485,7 @@
 	}));
 
 /***/ },
-/* 332 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38195,7 +37493,7 @@
 	//! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38270,7 +37568,7 @@
 	}));
 
 /***/ },
-/* 333 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38278,7 +37576,7 @@
 	//! author : petrbela : https://github.com/petrbela
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38445,7 +37743,7 @@
 	}));
 
 /***/ },
-/* 334 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38453,7 +37751,7 @@
 	//! author : Anatoly Mironov : https://github.com/mirontoli
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38512,7 +37810,7 @@
 	}));
 
 /***/ },
-/* 335 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38520,7 +37818,7 @@
 	//! author : Robert Allen
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38595,7 +37893,7 @@
 	}));
 
 /***/ },
-/* 336 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38603,7 +37901,7 @@
 	//! author : Ulrik Nielsen : https://github.com/mrbase
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38659,7 +37957,7 @@
 	}));
 
 /***/ },
-/* 337 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38669,7 +37967,7 @@
 	//! author : Mikolaj Dadela : https://github.com/mik01aj
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38739,7 +38037,7 @@
 	}));
 
 /***/ },
-/* 338 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38750,7 +38048,7 @@
 	//! author : Mikolaj Dadela : https://github.com/mik01aj
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38820,7 +38118,7 @@
 	}));
 
 /***/ },
-/* 339 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38828,7 +38126,7 @@
 	//! author : Jawish Hameed : https://github.com/jawish
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38923,7 +38221,7 @@
 	}));
 
 /***/ },
-/* 340 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38931,7 +38229,7 @@
 	//! author : Aggelos Karalias : https://github.com/mehiel
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39025,14 +38323,14 @@
 	}));
 
 /***/ },
-/* 341 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale : australian english (en-au)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39095,7 +38393,7 @@
 	}));
 
 /***/ },
-/* 342 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39103,7 +38401,7 @@
 	//! author : Jonathan Abourbih : https://github.com/jonbca
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39162,7 +38460,7 @@
 	}));
 
 /***/ },
-/* 343 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39170,7 +38468,7 @@
 	//! author : Chris Gedrim : https://github.com/chrisgedrim
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39233,7 +38531,7 @@
 	}));
 
 /***/ },
-/* 344 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39241,7 +38539,7 @@
 	//! author : Chris Cartlidge : https://github.com/chriscartlidge
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39304,14 +38602,14 @@
 	}));
 
 /***/ },
-/* 345 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale : New Zealand english (en-nz)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39374,7 +38672,7 @@
 	}));
 
 /***/ },
-/* 346 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39384,7 +38682,7 @@
 	//!          Se ne, bonvolu korekti kaj avizi min por ke mi povas lerni!
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39451,7 +38749,7 @@
 	}));
 
 /***/ },
-/* 347 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39459,7 +38757,7 @@
 	//! author : Julio Napurí : https://github.com/julionc
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39534,7 +38832,7 @@
 	}));
 
 /***/ },
-/* 348 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39543,7 +38841,7 @@
 	//! improvements : Illimar Tambek : https://github.com/ragulka
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39618,7 +38916,7 @@
 	}));
 
 /***/ },
-/* 349 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39626,7 +38924,7 @@
 	//! author : Eneko Illarramendi : https://github.com/eillarra
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39686,7 +38984,7 @@
 	}));
 
 /***/ },
-/* 350 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39694,7 +38992,7 @@
 	//! author : Ebrahim Byagowi : https://github.com/ebraminio
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39795,7 +39093,7 @@
 	}));
 
 /***/ },
-/* 351 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39803,7 +39101,7 @@
 	//! author : Tarmo Aidantausta : https://github.com/bleadof
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39906,7 +39204,7 @@
 	}));
 
 /***/ },
-/* 352 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39914,7 +39212,7 @@
 	//! author : Ragnar Johannesen : https://github.com/ragnar123
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39970,7 +39268,7 @@
 	}));
 
 /***/ },
-/* 353 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39978,7 +39276,7 @@
 	//! author : John Fischer : https://github.com/jfroffice
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40036,7 +39334,7 @@
 	}));
 
 /***/ },
-/* 354 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40044,7 +39342,7 @@
 	//! author : Jonathan Abourbih : https://github.com/jonbca
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40098,7 +39396,7 @@
 	}));
 
 /***/ },
-/* 355 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40106,7 +39404,7 @@
 	//! author : Gaspard Bucher : https://github.com/gaspard
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40164,7 +39462,7 @@
 	}));
 
 /***/ },
-/* 356 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40172,7 +39470,7 @@
 	//! author : Robin van der Vliet : https://github.com/robin0van0der0v
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40239,7 +39537,7 @@
 	}));
 
 /***/ },
-/* 357 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40247,7 +39545,7 @@
 	//! author : Jon Ashdown : https://github.com/jonashdown
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40319,7 +39617,7 @@
 	}));
 
 /***/ },
-/* 358 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40327,7 +39625,7 @@
 	//! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40398,7 +39696,7 @@
 	}));
 
 /***/ },
-/* 359 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40408,7 +39706,7 @@
 	//! author : Tal Ater : https://github.com/TalAter
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40501,7 +39799,7 @@
 	}));
 
 /***/ },
-/* 360 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40509,7 +39807,7 @@
 	//! author : Mayank Singhal : https://github.com/mayanksinghal
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40628,7 +39926,7 @@
 	}));
 
 /***/ },
-/* 361 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40636,7 +39934,7 @@
 	//! author : Bojan Marković : https://github.com/bmarkovic
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40775,7 +40073,7 @@
 	}));
 
 /***/ },
-/* 362 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40783,7 +40081,7 @@
 	//! author : Adam Brunner : https://github.com/adambrunner
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40888,7 +40186,7 @@
 	}));
 
 /***/ },
-/* 363 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40896,7 +40194,7 @@
 	//! author : Armendarabyan : https://github.com/armendarabyan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40987,7 +40285,7 @@
 	}));
 
 /***/ },
-/* 364 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40996,7 +40294,7 @@
 	//! reference: http://id.wikisource.org/wiki/Pedoman_Umum_Ejaan_Bahasa_Indonesia_yang_Disempurnakan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41074,7 +40372,7 @@
 	}));
 
 /***/ },
-/* 365 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41082,7 +40380,7 @@
 	//! author : Hinrik Örn Sigurðsson : https://github.com/hinrik
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41205,7 +40503,7 @@
 	}));
 
 /***/ },
-/* 366 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41214,7 +40512,7 @@
 	//! author: Mattia Larentis: https://github.com/nostalgiaz
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41279,7 +40577,7 @@
 	}));
 
 /***/ },
-/* 367 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41287,7 +40585,7 @@
 	//! author : LI Long : https://github.com/baryon
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41359,7 +40657,7 @@
 	}));
 
 /***/ },
-/* 368 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41368,7 +40666,7 @@
 	//! reference: http://jv.wikipedia.org/wiki/Basa_Jawa
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41446,7 +40744,7 @@
 	}));
 
 /***/ },
-/* 369 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41454,7 +40752,7 @@
 	//! author : Irakli Janiashvili : https://github.com/irakli-janiashvili
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41539,7 +40837,7 @@
 	}));
 
 /***/ },
-/* 370 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41547,7 +40845,7 @@
 	//! authors : Nurlan Rakhimzhanov : https://github.com/nurlan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41630,7 +40928,7 @@
 	}));
 
 /***/ },
-/* 371 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41638,7 +40936,7 @@
 	//! author : Kruy Vanna : https://github.com/kruyvanna
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41692,7 +40990,7 @@
 	}));
 
 /***/ },
-/* 372 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41704,7 +41002,7 @@
 	//! - Jeeeyul Lee <jeeeyul@gmail.com>
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41764,7 +41062,7 @@
 	}));
 
 /***/ },
-/* 373 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41772,7 +41070,7 @@
 	//! author : mweimerskirch : https://github.com/mweimerskirch, David Raison : https://github.com/kwisatz
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41902,7 +41200,7 @@
 	}));
 
 /***/ },
-/* 374 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41910,7 +41208,7 @@
 	//! author : Ryan Hart : https://github.com/ryanhart2
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41975,7 +41273,7 @@
 	}));
 
 /***/ },
-/* 375 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41983,7 +41281,7 @@
 	//! author : Mindaugas Mozūras : https://github.com/mmozuras
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42094,7 +41392,7 @@
 	}));
 
 /***/ },
-/* 376 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42103,7 +41401,7 @@
 	//! author : Jānis Elmeris : https://github.com/JanisE
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42194,7 +41492,7 @@
 	}));
 
 /***/ },
-/* 377 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42202,7 +41500,7 @@
 	//! author : Miodrag Nikač <miodrag@restartit.me> : https://github.com/miodragnikac
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42307,7 +41605,7 @@
 	}));
 
 /***/ },
-/* 378 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42315,7 +41613,7 @@
 	//! author : Borislav Mickov : https://github.com/B0k0
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42401,7 +41699,7 @@
 	}));
 
 /***/ },
-/* 379 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42409,7 +41707,7 @@
 	//! author : Floyd Pink : https://github.com/floydpink
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42485,7 +41783,7 @@
 	}));
 
 /***/ },
-/* 380 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42494,7 +41792,7 @@
 	//! author : Vivek Athalye : https://github.com/vnathalye
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42647,7 +41945,7 @@
 	}));
 
 /***/ },
-/* 381 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42655,7 +41953,7 @@
 	//! author : Weldan Jamili : https://github.com/weldan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42733,7 +42031,7 @@
 	}));
 
 /***/ },
-/* 382 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42741,7 +42039,7 @@
 	//! author : Weldan Jamili : https://github.com/weldan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42819,7 +42117,7 @@
 	}));
 
 /***/ },
-/* 383 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42827,7 +42125,7 @@
 	//! author : Squar team, mysquar.com
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42916,7 +42214,7 @@
 	}));
 
 /***/ },
-/* 384 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42925,7 +42223,7 @@
 	//!           Sigurd Gartmann : https://github.com/sigurdga
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42981,7 +42279,7 @@
 	}));
 
 /***/ },
-/* 385 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42989,7 +42287,7 @@
 	//! author : suvash : https://github.com/suvash
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43106,7 +42404,7 @@
 	}));
 
 /***/ },
-/* 386 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43114,7 +42412,7 @@
 	//! author : Joris Röling : https://github.com/jjupiter
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43181,7 +42479,7 @@
 	}));
 
 /***/ },
-/* 387 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43189,7 +42487,7 @@
 	//! author : https://github.com/mechuwind
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43245,7 +42543,7 @@
 	}));
 
 /***/ },
-/* 388 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43253,7 +42551,7 @@
 	//! author : Harpreet Singh : https://github.com/harpreetkhalsagtbit
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43373,7 +42671,7 @@
 	}));
 
 /***/ },
-/* 389 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43381,7 +42679,7 @@
 	//! author : Rafal Hirsz : https://github.com/evoL
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43482,7 +42780,7 @@
 	}));
 
 /***/ },
-/* 390 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43490,7 +42788,7 @@
 	//! author : Jefferson : https://github.com/jalex79
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43550,7 +42848,7 @@
 	}));
 
 /***/ },
-/* 391 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43558,7 +42856,7 @@
 	//! author : Caio Ribeiro Pereira : https://github.com/caio-ribeiro-pereira
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43614,7 +42912,7 @@
 	}));
 
 /***/ },
-/* 392 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43623,7 +42921,7 @@
 	//! author : Valentin Agachi : https://github.com/avaly
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43692,7 +42990,7 @@
 	}));
 
 /***/ },
-/* 393 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43702,7 +43000,7 @@
 	//! author : Коренберг Марк : https://github.com/socketpair
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43864,7 +43162,7 @@
 	}));
 
 /***/ },
-/* 394 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43872,7 +43170,7 @@
 	//! authors : Bård Rolstad Henriksen : https://github.com/karamell
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43929,7 +43227,7 @@
 	}));
 
 /***/ },
-/* 395 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43937,7 +43235,7 @@
 	//! author : Sampath Sitinamaluwa : https://github.com/sampathsris
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44003,7 +43301,7 @@
 	}));
 
 /***/ },
-/* 396 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44012,7 +43310,7 @@
 	//! based on work of petrbela : https://github.com/petrbela
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44157,7 +43455,7 @@
 	}));
 
 /***/ },
-/* 397 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44165,7 +43463,7 @@
 	//! author : Robert Sedovšek : https://github.com/sedovsek
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44321,7 +43619,7 @@
 	}));
 
 /***/ },
-/* 398 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44331,7 +43629,7 @@
 	//! author : Oerd Cukalla : https://github.com/oerd (fixes)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44394,7 +43692,7 @@
 	}));
 
 /***/ },
-/* 399 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44402,7 +43700,7 @@
 	//! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44506,7 +43804,7 @@
 	}));
 
 /***/ },
-/* 400 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44514,7 +43812,7 @@
 	//! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44618,7 +43916,7 @@
 	}));
 
 /***/ },
-/* 401 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44626,7 +43924,7 @@
 	//! author : Jens Alm : https://github.com/ulmus
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44689,7 +43987,7 @@
 	}));
 
 /***/ },
-/* 402 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44697,7 +43995,7 @@
 	//! author : Fahad Kassim : https://github.com/fadsel
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44751,7 +44049,7 @@
 	}));
 
 /***/ },
-/* 403 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44759,7 +44057,7 @@
 	//! author : Arjunkumar Krishnamoorthy : https://github.com/tk120404
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44884,7 +44182,7 @@
 	}));
 
 /***/ },
-/* 404 */
+/* 392 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44892,7 +44190,7 @@
 	//! author : Krishna Chaitanya Thota : https://github.com/kcthota
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44976,7 +44274,7 @@
 	}));
 
 /***/ },
-/* 405 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44984,7 +44282,7 @@
 	//! author : Kridsada Thanabulpong : https://github.com/sirn
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45045,7 +44343,7 @@
 	}));
 
 /***/ },
-/* 406 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45053,7 +44351,7 @@
 	//! author : Dan Hagman
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45111,7 +44409,7 @@
 	}));
 
 /***/ },
-/* 407 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45119,7 +44417,7 @@
 	//! author : Dominika Kruk : https://github.com/amaranthrose
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45234,7 +44532,7 @@
 	}));
 
 /***/ },
-/* 408 */
+/* 396 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45243,7 +44541,7 @@
 	//!           Burak Yiğit Kaya: https://github.com/BYK
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45328,7 +44626,7 @@
 	}));
 
 /***/ },
-/* 409 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45336,7 +44634,7 @@
 	//! author : Robin van der Vliet : https://github.com/robin0van0der0v with the help of Iustì Canun
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45423,7 +44721,7 @@
 	}));
 
 /***/ },
-/* 410 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45431,7 +44729,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45485,7 +44783,7 @@
 	}));
 
 /***/ },
-/* 411 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45493,7 +44791,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45547,7 +44845,7 @@
 	}));
 
 /***/ },
-/* 412 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45556,7 +44854,7 @@
 	//! Author : Menelion Elensúle : https://github.com/Oire
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45697,7 +44995,7 @@
 	}));
 
 /***/ },
-/* 413 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45705,7 +45003,7 @@
 	//! author : Sardor Muminov : https://github.com/muminoff
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45759,7 +45057,7 @@
 	}));
 
 /***/ },
-/* 414 */
+/* 402 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45767,7 +45065,7 @@
 	//! author : Bang Nguyen : https://github.com/bangnk
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45840,7 +45138,7 @@
 	}));
 
 /***/ },
-/* 415 */
+/* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45849,7 +45147,7 @@
 	//! author : Zeno Zeng : https://github.com/zenozeng
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45971,7 +45269,7 @@
 	}));
 
 /***/ },
-/* 416 */
+/* 404 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45979,7 +45277,7 @@
 	//! author : Ben : https://github.com/ben-lin
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(317)) :
+	    true ? factory(__webpack_require__(305)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -46076,7 +45374,7 @@
 	}));
 
 /***/ },
-/* 417 */
+/* 405 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46091,11 +45389,1591 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SalinityInput = __webpack_require__(418);
+	var _reactRouter = __webpack_require__(182);
+
+	var _constants = __webpack_require__(246);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DashboardMenu = function (_Component) {
+		_inherits(DashboardMenu, _Component);
+
+		function DashboardMenu() {
+			_classCallCheck(this, DashboardMenu);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardMenu).apply(this, arguments));
+		}
+
+		_createClass(DashboardMenu, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var id = _props.id;
+				var view = _props.view;
+
+				//handles appearance of default tab
+
+				var classString = '';
+				if (!view) classString = 'active';
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'dashboard-menu' },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } },
+							activeClassName: 'active' },
+						_react2.default.createElement('div', { className: 'sprite salinityIn' }),
+						_react2.default.createElement(
+							'div',
+							null,
+							'in'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_OUT } },
+							activeClassName: 'active',
+							className: classString },
+						_react2.default.createElement('div', { className: 'sprite salinityOut' }),
+						_react2.default.createElement(
+							'div',
+							null,
+							'out'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } },
+							activeClassName: 'active' },
+						_react2.default.createElement('div', { className: 'sprite flow' }),
+						_react2.default.createElement(
+							'div',
+							null,
+							'flow'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } },
+							activeClassName: 'active' },
+						_react2.default.createElement('div', { className: 'sprite power' }),
+						_react2.default.createElement(
+							'div',
+							null,
+							'power'
+						)
+					)
+				);
+			}
+		}]);
+
+		return DashboardMenu;
+	}(_react.Component);
+
+	DashboardMenu.propTypes = {
+		id: _react.PropTypes.string,
+		view: _react.PropTypes.string
+	};
+
+	exports.default = DashboardMenu;
+
+/***/ },
+/* 406 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _SalinityGraph = __webpack_require__(407);
+
+	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
+
+	var _HistoricalGraph = __webpack_require__(408);
+
+	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function generateBadText() {
+		return 'which is not well. Please check your settings for your eddi.';
+	}
+
+	function generateGoodText() {
+		return 'so everything is doing well.';
+	}
+
+	var DashboardSalinity = function (_Component) {
+		_inherits(DashboardSalinity, _Component);
+
+		function DashboardSalinity() {
+			_classCallCheck(this, DashboardSalinity);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinity).apply(this, arguments));
+		}
+
+		_createClass(DashboardSalinity, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var threshold = _props.threshold;
+				var current = _props.current;
+				var direction = _props.direction;
+				var status = current > threshold ? generateBadText() : generateGoodText();
+				return _react2.default.createElement(
+					'div',
+					{ className: 'dashboard-view salinity' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'dashboard-current' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'dashboard-current-numbers' },
+							_react2.default.createElement(
+								'h1',
+								null,
+								'Salinity ',
+								direction.toUpperCase()
+							),
+							_react2.default.createElement(
+								'h3',
+								null,
+								'' + current
+							),
+							_react2.default.createElement(
+								'p',
+								null,
+								'parts per million'
+							)
+						),
+						_react2.default.createElement(_SalinityGraph2.default, { salinity: current }),
+						_react2.default.createElement(
+							'p',
+							{ className: 'dashboard-note' },
+							'Your current level of salinity for the water your EDDI is pushing out is',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + current + ' ppm. '
+							),
+							'Your current threshold is set at',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + threshold + ' ppm, '
+							),
+							'' + status
+						)
+					),
+					_react2.default.createElement(_HistoricalGraph2.default, null)
+				);
+			}
+		}]);
+
+		return DashboardSalinity;
+	}(_react.Component);
+
+	DashboardSalinity.propTypes = {
+		threshold: _react.PropTypes.number.isRequired,
+		current: _react.PropTypes.number.isRequired,
+		direction: _react.PropTypes.string.isRequired
+	};
+
+	DashboardSalinity.defaultProps = {
+		threshold: 1000
+	};
+
+	exports.default = DashboardSalinity;
+
+/***/ },
+/* 407 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SIZE = 120;
+	var CENTER = SIZE / 2;
+
+	var DANGEROUS_SALINITY = 2000;
+
+	function colorAtPPM(ppm) {
+	  var ppmFactor = Math.min(1, ppm / DANGEROUS_SALINITY);
+	  var red = Math.round(42 + 129 * ppmFactor);
+	  var green = Math.round(191 - 138 * ppmFactor);
+	  var blue = Math.round(208 - 172 * ppmFactor);
+	  return 'rgba(' + red + ', ' + green + ', ' + blue + ', 1)';
+	}
+
+	var SalinityGraph = function (_Component) {
+	  _inherits(SalinityGraph, _Component);
+
+	  function SalinityGraph() {
+	    _classCallCheck(this, SalinityGraph);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(SalinityGraph).apply(this, arguments));
+	  }
+
+	  _createClass(SalinityGraph, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.canvas = this.refs.canvas;
+	      this.context = this.canvas.getContext('2d');
+	      this.paint(this.props.salinity);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps) {
+	      this.paint(newProps.salinity);
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate() {
+	      return false;
+	    }
+	  }, {
+	    key: 'paint',
+	    value: function paint(ppm) {
+	      ppm = Math.min(ppm, 4000);
+	      var context = this.context;
+	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	      var density = ppm / 400;
+	      for (var ix = 0; ix < density; ix++) {
+	        var radius = ix * (CENTER / density);
+	        var angleIncr = 60 / ix;
+	        var color = colorAtPPM(radius / CENTER * ppm);
+	        for (var ir = 0; ir < 360; ir += angleIncr) {
+	          var centerX = CENTER + radius * Math.sin(Math.PI * ((ix * 2 + ir) / 180));
+	          var centerY = CENTER + radius * Math.cos(Math.PI * ((ix * 2 + ir) / 180));
+	          context.beginPath();
+	          context.arc(centerX, centerY, 2, 0, 2 * Math.PI, false);
+	          context.fillStyle = color;
+	          context.fill();
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'salinity-graph', height: SIZE, width: SIZE });
+	    }
+	  }]);
+
+	  return SalinityGraph;
+	}(_react.Component);
+
+	exports.default = SalinityGraph;
+
+
+	SalinityGraph.defaultProps = {
+	  salinity: 0
+	};
+
+/***/ },
+/* 408 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var HistoricalGraph = function (_Component) {
+	  _inherits(HistoricalGraph, _Component);
+
+	  function HistoricalGraph() {
+	    _classCallCheck(this, HistoricalGraph);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(HistoricalGraph).apply(this, arguments));
+	  }
+
+	  _createClass(HistoricalGraph, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'historical-graph' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'historical-selector' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'historical-selection' },
+	            'This Month'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'historical-selection' },
+	            'This Week'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'historical-selection' },
+	            'Today'
+	          )
+	        ),
+	        _react2.default.createElement('canvas', { ref: 'canvas', className: 'historical-graph-canvas' })
+	      );
+	    }
+	  }]);
+
+	  return HistoricalGraph;
+	}(_react.Component);
+
+	exports.default = HistoricalGraph;
+
+/***/ },
+/* 409 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FlowGraph = __webpack_require__(410);
+
+	var _FlowGraph2 = _interopRequireDefault(_FlowGraph);
+
+	var _HistoricalGraph = __webpack_require__(408);
+
+	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function generateStatusText(rate) {
+		if (rate <= 0.3) return 'slow';else if (rate <= 3) return 'medium';else return 'fast';
+	}
+
+	var DashboardFlow = function (_Component) {
+		_inherits(DashboardFlow, _Component);
+
+		function DashboardFlow() {
+			_classCallCheck(this, DashboardFlow);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).apply(this, arguments));
+		}
+
+		_createClass(DashboardFlow, [{
+			key: 'render',
+			value: function render() {
+				var rate = this.props.rate;
+
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'dashboard-view flow' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'dashboard-current' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'dashboard-current-numbers' },
+							_react2.default.createElement(
+								'h1',
+								null,
+								'WATER FLOW'
+							),
+							_react2.default.createElement(
+								'h3',
+								null,
+								'' + rate
+							),
+							_react2.default.createElement(
+								'p',
+								null,
+								'liters per minute'
+							)
+						),
+						_react2.default.createElement(_FlowGraph2.default, { rate: rate }),
+						_react2.default.createElement(
+							'p',
+							{ className: 'dashboard-note' },
+							'Your current level of water flow is',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + rate + ' lpm, '
+							),
+							'which is a',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + generateStatusText(rate) + ' '
+							),
+							'flow.'
+						)
+					),
+					_react2.default.createElement(_HistoricalGraph2.default, null)
+				);
+			}
+		}]);
+
+		return DashboardFlow;
+	}(_react.Component);
+
+	DashboardFlow.propTypes = {
+		rate: _react.PropTypes.number.isRequired
+	};
+
+	exports.default = DashboardFlow;
+
+/***/ },
+/* 410 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _constants = __webpack_require__(246);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SIZE = 120;
+	var CENTER = SIZE / 2;
+	var LINE_THICKNESS = 20;
+	var BASE10 = Math.log(10);
+
+	//slow is 0.3, medium is 3, fast is 30
+
+	function colorForRate(rate) {
+	  if (rate < 0.3) {
+	    rate = 0.3;
+	  } else if (rate > 30) {
+	    rate = 30;
+	  }
+	  var rateFactor = Math.abs(Math.log(rate / 3) / BASE10);
+	  return colorForFactor(rateFactor);
+	}
+
+	function colorForAnglePi(anglePi) {
+	  // angle without pi factor
+	  //var angleFactor = Math.abs(anglePi - 1.5) / 0.7;
+	  var angleFactor = (anglePi - 0.8) / 1.4;
+	  return colorForFactor(angleFactor);
+	}
+
+	function colorForFactor(factor) {
+	  // factor is 0 to 1
+	  var red = Math.round(42 + 129 * factor);
+	  var green = Math.round(191 - 138 * factor);
+	  var blue = Math.round(208 - 172 * factor);
+	  return 'rgba(' + red + ', ' + green + ', ' + blue + ', 1)';
+	}
+
+	function angleForRate(rate) {
+	  if (rate < 0.3) {
+	    rate = 0.3;
+	  } else if (rate > 30) {
+	    rate = 30;
+	  }
+
+	  var logMult = (Math.log(rate / 3) / BASE10 + 1) / 2; // goes from 0 to 1
+	  return (logMult * 1.4 + 0.8) * Math.PI;
+	}
+
+	var FlowGraph = function (_Component) {
+	  _inherits(FlowGraph, _Component);
+
+	  function FlowGraph() {
+	    _classCallCheck(this, FlowGraph);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(FlowGraph).apply(this, arguments));
+	  }
+
+	  _createClass(FlowGraph, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.canvas = this.refs.canvas;
+	      this.context = this.canvas.getContext('2d');
+	      this.paint(this.props.rate);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps) {
+	      this.paint(newProps.rate);
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate() {
+	      return false;
+	    }
+	  }, {
+	    key: 'paint',
+	    value: function paint(rate) {
+	      var context = this.context;
+	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+	      context.lineWidth = LINE_THICKNESS;
+	      for (var ix = 0.9; ix < 2.3; ix += 0.2) {
+	        context.strokeStyle = colorForAnglePi(ix);
+	        context.beginPath();
+	        context.arc(CENTER, CENTER, 0.8 * CENTER, (ix - 0.1) * Math.PI, (ix + 0.1) * Math.PI, false);
+	        context.stroke();
+	      }
+
+	      var pointEdge = 0.8 * CENTER - 4;
+	      var baseEdge = 0.8 * CENTER - LINE_THICKNESS / 1.9;
+	      var angle = angleForRate(rate);
+	      var baseAngleA = angle - 0.2;
+	      var baseAngleB = angle + 0.2;
+	      context.fillStyle = _constants.BACKGROUND_COLOR;
+	      context.beginPath();
+	      context.moveTo(CENTER + pointEdge * Math.cos(angle), CENTER + pointEdge * Math.sin(angle));
+	      context.lineTo(CENTER + baseEdge * Math.cos(baseAngleA), CENTER + baseEdge * Math.sin(baseAngleA));
+	      context.lineTo(CENTER + baseEdge * Math.cos(baseAngleB), CENTER + baseEdge * Math.sin(baseAngleB));
+	      context.closePath();
+	      context.fill();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'flow-graph', height: SIZE, width: SIZE });
+	    }
+	  }]);
+
+	  return FlowGraph;
+	}(_react.Component);
+
+	exports.default = FlowGraph;
+
+
+	FlowGraph.defaultProps = {
+	  salinity: 0
+	};
+
+/***/ },
+/* 411 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(412);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(260)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Dashboard.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Dashboard.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 412 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(259)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #006d60;\n  text-decoration: none;\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 413 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(171);
+
+	var _reactRouter = __webpack_require__(182);
+
+	var _constants = __webpack_require__(246);
+
+	var _EddiListItem = __webpack_require__(414);
+
+	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
+
+	var _AddEddiButton = __webpack_require__(417);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
+
+	var _eddis = __webpack_require__(285);
+
+	var _menu = __webpack_require__(303);
+
+	var _List = __webpack_require__(420);
+
+	var _List2 = _interopRequireDefault(_List);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user,
+			eddis: state.eddis.list
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			navigateTo: function navigateTo(pathname, query) {
+				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
+			},
+			getEddisByUser: function getEddisByUser() {
+				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			},
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			}
+		};
+	}
+
+	var List = function (_Component) {
+		_inherits(List, _Component);
+
+		function List(props) {
+			_classCallCheck(this, List);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(List).call(this, props));
+
+			_this.state = {};
+			return _this;
+		}
+
+		_createClass(List, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _props = this.props;
+				var user = _props.user;
+				var getEddisByUser = _props.getEddisByUser;
+				var updateMenuName = _props.updateMenuName;
+
+				updateMenuName('my eddis');
+				if (user) getEddisByUser();
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var _props2 = this.props;
+				var user = _props2.user;
+				var getEddisByUser = _props2.getEddisByUser;
+
+				if (nextProps.user !== user) return getEddisByUser();
+			}
+		}, {
+			key: 'clickHandler',
+			value: function clickHandler(destination, query) {
+				var navigateTo = this.props.navigateTo;
+
+				navigateTo(destination, query);
+			}
+		}, {
+			key: 'navigateTo',
+			value: function navigateTo(key) {
+				var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+				var pathname = _constants.PATHS[key],
+				    destination = {
+					pathname: pathname,
+					query: query
+				};
+
+				if (pathname) return _reactRouter.browserHistory.push(destination);
+			}
+		}, {
+			key: '_renderEddis',
+			value: function _renderEddis() {
+				var eddis = this.props.eddis;
+
+				if (eddis) {
+					return eddis.map(function (eddi, i) {
+						return _react2.default.createElement(_EddiListItem2.default, { key: eddi.id, eddi: eddi });
+					});
+				}
+			}
+		}, {
+			key: '_renderNoEddis',
+			value: function _renderNoEddis() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'eddis-empty' },
+					_react2.default.createElement(
+						'p',
+						null,
+						' Currently you are not tracking any eddis. '
+					),
+					_react2.default.createElement(_AddEddiButton2.default, null)
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _props3 = this.props;
+				var user = _props3.user;
+				var eddis = _props3.eddis;
+
+
+				var showEddi = void 0;
+				if (eddis && eddis.length) {
+					showEddi = this._renderEddis();
+				} else {
+					showEddi = this._renderNoEddis();
+				}
+
+				return _react2.default.createElement(
+					'div',
+					{ id: 'list', className: 'page' },
+					showEddi
+				);
+			}
+		}]);
+
+		return List;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(List);
+
+/***/ },
+/* 414 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _constants = __webpack_require__(246);
+
+	var _reactRouter = __webpack_require__(182);
+
+	var _EddiListItem = __webpack_require__(415);
+
+	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EddiListItem = function (_Component) {
+	  _inherits(EddiListItem, _Component);
+
+	  function EddiListItem() {
+	    _classCallCheck(this, EddiListItem);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(EddiListItem).apply(this, arguments));
+	  }
+
+	  _createClass(EddiListItem, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        _reactRouter.Link,
+	        { to: { pathname: _constants.PATHS.DASHBOARD, query: { id: this.props.eddi.id } },
+	          className: 'eddi-list-item', style: { backgroundImage: "url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')" } },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'eddi-item-overlay' },
+	          this.props.eddi.settings.name
+	        )
+	      );
+	    }
+	  }]);
+
+	  return EddiListItem;
+	}(_react.Component);
+
+	exports.default = EddiListItem;
+
+/***/ },
+/* 415 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(416);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(260)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiListItem.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiListItem.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 416 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(259)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".eddi-list-item {\n  display: block;\n  background-position: center;\n  background-size: cover;\n  text-decoration: none;\n  color: white;\n  font-size: 17px;\n  text-shadow: 1px 1px 4px black;\n}\n.eddi-list-item .eddi-item-overlay {\n  width: 100%;\n  height: 100px;\n  background-color: rgba(0, 0, 0, 0.2);\n  line-height: 100px;\n  text-align: center;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 417 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(171);
+
+	var _modal = __webpack_require__(282);
+
+	var _AddEddiButton = __webpack_require__(418);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    openAddForm: function openAddForm() {
+	      return dispatch((0, _modal.modalShow)('AddEddiModal'));
+	    }
+	  };
+	}
+
+	var AddEddiButton = function (_Component) {
+	  _inherits(AddEddiButton, _Component);
+
+	  function AddEddiButton() {
+	    _classCallCheck(this, AddEddiButton);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(AddEddiButton).apply(this, arguments));
+	  }
+
+	  _createClass(AddEddiButton, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'add-eddi-button', onClick: function onClick() {
+	            return _this2.props.openAddForm();
+	          } },
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          'add new +'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return AddEddiButton;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(AddEddiButton);
+
+/***/ },
+/* 418 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(419);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(260)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiButton.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiButton.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 419 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(259)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".add-eddi-button {\n  background-color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  color: white;\n  width: 160px;\n  margin: 0 auto;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 420 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(421);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(260)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./List.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./List.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 421 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(259)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#list .eddis-empty {\n  margin: 40px;\n  text-align: center;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 422 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(171);
+
+	var _eddis = __webpack_require__(285);
+
+	var _menu = __webpack_require__(303);
+
+	var _AddEddiButton = __webpack_require__(417);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
+
+	var _SettingsEddi = __webpack_require__(423);
+
+	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddis: state.eddis.list
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			assignEddi: function assignEddi(eddiId) {
+				return dispatch((0, _eddis.assignEddiThunk)(eddiId));
+			},
+			updateStart: function updateStart(eddiId, hour, minutes) {
+				return dispatch((0, _eddis.setEddiStartThunk)(eddiId, hour, minutes));
+			},
+			updateEnd: function updateEnd(eddiId, hour, minutes) {
+				return dispatch((0, _eddis.setEddiEndThunk)(eddiId, hour, minutes));
+			},
+			updateSalinity: function updateSalinity(eddiId, salinity) {
+				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
+			},
+			getAllEddis: function getAllEddis() {
+				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			},
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			}
+		};
+	}
+
+	var Settings = function (_Component) {
+		_inherits(Settings, _Component);
+
+		function Settings() {
+			_classCallCheck(this, Settings);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Settings).apply(this, arguments));
+		}
+
+		_createClass(Settings, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _props = this.props;
+				var getAllEddis = _props.getAllEddis;
+				var updateMenuName = _props.updateMenuName;
+
+				getAllEddis();
+				updateMenuName('Settings');
+			}
+		}, {
+			key: 'onSalinityChange',
+			value: function onSalinityChange(id, salinity) {
+				var updateSalinity = this.props.updateSalinity;
+
+				updateSalinity(id, salinity);
+			}
+		}, {
+			key: 'onStartChange',
+			value: function onStartChange(id, hour, minutes) {
+				var updateStart = this.props.updateStart;
+
+				updateStart(id, hour, minutes);
+			}
+		}, {
+			key: 'onEndChange',
+			value: function onEndChange(id, hour, minutes) {
+				var updateEnd = this.props.updateEnd;
+
+				updateEnd(id, hour, minutes);
+			}
+		}, {
+			key: '_renderEddis',
+			value: function _renderEddis() {
+				var _props2 = this.props;
+				var eddis = _props2.eddis;
+				var updateSalinity = _props2.updateSalinity;
+				var updateEnd = _props2.updateEnd;
+				var updateStart = _props2.updateStart;
+
+				return eddis.map(function (eddi) {
+					var eddiId = eddi.id;
+					return _react2.default.createElement(_SettingsEddi2.default, { eddi: eddi,
+						onSalinityChange: function onSalinityChange(salinity) {
+							return updateSalinity(eddiId, salinity);
+						},
+						onStartChange: function onStartChange(hour, minutes) {
+							return updateStart(eddiId, hour, minutes);
+						},
+						onEndChange: function onEndChange(hour, minutes) {
+							return updateEnd(eddiId, hour, minutes);
+						}
+					});
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var EddiElements = this._renderEddis();
+				return _react2.default.createElement(
+					'div',
+					{ id: 'settings', className: 'page' },
+					_react2.default.createElement(
+						'div',
+						null,
+						EddiElements
+					),
+					_react2.default.createElement(_AddEddiButton2.default, null)
+				);
+			}
+		}]);
+
+		return Settings;
+	}(_react.Component);
+
+	var styles = {
+		addButton: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center'
+		}
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
+
+/***/ },
+/* 423 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _SettingsEddiHeader = __webpack_require__(424);
+
+	var _SettingsEddiHeader2 = _interopRequireDefault(_SettingsEddiHeader);
+
+	var _SettingsEddiVersion = __webpack_require__(425);
+
+	var _SettingsEddiVersion2 = _interopRequireDefault(_SettingsEddiVersion);
+
+	var _SettingsEddiForm = __webpack_require__(426);
+
+	var _SettingsEddiForm2 = _interopRequireDefault(_SettingsEddiForm);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var SettingsEddi = function (_Component) {
+		_inherits(SettingsEddi, _Component);
+
+		function SettingsEddi() {
+			_classCallCheck(this, SettingsEddi);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddi).apply(this, arguments));
+		}
+
+		_createClass(SettingsEddi, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var eddi = _props.eddi;
+				var _onSalinityChange = _props.onSalinityChange;
+				var _onEndChange = _props.onEndChange;
+				var _onStartChange = _props.onStartChange;
+				var _eddi$version = eddi.version;
+				var version = _eddi$version === undefined ? {} : _eddi$version;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+				var name = settings.name;
+				var _settings$timing = settings.timing;
+				var timing = _settings$timing === undefined ? {} : _settings$timing;
+				var salinity = settings.salinity;
+
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_SettingsEddiHeader2.default, {
+						name: settings.name
+					}),
+					_react2.default.createElement(_SettingsEddiVersion2.default, {
+						artikNumber: version.artik.number,
+						artikDate: new Date(version.artik.updated),
+						eddiNumber: version.eddi.number,
+						eddiDate: new Date(version.eddi.updated)
+					}),
+					_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(salinity) {
+							return _onSalinityChange(salinity);
+						},
+						onEndChange: function onEndChange(hour, minutes) {
+							return _onEndChange(hour, minutes);
+						},
+						onStartChange: function onStartChange(hour, minutes) {
+							return _onStartChange(hour, minutes);
+						},
+						salinityValue: salinity,
+						startValue: timing.start,
+						endValue: timing.end
+					})
+				);
+			}
+		}]);
+
+		return SettingsEddi;
+	}(_react.Component);
+
+	SettingsEddi.propTypes = {
+		onSalinityChange: PropTypes.func.isRequired,
+		onStartChange: PropTypes.func.isRequired,
+		onEndChange: PropTypes.func.isRequired,
+		eddi: PropTypes.shape({
+			version: PropTypes.shape({
+				eddi: PropTypes.shape({
+					number: PropTypes.string,
+					updated: PropTypes.string
+				}),
+				artik: PropTypes.shape({
+					number: PropTypes.string,
+					updated: PropTypes.string
+				})
+			}),
+			settings: PropTypes.shape({
+				name: PropTypes.string,
+				timing: PropTypes.shape({
+					start: PropTypes.shape({
+						hour: PropTypes.number,
+						minute: PropTypes.number
+					}),
+					end: PropTypes.shape({
+						hour: PropTypes.number,
+						minute: PropTypes.number
+					})
+				}),
+				salinity: PropTypes.number
+			})
+		}).isRequired
+	};
+
+	exports.default = SettingsEddi;
+
+/***/ },
+/* 424 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var SettingsEddiHeader = function (_Component) {
+		_inherits(SettingsEddiHeader, _Component);
+
+		function SettingsEddiHeader() {
+			_classCallCheck(this, SettingsEddiHeader);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddiHeader).apply(this, arguments));
+		}
+
+		_createClass(SettingsEddiHeader, [{
+			key: 'render',
+			value: function render() {
+				var name = this.props.name;
+				var formattedName = name.toUpperCase();
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'p',
+						null,
+						formattedName
+					)
+				);
+			}
+		}]);
+
+		return SettingsEddiHeader;
+	}(_react.Component);
+
+	SettingsEddiHeader.propTypes = {
+		name: PropTypes.string.isRequired
+	};
+
+	exports.default = SettingsEddiHeader;
+
+/***/ },
+/* 425 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _moment = __webpack_require__(305);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var SettingsEddiVersion = function (_Component) {
+		_inherits(SettingsEddiVersion, _Component);
+
+		function SettingsEddiVersion() {
+			_classCallCheck(this, SettingsEddiVersion);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddiVersion).apply(this, arguments));
+		}
+
+		_createClass(SettingsEddiVersion, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var artikNumber = _props.artikNumber;
+				var artikDate = _props.artikDate;
+				var eddiNumber = _props.eddiNumber;
+				var eddiDate = _props.eddiDate;
+				var formattedArtikDate = (0, _moment2.default)(artikDate).format('M/D/YY');
+				var formattedEddiDate = (0, _moment2.default)(eddiDate).format('M/D/YY');
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: styles.row },
+						_react2.default.createElement(
+							'p',
+							{ style: styles.bold },
+							'EDDI ' + eddiNumber
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'updated ' + formattedEddiDate
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: styles.row },
+						_react2.default.createElement(
+							'p',
+							{ style: styles.bold },
+							'ARTIK ' + artikNumber
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'released ' + formattedArtikDate
+						)
+					)
+				);
+			}
+		}]);
+
+		return SettingsEddiVersion;
+	}(_react.Component);
+
+	SettingsEddiVersion.propTypes = {
+		artikNumber: PropTypes.string.isRequired,
+		artikDate: PropTypes.instanceOf(Date).isRequired,
+		eddiNumber: PropTypes.string.isRequired,
+		eddiDate: PropTypes.instanceOf(Date).isRequired
+	};
+
+	var styles = {
+		row: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center'
+		},
+		bold: {
+			fontWeight: 'bold'
+		}
+	};
+
+	exports.default = SettingsEddiVersion;
+
+/***/ },
+/* 426 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(3);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _SalinityInput = __webpack_require__(427);
 
 	var _SalinityInput2 = _interopRequireDefault(_SalinityInput);
 
-	var _TimeSelect = __webpack_require__(420);
+	var _TimeSelect = __webpack_require__(428);
 
 	var _TimeSelect2 = _interopRequireDefault(_TimeSelect);
 
@@ -46213,7 +47091,7 @@
 	exports.default = SettingsEddiForm;
 
 /***/ },
-/* 418 */
+/* 427 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46228,7 +47106,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _data = __webpack_require__(419);
+	var _data = __webpack_require__(304);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46291,157 +47169,7 @@
 	exports.default = SalinityInput;
 
 /***/ },
-/* 419 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.salinityOptions = exports.aOptions = exports.minutesOptions = exports.hourOptions = undefined;
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	exports.createDays = createDays;
-	exports.createMonths = createMonths;
-	exports.createYears = createYears;
-	exports.convertMilitaryToNormal = convertMilitaryToNormal;
-	exports.convertNormalToMilitary = convertNormalToMilitary;
-	exports.convertMinutesToString = convertMinutesToString;
-	exports.convertStringToMinutes = convertStringToMinutes;
-	exports.mapDateToReadings = mapDateToReadings;
-	exports.formatReadingsToCsv = formatReadingsToCsv;
-
-	var _moment = __webpack_require__(317);
-
-	var _moment2 = _interopRequireDefault(_moment);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	_moment2.default.locale('en');
-
-	function createHours(num) {
-		var hourOptions = [];
-		for (var i = 0; i < num; i++) {
-			hourOptions.push(i + 1);
-		}
-		return hourOptions;
-	}
-
-	function createMinutes(increment) {
-		var minutesOptions = [];
-		var minuteString = undefined;
-		for (var i = 0; i < 60; i += increment) {
-			minuteString = (0, _moment2.default)(i, 'm').format('mm');
-			minutesOptions.push(minuteString);
-		}
-		return minutesOptions;
-	}
-
-	function createDays(month, year) {
-		//month is supposed to be zero-based
-		if (typeof month === 'string') month = _moment2.default.month(month);
-		var max = new Date(year, month, 0).getDate(),
-		    days = [];
-		for (var i = 0; i < max; i++) {
-			days.push(i + 1);
-		}
-		return days;
-	}
-
-	function createMonths() {
-		return _moment2.default.months();
-	}
-
-	function createYears(start) {
-		var years = [],
-		    current = new Date().getFullYear();
-		for (var i = start; i <= current; i++) {
-			years.push(i);
-		}
-
-		return years;
-	}
-
-	function convertMilitaryToNormal(hour) {
-		var time = (0, _moment2.default)({ hour: hour });
-		return time.format('h a').split(' ');
-	}
-
-	function convertNormalToMilitary(hour, a) {
-		var time = (0, _moment2.default)(hour + ' ' + a, 'h a');
-		return parseInt(time.format('H'));
-	}
-
-	function convertMinutesToString(minute) {
-		var time = (0, _moment2.default)({ minute: minute });
-		return time.format('mm');
-	}
-
-	function convertStringToMinutes(minString) {
-		return parseInt(minString);
-	}
-
-	var hourOptions = exports.hourOptions = createHours(12);
-	var minutesOptions = exports.minutesOptions = createMinutes(5);
-	var aOptions = exports.aOptions = ['am', 'pm'];
-
-	var salinityOptions = exports.salinityOptions = {
-		min: 500,
-		default: 1000
-	};
-
-	//readings
-	function mapDateToReadings(readings) {
-		return Object.keys(readings).map(function (utc) {
-			return _extends({}, readings[utc], {
-				date: new Date(utc * 1000)
-			});
-		}).sort(function (a, b) {
-			return a.date > b.date;
-		});
-	}
-
-	function formatReadingsToCsv(readings) {
-		var mapping = [{
-			key: 'date',
-			name: 'Date'
-		}, {
-			key: 'ppmIn',
-			name: 'Salinity In'
-		}, {
-			key: 'ppmOut',
-			name: 'Salinity Out'
-		}, {
-			key: 'ppmRec',
-			name: 'Salinity Recycled'
-		}, {
-			key: 'qDump',
-			name: 'Dump Flow'
-		}, {
-			key: 'qOut',
-			name: 'Water Flow'
-		}],
-		    first = mapping.map(function (map) {
-			return map.name;
-		}).reduce(function (row, header) {
-			return row + ',' + header;
-		});
-
-		return readings.map(function (reading) {
-			return mapping.reduce(function (row, map, i) {
-				var value = reading[map.key];
-				if (!i) return (0, _moment2.default)(value).format('MM-DD-YYYY HH:mm');
-				return row + ',' + value;
-			}, '');
-		}).reduce(function (body, row) {
-			return body + '\n' + row;
-		}, first);
-	}
-
-/***/ },
-/* 420 */
+/* 428 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46456,11 +47184,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _moment = __webpack_require__(317);
+	var _moment = __webpack_require__(305);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _data = __webpack_require__(419);
+	var _data = __webpack_require__(304);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46642,7 +47370,7 @@
 	exports.default = TimeSelect;
 
 /***/ },
-/* 421 */
+/* 429 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46661,13 +47389,13 @@
 
 	var _eddis = __webpack_require__(285);
 
-	var _menu = __webpack_require__(310);
+	var _menu = __webpack_require__(303);
 
-	var _EddiStateButton = __webpack_require__(422);
+	var _EddiStateButton = __webpack_require__(430);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
-	var _AddEddiButton = __webpack_require__(307);
+	var _AddEddiButton = __webpack_require__(417);
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
@@ -46770,7 +47498,7 @@
 				var setEddiState = _props4.setEddiState;
 				var hasEddis = !!eddiList.length;
 
-				var TroubleshootElement = undefined;
+				var TroubleshootElement = void 0;
 
 				if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderSelected();
 
@@ -46788,7 +47516,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
 
 /***/ },
-/* 422 */
+/* 430 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46882,7 +47610,7 @@
 	exports.default = EddiStateButton;
 
 /***/ },
-/* 423 */
+/* 431 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46901,11 +47629,11 @@
 
 	var _reactRedux = __webpack_require__(171);
 
-	var _menu = __webpack_require__(310);
+	var _menu = __webpack_require__(303);
 
-	var _data = __webpack_require__(419);
+	var _data = __webpack_require__(304);
 
-	var _DateSelect = __webpack_require__(433);
+	var _DateSelect = __webpack_require__(432);
 
 	var _DateSelect2 = _interopRequireDefault(_DateSelect);
 
@@ -47164,7 +47892,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 424 */
+/* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47179,693 +47907,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(182);
-
-	var _constants = __webpack_require__(246);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var DashboardMenu = function (_Component) {
-		_inherits(DashboardMenu, _Component);
-
-		function DashboardMenu() {
-			_classCallCheck(this, DashboardMenu);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardMenu).apply(this, arguments));
-		}
-
-		_createClass(DashboardMenu, [{
-			key: 'render',
-			value: function render() {
-				var _props = this.props;
-				var id = _props.id;
-				var view = _props.view;
-
-				//handles appearance of default tab
-
-				var classString = '';
-				if (!view) classString = 'active';
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'dashboard-menu' },
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } },
-							activeClassName: 'active'
-						},
-						_react2.default.createElement(
-							'div',
-							null,
-							'in'
-						)
-					),
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_OUT } },
-							activeClassName: 'active',
-							className: classString
-						},
-						_react2.default.createElement(
-							'div',
-							null,
-							'out'
-						)
-					),
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } },
-							activeClassName: 'active'
-						},
-						_react2.default.createElement(
-							'div',
-							null,
-							'flow'
-						)
-					),
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } },
-							activeClassName: 'active'
-						},
-						_react2.default.createElement(
-							'div',
-							null,
-							'power'
-						)
-					)
-				);
-			}
-		}]);
-
-		return DashboardMenu;
-	}(_react.Component);
-
-	DashboardMenu.propTypes = {
-		id: _react.PropTypes.string,
-		view: _react.PropTypes.string
-	};
-
-	exports.default = DashboardMenu;
-
-/***/ },
-/* 425 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _SalinityGraph = __webpack_require__(426);
-
-	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
-
-	var _HistoricalGraph = __webpack_require__(431);
-
-	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function generateBadText() {
-		return 'which is not well. Please check your settings for your eddi.';
-	}
-
-	function generateGoodText() {
-		return 'so everything is doing well.';
-	}
-
-	var DashboardSalinity = function (_Component) {
-		_inherits(DashboardSalinity, _Component);
-
-		function DashboardSalinity() {
-			_classCallCheck(this, DashboardSalinity);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinity).apply(this, arguments));
-		}
-
-		_createClass(DashboardSalinity, [{
-			key: 'render',
-			value: function render() {
-				var _props = this.props;
-				var threshold = _props.threshold;
-				var current = _props.current;
-				var direction = _props.direction;
-				var status = current > threshold ? generateBadText() : generateGoodText();
-				return _react2.default.createElement(
-					'div',
-					{ className: 'dashboard-view salinity' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'dashboard-current' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'dashboard-current-numbers' },
-							_react2.default.createElement(
-								'h1',
-								null,
-								'Salinity ',
-								direction.toUpperCase()
-							),
-							_react2.default.createElement(
-								'h3',
-								null,
-								'' + current
-							),
-							_react2.default.createElement(
-								'p',
-								null,
-								'parts per million'
-							)
-						),
-						_react2.default.createElement(_SalinityGraph2.default, { salinity: current }),
-						_react2.default.createElement(
-							'p',
-							{ className: 'dashboard-note' },
-							'Your current level of salinity for the water your EDDI is pushing out is',
-							_react2.default.createElement(
-								'span',
-								null,
-								' ' + current + ' ppm. '
-							),
-							'Your current threshold is set at',
-							_react2.default.createElement(
-								'span',
-								null,
-								' ' + threshold + ' ppm, '
-							),
-							'' + status
-						)
-					),
-					_react2.default.createElement(_HistoricalGraph2.default, null)
-				);
-			}
-		}]);
-
-		return DashboardSalinity;
-	}(_react.Component);
-
-	DashboardSalinity.propTypes = {
-		threshold: _react.PropTypes.number.isRequired,
-		current: _react.PropTypes.number.isRequired,
-		direction: _react.PropTypes.string.isRequired
-	};
-
-	DashboardSalinity.defaultProps = {
-		threshold: 1000
-	};
-
-	exports.default = DashboardSalinity;
-
-/***/ },
-/* 426 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var SIZE = 120;
-	var CENTER = SIZE / 2;
-
-	var DANGEROUS_SALINITY = 2000;
-
-	function colorAtPPM(ppm) {
-	  var ppmFactor = Math.min(1, ppm / DANGEROUS_SALINITY);
-	  var red = Math.round(42 + 129 * ppmFactor);
-	  var green = Math.round(191 - 138 * ppmFactor);
-	  var blue = Math.round(208 - 172 * ppmFactor);
-	  return 'rgba(' + red + ', ' + green + ', ' + blue + ', 1)';
-	}
-
-	var SalinityGraph = function (_Component) {
-	  _inherits(SalinityGraph, _Component);
-
-	  function SalinityGraph() {
-	    _classCallCheck(this, SalinityGraph);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(SalinityGraph).apply(this, arguments));
-	  }
-
-	  _createClass(SalinityGraph, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.canvas = this.refs.canvas;
-	      this.context = this.canvas.getContext('2d');
-	      this.paint(this.props.salinity);
-	    }
-	  }, {
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(newProps) {
-	      this.paint(newProps.salinity);
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate() {
-	      return false;
-	    }
-	  }, {
-	    key: 'paint',
-	    value: function paint(ppm) {
-	      ppm = Math.min(ppm, 4000);
-	      var context = this.context;
-	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	      var density = ppm / 400;
-	      for (var ix = 0; ix < density; ix++) {
-	        var radius = ix * (CENTER / density);
-	        var angleIncr = 60 / ix;
-	        var color = colorAtPPM(radius / CENTER * ppm);
-	        for (var ir = 0; ir < 360; ir += angleIncr) {
-	          var centerX = CENTER + radius * Math.sin(Math.PI * ((ix * 2 + ir) / 180));
-	          var centerY = CENTER + radius * Math.cos(Math.PI * ((ix * 2 + ir) / 180));
-	          context.beginPath();
-	          context.arc(centerX, centerY, 2, 0, 2 * Math.PI, false);
-	          context.fillStyle = color;
-	          context.fill();
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'salinity-graph', height: SIZE, width: SIZE });
-	    }
-	  }]);
-
-	  return SalinityGraph;
-	}(_react.Component);
-
-	exports.default = SalinityGraph;
-
-
-	SalinityGraph.defaultProps = {
-	  salinity: 0
-	};
-
-/***/ },
-/* 427 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _FlowGraph = __webpack_require__(428);
-
-	var _FlowGraph2 = _interopRequireDefault(_FlowGraph);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function generateStatusText(rate) {
-		if (rate <= 0.3) return 'slow';else if (rate <= 3) return 'medium';else return 'fast';
-	}
-
-	var DashboardFlow = function (_Component) {
-		_inherits(DashboardFlow, _Component);
-
-		function DashboardFlow() {
-			_classCallCheck(this, DashboardFlow);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).apply(this, arguments));
-		}
-
-		_createClass(DashboardFlow, [{
-			key: 'render',
-			value: function render() {
-				var rate = this.props.rate;
-
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement(
-								'h1',
-								null,
-								'WATER FLOW'
-							),
-							_react2.default.createElement(
-								'h3',
-								null,
-								'' + rate
-							),
-							_react2.default.createElement(
-								'p',
-								null,
-								'liters per minute'
-							)
-						),
-						_react2.default.createElement(_FlowGraph2.default, { rate: rate })
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Your current level of water flow is',
-						_react2.default.createElement(
-							'span',
-							null,
-							' ' + rate + ' lpm, '
-						),
-						'which is a',
-						_react2.default.createElement(
-							'span',
-							null,
-							' ' + generateStatusText(rate) + ' '
-						),
-						'flow.'
-					)
-				);
-			}
-		}]);
-
-		return DashboardFlow;
-	}(_react.Component);
-
-	DashboardFlow.propTypes = {
-		rate: _react.PropTypes.number.isRequired
-	};
-
-	exports.default = DashboardFlow;
-
-/***/ },
-/* 428 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _constants = __webpack_require__(246);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var SIZE = 200;
-	var CENTER = SIZE / 2;
-	var LINE_THICKNESS = 30;
-	var BASE10 = Math.log(10);
-
-	//slow is 0.3, medium is 3, fast is 30
-
-	function colorForRate(rate) {
-	  if (rate < 0.3) {
-	    rate = 0.3;
-	  } else if (rate > 30) {
-	    rate = 30;
-	  }
-	  var rateFactor = Math.abs(Math.log(rate / 3) / BASE10);
-	  return colorForFactor(rateFactor);
-	}
-
-	function colorForAnglePi(anglePi) {
-	  // angle without pi factor
-	  //var angleFactor = Math.abs(anglePi - 1.5) / 0.7;
-	  var angleFactor = (anglePi - 0.8) / 1.4;
-	  return colorForFactor(angleFactor);
-	}
-
-	function colorForFactor(factor) {
-	  // factor is 0 to 1
-	  var red = Math.round(42 + 129 * factor);
-	  var green = Math.round(191 - 138 * factor);
-	  var blue = Math.round(208 - 172 * factor);
-	  return 'rgba(' + red + ', ' + green + ', ' + blue + ', 1)';
-	}
-
-	function angleForRate(rate) {
-	  if (rate < 0.3) {
-	    rate = 0.3;
-	  } else if (rate > 30) {
-	    rate = 30;
-	  }
-
-	  var logMult = (Math.log(rate / 3) / BASE10 + 1) / 2; // goes from 0 to 1
-	  return (logMult * 1.4 + 0.8) * Math.PI;
-	}
-
-	var FlowGraph = function (_Component) {
-	  _inherits(FlowGraph, _Component);
-
-	  function FlowGraph() {
-	    _classCallCheck(this, FlowGraph);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(FlowGraph).apply(this, arguments));
-	  }
-
-	  _createClass(FlowGraph, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.canvas = this.refs.canvas;
-	      this.context = this.canvas.getContext('2d');
-	      this.paint(this.props.rate);
-	    }
-	  }, {
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(newProps) {
-	      this.paint(newProps.rate);
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate() {
-	      return false;
-	    }
-	  }, {
-	    key: 'paint',
-	    value: function paint(rate) {
-	      var context = this.context;
-	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-	      context.lineWidth = LINE_THICKNESS;
-	      for (var ix = 0.9; ix < 2.3; ix += 0.2) {
-	        context.strokeStyle = colorForAnglePi(ix);
-	        context.beginPath();
-	        context.arc(CENTER, CENTER, 0.8 * CENTER, (ix - 0.1) * Math.PI, (ix + 0.1) * Math.PI, false);
-	        context.stroke();
-	      }
-
-	      var pointEdge = 0.8 * CENTER - 4;
-	      var baseEdge = 0.8 * CENTER - LINE_THICKNESS / 1.9;
-	      var angle = angleForRate(rate);
-	      var baseAngleA = angle - 0.2;
-	      var baseAngleB = angle + 0.2;
-	      context.fillStyle = _constants.BACKGROUND_COLOR;
-	      context.beginPath();
-	      context.moveTo(CENTER + pointEdge * Math.cos(angle), CENTER + pointEdge * Math.sin(angle));
-	      context.lineTo(CENTER + baseEdge * Math.cos(baseAngleA), CENTER + baseEdge * Math.sin(baseAngleA));
-	      context.lineTo(CENTER + baseEdge * Math.cos(baseAngleB), CENTER + baseEdge * Math.sin(baseAngleB));
-	      context.closePath();
-	      context.fill();
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'flow-graph', height: SIZE, width: SIZE });
-	    }
-	  }]);
-
-	  return FlowGraph;
-	}(_react.Component);
-
-	exports.default = FlowGraph;
-
-
-	FlowGraph.defaultProps = {
-	  salinity: 0
-	};
-
-/***/ },
-/* 429 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(430);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(260)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Dashboard.less", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Dashboard.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 430 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(259)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #006d60;\n  text-decoration: none;\n  text-align: center;\n  padding-top: 42px;\n  background-image: url('http://orig14.deviantart.net/f231/f/2015/030/6/c/salt_shaker_pixel_by_alfvie-d8g1phq.png');\n  background-size: 12px 20px;\n  background-position: center 16px;\n  background-repeat: no-repeat;\n  text-transform: uppercase;\n  font-size: 15px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 431 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var HistoricalGraph = function (_Component) {
-	  _inherits(HistoricalGraph, _Component);
-
-	  function HistoricalGraph() {
-	    _classCallCheck(this, HistoricalGraph);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(HistoricalGraph).apply(this, arguments));
-	  }
-
-	  _createClass(HistoricalGraph, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'historical-graph' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'historical-selector' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'historical-selection' },
-	            'This Month'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'historical-selection' },
-	            'This Week'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'historical-selection' },
-	            'Today'
-	          )
-	        ),
-	        _react2.default.createElement('canvas', { ref: 'canvas', className: 'historical-graph-canvas' })
-	      );
-	    }
-	  }]);
-
-	  return HistoricalGraph;
-	}(_react.Component);
-
-	exports.default = HistoricalGraph;
-
-/***/ },
-/* 432 */,
-/* 433 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(3);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _data = __webpack_require__(419);
+	var _data = __webpack_require__(304);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

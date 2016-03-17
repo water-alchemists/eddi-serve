@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import FlowGraph from './graphs/FlowGraph';
+import HistoricalGraph from './graphs/HistoricalGraph';
 
 function generateStatusText(rate){
 	if(rate <= 0.3) return 'slow';
@@ -14,22 +15,23 @@ class DashboardFlow extends Component {
 		const { rate } = this.props;
 
 		return (
-			<div >
-				<div>
-					<div >
+			<div className='dashboard-view flow'>
+				<div className='dashboard-current'>
+					<div className='dashboard-current-numbers'>
 						<h1>WATER FLOW</h1>
 						<h3>{`${rate}`}</h3>
 						<p>liters per minute</p>
 					</div>
 					<FlowGraph rate={rate} />
+					<p className='dashboard-note'>
+						Your current level of water flow is
+						<span>{` ${rate} lpm, `}</span>
+						which is a
+						<span>{` ${generateStatusText(rate)} `}</span>
+						flow.
+					</p>
 				</div>
-				<p>
-					Your current level of water flow is 
-					<span>{` ${rate} lpm, `}</span>
-					which is a
-					<span>{` ${generateStatusText(rate)} `}</span>
-					flow.
-				</p>
+				<HistoricalGraph />
 			</div>
 		);
 	}

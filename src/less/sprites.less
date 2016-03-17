@@ -1,0 +1,31 @@
+
+// spaced 45px in the x, with 41 for the first
+
+.sprite{
+  background-image: url('/assets/nice-sprites.png');
+  background-repeat: no-repeat;
+
+  &.home{
+    background-position: 0 0;
+    &.green{
+      background-position: 20px 0px;
+    }
+  }
+
+  &.salinityIn{
+    background-position: -109px -81px;
+  }
+
+  &.salinityOut{
+    background-position: -155px -81px;
+  }
+
+  &.flow{
+    background-position: -209px -81px;
+  }
+
+  &.power{
+    background-position: -253px -81px;
+  }
+
+}
