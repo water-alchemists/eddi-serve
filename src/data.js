@@ -1,5 +1,6 @@
 'use strict';
 import moment from 'moment';
+moment.locale('en');
 
 function createHours(num){
 	const hourOptions = [];
@@ -17,6 +18,31 @@ function createMinutes(increment){
 		minutesOptions.push(minuteString);
 	}
 	return minutesOptions;
+}
+
+export function createDays(month, year){
+	//month is supposed to be zero-based
+	if(typeof month === 'string') month = moment.month(month);
+	const max = new Date(year, month, 0).getDate(),
+		days = [];
+	for(let i = 0; i < max; i++){
+		days.push(i + 1);
+	}
+	return days;
+}
+
+export function createMonths(){
+	return moment.months();
+}
+
+export function createYears(start){
+	const years = [],
+		current = new Date().getFullYear();
+	for(let i = start; i <= current; i++){
+		years.push(i);
+	}
+
+	return years;
 }
 
 export function convertMilitaryToNormal(hour){
@@ -47,3 +73,56 @@ export const salinityOptions = {
 	min: 500,
 	default : 1000
 };
+
+//readings
+export function mapDateToReadings(readings){
+	return Object.keys(readings)
+		.map(utc => {
+			return {
+				...readings[utc],
+				date : new Date(utc * 1000)
+			}
+		})
+		.sort((a,b) => a.date > b.date);
+}
+
+export function formatReadingsToCsv(readings){
+	const mapping = [
+		{
+			key : 'date',
+			name : 'Date'
+		},
+		{
+			key : 'ppmIn',
+			name : 'Salinity In'
+		},
+		{
+			key : 'ppmOut',
+			name : 'Salinity Out'
+		},
+		{
+			key : 'ppmRec',
+			name : 'Salinity Recycled'
+		},
+		{
+			key : 'qDump',
+			name : 'Dump Flow'
+		},
+		{
+			key : 'qOut',
+			name : 'Water Flow'
+		}
+	],
+	first = mapping.map(map => map.name)
+				.reduce((row, header) => `${row},${header}`);
+
+	return readings
+		.map(reading => {
+			return mapping.reduce((row, map, i) => {
+				let value = reading[map.key]
+				if(!i) return moment(value).format('MM-DD-YYYY HH:mm');
+				return`${row},${value}`;
+			},'');
+		})
+		.reduce((body, row) => `${body}\n${row}`, first);
+}

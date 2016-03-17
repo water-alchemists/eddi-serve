@@ -14,7 +14,7 @@
     font-size: @navbar_height - 12px;
     position: absolute;
       top: 0;
-      left: 0;
+      right: 0;
 
     .icon{
       display: block;
@@ -38,8 +38,8 @@
     .menu-options{
       display: none;
       position: absolute;
-        top: @navbar_height;
-        left: 0;
+      top: @navbar_height;
+      right: 0;
       width: 180px;
       background-color: white;
       color: black;
@@ -51,8 +51,8 @@
         display: block;
         padding: 8px;
         &.active{
-          color: white;
-          background-color: @true_blue_lite;
+          color: @trim_color;
+          text-decoration: underline;
         }
       }
     }

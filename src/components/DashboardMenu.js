@@ -6,27 +6,33 @@ import { PATHS, QUERY } from '../constants';
 
 class DashboardMenu extends Component {
 	render(){
-		const { id } = this.props;
+		const { id, view } = this.props;
+
+		//handles appearance of default tab
+		let classString = '';
+		if(!view) classString = 'active';
+
  		return (
 			<div className='dashboard-menu'>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_IN }} }
-					activeClassName='active'
-				>
+							activeClassName='active'>
+					<div className='sprite salinityIn' />
 					<div>in</div>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_OUT }} }
-					activeClassName='active'
-				>
+							activeClassName='active'
+					className={classString}>
+					<div className='sprite salinityOut' />
 					<div>out</div>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.FLOW }} }
-					activeClassName='active'
-				>
+							activeClassName='active'>
+					<div className='sprite flow' />
 					<div>flow</div>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.POWER }} }
-					activeClassName='active'
-				>
+							activeClassName='active'>
+					<div className='sprite power' />							
 					<div>power</div>
 				</Link>
 			</div>
@@ -35,7 +41,8 @@ class DashboardMenu extends Component {
 }
 
 DashboardMenu.propTypes = {
-	id : PropTypes.string
+	id : PropTypes.string,
+	view : PropTypes.string
 };
 
 
