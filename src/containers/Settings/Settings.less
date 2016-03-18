@@ -1,0 +1,49 @@
+@import '../../less/vars';
+
+#settings {
+	height : 100vh;
+	background-color: @light_color;
+	.settings-eddi {
+		background-color : white;
+		.header {
+			padding-top: 1rem;
+			padding-bottom : 1rem;
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			h3 {
+				font-weight: normal;
+				text-align : center;
+				margin: 0px;
+			}
+		}
+
+		.settings-version {
+			.version-type {
+				display : flex;
+				flex-direction : row;
+				justify-content : space-between;
+				align-items: center;
+				
+				.info {
+					color: black;
+				}
+
+				.date {
+					color: @light_color;
+				}
+
+
+			}
+		}
+
+	}
+	.footer {
+			position : absolute;
+			width : 100%;
+			bottom : 0;
+			left: 0;
+			padding-top : 5px;
+			padding-bottom : 5px;
+		}
+}

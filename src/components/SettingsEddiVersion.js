@@ -13,14 +13,14 @@ class SettingsEddiVersion extends Component {
 			formattedEddiDate = moment(eddiDate).format('M/D/YY');
 
 		return (
-			<div>
-				<div style={styles.row}>
-					<p style={styles.bold}>{`EDDI ${eddiNumber}`}</p>
-					<p>{`updated ${formattedEddiDate}`}</p>
+			<div className='settings-version' >
+				<div className='version-type' style={styles.row}>
+					<p className='info' style={styles.bold}>{`EDDI ${eddiNumber}`}</p>
+					<p className='date'>{`updated ${formattedEddiDate}`}</p>
 				</div>
-				<div style={styles.row}>
-					<p style={styles.bold}>{`ARTIK ${artikNumber}`}</p>
-					<p>{`released ${formattedArtikDate}`}</p>
+				<div className='version-type' style={styles.row}>
+					<p className='info' style={styles.bold}>{`ARTIK ${artikNumber}`}</p>
+					<p className='date'>{`released ${formattedArtikDate}`}</p>
 				</div>
 			</div>
 		);

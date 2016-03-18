@@ -10,8 +10,8 @@ class SettingsEddiHeader extends Component {
 		const { name } = this.props,
 			formattedName = name.toUpperCase();
 		return (
-			<div>
-				<p>{formattedName}</p>
+			<div className='header' style={{backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')"}}>
+				<h3>{formattedName}</h3>
 			</div>
 		);
 	}

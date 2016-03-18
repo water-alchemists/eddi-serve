@@ -16,7 +16,7 @@ class SettingsEddi extends Component {
 			{ name, timing={}, salinity } = settings;
 
 		return (
-			<div>
+			<div className='settings-eddi'>
 				<SettingsEddiHeader 
 					name={settings.name}
 				/>

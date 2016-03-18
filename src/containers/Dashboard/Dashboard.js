@@ -40,7 +40,6 @@ class Dashboard extends Component {
 	componentWillMount(){
 		const { updateMenuName, eddi={} } = this.props;
 		if( eddi.id ) {
-			console.log('i am here');
 			updateMenuName(eddi.settings.name);
 			if(eddi.readings){
 				//format the readings into an array for data handling
@@ -62,7 +61,7 @@ class Dashboard extends Component {
 				//format the readings into an array for data handling
 				const readings = mapDateToReadings(eddi.readings),
 					current = readings[readings.length - 1];
-				console.log('these are the readings', readings, current);
+
 				this.setState({ readings, current });
 			}
 		}

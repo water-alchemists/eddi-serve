@@ -8,14 +8,14 @@ import {
 	setEddiEndThunk,
 	setEddiSalinityThunk,
 	getAllEddiByUserThunk,
-} from '../actions/eddis';
-import { menuNameChange } from '../actions/menu';
+} from '../../actions/eddis';
+import { menuNameChange } from '../../actions/menu';
 
-import AddEddiButton from '../components/AddEddiButton';
+import AddEddiButton from '../../components/AddEddiButton';
 
-import SettingsEddi from '../components/SettingsEddi';
+import SettingsEddi from '../../components/SettingsEddi';
 
-
+import style from './Settings.less';
 
 function mapStateToProps(state){
 	return {
@@ -78,7 +78,9 @@ class Settings extends Component {
 				<div>
 					{EddiElements}
 				</div>
-				<AddEddiButton />
+				<div className='footer'>
+					<AddEddiButton />
+				</div>
 			</div>
 		);
 	}
