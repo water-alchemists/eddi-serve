@@ -16,6 +16,7 @@ import DashboardFlow from '../../components/DashboardFlow';
 import style from './Dashboard.less';
 
 function getGoodBad(current, threshold){
+	console.log('this is the threshold', threshold, current);
 	if(!threshold) threshold = SALINITY_THRESHOLD; //default threshold for salinity
 	const { ppmIn, ppmOut, qOut } = current,
 		flowGood = qOut > FLOW_THRESHOLD ? false : true,

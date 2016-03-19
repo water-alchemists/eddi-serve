@@ -7,7 +7,7 @@ class SalinityInput extends Component {
 		event.preventDefault();
 		const { onSalinityChange } = this.props,
 			value = event.target.value,
-			formattedValue = isNaN(Number(value)) ? parseInt(value) : null;
+			formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
 
 		if(onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
 	}

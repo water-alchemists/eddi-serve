@@ -31985,6 +31985,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	function getGoodBad(current, threshold) {
+		console.log('this is the threshold', threshold, current);
 		if (!threshold) threshold = _constants.SALINITY_THRESHOLD; //default threshold for salinity
 		var ppmIn = current.ppmIn;
 		var ppmOut = current.ppmOut;
@@ -47284,7 +47285,7 @@
 				event.preventDefault();
 				var onSalinityChange = this.props.onSalinityChange;
 				var value = event.target.value;
-				var formattedValue = isNaN(Number(value)) ? parseInt(value) : null;
+				var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
 
 				if (onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
 			}
