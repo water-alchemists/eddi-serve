@@ -22,8 +22,8 @@ class SettingsEddiHeader extends Component {
 			>
 				<h3>{formattedName}</h3>
 				<div>
-					<div className='sprite pdf'></div>
-					<div className='sprite pdf faded'></div>
+					<div className='sprite flow bad'></div>
+					<div className='sprite flow faded bad'></div>
 				</div>
 			</div>
 		);
