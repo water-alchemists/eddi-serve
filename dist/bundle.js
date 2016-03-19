@@ -26954,13 +26954,18 @@
 
 /***/ },
 /* 255 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _reactRouter = __webpack_require__(184);
+
+	var _constants = __webpack_require__(248);
+
 	function errorHandle(_ref) {
 		var dispatch = _ref.dispatch;
 
@@ -26968,7 +26973,10 @@
 			return function (action) {
 				var error = action.error;
 
-				if (error instanceof Error) return window.alert(error.message);
+				if (error instanceof Error) {
+					if (error.message.indexOf('not authenticated') > -1) return _reactRouter.browserHistory.push(_constants.PATHS.HOME);
+					return window.alert(error.message);
+				}
 				return next(action);
 			};
 		};
@@ -47375,7 +47383,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-version .version-type .info {\n  color: black;\n}\n#settings .settings-eddi .settings-version .version-type .date {\n  color: rgba(241, 241, 242, 0.9);\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-version {\n  padding-left: 15px;\n  padding-right: 15px;\n  padding-top: 5px;\n  padding-right: 5px;\n}\n#settings .settings-eddi .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-version .version-type .info {\n  color: black;\n}\n#settings .settings-eddi .settings-version .version-type .date {\n  color: rgba(241, 241, 242, 0.9);\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
 
 	// exports
 
