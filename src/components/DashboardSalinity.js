@@ -1,5 +1,8 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
+
+import { SALINITY_THRESHOLD } from '../constants';
+
 import SalinityGraph from './graphs/SalinityGraph';
 import HistoricalGraph from './graphs/HistoricalGraph';
 
@@ -47,7 +50,7 @@ DashboardSalinity.propTypes = {
 };
 
 DashboardSalinity.defaultProps = {
-	threshold : 1000
+	threshold : SALINITY_THRESHOLD
 };
 
 export default DashboardSalinity;

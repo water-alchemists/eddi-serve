@@ -26684,6 +26684,10 @@
 	// Style Related
 	var BACKGROUND_COLOR = exports.BACKGROUND_COLOR = "rgba(13,14,31,1)";
 
+	//Thresholds
+	var FLOW_THRESHOLD = exports.FLOW_THRESHOLD = 5;
+	var SALINITY_THRESHOLD = exports.SALINITY_THRESHOLD = 1000;
+
 /***/ },
 /* 249 */
 /***/ function(module, exports, __webpack_require__) {
@@ -31929,13 +31933,21 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	function getGoodBad(current) {
-		console.log('current', current);
+	function getGoodBad(current, threshold) {
+		if (!threshold) threshold = _constants.SALINITY_THRESHOLD; //default threshold for salinity
+		var ppmIn = current.ppmIn;
+		var ppmOut = current.ppmOut;
+		var qOut = current.qOut;
+		var flowGood = qOut > _constants.FLOW_THRESHOLD ? false : true;
+		var salinityInGood = ppmIn > threshold ? false : true;
+		var salinityOutGood = ppmOut > threshold ? false : true;
+		var powerGood = true;
+
 		return {
-			salinityIn: false,
-			salinityOut: false,
-			power: false,
-			flow: false
+			salinityIn: salinityInGood,
+			salinityOut: salinityOutGood,
+			power: powerGood,
+			flow: flowGood
 		};
 	}
 
@@ -32062,9 +32074,11 @@
 				var _props3$location = _props3.location;
 				var location = _props3$location === undefined ? {} : _props3$location;
 				var id = eddi.id;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 				var view = location.query.view;
 
-				var _getGoodBad = getGoodBad(current);
+				var _getGoodBad = getGoodBad(current, settings.salinity);
 
 				var salinityIn = _getGoodBad.salinityIn;
 				var salinityOut = _getGoodBad.salinityOut;
@@ -32140,6 +32154,8 @@
 
 	var _moment2 = _interopRequireDefault(_moment);
 
+	var _constants = __webpack_require__(248);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_moment2.default.locale('en');
@@ -32212,7 +32228,7 @@
 
 	var salinityOptions = exports.salinityOptions = {
 		min: 500,
-		default: 1000
+		default: _constants.SALINITY_THRESHOLD
 	};
 
 	//readings
@@ -45515,6 +45531,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _constants = __webpack_require__(248);
+
 	var _SalinityGraph = __webpack_require__(409);
 
 	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
@@ -45616,7 +45634,7 @@
 	};
 
 	DashboardSalinity.defaultProps = {
-		threshold: 1000
+		threshold: _constants.SALINITY_THRESHOLD
 	};
 
 	exports.default = DashboardSalinity;

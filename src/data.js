@@ -1,5 +1,6 @@
 'use strict';
 import moment from 'moment';
+import { SALINITY_THRESHOLD } from './constants';
 moment.locale('en');
 
 function createHours(num){
@@ -71,7 +72,7 @@ export const aOptions = ['am', 'pm'];
 
 export const salinityOptions = {
 	min: 500,
-	default : 1000
+	default : SALINITY_THRESHOLD
 };
 
 //readings

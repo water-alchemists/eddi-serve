@@ -51,3 +51,7 @@ export const MODAL_OFF = 'MODAL_OFF';
 
 // Style Related
 export const BACKGROUND_COLOR = "rgba(13,14,31,1)";
+
+//Thresholds
+export const FLOW_THRESHOLD = 5;
+export const SALINITY_THRESHOLD = 1000;

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { menuNameChange } from '../../actions/menu';
 import { selectEddiById } from '../../actions/eddis';
 
-import { QUERY } from '../../constants';
+import { QUERY, FLOW_THRESHOLD, SALINITY_THRESHOLD } from '../../constants';
 
 import { mapDateToReadings } from '../../data';
 
@@ -15,13 +15,19 @@ import DashboardFlow from '../../components/DashboardFlow';
 
 import style from './Dashboard.less';
 
-function getGoodBad(current){
-	console.log('current', current);
+function getGoodBad(current, threshold){
+	if(!threshold) threshold = SALINITY_THRESHOLD; //default threshold for salinity
+	const { ppmIn, ppmOut, qOut } = current,
+		flowGood = qOut > FLOW_THRESHOLD ? false : true,
+		salinityInGood = ppmIn > threshold ? false : true,
+		salinityOutGood = ppmOut > threshold ? false : true,
+		powerGood = true;
+
 	return {
-		salinityIn : false,
-		salinityOut : false,
-		power : false,
-		flow : false
+		salinityIn : salinityInGood,
+		salinityOut : salinityOutGood,
+		power : powerGood,
+		flow : flowGood
 	};
 }
 
@@ -118,9 +124,9 @@ class Dashboard extends Component {
 	render(){
 		const { current } = this.state,
 			{ eddi={}, location={} } = this.props,
-			{ id } = eddi,
+			{ id, settings={} } = eddi,
 			{ view } = location.query,
-			{ salinityIn, salinityOut, flow, power } = getGoodBad(current);
+			{ salinityIn, salinityOut, flow, power } = getGoodBad(current, settings.salinity);
 
 		let DashboardElement = this._renderViewBasedQuery(view);
 		return (
