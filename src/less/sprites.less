@@ -4,28 +4,99 @@
 .sprite{
   background-image: url('/assets/nice-sprites.png');
   background-repeat: no-repeat;
-
+  height: 35px;
+  width : 35px;
   &.home{
-    background-position: 0 0;
+    background-position: -10px -10px;
     &.green{
-      background-position: 20px 0px;
+      background-position: -60px -10px;
+    }
+  }
+
+  &.dashboard {
+    background-position : -10px -80px;
+    &.green {
+      background-position : -60px -80px;
+    }
+  }
+
+  &.setting {
+    background-position : -10px -150px;
+    &.green {
+      background-position : -60px -150px;
+    }
+  }
+
+  &.troubleshoot {
+    background-position : -10px -295px;
+    &.green {
+      background-position : -60px -295px;
+    }
+  }
+
+  &.report {
+    background-position : -10px -220px;
+    &.green {
+      background-position : -60px -220px;
+    }
+  }
+
+  &.arrow {
+    &.down {
+      background-position : -55px -420px;
+    }
+    &.up {
+      background-position : -55px -350px;
+    }
+    &.right {
+      background-position : 0px -420px;
+    }
+  }
+
+  &.camera {
+    background-position : -207px -295px;
+  }
+
+  &.csv {
+    background-position : -207px -425px;
+    &.faded {
+      background-position : -207px -362px;
+    }
+  }
+
+  &.pdf {
+    background-position : -255px -425px;
+    &.faded {
+      background-position : -255px -362px;
     }
   }
 
   &.salinityIn{
     background-position: -109px -81px;
+    &.faded {
+
+    }
   }
 
   &.salinityOut{
     background-position: -155px -81px;
+    &.faded {
+
+    }
   }
 
   &.flow{
     background-position: -209px -81px;
+    &.faded {
+
+    }
   }
 
   &.power{
     background-position: -253px -81px;
+    &.faded {
+      
+    }
   }
 
 }

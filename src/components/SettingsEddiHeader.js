@@ -21,6 +21,10 @@ class SettingsEddiHeader extends Component {
 				onClick={event => this.clickHandler(event)}
 			>
 				<h3>{formattedName}</h3>
+				<div>
+					<div className='sprite pdf'></div>
+					<div className='sprite pdf faded'></div>
+				</div>
 			</div>
 		);
 	}
