@@ -46712,7 +46712,7 @@
 				var salinity = settings.salinity;
 
 
-				if (isOpen) className.push('hide');
+				if (!isOpen) className.push('hide');
 
 				return _react2.default.createElement(
 					'div',
@@ -47031,7 +47031,7 @@
 						'div',
 						{ className: 'operate-row' },
 						_react2.default.createElement(
-							'h5',
+							'h4',
 							null,
 							'OPERATING FROM'
 						),
@@ -47065,7 +47065,7 @@
 						'div',
 						{ className: 'salinity-row' },
 						_react2.default.createElement(
-							'h5',
+							'h4',
 							null,
 							'SALINITY OUTPUT'
 						),
@@ -47149,7 +47149,8 @@
 				event.preventDefault();
 				var onSalinityChange = this.props.onSalinityChange;
 				var value = event.target.value;
-				var formattedValue = parseInt(value);
+				var formattedValue = isNaN(Number(value)) ? parseInt(value) : null;
+
 				if (onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
 			}
 		}, {
@@ -47161,12 +47162,13 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'salinity-input' },
 					_react2.default.createElement('input', { type: 'number',
 						onChange: function onChange(event) {
 							return _this2.changeHandler(event);
 						},
-						value: value
+						value: value,
+						placeholder: 'Set Your Own'
 					})
 				);
 			}
@@ -47207,6 +47209,10 @@
 	var _moment2 = _interopRequireDefault(_moment);
 
 	var _data = __webpack_require__(306);
+
+	var _DateTimeSelect = __webpack_require__(439);
+
+	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47338,7 +47344,7 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'date-time-select' },
 					_react2.default.createElement(
 						'select',
 						{ value: hr,
@@ -47422,7 +47428,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: rgba(241, 241, 242, 0.9);\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h5 {\n  color: black;\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: rgba(241, 241, 242, 0.9);\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
 
 	// exports
 
@@ -47971,6 +47977,10 @@
 
 	var _data = __webpack_require__(306);
 
+	var _DateTimeSelect = __webpack_require__(439);
+
+	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -47980,7 +47990,6 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var MONTHS = (0, _data.createMonths)();
-	console.log(MONTHS);
 
 	var DateSelect = function (_Component) {
 		_inherits(DateSelect, _Component);
@@ -48074,7 +48083,7 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'date-time-select' },
 					_react2.default.createElement(
 						'select',
 						{ onChange: function onChange(event) {
@@ -48159,6 +48168,46 @@
 
 	// module
 	exports.push([module.id, "", ""]);
+
+	// exports
+
+
+/***/ },
+/* 439 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(440);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(262)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 440 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(261)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  padding: 5px;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
 
 	// exports
 

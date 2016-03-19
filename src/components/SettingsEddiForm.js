@@ -17,7 +17,7 @@ class SettingsEddiForm extends Component {
 		return (
 			<div className='settings-form'>
 				<div className='operate-row'>
-					<h5>OPERATING FROM</h5>
+					<h4>OPERATING FROM</h4>
 					<div style={styles.row}>
 						<TimeSelect onChange={ ({ hour, minute }) => onStartChange(hour, minute) }
 							hour={startValue.hour}
@@ -31,7 +31,7 @@ class SettingsEddiForm extends Component {
 					</div>
 				</div>
 				<div className='salinity-row'>
-					<h5>SALINITY OUTPUT</h5>
+					<h4>SALINITY OUTPUT</h4>
 					<SalinityInput value={salinityValue}
 						onSalinityChange={salinity => onSalinityChange(salinity)}
 					/>

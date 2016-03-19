@@ -28,7 +28,7 @@ class SettingsEddi extends Component {
 			{ version={}, settings={} } = eddi,
 			{ name, timing={}, salinity } = settings;
 
-		if(isOpen) className.push('hide');
+		if(!isOpen) className.push('hide');
 
 		return (
 			<div className='settings-eddi'>

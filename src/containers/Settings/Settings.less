@@ -59,8 +59,29 @@
 			}
 
 			.settings-form { 
-				h5 {
+				h4 {
 					color: black;
+					font-weight: 200;
+					margin : 0;
+				}
+				.operate-row {
+					p {
+						color: @light_color;
+					}
+				}
+				.salinity-row {
+					.salinity-input {
+						input {
+							border-color : @trim_color;
+							border-width : 2px;
+							padding : 5px;
+							font-size : @input_font_size;
+							text-transform : uppercase;
+							&:focus {
+								outline: none;
+							}
+						}
+					}
 				}
 			}
 		}

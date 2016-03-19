@@ -3,8 +3,10 @@ import React, { Component, PropTypes } from 'react';
 
 import { createDays, createMonths, createYears } from '../data';
 
+import style from '../less/DateTimeSelect.less';
+
 const MONTHS = createMonths();
-console.log(MONTHS);
+
 
 class DateSelect extends Component {
 	onDayChange(event){
@@ -55,7 +57,7 @@ class DateSelect extends Component {
 			DayElements = this._renderDays();
 
 		return (
-			<div>
+			<div className='date-time-select'>
 				<select onChange={event => this.onDayChange(event)}
 					value={day}
 				>
