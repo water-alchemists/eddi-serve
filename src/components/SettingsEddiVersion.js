@@ -15,11 +15,11 @@ class SettingsEddiVersion extends Component {
 		return (
 			<div className='settings-version' >
 				<div className='version-type' style={styles.row}>
-					<p className='info' style={styles.bold}>{`EDDI ${eddiNumber}`}</p>
+					<p className='info'>{`EDDI ${eddiNumber}`}</p>
 					<p className='date'>{`updated ${formattedEddiDate}`}</p>
 				</div>
 				<div className='version-type' style={styles.row}>
-					<p className='info' style={styles.bold}>{`ARTIK ${artikNumber}`}</p>
+					<p className='info'>{`ARTIK ${artikNumber}`}</p>
 					<p className='date'>{`released ${formattedArtikDate}`}</p>
 				</div>
 			</div>
@@ -41,9 +41,6 @@ const styles = {
 		justifyContent : 'space-between',
 		alignItems : 'center'
 	},
-	bold : {
-		fontWeight : 'bold'
-	}
 }
 
 export default SettingsEddiVersion;

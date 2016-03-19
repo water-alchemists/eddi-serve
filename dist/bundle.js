@@ -46672,15 +46672,31 @@
 	var SettingsEddi = function (_Component) {
 		_inherits(SettingsEddi, _Component);
 
-		function SettingsEddi() {
+		function SettingsEddi(props) {
 			_classCallCheck(this, SettingsEddi);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddi).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddi).call(this, props));
+
+			_this.state = {
+				isOpen: false
+			};
+			return _this;
 		}
 
 		_createClass(SettingsEddi, [{
+			key: 'toggleShow',
+			value: function toggleShow() {
+				var isOpen = this.state.isOpen;
+
+				this.setState({ isOpen: !isOpen });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
+				var isOpen = this.state.isOpen;
+				var className = ['settings-container'];
 				var _props = this.props;
 				var eddi = _props.eddi;
 				var _onSalinityChange = _props.onSalinityChange;
@@ -46696,31 +46712,40 @@
 				var salinity = settings.salinity;
 
 
+				if (isOpen) className.push('hide');
+
 				return _react2.default.createElement(
 					'div',
 					{ className: 'settings-eddi' },
 					_react2.default.createElement(_SettingsEddiHeader2.default, {
-						name: settings.name
+						name: settings.name,
+						onClick: function onClick() {
+							return _this2.toggleShow();
+						}
 					}),
-					_react2.default.createElement(_SettingsEddiVersion2.default, {
-						artikNumber: version.artik.number,
-						artikDate: new Date(version.artik.updated),
-						eddiNumber: version.eddi.number,
-						eddiDate: new Date(version.eddi.updated)
-					}),
-					_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(salinity) {
-							return _onSalinityChange(salinity);
-						},
-						onEndChange: function onEndChange(hour, minutes) {
-							return _onEndChange(hour, minutes);
-						},
-						onStartChange: function onStartChange(hour, minutes) {
-							return _onStartChange(hour, minutes);
-						},
-						salinityValue: salinity,
-						startValue: timing.start,
-						endValue: timing.end
-					})
+					_react2.default.createElement(
+						'div',
+						{ className: className.join(' ') },
+						_react2.default.createElement(_SettingsEddiVersion2.default, {
+							artikNumber: version.artik.number,
+							artikDate: new Date(version.artik.updated),
+							eddiNumber: version.eddi.number,
+							eddiDate: new Date(version.eddi.updated)
+						}),
+						_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(salinity) {
+								return _onSalinityChange(salinity);
+							},
+							onEndChange: function onEndChange(hour, minutes) {
+								return _onEndChange(hour, minutes);
+							},
+							onStartChange: function onStartChange(hour, minutes) {
+								return _onStartChange(hour, minutes);
+							},
+							salinityValue: salinity,
+							startValue: timing.start,
+							endValue: timing.end
+						})
+					)
 				);
 			}
 		}]);
@@ -46798,13 +46823,29 @@
 		}
 
 		_createClass(SettingsEddiHeader, [{
+			key: 'clickHandler',
+			value: function clickHandler(event) {
+				event.preventDefault();
+				var onClick = this.props.onClick;
+
+				console.log('click');
+				if (onClick instanceof Function) onClick();
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
 				var name = this.props.name;
 				var formattedName = name.toUpperCase();
 				return _react2.default.createElement(
 					'div',
-					{ className: 'header', style: { backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')" } },
+					{ className: 'header',
+						style: { backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')" },
+						onClick: function onClick(event) {
+							return _this2.clickHandler(event);
+						}
+					},
 					_react2.default.createElement(
 						'h3',
 						null,
@@ -46818,7 +46859,8 @@
 	}(_react.Component);
 
 	SettingsEddiHeader.propTypes = {
-		name: PropTypes.string.isRequired
+		name: PropTypes.string.isRequired,
+		onClick: PropTypes.func
 	};
 
 	exports.default = SettingsEddiHeader;
@@ -46881,7 +46923,7 @@
 						{ className: 'version-type', style: styles.row },
 						_react2.default.createElement(
 							'p',
-							{ className: 'info', style: styles.bold },
+							{ className: 'info' },
 							'EDDI ' + eddiNumber
 						),
 						_react2.default.createElement(
@@ -46895,7 +46937,7 @@
 						{ className: 'version-type', style: styles.row },
 						_react2.default.createElement(
 							'p',
-							{ className: 'info', style: styles.bold },
+							{ className: 'info' },
 							'ARTIK ' + artikNumber
 						),
 						_react2.default.createElement(
@@ -46924,9 +46966,6 @@
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center'
-		},
-		bold: {
-			fontWeight: 'bold'
 		}
 	};
 
@@ -46987,10 +47026,10 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'settings-form' },
 					_react2.default.createElement(
 						'div',
-						null,
+						{ className: 'operate-row' },
 						_react2.default.createElement(
 							'h5',
 							null,
@@ -47024,7 +47063,7 @@
 					),
 					_react2.default.createElement(
 						'div',
-						null,
+						{ className: 'salinity-row' },
 						_react2.default.createElement(
 							'h5',
 							null,
@@ -47383,7 +47422,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-version {\n  padding-left: 15px;\n  padding-right: 15px;\n  padding-top: 5px;\n  padding-right: 5px;\n}\n#settings .settings-eddi .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-version .version-type .info {\n  color: black;\n}\n#settings .settings-eddi .settings-version .version-type .date {\n  color: rgba(241, 241, 242, 0.9);\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: rgba(241, 241, 242, 0.9);\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h5 {\n  color: black;\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
 
 	// exports
 
