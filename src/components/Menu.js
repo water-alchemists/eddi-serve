@@ -1,9 +1,14 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import classNames from 'classnames';
 import { PATHS } from '../constants';
 
 import style from '../less/Menu.less';
+
+function isPath(path, compare){
+	return compare.indexOf(path) > -1;
+}
 
 class Menu extends Component {
 
@@ -21,13 +26,39 @@ class Menu extends Component {
 	}
 
 	_renderLoggedIn(){
-		const { menu, eddis } = this.props,
+		const { menu, eddis, current } = this.props,
 			{ name='' } = menu,
 			{ list, selected={} }  = eddis,
 			query = {
 				id : selected.id
-			};
-			console.log('this is the menu', menu, name);
+			},
+			homeSpriteClass = classNames([
+				'sprite', 
+				'home', 
+				{ green : current === PATHS.HOME || isPath(PATHS.LIST, current) }
+			]),
+			settingsSpriteClass = classNames([
+				'sprite',
+				'settings', 
+				{ green : isPath(PATHS.SETTINGS, current) }
+			]),
+			reportSpriteClass = classNames([
+				'sprite',
+				'report',
+				{ green : isPath(PATHS.REPORT, current) }
+			]),
+			troubleshootSpriteClass = classNames([
+				'sprite',
+				'troubleshoot',
+				{ green : isPath(PATHS.TROUBLESHOOT, current) }
+			]),
+			dashboardSpriteClass = classNames([
+				'sprite',
+				'dashboard',
+				{ green : isPath(PATHS.DASHBOARD, current) }
+			]);
+
+		console.log('this is the current', current);
 		let menuOptions;
 
 		if( list instanceof Array && list.length ){
@@ -36,28 +67,28 @@ class Menu extends Component {
 					activeClassName='active'
 					key={'dashboard'}
 				>
-					<div className='sprite dashboard'></div>
+					<div className={dashboardSpriteClass}></div>
 					<p>Dashboard</p>
 				</Link>),
 				(<Link to={ PATHS.SETTINGS } 
 					activeClassName='active'
 					key={'settings'}
 				>
-					<div className='sprite settings'></div>
+					<div className={settingsSpriteClass}></div>
 					<p>Settings</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.REPORT, query }}
 					activeClassName='active'
 					key={'report'}
 				>
-					<div className='sprite report'></div>
+					<div className={reportSpriteClass}></div>
 					<p>Report</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}
 					activeClassName='active'
 					key={'troubleshoot'}
 				>
-					<div className='sprite troubleshoot'></div>
+					<div className={troubleshootSpriteClass}></div>
 					<p>Troubleshoot</p>
 				</Link>),
 		  	];
@@ -72,7 +103,7 @@ class Menu extends Component {
 						<Link to={PATHS.LIST}
 							activeClassName='active'
 						>
-							<div className='sprite home'></div>
+							<div className={homeSpriteClass}></div>
 							<p>Home</p>
 						</Link>
 						{ menuOptions }
@@ -122,7 +153,8 @@ Menu.propTypes = {
 	}), 
 	menu : PropTypes.shape({
 		name : PropTypes.string
-	})
+	}),
+	current : PropTypes.string
 };
 
 export default Menu;
