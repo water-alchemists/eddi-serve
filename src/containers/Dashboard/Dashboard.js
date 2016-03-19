@@ -15,6 +15,16 @@ import DashboardFlow from '../../components/DashboardFlow';
 
 import style from './Dashboard.less';
 
+function getGoodBad(current){
+	console.log('current', current);
+	return {
+		salinityIn : false,
+		salinityOut : false,
+		power : false,
+		flow : false
+	};
+}
+
 function mapStateToProps(state){
 	return {
 		eddi : state.eddis.selected,
@@ -106,15 +116,21 @@ class Dashboard extends Component {
 	}
 
 	render(){
-		const { eddi={}, location={} } = this.props,
+		const { current } = this.state,
+			{ eddi={}, location={} } = this.props,
 			{ id } = eddi,
-			{ view } = location.query;
+			{ view } = location.query,
+			{ salinityIn, salinityOut, flow, power } = getGoodBad(current);
 
 		let DashboardElement = this._renderViewBasedQuery(view);
 		return (
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} 
 					view={view}
+					salinityIn={salinityIn}
+					salinityOut={salinityOut}
+					flow={flow}
+					power={power}
 				/>
 				{ DashboardElement }
 			</div>

@@ -31301,7 +31301,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -10px -10px;\n}\n.sprite.home.green {\n  background-position: -60px -10px;\n}\n.sprite.dashboard {\n  background-position: -10px -80px;\n}\n.sprite.dashboard.green {\n  background-position: -60px -80px;\n}\n.sprite.setting {\n  background-position: -10px -150px;\n}\n.sprite.setting.green {\n  background-position: -60px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -10px -295px;\n}\n.sprite.troubleshoot.green {\n  background-position: -60px -295px;\n}\n.sprite.report {\n  background-position: -10px -220px;\n}\n.sprite.report.green {\n  background-position: -60px -220px;\n}\n.sprite.arrow.down {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -420px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -10px -10px;\n}\n.sprite.home.green {\n  background-position: -60px -10px;\n}\n.sprite.dashboard {\n  background-position: -10px -80px;\n}\n.sprite.dashboard.green {\n  background-position: -60px -80px;\n}\n.sprite.setting {\n  background-position: -10px -150px;\n}\n.sprite.setting.green {\n  background-position: -60px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -10px -295px;\n}\n.sprite.troubleshoot.green {\n  background-position: -60px -295px;\n}\n.sprite.report {\n  background-position: -10px -220px;\n}\n.sprite.report.green {\n  background-position: -60px -220px;\n}\n.sprite.arrow.down {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -420px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
 
 	// exports
 
@@ -31929,6 +31929,16 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	function getGoodBad(current) {
+		console.log('current', current);
+		return {
+			salinityIn: false,
+			salinityOut: false,
+			power: false,
+			flow: false
+		};
+	}
+
 	function mapStateToProps(state) {
 		return {
 			eddi: state.eddis.selected
@@ -32045,6 +32055,7 @@
 		}, {
 			key: 'render',
 			value: function render() {
+				var current = this.state.current;
 				var _props3 = this.props;
 				var _props3$eddi = _props3.eddi;
 				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
@@ -32053,13 +32064,24 @@
 				var id = eddi.id;
 				var view = location.query.view;
 
+				var _getGoodBad = getGoodBad(current);
+
+				var salinityIn = _getGoodBad.salinityIn;
+				var salinityOut = _getGoodBad.salinityOut;
+				var flow = _getGoodBad.flow;
+				var power = _getGoodBad.power;
+
 
 				var DashboardElement = this._renderViewBasedQuery(view);
 				return _react2.default.createElement(
 					'div',
 					{ id: 'dashboard', className: 'page' },
 					_react2.default.createElement(_DashboardMenu2.default, { id: id,
-						view: view
+						view: view,
+						salinityIn: salinityIn,
+						salinityOut: salinityOut,
+						flow: flow,
+						power: power
 					}),
 					DashboardElement
 				);
@@ -45362,15 +45384,23 @@
 
 	var _reactRouter = __webpack_require__(184);
 
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	var _constants = __webpack_require__(248);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ACTIVE_CLASS = 'active';
 
 	var DashboardMenu = function (_Component) {
 		_inherits(DashboardMenu, _Component);
@@ -45387,11 +45417,20 @@
 				var _props = this.props;
 				var id = _props.id;
 				var view = _props.view;
-
-				//handles appearance of default tab
-
-				var classString = '';
-				if (!view) classString = 'active';
+				var salinityIn = _props.salinityIn;
+				var salinityOut = _props.salinityOut;
+				var flow = _props.flow;
+				var power = _props.power;
+				var defaultViewClass = (0, _classnames2.default)(_defineProperty({}, ACTIVE_CLASS, !view)); //handles appearance of default tab
+				var salinityInClass = (0, _classnames2.default)(['sprite', 'salinityIn', { faded: view !== _constants.QUERY.SALINITY_IN }, { bad: !salinityIn }]);
+				var salinityInFont = (0, _classnames2.default)({ 'red-font': !salinityIn });
+				var salinityOutClass = (0, _classnames2.default)(['sprite', 'salinityOut', { faded: view !== _constants.QUERY.SALINITY_OUT }, { bad: !salinityOut }]);
+				var salinityOutFont = (0, _classnames2.default)({ 'red-font': !salinityOut });
+				var flowClass = (0, _classnames2.default)(['sprite', 'flow', { faded: view !== _constants.QUERY.FLOW }, { bad: !flow }]);
+				var flowFont = (0, _classnames2.default)({ 'red-font': !flow });
+				var powerClass = (0, _classnames2.default)(['sprite', 'power', { faded: view !== _constants.QUERY.POWER }, { bad: !power }]);
+				var powerFont = (0, _classnames2.default)({ 'red-font': !power });
+				console.log('this is the view', view);
 
 				return _react2.default.createElement(
 					'div',
@@ -45399,45 +45438,45 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } },
-							activeClassName: 'active' },
-						_react2.default.createElement('div', { className: 'sprite salinityIn' }),
+							activeClassName: ACTIVE_CLASS },
+						_react2.default.createElement('div', { className: salinityInClass }),
 						_react2.default.createElement(
 							'div',
-							null,
+							{ className: salinityInFont },
 							'in'
 						)
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_OUT } },
-							activeClassName: 'active',
-							className: classString },
-						_react2.default.createElement('div', { className: 'sprite salinityOut' }),
+							activeClassName: ACTIVE_CLASS,
+							className: defaultViewClass },
+						_react2.default.createElement('div', { className: salinityOutClass }),
 						_react2.default.createElement(
 							'div',
-							null,
+							{ className: salinityOutFont },
 							'out'
 						)
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } },
-							activeClassName: 'active' },
-						_react2.default.createElement('div', { className: 'sprite flow' }),
+							activeClassName: ACTIVE_CLASS },
+						_react2.default.createElement('div', { className: flowClass }),
 						_react2.default.createElement(
 							'div',
-							null,
+							{ className: flowFont },
 							'flow'
 						)
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } },
-							activeClassName: 'active' },
-						_react2.default.createElement('div', { className: 'sprite power' }),
+							activeClassName: ACTIVE_CLASS },
+						_react2.default.createElement('div', { className: powerClass }),
 						_react2.default.createElement(
 							'div',
-							null,
+							{ className: powerFont },
 							'power'
 						)
 					)
@@ -45450,7 +45489,12 @@
 
 	DashboardMenu.propTypes = {
 		id: _react.PropTypes.string,
-		view: _react.PropTypes.string
+		view: _react.PropTypes.string,
+		current: _react.PropTypes.string,
+		salinityIn: _react.PropTypes.bool,
+		salinityOut: _react.PropTypes.bool,
+		flow: _react.PropTypes.bool,
+		power: _react.PropTypes.bool
 	};
 
 	exports.default = DashboardMenu;
