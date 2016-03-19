@@ -5,6 +5,18 @@
 	background-color: @light_color;
 	.settings-eddi {
 		background-color : white;
+		.arrow-container {
+			display:flex;
+			flex-direction : row;
+			justify-content : center;
+			align-items : center;
+
+			//sliding
+			overflow-y : hidden;
+			transition-property: all;
+			transition-duration: .5s;
+			transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+		}
 		.header {
 			padding-top: 1rem;
 			padding-bottom : 1rem;

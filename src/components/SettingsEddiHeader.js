@@ -1,5 +1,6 @@
 'use strict';
 import React, { Component } from 'react';
+import classNames from 'classnames';
 
 const { 
 	PropTypes
@@ -9,11 +10,11 @@ class SettingsEddiHeader extends Component {
 	clickHandler(event){
 		event.preventDefault();
 		const { onClick } = this.props;
-		console.log('click');
 		if(onClick instanceof Function) onClick();
 	}
 	render(){
-		const { name } = this.props,
+		const { name, isOpen } = this.props,
+			containerClass = classNames(['arrow-container', { hide : isOpen}]),
 			formattedName = name.toUpperCase();
 		return (
 			<div className='header' 
@@ -21,9 +22,8 @@ class SettingsEddiHeader extends Component {
 				onClick={event => this.clickHandler(event)}
 			>
 				<h3>{formattedName}</h3>
-				<div>
-					<div className='sprite flow bad'></div>
-					<div className='sprite flow faded bad'></div>
+				<div className={containerClass}>
+					<div className='sprite arrow down'></div>
 				</div>
 			</div>
 		);
@@ -32,7 +32,8 @@ class SettingsEddiHeader extends Component {
 
 SettingsEddiHeader.propTypes = {
 	name : PropTypes.string.isRequired,
-	onClick: PropTypes.func
+	onClick: PropTypes.func,
+	isOpen : PropTypes.bool
 };
 
 export default SettingsEddiHeader;

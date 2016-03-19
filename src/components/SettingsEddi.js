@@ -1,5 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
+import classNames from 'classnames';
+
 import SettingsEddiHeader from './SettingsEddiHeader';
 import SettingsEddiVersion from './SettingsEddiVersion';
 import SettingsEddiForm from './SettingsEddiForm';
@@ -23,20 +25,20 @@ class SettingsEddi extends Component {
 
 	render(){
 		const { isOpen } = this.state,
-			className = ['settings-container'],
 			{ eddi, onSalinityChange, onEndChange, onStartChange } = this.props,
 			{ version={}, settings={} } = eddi,
-			{ name, timing={}, salinity } = settings;
-
-		if(!isOpen) className.push('hide');
+			{ name, timing={}, salinity } = settings,
+			bodyClass= classNames(['settings-container', { hide : !isOpen }]),
+			footerClass=classNames(['arrow-container', { hide : !isOpen }]);
 
 		return (
 			<div className='settings-eddi'>
 				<SettingsEddiHeader 
 					name={settings.name}
 					onClick={() => this.toggleShow()}
+					isOpen={isOpen}
 				/>
-				<div className={className.join(' ')}>
+				<div className={bodyClass}>
 					<SettingsEddiVersion 
 						artikNumber={version.artik.number}
 						artikDate={new Date(version.artik.updated)}
@@ -50,6 +52,9 @@ class SettingsEddi extends Component {
 						startValue={timing.start}
 						endValue={timing.end}
 					/>
+				</div>
+				<div className={footerClass}>
+					<div className='sprite arrow up' onClick={() => this.toggleShow()}></div>
 				</div>
 			</div>
 		);
