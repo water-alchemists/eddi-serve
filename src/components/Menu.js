@@ -36,25 +36,29 @@ class Menu extends Component {
 					activeClassName='active'
 					key={'dashboard'}
 				>
-					Dashboard
+					<div className='sprite dashboard'></div>
+					<p>Dashboard</p>
 				</Link>),
 				(<Link to={ PATHS.SETTINGS } 
 					activeClassName='active'
 					key={'settings'}
 				>
-					Settings
+					<div className='sprite settings'></div>
+					<p>Settings</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.REPORT, query }}
 					activeClassName='active'
 					key={'report'}
 				>
-					Report
+					<div className='sprite report'></div>
+					<p>Report</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}
 					activeClassName='active'
 					key={'troubleshoot'}
 				>
-					Troubleshoot
+					<div className='sprite troubleshoot'></div>
+					<p>Troubleshoot</p>
 				</Link>),
 		  	];
 		}
@@ -68,10 +72,14 @@ class Menu extends Component {
 						<Link to={PATHS.LIST}
 							activeClassName='active'
 						>
-							Home
+							<div className='sprite home'></div>
+							<p>Home</p>
 						</Link>
 						{ menuOptions }
-						<a onClick={() => this.logoutHandler()}>Logout</a>
+						<a onClick={() => this.logoutHandler()}>
+							<div className='sprite empty'></div>
+							<p>Logout</p>
+						</a>
 					</div>
 				</div>
 				<h1>{ name }</h1>

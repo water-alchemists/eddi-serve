@@ -22,7 +22,7 @@ class DashboardMenu extends Component {
 			salinityOutClass = classNames([
 				'sprite', 
 				'salinityOut', 
-				{ faded : view !== QUERY.SALINITY_OUT },
+				{ faded : view && view !== QUERY.SALINITY_OUT },
 				{ bad : !salinityOut }
 			]),
 			salinityOutFont = classNames({ 'red-font' : !salinityOut }),
