@@ -21,16 +21,16 @@ class DashboardSalinity extends Component {
 				<div className='dashboard-current'>
 					<div className='dashboard-current-numbers'>
 						<h1>Salinity {direction.toUpperCase()}</h1>
-						<h3>{`${current}`}</h3>
+						<h3>{`${current.toLocaleString()}`}</h3>
 						<p>parts per million</p>
 					</div>
 					<SalinityGraph salinity={current}/>
 					<p className='dashboard-note'>
 						Your current level of salinity for the water your EDDI
 						is pushing out is
-						<span>{` ${current} ppm. `}</span>
+						<span>{` ${current.toLocaleString()} ppm. `}</span>
 						Your current threshold is set at
-						<span>{` ${threshold} ppm, `}</span>
+						<span>{` ${threshold.toLocaleString()} ppm, `}</span>
 						{`${status}`}
 					</p>
 				</div>

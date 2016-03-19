@@ -45530,7 +45530,7 @@
 							_react2.default.createElement(
 								'h3',
 								null,
-								'' + current
+								'' + current.toLocaleString()
 							),
 							_react2.default.createElement(
 								'p',
@@ -45546,13 +45546,13 @@
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + current + ' ppm. '
+								' ' + current.toLocaleString() + ' ppm. '
 							),
 							'Your current threshold is set at',
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + threshold + ' ppm, '
+								' ' + threshold.toLocaleString() + ' ppm, '
 							),
 							'' + status
 						)
