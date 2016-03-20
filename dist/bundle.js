@@ -27245,24 +27245,30 @@
 				if (list instanceof Array && list.length) {
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: _constants.PATHS.SETTINGS },
-						'Settings'
-					), _react2.default.createElement(
-						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: query },
-							activeClassName: 'active'
+							activeClassName: 'active',
+							key: 'dashboard'
 						},
 						'Dashboard'
 					), _react2.default.createElement(
 						_reactRouter.Link,
+						{ to: _constants.PATHS.SETTINGS,
+							activeClassName: 'active',
+							key: 'settings'
+						},
+						'Settings'
+					), _react2.default.createElement(
+						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.REPORT, query: query },
-							activeClassName: 'active'
+							activeClassName: 'active',
+							key: 'report'
 						},
 						'Report'
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.TROUBLESHOOT, query: query },
-							activeClassName: 'active'
+							activeClassName: 'active',
+							key: 'troubleshoot'
 						},
 						'Troubleshoot'
 					)];
@@ -27287,7 +27293,9 @@
 							{ className: 'menu-options' },
 							_react2.default.createElement(
 								_reactRouter.Link,
-								{ to: _constants.PATHS.LIST },
+								{ to: _constants.PATHS.LIST,
+									activeClassName: 'active'
+								},
 								'Home'
 							),
 							menuOptions,
@@ -27387,7 +27395,7 @@
 
 
 	// module
-	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  left: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu .burger-menu .menu-options a.active {\n  color: white;\n  background-color: rgba(42, 191, 208, 0.5);\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n  text-decoration: underline;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
@@ -31285,7 +31293,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n}\n.sprite.home {\n  background-position: 0 0;\n}\n.sprite.home.green {\n  background-position: 20px 0px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
 
 	// exports
 
@@ -31875,8 +31883,6 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -31888,6 +31894,8 @@
 	var _eddis = __webpack_require__(287);
 
 	var _constants = __webpack_require__(248);
+
+	var _data = __webpack_require__(306);
 
 	var _DashboardMenu = __webpack_require__(407);
 
@@ -31930,16 +31938,6 @@
 		};
 	}
 
-	function mapDateToReadings(readings) {
-		return Object.keys(readings).map(function (utc) {
-			return _extends({}, readings[utc], {
-				date: new Date(utc * 1000)
-			});
-		}).sort(function (a, b) {
-			return a.date > b.date;
-		});
-	}
-
 	var Dashboard = function (_Component) {
 		_inherits(Dashboard, _Component);
 
@@ -31968,7 +31966,7 @@
 					updateMenuName(eddi.settings.name);
 					if (eddi.readings) {
 						//format the readings into an array for data handling
-						var readings = mapDateToReadings(eddi.readings),
+						var readings = (0, _data.mapDateToReadings)(eddi.readings),
 						    current = readings[readings.length - 1];
 						console.log('these are the readings', readings, current);
 						this.setState({ readings: readings, current: current });
@@ -31990,7 +31988,7 @@
 					updateMenuName(eddi.settings.name);
 					if (eddi.readings) {
 						//format the readings into an array for data handling
-						var readings = mapDateToReadings(eddi.readings),
+						var readings = (0, _data.mapDateToReadings)(eddi.readings),
 						    current = readings[readings.length - 1];
 						console.log('these are the readings', readings, current);
 						this.setState({ readings: readings, current: current });
@@ -32004,15 +32002,16 @@
 				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
 				var threshold = eddi.settings.salinity;
 
-				return _react2.default.createElement(_DashboardSalinity2.default, { threshold: threshold,
+				return _react2.default.createElement(_DashboardSalinity2.default, { key: direction,
+					threshold: threshold,
 					current: current,
 					direction: direction
 				});
 			}
 		}, {
 			key: '_renderFlow',
-			value: function _renderFlow(current) {
-				return _react2.default.createElement(_DashboardFlow2.default, null);
+			value: function _renderFlow(rate) {
+				return _react2.default.createElement(_DashboardFlow2.default, { rate: rate });
 			}
 		}, {
 			key: '_renderViewBasedQuery',
@@ -32020,12 +32019,10 @@
 				var _props$eddi3 = this.props.eddi;
 				var eddi = _props$eddi3 === undefined ? {} : _props$eddi3;
 				var current = this.state.current;
+				//defaults to salinity out
 
 				if (eddi.settings) {
 					switch (view) {
-						case _constants.QUERY.SALINITY_OUT:
-							return this._renderSalinity(current.ppmOut, 'output');
-							break;
 						case _constants.QUERY.SALINITY_IN:
 							return this._renderSalinity(current.ppmIn, 'input');
 							break;
@@ -32033,7 +32030,7 @@
 							return this._renderFlow(current.qOut);
 							break;
 						default:
-							return null;
+							return this._renderSalinity(current.ppmOut, 'output');
 					}
 				}
 				return null;
@@ -32054,7 +32051,9 @@
 				return _react2.default.createElement(
 					'div',
 					{ id: 'dashboard', className: 'page' },
-					_react2.default.createElement(_DashboardMenu2.default, { id: id }),
+					_react2.default.createElement(_DashboardMenu2.default, { id: id,
+						view: view
+					}),
 					DashboardElement
 				);
 			}
@@ -32095,16 +32094,26 @@
 		value: true
 	});
 	exports.salinityOptions = exports.aOptions = exports.minutesOptions = exports.hourOptions = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.createDays = createDays;
+	exports.createMonths = createMonths;
+	exports.createYears = createYears;
 	exports.convertMilitaryToNormal = convertMilitaryToNormal;
 	exports.convertNormalToMilitary = convertNormalToMilitary;
 	exports.convertMinutesToString = convertMinutesToString;
 	exports.convertStringToMinutes = convertStringToMinutes;
+	exports.mapDateToReadings = mapDateToReadings;
+	exports.formatReadingsToCsv = formatReadingsToCsv;
 
 	var _moment = __webpack_require__(307);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_moment2.default.locale('en');
 
 	function createHours(num) {
 		var hourOptions = [];
@@ -32122,6 +32131,31 @@
 			minutesOptions.push(minuteString);
 		}
 		return minutesOptions;
+	}
+
+	function createDays(month, year) {
+		//month is supposed to be zero-based
+		if (typeof month === 'string') month = _moment2.default.month(month);
+		var max = new Date(year, month, 0).getDate(),
+		    days = [];
+		for (var i = 0; i < max; i++) {
+			days.push(i + 1);
+		}
+		return days;
+	}
+
+	function createMonths() {
+		return _moment2.default.months();
+	}
+
+	function createYears(start) {
+		var years = [],
+		    current = new Date().getFullYear();
+		for (var i = start; i <= current; i++) {
+			years.push(i);
+		}
+
+		return years;
 	}
 
 	function convertMilitaryToNormal(hour) {
@@ -32151,6 +32185,54 @@
 		min: 500,
 		default: 1000
 	};
+
+	//readings
+	function mapDateToReadings(readings) {
+		return Object.keys(readings).map(function (utc) {
+			return _extends({}, readings[utc], {
+				date: new Date(utc * 1000)
+			});
+		}).sort(function (a, b) {
+			return a.date > b.date;
+		});
+	}
+
+	function formatReadingsToCsv(readings) {
+		var mapping = [{
+			key: 'date',
+			name: 'Date'
+		}, {
+			key: 'ppmIn',
+			name: 'Salinity In'
+		}, {
+			key: 'ppmOut',
+			name: 'Salinity Out'
+		}, {
+			key: 'ppmRec',
+			name: 'Salinity Recycled'
+		}, {
+			key: 'qDump',
+			name: 'Dump Flow'
+		}, {
+			key: 'qOut',
+			name: 'Water Flow'
+		}],
+		    first = mapping.map(function (map) {
+			return map.name;
+		}).reduce(function (row, header) {
+			return row + ',' + header;
+		});
+
+		return readings.map(function (reading) {
+			return mapping.reduce(function (row, map, i) {
+				var value = reading[map.key];
+				if (!i) return (0, _moment2.default)(value).format('MM-DD-YYYY HH:mm');
+				return row + ',' + value;
+			}, '');
+		}).reduce(function (body, row) {
+			return body + '\n' + row;
+		}, first);
+	}
 
 /***/ },
 /* 307 */
@@ -45295,7 +45377,14 @@
 		_createClass(DashboardMenu, [{
 			key: 'render',
 			value: function render() {
-				var id = this.props.id;
+				var _props = this.props;
+				var id = _props.id;
+				var view = _props.view;
+
+				//handles appearance of default tab
+
+				var classString = '';
+				if (!view) classString = 'active';
 
 				return _react2.default.createElement(
 					'div',
@@ -45303,8 +45392,8 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } },
-							activeClassName: 'active'
-						},
+							activeClassName: 'active' },
+						_react2.default.createElement('div', { className: 'sprite salinityIn' }),
 						_react2.default.createElement(
 							'div',
 							null,
@@ -45314,8 +45403,9 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_OUT } },
-							activeClassName: 'active'
-						},
+							activeClassName: 'active',
+							className: classString },
+						_react2.default.createElement('div', { className: 'sprite salinityOut' }),
 						_react2.default.createElement(
 							'div',
 							null,
@@ -45325,8 +45415,8 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } },
-							activeClassName: 'active'
-						},
+							activeClassName: 'active' },
+						_react2.default.createElement('div', { className: 'sprite flow' }),
 						_react2.default.createElement(
 							'div',
 							null,
@@ -45336,8 +45426,8 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } },
-							activeClassName: 'active'
-						},
+							activeClassName: 'active' },
+						_react2.default.createElement('div', { className: 'sprite power' }),
 						_react2.default.createElement(
 							'div',
 							null,
@@ -45352,7 +45442,8 @@
 	}(_react.Component);
 
 	DashboardMenu.propTypes = {
-		id: _react.PropTypes.string
+		id: _react.PropTypes.string,
+		view: _react.PropTypes.string
 	};
 
 	exports.default = DashboardMenu;
@@ -45376,6 +45467,10 @@
 	var _SalinityGraph = __webpack_require__(409);
 
 	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
+
+	var _HistoricalGraph = __webpack_require__(410);
+
+	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45412,21 +45507,17 @@
 				var status = current > threshold ? generateBadText() : generateGoodText();
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'dashboard-view salinity' },
 					_react2.default.createElement(
 						'div',
-						{ style: styles.row },
+						{ className: 'dashboard-current' },
 						_react2.default.createElement(
 							'div',
-							null,
+							{ className: 'dashboard-current-numbers' },
 							_react2.default.createElement(
 								'h1',
 								null,
-								'SALINITY'
-							),
-							_react2.default.createElement(
-								'h1',
-								null,
+								'Salinity ',
 								direction.toUpperCase()
 							),
 							_react2.default.createElement(
@@ -45440,25 +45531,26 @@
 								'parts per million'
 							)
 						),
-						_react2.default.createElement(_SalinityGraph2.default, { salinity: current })
+						_react2.default.createElement(_SalinityGraph2.default, { salinity: current }),
+						_react2.default.createElement(
+							'p',
+							{ className: 'dashboard-note' },
+							'Your current level of salinity for the water your EDDI is pushing out is',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + current + ' ppm. '
+							),
+							'Your current threshold is set at',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + threshold + ' ppm, '
+							),
+							'' + status
+						)
 					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Your current level of salinity for the water your EDDI is pushing out is',
-						_react2.default.createElement(
-							'span',
-							null,
-							' ' + current + ' ppm. '
-						),
-						'Your current threshold is set at',
-						_react2.default.createElement(
-							'span',
-							null,
-							' ' + threshold + ' ppm, '
-						),
-						'' + status
-					)
+					_react2.default.createElement(_HistoricalGraph2.default, null)
 				);
 			}
 		}]);
@@ -45470,15 +45562,6 @@
 		threshold: _react.PropTypes.number.isRequired,
 		current: _react.PropTypes.number.isRequired,
 		direction: _react.PropTypes.string.isRequired
-	};
-
-	var styles = {
-		row: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'flex-start'
-		}
 	};
 
 	DashboardSalinity.defaultProps = {
@@ -45511,7 +45594,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var SIZE = 200;
+	var SIZE = 120;
 	var CENTER = SIZE / 2;
 
 	var DANGEROUS_SALINITY = 2000;
@@ -45556,7 +45639,7 @@
 	      ppm = Math.min(ppm, 4000);
 	      var context = this.context;
 	      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	      var density = ppm / 200;
+	      var density = ppm / 400;
 	      for (var ix = 0; ix < density; ix++) {
 	        var radius = ix * (CENTER / density);
 	        var angleIncr = 60 / ix;
@@ -45574,7 +45657,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('canvas', { ref: 'canvas', height: SIZE, width: SIZE });
+	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'salinity-graph', height: SIZE, width: SIZE });
 	    }
 	  }]);
 
@@ -45589,7 +45672,74 @@
 	};
 
 /***/ },
-/* 410 */,
+/* 410 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var HistoricalGraph = function (_Component) {
+	  _inherits(HistoricalGraph, _Component);
+
+	  function HistoricalGraph() {
+	    _classCallCheck(this, HistoricalGraph);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(HistoricalGraph).apply(this, arguments));
+	  }
+
+	  _createClass(HistoricalGraph, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'historical-graph' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'historical-selector' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'historical-selection' },
+	            'This Month'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'historical-selection' },
+	            'This Week'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'historical-selection' },
+	            'Today'
+	          )
+	        ),
+	        _react2.default.createElement('canvas', { ref: 'canvas', className: 'historical-graph-canvas' })
+	      );
+	    }
+	  }]);
+
+	  return HistoricalGraph;
+	}(_react.Component);
+
+	exports.default = HistoricalGraph;
+
+/***/ },
 /* 411 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -45609,6 +45759,10 @@
 
 	var _FlowGraph2 = _interopRequireDefault(_FlowGraph);
 
+	var _HistoricalGraph = __webpack_require__(410);
+
+	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45616,6 +45770,10 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function generateStatusText(rate) {
+		if (rate <= 0.3) return 'slow';else if (rate <= 3) return 'medium';else return 'fast';
+	}
 
 	var DashboardFlow = function (_Component) {
 		_inherits(DashboardFlow, _Component);
@@ -45629,10 +45787,54 @@
 		_createClass(DashboardFlow, [{
 			key: 'render',
 			value: function render() {
+				var rate = this.props.rate;
+
+
 				return _react2.default.createElement(
 					'div',
-					null,
-					_react2.default.createElement(_FlowGraph2.default, { rate: 3 })
+					{ className: 'dashboard-view flow' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'dashboard-current' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'dashboard-current-numbers' },
+							_react2.default.createElement(
+								'h1',
+								null,
+								'WATER FLOW'
+							),
+							_react2.default.createElement(
+								'h3',
+								null,
+								'' + rate
+							),
+							_react2.default.createElement(
+								'p',
+								null,
+								'liters per minute'
+							)
+						),
+						_react2.default.createElement(_FlowGraph2.default, { rate: rate }),
+						_react2.default.createElement(
+							'p',
+							{ className: 'dashboard-note' },
+							'Your current level of water flow is',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + rate + ' lpm, '
+							),
+							'which is a',
+							_react2.default.createElement(
+								'span',
+								null,
+								' ' + generateStatusText(rate) + ' '
+							),
+							'flow.'
+						)
+					),
+					_react2.default.createElement(_HistoricalGraph2.default, null)
 				);
 			}
 		}]);
@@ -45640,7 +45842,9 @@
 		return DashboardFlow;
 	}(_react.Component);
 
-	DashboardFlow.propTypes = {};
+	DashboardFlow.propTypes = {
+		rate: _react.PropTypes.number.isRequired
+	};
 
 	exports.default = DashboardFlow;
 
@@ -45670,9 +45874,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var SIZE = 200;
+	var SIZE = 120;
 	var CENTER = SIZE / 2;
-	var LINE_THICKNESS = 30;
+	var LINE_THICKNESS = 20;
 	var BASE10 = Math.log(10);
 
 	//slow is 0.3, medium is 3, fast is 30
@@ -45769,7 +45973,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('canvas', { ref: 'canvas', height: SIZE, width: SIZE });
+	      return _react2.default.createElement('canvas', { ref: 'canvas', className: 'flow-graph', height: SIZE, width: SIZE });
 	    }
 	  }]);
 
@@ -45818,7 +46022,7 @@
 
 
 	// module
-	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 56px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #0d0e1f;\n  text-decoration: none;\n  text-align: center;\n  padding-top: 32px;\n  background-image: url('http://orig14.deviantart.net/f231/f/2015/030/6/c/salt_shaker_pixel_by_alfvie-d8g1phq.png');\n  background-size: 12px 20px;\n  background-position: center 6px;\n  background-repeat: no-repeat;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n", ""]);
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #006d60;\n  text-decoration: none;\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n}\n", ""]);
 
 	// exports
 
@@ -47212,7 +47416,176 @@
 
 /***/ },
 /* 435 */,
-/* 436 */,
+/* 436 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _data = __webpack_require__(306);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MONTHS = (0, _data.createMonths)();
+	console.log(MONTHS);
+
+	var DateSelect = function (_Component) {
+		_inherits(DateSelect, _Component);
+
+		function DateSelect() {
+			_classCallCheck(this, DateSelect);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DateSelect).apply(this, arguments));
+		}
+
+		_createClass(DateSelect, [{
+			key: 'onDayChange',
+			value: function onDayChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var day = parseInt(event.target.value);
+
+				if (onChange instanceof Function) onChange({ day: day });
+			}
+		}, {
+			key: 'onMonthChange',
+			value: function onMonthChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var month = parseInt(event.target.value);
+				if (onChange instanceof Function) onChange({ month: month });
+			}
+		}, {
+			key: 'onYearChange',
+			value: function onYearChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var year = parseInt(event.target.value);
+
+				if (onChange instanceof Function) onChange({ year: year });
+			}
+		}, {
+			key: '_renderDays',
+			value: function _renderDays() {
+				var _props = this.props;
+				var month = _props.month;
+				var year = _props.year;
+				var days = (0, _data.createDays)(month, year);
+
+				return days.map(function (day) {
+					return _react2.default.createElement(
+						'option',
+						{ value: day, key: day },
+						day
+					);
+				});
+			}
+		}, {
+			key: '_renderMonths',
+			value: function _renderMonths() {
+				var months = MONTHS;
+				return months.map(function (month, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: i, key: month },
+						month
+					);
+				});
+			}
+		}, {
+			key: '_renderYears',
+			value: function _renderYears() {
+				var startYear = this.props.startYear;
+				var years = (0, _data.createYears)(startYear);
+
+				return years.map(function (year) {
+					return _react2.default.createElement(
+						'option',
+						{ value: year, key: year },
+						year
+					);
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _props2 = this.props;
+				var year = _props2.year;
+				var day = _props2.day;
+				var month = _props2.month;
+				var YearElements = this._renderYears();
+				var MonthElements = this._renderMonths();
+				var DayElements = this._renderDays();
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onDayChange(event);
+							},
+							value: day
+						},
+						DayElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onMonthChange(event);
+							},
+							value: month
+						},
+						MonthElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onYearChange(event);
+							},
+							value: year
+						},
+						YearElements
+					)
+				);
+			}
+		}]);
+
+		return DateSelect;
+	}(_react.Component);
+
+	DateSelect.propTypes = {
+		onChange: _react.PropTypes.func.isRequired,
+		startYear: _react.PropTypes.number,
+		year: _react.PropTypes.number,
+		day: _react.PropTypes.number,
+		month: _react.PropTypes.number
+	};
+
+	DateSelect.defaultProps = {
+		startYear: 2014
+	};
+
+	exports.default = DateSelect;
+
+/***/ },
 /* 437 */,
 /* 438 */,
 /* 439 */,
@@ -47389,6 +47762,8 @@
 		value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(5);
@@ -47399,6 +47774,12 @@
 
 	var _menu = __webpack_require__(305);
 
+	var _data = __webpack_require__(306);
+
+	var _DateSelect = __webpack_require__(436);
+
+	var _DateSelect2 = _interopRequireDefault(_DateSelect);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -47406,6 +47787,11 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var OPTIONS = {
+		CSV: 'csv',
+		PDF: 'pdf'
+	};
 
 	function mapStateToProps(state) {
 		return {
@@ -47421,13 +47807,48 @@
 		};
 	}
 
+	function getDateObject(date) {
+		if (!(date instanceof Date)) return;
+		return {
+			day: date.getDate(),
+			month: date.getMonth(),
+			year: date.getFullYear()
+		};
+	}
+
+	function isActive(compare, value) {
+		return compare === value ? 'active' : '';
+	}
+
 	var Report = function (_Component) {
 		_inherits(Report, _Component);
 
-		function Report() {
+		function Report(props) {
 			_classCallCheck(this, Report);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Report).apply(this, arguments));
+			// todays
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Report).call(this, props));
+
+			var today = new Date(),
+			    day = today.getDate(),
+			    month = today.getMonth(),
+			    year = today.getFullYear();
+
+			_this.state = {
+				start: {
+					day: null,
+					month: null,
+					year: null
+				},
+				end: {
+					month: month,
+					day: day,
+					year: year
+				},
+				type: OPTIONS.CSV
+			};
+			return _this;
 		}
 
 		_createClass(Report, [{
@@ -47437,8 +47858,19 @@
 				var updateMenuName = _props.updateMenuName;
 				var _props$eddi = _props.eddi;
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
+				var id = eddi.id;
+				var readings = eddi.readings;
+				var settings = eddi.settings;
 
-				if (eddi.id) updateMenuName(eddi.settings.name);
+				if (id) updateMenuName(settings.name);
+				if (readings) {
+					var formattedReadings = (0, _data.mapDateToReadings)(readings),
+					    start = getDateObject(formattedReadings[0].date);
+					this.setState({
+						start: start,
+						readings: formattedReadings
+					});
+				}
 			}
 		}, {
 			key: 'componentWillReceiveProps',
@@ -47448,19 +47880,151 @@
 				var _props2$eddi = _props2.eddi;
 				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
 				var eddi = newProps.eddi;
+				var id = eddi.id;
+				var readings = eddi.readings;
+				var settings = eddi.settings;
 
 
-				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
+				if (id !== oldEddi.id) {
+					updateMenuName(settings.name);
+					if (readings) {
+						var formattedReadings = (0, _data.mapDateToReadings)(readings),
+						    start = getDateObject(formattedReadings[0].date);
+						this.setState({
+							start: start,
+							readings: formattedReadings
+						});
+					}
+				}
+			}
+		}, {
+			key: 'clickOption',
+			value: function clickOption(event, type) {
+				event.preventDefault();
+				this.setState({ type: type });
+			}
+		}, {
+			key: 'onStartChange',
+			value: function onStartChange(value) {
+				var start = this.state.start;
+				var newStart = _extends({}, start, value);
+				this.setState({ start: newStart });
+			}
+		}, {
+			key: 'onEndChange',
+			value: function onEndChange(value) {
+				var end = this.state.end;
+				var newEnd = _extends({}, end, value);
+				this.setState({ end: newEnd });
+			}
+		}, {
+			key: 'submitHandler',
+			value: function submitHandler(event) {
+				event.preventDefault();
+				var _state = this.state;
+				var start = _state.start;
+				var end = _state.end;
+				var readings = _state.readings;
+				var type = _state.type;
+				var focus = readings.filter(function (reading) {
+					var date = reading.date;
+					var startDate = new Date(start.year, start.month, start.day);
+					var endDate = new Date(end.year, end.month, end.day);
+					return date >= startDate && date <= endDate;
+				});
+				if (isActive(OPTIONS.CSV, type)) console.log((0, _data.formatReadingsToCsv)(focus));
 			}
 		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
 				var eddi = this.props.eddi;
+				var _state2 = this.state;
+				var start = _state2.start;
+				var end = _state2.end;
+				var type = _state2.type;
 
 				return _react2.default.createElement(
 					'div',
 					{ id: 'report', className: 'page' },
-					'This is the report page.'
+					_react2.default.createElement(
+						'form',
+						{ onSubmit: function onSubmit(event) {
+								return _this2.submitHandler(event);
+							} },
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement(
+									'h3',
+									null,
+									'Start Report'
+								),
+								_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
+										return _this2.onStartChange(value);
+									},
+									year: start.year,
+									month: start.month,
+									day: start.day
+								})
+							),
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement(
+									'h3',
+									null,
+									'End Report'
+								),
+								_react2.default.createElement(_DateSelect2.default, { onChange: function onChange(value) {
+										return _this2.onEndChange(value);
+									},
+									year: end.year,
+									month: end.month,
+									day: end.day
+								})
+							),
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement(
+									'div',
+									{ className: isActive(OPTIONS.CSV, type),
+										onClick: function onClick(event) {
+											return _this2.clickOption(event, OPTIONS.CSV);
+										}
+									},
+									_react2.default.createElement(
+										'p',
+										null,
+										'CSV'
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: isActive(OPTIONS.PDF, type),
+										onClick: function onClick(event) {
+											return _this2.clickOption(event, OPTIONS.PDF);
+										}
+									},
+									_react2.default.createElement(
+										'p',
+										null,
+										'PDF'
+									)
+								)
+							)
+						),
+						_react2.default.createElement(
+							'button',
+							{ type: 'submit' },
+							'EXPORT'
+						)
+					)
 				);
 			}
 		}]);

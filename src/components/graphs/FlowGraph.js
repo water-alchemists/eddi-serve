@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import { BACKGROUND_COLOR } from '../../constants';
 
-const SIZE = 200;
+const SIZE = 120;
 const CENTER = SIZE/2;
-const LINE_THICKNESS = 30;
+const LINE_THICKNESS = 20;
 const BASE10 = Math.log(10);
 
 //slow is 0.3, medium is 3, fast is 30
@@ -98,7 +98,7 @@ export default class FlowGraph extends Component {
   }
 
   render(){
-    return <canvas ref="canvas" height={SIZE} width={SIZE} />
+    return <canvas ref="canvas" className='flow-graph' height={SIZE} width={SIZE} />
   }
 
 }

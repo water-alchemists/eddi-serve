@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 
-const SIZE = 200;
+const SIZE = 120;
 const CENTER = SIZE/2;
 
 const DANGEROUS_SALINITY = 2000;
@@ -38,7 +38,7 @@ export default class SalinityGraph extends Component {
     ppm = Math.min(ppm, 4000);
     var context = this.context;
     context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    var density = ppm / 200;
+    var density = ppm / 400;
     for( var ix=0; ix < density; ix++ ){
       let radius = (ix * ((CENTER)/density));
       let angleIncr = 60 / ix;
@@ -55,7 +55,7 @@ export default class SalinityGraph extends Component {
   }
 
   render(){
-    return <canvas ref="canvas" height={SIZE} width={SIZE} />
+    return <canvas ref="canvas" className='salinity-graph' height={SIZE} width={SIZE} />
   }
 
 }

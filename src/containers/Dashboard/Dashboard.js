@@ -7,6 +7,8 @@ import { selectEddiById } from '../../actions/eddis';
 
 import { QUERY } from '../../constants';
 
+import { mapDateToReadings } from '../../data';
+
 import DashboardMenu from '../../components/DashboardMenu';
 import DashboardSalinity from '../../components/DashboardSalinity';
 import DashboardFlow from '../../components/DashboardFlow';
@@ -24,17 +26,6 @@ function mapDispatchToProps(dispatch){
 		updateMenuName:	(name) => dispatch(menuNameChange(name)),
 		selectEddiById: (eddi) => dispatch(selectEddiById(eddi)),
 	};
-}
-
-function mapDateToReadings(readings){
-	return Object.keys(readings)
-		.map(utc => {
-			return {
-				...readings[utc],
-				date : new Date(utc * 1000)
-			}
-		})
-		.sort((a,b) => a.date > b.date);
 }
 
 class Dashboard extends Component {
@@ -82,27 +73,26 @@ class Dashboard extends Component {
 			threshold = eddi.settings.salinity;
 
 		return (
-			<DashboardSalinity threshold={threshold}
+			<DashboardSalinity key={direction} 
+				threshold={threshold}
 				current={current}
 				direction={direction}
 			/>
 		);
 	}
 
-	_renderFlow(current){
+	_renderFlow(rate){
 		return (
-			<DashboardFlow />
+			<DashboardFlow rate={rate}/>
 		);
 	}
 
 	_renderViewBasedQuery(view){
 		const { eddi={} } = this.props,
 			{ current } = this.state;
+		//defaults to salinity out
 		if(eddi.settings){
 			switch(view){
-			case QUERY.SALINITY_OUT:
-				return this._renderSalinity(current.ppmOut, 'output');
-				break;
 			case QUERY.SALINITY_IN:
 				return this._renderSalinity(current.ppmIn, 'input');
 				break;
@@ -110,7 +100,7 @@ class Dashboard extends Component {
 				return this._renderFlow(current.qOut);
 				break;
 			default:
-				return null;
+				return this._renderSalinity(current.ppmOut, 'output');
 			}
 		}
 		return null;
@@ -124,7 +114,9 @@ class Dashboard extends Component {
 		let DashboardElement = this._renderViewBasedQuery(view);
 		return (
 			<div id="dashboard" className="page">
-				<DashboardMenu id={id} />
+				<DashboardMenu id={id} 
+					view={view}
+				/>
 				{ DashboardElement }
 			</div>
 		);
