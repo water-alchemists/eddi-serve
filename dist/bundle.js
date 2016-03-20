@@ -32256,7 +32256,7 @@
 		if (typeof month === 'string') month = _moment2.default.month(month);
 		var max = new Date(year, month, 0).getDate(),
 		    days = [];
-		for (var i = 0; i < max; i++) {
+		for (var i = 0; i <= max; i++) {
 			days.push(i + 1);
 		}
 		return days;
@@ -32387,8 +32387,6 @@
 		}),
 		    daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
 
-		console.log('days between', daysBetween);
-
 		function getAverageOfDay(data, day) {
 			var dayData = data.filter(function (entry) {
 				return entry.date.getDate() === day;
@@ -32401,7 +32399,6 @@
 		}
 
 		return daysBetween.map(function (day) {
-			console.log('day between ', day);
 			return {
 				x: (0, _moment2.default)({ day: day, year: current.getFullYear(), month: current.getMonth() }).toDate(),
 				y: getAverageOfDay(weekData, day)
@@ -32428,7 +32425,6 @@
 		}
 
 		return days.map(function (day) {
-			console.log('day', day);
 			return {
 				x: (0, _moment2.default)({ day: day, year: current.getFullYear(), month: current.getMonth() }).toDate(),
 				y: getAverageOfDay(monthData, day)

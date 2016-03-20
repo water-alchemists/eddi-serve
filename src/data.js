@@ -34,7 +34,7 @@ export function createDays(month, year){
 	if(typeof month === 'string') month = moment.month(month);
 	const max = new Date(year, month, 0).getDate(),
 		days = [];
-	for(let i = 0; i < max; i++){
+	for(let i = 0; i <= max; i++){
 		days.push(i + 1);
 	}
 	return days;
@@ -163,8 +163,6 @@ export function formatToWeekHistory(readings, yProp){
 		weekData = readings.filter(reading => moment(reading.date).isBetween(beginning, current, 'day')),
 		daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
 
-	console.log('days between', daysBetween);
-
 	function getAverageOfDay(data, day){
 		const dayData = data.filter(entry => entry.date.getDate() === day);
 		let average;
@@ -173,7 +171,6 @@ export function formatToWeekHistory(readings, yProp){
 	}
 
 	return daysBetween.map(day => {
-		console.log('day between ', day);
 		return {
 			x : moment({ day, year : current.getFullYear(), month : current.getMonth() }).toDate(),
 			y : getAverageOfDay(weekData, day)
@@ -194,7 +191,6 @@ export function formatToMonthHistory(readings, yProp){
 	}
 
 	return days.map(day => {
-		console.log('day', day);
 		return {
 			x : moment({ day, year : current.getFullYear(), month : current.getMonth() }).toDate(), 
 			y : getAverageOfDay(monthData, day)
