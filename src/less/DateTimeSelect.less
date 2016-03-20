@@ -1,6 +1,14 @@
 @import './vars';
 
 .date-time-select {
+	display:flex;
+	flex-direction : row;
+	-webkit-flex-direction : row;
+	justify-content : space-between;
+	-webkit-justify-content : space-between;
+	align-items: center;
+	-webkit-align-items : space-between;
+
 	select {
 		-webkit-appearance: none;
 		-moz-appearance: none;
@@ -11,7 +19,7 @@
 		text-transform : uppercase;
 		text-align: center;
 		padding : 5px;
-		margin-right : -2px;
+		cursor : pointer;
 		&:focus {
 			outline:none;
 		}

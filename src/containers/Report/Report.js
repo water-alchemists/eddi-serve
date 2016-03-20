@@ -1,6 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import { menuNameChange } from '../../actions/menu';
 
@@ -37,7 +38,7 @@ function getDateObject(date){
 }
 
 function isActive(compare, value){
-	return compare === value ? 'active' : '';
+	return compare === value;
 }
 
 class Report extends Component {
@@ -132,12 +133,30 @@ class Report extends Component {
 
 	render(){
 		const { eddi } = this.props,
-			{ start, end, type } = this.state;
+			{ start, end, type } = this.state,
+			csvClass = classNames([
+				'selection',
+				{ active : isActive(OPTIONS.CSV, type)}
+			]),
+			csvSpriteClass = classNames([
+				'sprite',
+				'csv',
+				{ faded : !isActive(OPTIONS.CSV, type)}
+			]),
+			pdfClass = classNames([
+				'selection',
+				{ active : isActive(OPTIONS.PDF, type)}
+			]),
+			pdfSpriteClass = classNames([
+				'sprite',
+				'pdf',
+				{ faded : !isActive(OPTIONS.PDF, type)}
+			]);
 		return (
 			<div id="report" className='page'>
 				<form onSubmit={event => this.submitHandler(event)}>
 					<div>
-						<div>
+						<div className='section'>
 							<h3>Start Report</h3>
 							<DateSelect onChange={value => this.onStartChange(value)}
 								year={start.year}
@@ -145,7 +164,7 @@ class Report extends Component {
 								day={start.day}
 							/>
 						</div>
-						<div>
+						<div className='section'>
 							<h3>End Report</h3>
 							<DateSelect onChange={value => this.onEndChange(value)}
 								year={end.year}
@@ -153,22 +172,26 @@ class Report extends Component {
 								day={end.day}
 							/>
 						</div>
-						<div>
-							<div className={isActive(OPTIONS.CSV, type)}
+						<div className='document-section'>
+							<div className={csvClass}
 								onClick={event => this.clickOption(event, OPTIONS.CSV)}
 							>
+								<div className={csvSpriteClass}></div>
 								<p>CSV</p>
 							</div>
-							<div className={isActive(OPTIONS.PDF, type)}
+							<div className={pdfClass}
 								onClick={event => this.clickOption(event, OPTIONS.PDF)}
 							>
+								<div className={pdfSpriteClass}></div>
 								<p>PDF</p>
 							</div>
 						</div>
+						<div className='document-section'>
+							<button type='submit'>
+								EXPORT
+							</button>
+						</div>
 					</div>
-					<button type='submit'>
-						EXPORT
-					</button>
 				</form>
 			</div>
 		);

@@ -1,1 +1,60 @@
 @import '../../less/vars';
+
+#report {
+	background-color : @light_color;
+
+	.section {
+		background-color : white;
+		padding: 10px;
+		h3 {
+			color: black;
+			font-weight : 500;
+			margin-top: 5px;
+			margin-bottom: 5px;
+			text-transform: uppercase;
+		}
+		.date-time-select {
+			max-width : 225px;
+		}
+	}
+	.document-section {
+
+		display:flex;
+		flex-direction : row;
+		-webkit-flex-direction : row;
+		justify-content : space-around;
+		-webkit-justify-content : space-around;
+		align-items: center;
+		-webkit-align-items: center;
+		margin-top: 5px;
+		padding-top: 15px;
+		padding-bottom : 15px;
+		.selection {
+			background-color : @light_color;
+			width: 80px;
+			height: 80px;
+			display:flex;
+			flex-direction : column;
+			-webkit-flex-direction : column;
+			justify-content : center;
+			-webkit-justify-content : center;
+			align-items: center;
+			-webkit-align-items: center;
+
+			p {
+				color : @trim_color;
+				opacity : 0.6;
+				margin: 0px;
+				padding-top: 5px;
+				padding-bottom : 5px;
+				text-align: center;
+			}
+			&.active {
+				background-color: white;
+				p {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

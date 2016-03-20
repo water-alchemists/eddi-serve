@@ -48113,6 +48113,10 @@
 
 	var _reactRedux = __webpack_require__(173);
 
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	var _menu = __webpack_require__(305);
 
 	var _data = __webpack_require__(306);
@@ -48162,7 +48166,7 @@
 	}
 
 	function isActive(compare, value) {
-		return compare === value ? 'active' : '';
+		return compare === value;
 	}
 
 	var Report = function (_Component) {
@@ -48289,7 +48293,10 @@
 				var start = _state2.start;
 				var end = _state2.end;
 				var type = _state2.type;
-
+				var csvClass = (0, _classnames2.default)(['selection', { active: isActive(OPTIONS.CSV, type) }]);
+				var csvSpriteClass = (0, _classnames2.default)(['sprite', 'csv', { faded: !isActive(OPTIONS.CSV, type) }]);
+				var pdfClass = (0, _classnames2.default)(['selection', { active: isActive(OPTIONS.PDF, type) }]);
+				var pdfSpriteClass = (0, _classnames2.default)(['sprite', 'pdf', { faded: !isActive(OPTIONS.PDF, type) }]);
 				return _react2.default.createElement(
 					'div',
 					{ id: 'report', className: 'page' },
@@ -48303,7 +48310,7 @@
 							null,
 							_react2.default.createElement(
 								'div',
-								null,
+								{ className: 'section' },
 								_react2.default.createElement(
 									'h3',
 									null,
@@ -48319,7 +48326,7 @@
 							),
 							_react2.default.createElement(
 								'div',
-								null,
+								{ className: 'section' },
 								_react2.default.createElement(
 									'h3',
 									null,
@@ -48335,14 +48342,15 @@
 							),
 							_react2.default.createElement(
 								'div',
-								null,
+								{ className: 'document-section' },
 								_react2.default.createElement(
 									'div',
-									{ className: isActive(OPTIONS.CSV, type),
+									{ className: csvClass,
 										onClick: function onClick(event) {
 											return _this2.clickOption(event, OPTIONS.CSV);
 										}
 									},
+									_react2.default.createElement('div', { className: csvSpriteClass }),
 									_react2.default.createElement(
 										'p',
 										null,
@@ -48351,23 +48359,28 @@
 								),
 								_react2.default.createElement(
 									'div',
-									{ className: isActive(OPTIONS.PDF, type),
+									{ className: pdfClass,
 										onClick: function onClick(event) {
 											return _this2.clickOption(event, OPTIONS.PDF);
 										}
 									},
+									_react2.default.createElement('div', { className: pdfSpriteClass }),
 									_react2.default.createElement(
 										'p',
 										null,
 										'PDF'
 									)
 								)
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'document-section' },
+								_react2.default.createElement(
+									'button',
+									{ type: 'submit' },
+									'EXPORT'
+								)
 							)
-						),
-						_react2.default.createElement(
-							'button',
-							{ type: 'submit' },
-							'EXPORT'
 						)
 					)
 				);
@@ -48587,7 +48600,7 @@
 
 
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, "#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 10px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
 
 	// exports
 
@@ -48627,7 +48640,7 @@
 
 
 	// module
-	exports.push([module.id, ".date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  margin-right: -2px;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
+	exports.push([module.id, ".date-time-select {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: space-between;\n}\n.date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  cursor: pointer;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
 
 	// exports
 
