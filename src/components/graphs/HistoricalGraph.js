@@ -60,11 +60,12 @@ HistoricalGraph.propTypes = {
   data : PropTypes.arrayOf(
     PropTypes.shape({
       x : PropTypes.instanceOf(Date).isRequired,
-      y : PropTypes.number.isRequired
+      y : PropTypes.number
     })
   ).isRequired,
   onClick : PropTypes.func,
-  type : PropTypes.string
+  type : PropTypes.string,
+  threshold : PropTypes.number.isRequired
 }
 
 export default HistoricalGraph;

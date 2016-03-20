@@ -25,16 +25,36 @@ function generateStatusText(rate){
 class DashboardFlow extends Component {
 	constructor(props){
 		super(props);
+		const type = HISTORICAL.TODAY,
+			{ readings } = this.props,
+			formatter = FORMATTERS[type];
+		let graphData = [];
+		if(formatter instanceof Function) graphData = formatter(readings, 'qOut');
+
 		this.state = {
-			type : HISTORICAL.TODAY,
-			graphData : []
+			type,
+			graphData
 		};
 	}
+
+	componentWillReceiveProps(nextProps){
+		const { type } = this.state,
+			{ readings } = nextProps,
+			formatter = FORMATTERS[type];
+		let graphData = [];
+		if(formatter instanceof Function) graphData = formatter(readings, 'qOut');
+		this.setState({ graphData });
+	}
+
 	graphClick(type){
-		this.setState({ type });
+		const { readings } = this.props,
+			formatter = FORMATTERS[type];
+		let graphData = [];
+		if(formatter instanceof Function) graphData = formatter(readings, 'qOut');
+		this.setState({ type, graphData });
 	}
 	render(){
-		const { type } = this.state,
+		const { type, graphData } = this.state,
 			{ rate, readings } = this.props;
 
 		return (
@@ -54,9 +74,10 @@ class DashboardFlow extends Component {
 						flow.
 					</p>
 				</div>
-				<HistoricalGraph data={readings}
+				<HistoricalGraph data={graphData}
 					onClick={type => this.graphClick(type)}
 					type={type}
+					threshold={3}
 				/>
 			</div>
 		);

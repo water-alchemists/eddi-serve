@@ -139,22 +139,23 @@ export function formatReadingsToCsv(readings){
 export function formatToTodayHistory(readings, yProp){
 	const current = new Date(),
 		todayData = readings.filter(reading => moment(reading.date).isSame(current, 'day')), 
-		hours = createHours();
+		hours = createHours(24);
 
 	function getAverageOfHour(data, hour){
-		const hourData = data.filter(entry => entry.date.getHours() === hour);
+		const hourData = data.filter(entry => entry.date.getHours() === hour - 1);
 		let average;
 		if(hourData.length) average = hourData.reduce((sum, entry) => sum + entry[yProp], 0) / hourData.length;
 		return average;
 	}
-
 	return hours.map(hour => {
 		return {
-			x : hour,
+			x : moment({ hour: hour - 1 }).toDate(),
 			y : getAverageOfHour(todayData, hour)
 		};
 	});
 }
+
+// TODO: returning wrong array
 
 export function formatToWeekHistory(readings, yProp){
 	const current = new Date(),
@@ -170,13 +171,14 @@ export function formatToWeekHistory(readings, yProp){
 	}
 
 	return daysBetween.map(day => {
+		console.log('day between ', day);
 		return {
-			x : day, 
+			x : moment({ day : day + 1, year : current.getFullYear() }).toDate(),
 			y : getAverageOfDay(weekData, day)
 		};
 	});
 }
-
+// TODO: fix syntax. returning wrong array
 export function formatToMonthHistory(readings, yProp){
 	const current = new Date(),
 		monthData = readings.filter(reading => moment(reading.date).isSame(current, 'month')),
@@ -190,8 +192,9 @@ export function formatToMonthHistory(readings, yProp){
 	}
 
 	return days.map(day => {
+		console.log('day', day);
 		return {
-			x : day, 
+			x : moment({ day : day + 1, year : current.getFullYear() }).toDate(), 
 			y : getAverageOfDay(monthData, day)
 		};
 	});

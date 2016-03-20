@@ -32357,11 +32357,11 @@
 		    todayData = readings.filter(function (reading) {
 			return (0, _moment2.default)(reading.date).isSame(current, 'day');
 		}),
-		    hours = createHours();
+		    hours = createHours(24);
 
 		function getAverageOfHour(data, hour) {
 			var hourData = data.filter(function (entry) {
-				return entry.date.getHours() === hour;
+				return entry.date.getHours() === hour - 1;
 			});
 			var average = undefined;
 			if (hourData.length) average = hourData.reduce(function (sum, entry) {
@@ -32369,14 +32369,15 @@
 			}, 0) / hourData.length;
 			return average;
 		}
-
 		return hours.map(function (hour) {
 			return {
-				x: hour,
+				x: (0, _moment2.default)({ hour: hour - 1 }).toDate(),
 				y: getAverageOfHour(todayData, hour)
 			};
 		});
 	}
+
+	// TODO: returning wrong array
 
 	function formatToWeekHistory(readings, yProp) {
 		var current = new Date(),
@@ -32398,13 +32399,14 @@
 		}
 
 		return daysBetween.map(function (day) {
+			console.log('day between ', day);
 			return {
-				x: day,
+				x: (0, _moment2.default)({ day: day + 1, year: current.getFullYear() }).toDate(),
 				y: getAverageOfDay(weekData, day)
 			};
 		});
 	}
-
+	// TODO: fix syntax. returning wrong array
 	function formatToMonthHistory(readings, yProp) {
 		var current = new Date(),
 		    monthData = readings.filter(function (reading) {
@@ -32424,8 +32426,9 @@
 		}
 
 		return days.map(function (day) {
+			console.log('day', day);
 			return {
-				x: day,
+				x: (0, _moment2.default)({ day: day + 1, year: current.getFullYear() }).toDate(),
 				y: getAverageOfDay(monthData, day)
 			};
 		});
@@ -45730,9 +45733,9 @@
 			var direction = _this$props.direction;
 			var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
 			var formatter = FORMATTERS[type];
-			var graphData = undefined;
+			var graphData = [];
 			if (formatter instanceof Function) graphData = formatter(readings, prop);
-			console.log('constructor', readings, 'formater', formatter, 'graph', graphData, prop);
+
 			_this.state = {
 				type: type,
 				graphData: graphData
@@ -45748,7 +45751,7 @@
 				var direction = nextProps.direction;
 				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
 				var formatter = FORMATTERS[type];
-				var graphData = undefined;
+				var graphData = [];
 				if (formatter instanceof Function) graphData = formatter(readings, prop);
 				this.setState({ graphData: graphData });
 			}
@@ -45760,7 +45763,7 @@
 				var direction = _props.direction;
 				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
 				var formatter = FORMATTERS[type];
-				var graphData = undefined;
+				var graphData = [];
 				if (formatter instanceof Function) graphData = formatter(readings, prop);
 				this.setState({ type: type, graphData: graphData });
 			}
@@ -45827,7 +45830,8 @@
 						onClick: function onClick(type) {
 							return _this2.graphClick(type);
 						},
-						type: type
+						type: type,
+						threshold: threshold
 					})
 				);
 			}
@@ -46076,10 +46080,11 @@
 	HistoricalGraph.propTypes = {
 	  data: _react.PropTypes.arrayOf(_react.PropTypes.shape({
 	    x: _react.PropTypes.instanceOf(Date).isRequired,
-	    y: _react.PropTypes.number.isRequired
+	    y: _react.PropTypes.number
 	  })).isRequired,
 	  onClick: _react.PropTypes.func,
-	  type: _react.PropTypes.string
+	  type: _react.PropTypes.string,
+	  threshold: _react.PropTypes.number.isRequired
 	};
 
 	exports.default = HistoricalGraph;
@@ -46138,24 +46143,46 @@
 
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).call(this, props));
 
+			var type = _constants.HISTORICAL.TODAY;
+			var readings = _this.props.readings;
+			var formatter = FORMATTERS[type];
+			var graphData = [];
+			if (formatter instanceof Function) graphData = formatter(readings, 'qOut');
+
 			_this.state = {
-				type: _constants.HISTORICAL.TODAY,
-				graphData: []
+				type: type,
+				graphData: graphData
 			};
 			return _this;
 		}
 
 		_createClass(DashboardFlow, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var type = this.state.type;
+				var readings = nextProps.readings;
+				var formatter = FORMATTERS[type];
+				var graphData = [];
+				if (formatter instanceof Function) graphData = formatter(readings, 'qOut');
+				this.setState({ graphData: graphData });
+			}
+		}, {
 			key: 'graphClick',
 			value: function graphClick(type) {
-				this.setState({ type: type });
+				var readings = this.props.readings;
+				var formatter = FORMATTERS[type];
+				var graphData = [];
+				if (formatter instanceof Function) graphData = formatter(readings, 'qOut');
+				this.setState({ type: type, graphData: graphData });
 			}
 		}, {
 			key: 'render',
 			value: function render() {
 				var _this2 = this;
 
-				var type = this.state.type;
+				var _state = this.state;
+				var type = _state.type;
+				var graphData = _state.graphData;
 				var _props = this.props;
 				var rate = _props.rate;
 				var readings = _props.readings;
@@ -46205,11 +46232,12 @@
 							'flow.'
 						)
 					),
-					_react2.default.createElement(_HistoricalGraph2.default, { data: readings,
+					_react2.default.createElement(_HistoricalGraph2.default, { data: graphData,
 						onClick: function onClick(type) {
 							return _this2.graphClick(type);
 						},
-						type: type
+						type: type,
+						threshold: 3
 					})
 				);
 			}

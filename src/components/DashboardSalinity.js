@@ -31,9 +31,9 @@ class DashboardSalinity extends Component {
 			{ readings, direction } = this.props,
 			prop = direction === 'input' ? 'ppmIn' : 'ppmOut',
 			formatter = FORMATTERS[type];
-		let graphData;
+		let graphData = [];
 		if(formatter instanceof Function) graphData = formatter(readings, prop);
-		console.log('constructor', readings, 'formater', formatter, 'graph', graphData, prop)
+
 		this.state = {
 			type,
 			graphData
@@ -45,7 +45,7 @@ class DashboardSalinity extends Component {
 			{ readings, direction } = nextProps,
 			prop = direction === 'input' ? 'ppmIn' : 'ppmOut',
 			formatter = FORMATTERS[type];
-		let graphData;
+		let graphData = [];
 		if(formatter instanceof Function) graphData = formatter(readings, prop);
 		this.setState({ graphData });
 	}
@@ -54,7 +54,7 @@ class DashboardSalinity extends Component {
 		const { readings, direction } = this.props,
 			prop = direction === 'input' ? 'ppmIn' : 'ppmOut',
 			formatter = FORMATTERS[type];
-		let graphData;
+		let graphData = [];
 		if(formatter instanceof Function) graphData = formatter(readings, prop);
 		this.setState({ type, graphData });
 	}
@@ -83,6 +83,7 @@ class DashboardSalinity extends Component {
 				<HistoricalGraph data={graphData}
 					onClick={type => this.graphClick(type)}
 					type={type}
+					threshold={threshold}
 				/>
 			</div>
 		);
