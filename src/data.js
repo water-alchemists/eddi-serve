@@ -3,10 +3,10 @@ import moment from 'moment';
 import { SALINITY_THRESHOLD } from './constants';
 moment.locale('en');
 
-function getDaysBetween(beginning, end){
+function getDaysBetween(end, beginning){
 	const days = [];
 	for(let x = beginning; x < end; x++){
-		days.push(x);
+		days.push(x + 1);
 	}
 	return days;
 }
@@ -163,17 +163,19 @@ export function formatToWeekHistory(readings, yProp){
 		weekData = readings.filter(reading => moment(reading.date).isBetween(beginning, current, 'day')),
 		daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
 
+	console.log('days between', daysBetween);
+
 	function getAverageOfDay(data, day){
 		const dayData = data.filter(entry => entry.date.getDate() === day);
 		let average;
-		if(dayData) average = dayData.reduce((sum, entry) => sum + entry[yProp], 0) / dayData;
+		if(dayData.length) average = dayData.reduce((sum, entry) => sum + entry[yProp], 0) / dayData.length;
 		return average;
 	}
 
 	return daysBetween.map(day => {
 		console.log('day between ', day);
 		return {
-			x : moment({ day : day + 1, year : current.getFullYear() }).toDate(),
+			x : moment({ day, year : current.getFullYear(), month : current.getMonth() }).toDate(),
 			y : getAverageOfDay(weekData, day)
 		};
 	});
@@ -187,14 +189,14 @@ export function formatToMonthHistory(readings, yProp){
 	function getAverageOfDay(data, day){
 		const dayData = data.filter(entry => entry.date.getDate() === day);
 		let average;
-		if(dayData) average = dayData.reduce((sum, entry) => sum + entry[yProp], 0) / dayData;
+		if(dayData.length) average = dayData.reduce((sum, entry) => sum + entry[yProp], 0) / dayData.length;
 		return average;
 	}
 
 	return days.map(day => {
 		console.log('day', day);
 		return {
-			x : moment({ day : day + 1, year : current.getFullYear() }).toDate(), 
+			x : moment({ day, year : current.getFullYear(), month : current.getMonth() }).toDate(), 
 			y : getAverageOfDay(monthData, day)
 		};
 	});

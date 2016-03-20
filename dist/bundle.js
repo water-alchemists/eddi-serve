@@ -32225,10 +32225,10 @@
 
 	_moment2.default.locale('en');
 
-	function getDaysBetween(beginning, end) {
+	function getDaysBetween(end, beginning) {
 		var days = [];
 		for (var x = beginning; x < end; x++) {
-			days.push(x);
+			days.push(x + 1);
 		}
 		return days;
 	}
@@ -32387,21 +32387,23 @@
 		}),
 		    daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
 
+		console.log('days between', daysBetween);
+
 		function getAverageOfDay(data, day) {
 			var dayData = data.filter(function (entry) {
 				return entry.date.getDate() === day;
 			});
 			var average = undefined;
-			if (dayData) average = dayData.reduce(function (sum, entry) {
+			if (dayData.length) average = dayData.reduce(function (sum, entry) {
 				return sum + entry[yProp];
-			}, 0) / dayData;
+			}, 0) / dayData.length;
 			return average;
 		}
 
 		return daysBetween.map(function (day) {
 			console.log('day between ', day);
 			return {
-				x: (0, _moment2.default)({ day: day + 1, year: current.getFullYear() }).toDate(),
+				x: (0, _moment2.default)({ day: day, year: current.getFullYear(), month: current.getMonth() }).toDate(),
 				y: getAverageOfDay(weekData, day)
 			};
 		});
@@ -32419,16 +32421,16 @@
 				return entry.date.getDate() === day;
 			});
 			var average = undefined;
-			if (dayData) average = dayData.reduce(function (sum, entry) {
+			if (dayData.length) average = dayData.reduce(function (sum, entry) {
 				return sum + entry[yProp];
-			}, 0) / dayData;
+			}, 0) / dayData.length;
 			return average;
 		}
 
 		return days.map(function (day) {
 			console.log('day', day);
 			return {
-				x: (0, _moment2.default)({ day: day + 1, year: current.getFullYear() }).toDate(),
+				x: (0, _moment2.default)({ day: day, year: current.getFullYear(), month: current.getMonth() }).toDate(),
 				y: getAverageOfDay(monthData, day)
 			};
 		});
