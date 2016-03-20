@@ -4,28 +4,127 @@
 .sprite{
   background-image: url('/assets/nice-sprites.png');
   background-repeat: no-repeat;
-
+  height: 35px;
+  width : 35px;
   &.home{
-    background-position: 0 0;
+    background-position: -10px -12px;
     &.green{
-      background-position: 20px 0px;
+      background-position: -60px -12px;
+    }
+  }
+
+  &.dashboard {
+    background-position : -7px -81px;
+    &.green {
+      background-position : -57px -81px;
+    }
+  }
+
+  &.settings {
+    background-position : -7px -150px;
+    &.green {
+      background-position : -57px -150px;
+    }
+  }
+
+  &.troubleshoot {
+    background-position : -1px -294px;
+    &.green {
+      background-position : -52px -294px;
+    }
+  }
+
+  &.report {
+    background-position : -8px -223px;
+    &.green {
+      background-position : -57px -223px;
+    }
+  }
+
+  &.arrow {
+    &.down {
+      background-position : -55px -420px;
+    }
+    &.up {
+      background-position : -55px -365px;
+    }
+    &.right {
+      background-position : 0px -420px;
+    }
+  }
+
+  &.camera {
+    background-position : -207px -295px;
+  }
+
+  &.csv {
+    background-position : -207px -425px;
+    &.faded {
+      background-position : -207px -362px;
+    }
+  }
+
+  &.pdf {
+    background-position : -255px -425px;
+    &.faded {
+      background-position : -255px -362px;
     }
   }
 
   &.salinityIn{
     background-position: -109px -81px;
+    &.faded {
+      background-position : -109px -10px;
+    }
+    &.bad {
+      background-position : -109px -222px;
+      &.faded {
+        background-position : -109px -149px;
+      }
+    }
   }
 
   &.salinityOut{
     background-position: -155px -81px;
+    &.faded {
+      background-position : -155px -10px;
+    }
+    &.bad {
+      background-position : -155px -222px;
+      &.faded {
+        background-position : -155px -149px;
+      }
+    }
   }
 
   &.flow{
     background-position: -209px -81px;
+    &.faded {
+      background-position : -209px -10px;
+    }
+    &.bad {
+      background-position : -209px -222px;
+      &.faded {
+        background-position : -209px -149px;
+      }
+    }
   }
 
   &.power{
     background-position: -253px -81px;
+    &.faded {
+      background-position : -253px  -10px;
+    }
+    &.bad {
+      background-position: -253px -222px;
+      &.faded {
+        background-position: -253px -149px
+      }
+    }
+  }
+
+  &.empty {
+    background-position : 20px 20px;
   }
 
 }

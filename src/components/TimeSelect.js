@@ -11,6 +11,8 @@ import { hourOptions,
 	convertStringToMinutes
 } from '../data';
 
+import style from '../less/DateTimeSelect.less';
+
 class TimeSelect extends Component {
 	constructor(props){
 		super(props);
@@ -106,7 +108,7 @@ class TimeSelect extends Component {
 			AmPmElements = this._renderAmPm();
 
 		return (
-			<div>
+			<div className='date-time-select'>
 				<select value={hr}
 					onChange={event => this.onHourChanges(event)}
 				>

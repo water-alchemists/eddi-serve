@@ -31,7 +31,6 @@ class EddiStateButton extends Component {
 	}
 	render(){
 		const { value } = this.props;
-		console.log('this is hte value', value);
 		return value ? this._renderOn() : this._renderOff();
 	}
 }

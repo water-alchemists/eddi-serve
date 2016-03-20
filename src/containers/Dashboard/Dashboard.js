@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { menuNameChange } from '../../actions/menu';
 import { selectEddiById } from '../../actions/eddis';
 
-import { QUERY } from '../../constants';
+import { QUERY, FLOW_THRESHOLD, SALINITY_THRESHOLD } from '../../constants';
 
 import { mapDateToReadings } from '../../data';
 
@@ -14,6 +14,22 @@ import DashboardSalinity from '../../components/DashboardSalinity';
 import DashboardFlow from '../../components/DashboardFlow';
 
 import style from './Dashboard.less';
+
+function getGoodBad(current, threshold){
+	if(!threshold) threshold = SALINITY_THRESHOLD; //default threshold for salinity
+	const { ppmIn, ppmOut, qOut } = current,
+		flowGood = qOut > FLOW_THRESHOLD ? false : true,
+		salinityInGood = ppmIn > threshold ? false : true,
+		salinityOutGood = ppmOut > threshold ? false : true,
+		powerGood = true;
+
+	return {
+		salinityIn : salinityInGood,
+		salinityOut : salinityOutGood,
+		power : powerGood,
+		flow : flowGood
+	};
+}
 
 function mapStateToProps(state){
 	return {
@@ -40,13 +56,11 @@ class Dashboard extends Component {
 	componentWillMount(){
 		const { updateMenuName, eddi={} } = this.props;
 		if( eddi.id ) {
-			console.log('i am here');
 			updateMenuName(eddi.settings.name);
 			if(eddi.readings){
 				//format the readings into an array for data handling
 				const readings = mapDateToReadings(eddi.readings),
 					current = readings[readings.length - 1];
-				console.log('these are the readings', readings, current);
 				this.setState({ readings, current });
 			}
 		}
@@ -62,14 +76,15 @@ class Dashboard extends Component {
 				//format the readings into an array for data handling
 				const readings = mapDateToReadings(eddi.readings),
 					current = readings[readings.length - 1];
-				console.log('these are the readings', readings, current);
+
 				this.setState({ readings, current });
 			}
 		}
 	}
 
 	_renderSalinity(current, direction){
-		const { eddi={} } = this.props,
+		const { readings } = this.state,
+			{ eddi={} } = this.props,
 			threshold = eddi.settings.salinity;
 
 		return (
@@ -77,13 +92,17 @@ class Dashboard extends Component {
 				threshold={threshold}
 				current={current}
 				direction={direction}
+				readings={readings}
 			/>
 		);
 	}
 
 	_renderFlow(rate){
+		const { readings } = this.state;
 		return (
-			<DashboardFlow rate={rate}/>
+			<DashboardFlow rate={rate}
+				readings={readings}
+			/>
 		);
 	}
 
@@ -107,15 +126,21 @@ class Dashboard extends Component {
 	}
 
 	render(){
-		const { eddi={}, location={} } = this.props,
-			{ id } = eddi,
-			{ view } = location.query;
+		const { current } = this.state,
+			{ eddi={}, location={} } = this.props,
+			{ id, settings={} } = eddi,
+			{ view } = location.query,
+			{ salinityIn, salinityOut, flow, power } = getGoodBad(current, settings.salinity);
 
 		let DashboardElement = this._renderViewBasedQuery(view);
 		return (
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} 
 					view={view}
+					salinityIn={salinityIn}
+					salinityOut={salinityOut}
+					flow={flow}
+					power={power}
 				/>
 				{ DashboardElement }
 			</div>

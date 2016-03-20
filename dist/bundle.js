@@ -26684,6 +26684,17 @@
 	// Style Related
 	var BACKGROUND_COLOR = exports.BACKGROUND_COLOR = "rgba(13,14,31,1)";
 
+	//Thresholds
+	var FLOW_THRESHOLD = exports.FLOW_THRESHOLD = 5;
+	var SALINITY_THRESHOLD = exports.SALINITY_THRESHOLD = 1000;
+
+	//Graphs
+	var HISTORICAL = exports.HISTORICAL = {
+		TODAY: 'today',
+		MONTH: 'month',
+		WEEK: 'week'
+	};
+
 /***/ },
 /* 249 */
 /***/ function(module, exports, __webpack_require__) {
@@ -26954,13 +26965,18 @@
 
 /***/ },
 /* 255 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _reactRouter = __webpack_require__(184);
+
+	var _constants = __webpack_require__(248);
+
 	function errorHandle(_ref) {
 		var dispatch = _ref.dispatch;
 
@@ -26968,7 +26984,10 @@
 			return function (action) {
 				var error = action.error;
 
-				if (error instanceof Error) return window.alert(error.message);
+				if (error instanceof Error) {
+					if (error.message.indexOf('not authenticated') > -1) return _reactRouter.browserHistory.push(_constants.PATHS.HOME);
+					return window.alert(error.message);
+				}
 				return next(action);
 			};
 		};
@@ -27003,7 +27022,7 @@
 
 	var _List3 = _interopRequireDefault(_List2);
 
-	var _Settings2 = __webpack_require__(442);
+	var _Settings2 = __webpack_require__(424);
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
@@ -27011,7 +27030,7 @@
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(443);
+	var _Report2 = __webpack_require__(435);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -27146,8 +27165,12 @@
 				var eddis = _props2.eddis;
 				var logout = _props2.logout;
 				var dispatch = _props2.dispatch;
+				var location = _props2.location;
 				var isOpen = this.state.isOpen;
 				var children = this._cloneChildrenWithToggle();
+				var pathname = location.pathname;
+
+
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -27155,7 +27178,8 @@
 						logout: logout,
 						user: user,
 						eddis: eddis,
-						menu: menu
+						menu: menu,
+						current: pathname
 					}),
 					children,
 					_react2.default.createElement(_ModalWrapper2.default, { dispatch: dispatch,
@@ -27188,6 +27212,10 @@
 
 	var _reactRouter = __webpack_require__(184);
 
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	var _constants = __webpack_require__(248);
 
 	var _Menu = __webpack_require__(259);
@@ -27201,6 +27229,10 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function isPath(path, compare) {
+		return compare.indexOf(path) > -1;
+	}
 
 	var Menu = function (_Component) {
 		_inherits(Menu, _Component);
@@ -27231,6 +27263,7 @@
 				var _props = this.props;
 				var menu = _props.menu;
 				var eddis = _props.eddis;
+				var current = _props.current;
 				var _menu$name = menu.name;
 				var name = _menu$name === undefined ? '' : _menu$name;
 				var list = eddis.list;
@@ -27239,7 +27272,12 @@
 				var query = {
 					id: selected.id
 				};
-				console.log('this is the menu', menu, name);
+				var homeSpriteClass = (0, _classnames2.default)(['sprite', 'home', { green: current === _constants.PATHS.HOME || isPath(_constants.PATHS.LIST, current) }]);
+				var settingsSpriteClass = (0, _classnames2.default)(['sprite', 'settings', { green: isPath(_constants.PATHS.SETTINGS, current) }]);
+				var reportSpriteClass = (0, _classnames2.default)(['sprite', 'report', { green: isPath(_constants.PATHS.REPORT, current) }]);
+				var troubleshootSpriteClass = (0, _classnames2.default)(['sprite', 'troubleshoot', { green: isPath(_constants.PATHS.TROUBLESHOOT, current) }]);
+				var dashboardSpriteClass = (0, _classnames2.default)(['sprite', 'dashboard', { green: isPath(_constants.PATHS.DASHBOARD, current) }]);
+
 				var menuOptions = undefined;
 
 				if (list instanceof Array && list.length) {
@@ -27249,28 +27287,48 @@
 							activeClassName: 'active',
 							key: 'dashboard'
 						},
-						'Dashboard'
+						_react2.default.createElement('div', { className: dashboardSpriteClass }),
+						_react2.default.createElement(
+							'p',
+							null,
+							'Dashboard'
+						)
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: _constants.PATHS.SETTINGS,
 							activeClassName: 'active',
 							key: 'settings'
 						},
-						'Settings'
+						_react2.default.createElement('div', { className: settingsSpriteClass }),
+						_react2.default.createElement(
+							'p',
+							null,
+							'Settings'
+						)
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.REPORT, query: query },
 							activeClassName: 'active',
 							key: 'report'
 						},
-						'Report'
+						_react2.default.createElement('div', { className: reportSpriteClass }),
+						_react2.default.createElement(
+							'p',
+							null,
+							'Report'
+						)
 					), _react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.TROUBLESHOOT, query: query },
 							activeClassName: 'active',
 							key: 'troubleshoot'
 						},
-						'Troubleshoot'
+						_react2.default.createElement('div', { className: troubleshootSpriteClass }),
+						_react2.default.createElement(
+							'p',
+							null,
+							'Troubleshoot'
+						)
 					)];
 				}
 
@@ -27296,7 +27354,12 @@
 								{ to: _constants.PATHS.LIST,
 									activeClassName: 'active'
 								},
-								'Home'
+								_react2.default.createElement('div', { className: homeSpriteClass }),
+								_react2.default.createElement(
+									'p',
+									null,
+									'Home'
+								)
 							),
 							menuOptions,
 							_react2.default.createElement(
@@ -27304,7 +27367,12 @@
 								{ onClick: function onClick() {
 										return _this2.logoutHandler();
 									} },
-								'Logout'
+								_react2.default.createElement('div', { className: 'sprite empty' }),
+								_react2.default.createElement(
+									'p',
+									null,
+									'Logout'
+								)
 							)
 						)
 					),
@@ -27355,7 +27423,8 @@
 		}),
 		menu: _react.PropTypes.shape({
 			name: _react.PropTypes.string
-		})
+		}),
+		current: _react.PropTypes.string
 	};
 
 	exports.default = Menu;
@@ -27395,7 +27464,7 @@
 
 
 	// module
-	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 180px;\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  display: block;\n  padding: 8px;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n  text-decoration: underline;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 250px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
@@ -31293,7 +31362,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n}\n.sprite.home {\n  background-position: 0 0;\n}\n.sprite.home.green {\n  background-position: 20px 0px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -10px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -8px -223px;\n}\n.sprite.report.green {\n  background-position: -57px -223px;\n}\n.sprite.arrow.down {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -420px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
 
 	// exports
 
@@ -31921,6 +31990,24 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	function getGoodBad(current, threshold) {
+		if (!threshold) threshold = _constants.SALINITY_THRESHOLD; //default threshold for salinity
+		var ppmIn = current.ppmIn;
+		var ppmOut = current.ppmOut;
+		var qOut = current.qOut;
+		var flowGood = qOut > _constants.FLOW_THRESHOLD ? false : true;
+		var salinityInGood = ppmIn > threshold ? false : true;
+		var salinityOutGood = ppmOut > threshold ? false : true;
+		var powerGood = true;
+
+		return {
+			salinityIn: salinityInGood,
+			salinityOut: salinityOutGood,
+			power: powerGood,
+			flow: flowGood
+		};
+	}
+
 	function mapStateToProps(state) {
 		return {
 			eddi: state.eddis.selected
@@ -31962,13 +32049,11 @@
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 
 				if (eddi.id) {
-					console.log('i am here');
 					updateMenuName(eddi.settings.name);
 					if (eddi.readings) {
 						//format the readings into an array for data handling
 						var readings = (0, _data.mapDateToReadings)(eddi.readings),
 						    current = readings[readings.length - 1];
-						console.log('these are the readings', readings, current);
 						this.setState({ readings: readings, current: current });
 					}
 				}
@@ -31990,7 +32075,7 @@
 						//format the readings into an array for data handling
 						var readings = (0, _data.mapDateToReadings)(eddi.readings),
 						    current = readings[readings.length - 1];
-						console.log('these are the readings', readings, current);
+
 						this.setState({ readings: readings, current: current });
 					}
 				}
@@ -31998,6 +32083,7 @@
 		}, {
 			key: '_renderSalinity',
 			value: function _renderSalinity(current, direction) {
+				var readings = this.state.readings;
 				var _props$eddi2 = this.props.eddi;
 				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
 				var threshold = eddi.settings.salinity;
@@ -32005,13 +32091,18 @@
 				return _react2.default.createElement(_DashboardSalinity2.default, { key: direction,
 					threshold: threshold,
 					current: current,
-					direction: direction
+					direction: direction,
+					readings: readings
 				});
 			}
 		}, {
 			key: '_renderFlow',
 			value: function _renderFlow(rate) {
-				return _react2.default.createElement(_DashboardFlow2.default, { rate: rate });
+				var readings = this.state.readings;
+
+				return _react2.default.createElement(_DashboardFlow2.default, { rate: rate,
+					readings: readings
+				});
 			}
 		}, {
 			key: '_renderViewBasedQuery',
@@ -32038,13 +32129,23 @@
 		}, {
 			key: 'render',
 			value: function render() {
+				var current = this.state.current;
 				var _props3 = this.props;
 				var _props3$eddi = _props3.eddi;
 				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
 				var _props3$location = _props3.location;
 				var location = _props3$location === undefined ? {} : _props3$location;
 				var id = eddi.id;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 				var view = location.query.view;
+
+				var _getGoodBad = getGoodBad(current, settings.salinity);
+
+				var salinityIn = _getGoodBad.salinityIn;
+				var salinityOut = _getGoodBad.salinityOut;
+				var flow = _getGoodBad.flow;
+				var power = _getGoodBad.power;
 
 
 				var DashboardElement = this._renderViewBasedQuery(view);
@@ -32052,7 +32153,11 @@
 					'div',
 					{ id: 'dashboard', className: 'page' },
 					_react2.default.createElement(_DashboardMenu2.default, { id: id,
-						view: view
+						view: view,
+						salinityIn: salinityIn,
+						salinityOut: salinityOut,
+						flow: flow,
+						power: power
 					}),
 					DashboardElement
 				);
@@ -32106,14 +32211,27 @@
 	exports.convertStringToMinutes = convertStringToMinutes;
 	exports.mapDateToReadings = mapDateToReadings;
 	exports.formatReadingsToCsv = formatReadingsToCsv;
+	exports.formatToTodayHistory = formatToTodayHistory;
+	exports.formatToWeekHistory = formatToWeekHistory;
+	exports.formatToMonthHistory = formatToMonthHistory;
 
 	var _moment = __webpack_require__(307);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
+	var _constants = __webpack_require__(248);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_moment2.default.locale('en');
+
+	function getDaysBetween(end, beginning) {
+		var days = [];
+		for (var x = beginning; x < end; x++) {
+			days.push(x + 1);
+		}
+		return days;
+	}
 
 	function createHours(num) {
 		var hourOptions = [];
@@ -32138,7 +32256,7 @@
 		if (typeof month === 'string') month = _moment2.default.month(month);
 		var max = new Date(year, month, 0).getDate(),
 		    days = [];
-		for (var i = 0; i < max; i++) {
+		for (var i = 0; i <= max; i++) {
 			days.push(i + 1);
 		}
 		return days;
@@ -32183,7 +32301,7 @@
 
 	var salinityOptions = exports.salinityOptions = {
 		min: 500,
-		default: 1000
+		default: _constants.SALINITY_THRESHOLD
 	};
 
 	//readings
@@ -32232,6 +32350,86 @@
 		}).reduce(function (body, row) {
 			return body + '\n' + row;
 		}, first);
+	}
+
+	function formatToTodayHistory(readings, yProp) {
+		var current = new Date(),
+		    todayData = readings.filter(function (reading) {
+			return (0, _moment2.default)(reading.date).isSame(current, 'day');
+		}),
+		    hours = createHours(24);
+
+		function getAverageOfHour(data, hour) {
+			var hourData = data.filter(function (entry) {
+				return entry.date.getHours() === hour - 1;
+			});
+			var average = undefined;
+			if (hourData.length) average = hourData.reduce(function (sum, entry) {
+				return sum + entry[yProp];
+			}, 0) / hourData.length;
+			return average;
+		}
+		return hours.map(function (hour) {
+			return {
+				x: (0, _moment2.default)({ hour: hour - 1 }).toDate(),
+				y: getAverageOfHour(todayData, hour)
+			};
+		});
+	}
+
+	// TODO: returning wrong array
+
+	function formatToWeekHistory(readings, yProp) {
+		var current = new Date(),
+		    beginning = new Date(current - 7 * 1000 * 60 * 60 * 24),
+		    weekData = readings.filter(function (reading) {
+			return (0, _moment2.default)(reading.date).isBetween(beginning, current, 'day');
+		}),
+		    daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
+
+		function getAverageOfDay(data, day) {
+			var dayData = data.filter(function (entry) {
+				return entry.date.getDate() === day;
+			});
+			var average = undefined;
+			if (dayData.length) average = dayData.reduce(function (sum, entry) {
+				return sum + entry[yProp];
+			}, 0) / dayData.length;
+			return average;
+		}
+
+		return daysBetween.map(function (day) {
+			return {
+				x: (0, _moment2.default)({ day: day, year: current.getFullYear(), month: current.getMonth() }).toDate(),
+				y: getAverageOfDay(weekData, day)
+			};
+		});
+	}
+	// TODO: fix syntax. returning wrong array
+	function formatToMonthHistory(readings, yProp) {
+		var current = new Date(),
+		    monthData = readings.filter(function (reading) {
+			return (0, _moment2.default)(reading.date).isSame(current, 'month');
+		}),
+		    days = createDays(current.getMonth(), current.getFullYear());
+
+		function getAverageOfDay(data, day) {
+			var dayData = data.filter(function (entry) {
+				return entry.date.getDate() === day;
+			});
+			var average = undefined;
+			if (dayData.length) average = dayData.reduce(function (sum, entry) {
+				return sum + entry[yProp];
+			}, 0) / dayData.length;
+			return average;
+		}
+
+		return days.map(function (day) {
+			return {
+				x: (0, _moment2.default)({ day: day, year: current.getFullYear(), month: current.getMonth() }).toDate(),
+				y: getAverageOfDay(monthData, day)
+			};
+		});
 	}
 
 /***/ },
@@ -45355,15 +45553,23 @@
 
 	var _reactRouter = __webpack_require__(184);
 
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	var _constants = __webpack_require__(248);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ACTIVE_CLASS = 'active';
 
 	var DashboardMenu = function (_Component) {
 		_inherits(DashboardMenu, _Component);
@@ -45380,11 +45586,19 @@
 				var _props = this.props;
 				var id = _props.id;
 				var view = _props.view;
-
-				//handles appearance of default tab
-
-				var classString = '';
-				if (!view) classString = 'active';
+				var salinityIn = _props.salinityIn;
+				var salinityOut = _props.salinityOut;
+				var flow = _props.flow;
+				var power = _props.power;
+				var defaultViewClass = (0, _classnames2.default)(_defineProperty({}, ACTIVE_CLASS, !view)); //handles appearance of default tab
+				var salinityInClass = (0, _classnames2.default)(['sprite', 'salinityIn', { faded: view !== _constants.QUERY.SALINITY_IN }, { bad: !salinityIn }]);
+				var salinityInFont = (0, _classnames2.default)({ 'red-font': !salinityIn });
+				var salinityOutClass = (0, _classnames2.default)(['sprite', 'salinityOut', { faded: view && view !== _constants.QUERY.SALINITY_OUT }, { bad: !salinityOut }]);
+				var salinityOutFont = (0, _classnames2.default)({ 'red-font': !salinityOut });
+				var flowClass = (0, _classnames2.default)(['sprite', 'flow', { faded: view !== _constants.QUERY.FLOW }, { bad: !flow }]);
+				var flowFont = (0, _classnames2.default)({ 'red-font': !flow });
+				var powerClass = (0, _classnames2.default)(['sprite', 'power', { faded: view !== _constants.QUERY.POWER }, { bad: !power }]);
+				var powerFont = (0, _classnames2.default)({ 'red-font': !power });
 
 				return _react2.default.createElement(
 					'div',
@@ -45392,45 +45606,45 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } },
-							activeClassName: 'active' },
-						_react2.default.createElement('div', { className: 'sprite salinityIn' }),
+							activeClassName: ACTIVE_CLASS },
+						_react2.default.createElement('div', { className: salinityInClass }),
 						_react2.default.createElement(
-							'div',
-							null,
+							'p',
+							{ className: salinityInFont },
 							'in'
 						)
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_OUT } },
-							activeClassName: 'active',
-							className: classString },
-						_react2.default.createElement('div', { className: 'sprite salinityOut' }),
+							activeClassName: ACTIVE_CLASS,
+							className: defaultViewClass },
+						_react2.default.createElement('div', { className: salinityOutClass }),
 						_react2.default.createElement(
-							'div',
-							null,
+							'p',
+							{ className: salinityOutFont },
 							'out'
 						)
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } },
-							activeClassName: 'active' },
-						_react2.default.createElement('div', { className: 'sprite flow' }),
+							activeClassName: ACTIVE_CLASS },
+						_react2.default.createElement('div', { className: flowClass }),
 						_react2.default.createElement(
-							'div',
-							null,
+							'p',
+							{ className: flowFont },
 							'flow'
 						)
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } },
-							activeClassName: 'active' },
-						_react2.default.createElement('div', { className: 'sprite power' }),
+							activeClassName: ACTIVE_CLASS },
+						_react2.default.createElement('div', { className: powerClass }),
 						_react2.default.createElement(
-							'div',
-							null,
+							'p',
+							{ className: powerFont },
 							'power'
 						)
 					)
@@ -45443,7 +45657,12 @@
 
 	DashboardMenu.propTypes = {
 		id: _react.PropTypes.string,
-		view: _react.PropTypes.string
+		view: _react.PropTypes.string,
+		current: _react.PropTypes.string,
+		salinityIn: _react.PropTypes.bool,
+		salinityOut: _react.PropTypes.bool,
+		flow: _react.PropTypes.bool,
+		power: _react.PropTypes.bool
 	};
 
 	exports.default = DashboardMenu;
@@ -45460,9 +45679,13 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _FORMATTERS;
+
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _constants = __webpack_require__(248);
 
 	var _SalinityGraph = __webpack_require__(409);
 
@@ -45472,6 +45695,8 @@
 
 	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
 
+	var _data = __webpack_require__(306);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45479,6 +45704,10 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var FORMATTERS = (_FORMATTERS = {}, _defineProperty(_FORMATTERS, _constants.HISTORICAL.TODAY, _data.formatToTodayHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.WEEK, _data.formatToWeekHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.MONTH, _data.formatToMonthHistory), _FORMATTERS);
 
 	function generateBadText() {
 		return 'which is not well. Please check your settings for your eddi.';
@@ -45491,19 +45720,64 @@
 	var DashboardSalinity = function (_Component) {
 		_inherits(DashboardSalinity, _Component);
 
-		function DashboardSalinity() {
+		function DashboardSalinity(props) {
 			_classCallCheck(this, DashboardSalinity);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinity).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinity).call(this, props));
+
+			var type = _constants.HISTORICAL.TODAY;
+			var _this$props = _this.props;
+			var readings = _this$props.readings;
+			var direction = _this$props.direction;
+			var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+			var formatter = FORMATTERS[type];
+			var graphData = [];
+			if (formatter instanceof Function) graphData = formatter(readings, prop);
+
+			_this.state = {
+				type: type,
+				graphData: graphData
+			};
+			return _this;
 		}
 
 		_createClass(DashboardSalinity, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var type = this.state.type;
+				var readings = nextProps.readings;
+				var direction = nextProps.direction;
+				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+				var formatter = FORMATTERS[type];
+				var graphData = [];
+				if (formatter instanceof Function) graphData = formatter(readings, prop);
+				this.setState({ graphData: graphData });
+			}
+		}, {
+			key: 'graphClick',
+			value: function graphClick(type) {
+				var _props = this.props;
+				var readings = _props.readings;
+				var direction = _props.direction;
+				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+				var formatter = FORMATTERS[type];
+				var graphData = [];
+				if (formatter instanceof Function) graphData = formatter(readings, prop);
+				this.setState({ type: type, graphData: graphData });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var _props = this.props;
-				var threshold = _props.threshold;
-				var current = _props.current;
-				var direction = _props.direction;
+				var _this2 = this;
+
+				var _state = this.state;
+				var type = _state.type;
+				var graphData = _state.graphData;
+				var _props2 = this.props;
+				var threshold = _props2.threshold;
+				var current = _props2.current;
+				var direction = _props2.direction;
+				var readings = _props2.readings;
 				var status = current > threshold ? generateBadText() : generateGoodText();
 				return _react2.default.createElement(
 					'div',
@@ -45523,7 +45797,7 @@
 							_react2.default.createElement(
 								'h3',
 								null,
-								'' + current
+								'' + current.toLocaleString()
 							),
 							_react2.default.createElement(
 								'p',
@@ -45539,18 +45813,24 @@
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + current + ' ppm. '
+								' ' + current.toLocaleString() + ' ppm. '
 							),
 							'Your current threshold is set at',
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + threshold + ' ppm, '
+								' ' + threshold.toLocaleString() + ' ppm, '
 							),
 							'' + status
 						)
 					),
-					_react2.default.createElement(_HistoricalGraph2.default, null)
+					_react2.default.createElement(_HistoricalGraph2.default, { data: graphData,
+						onClick: function onClick(type) {
+							return _this2.graphClick(type);
+						},
+						type: type,
+						threshold: threshold
+					})
 				);
 			}
 		}]);
@@ -45561,11 +45841,16 @@
 	DashboardSalinity.propTypes = {
 		threshold: _react.PropTypes.number.isRequired,
 		current: _react.PropTypes.number.isRequired,
-		direction: _react.PropTypes.string.isRequired
+		direction: _react.PropTypes.string.isRequired,
+		readings: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			date: _react.PropTypes.instanceOf(Date),
+			ppmIn: _react.PropTypes.number,
+			ppmOut: _react.PropTypes.number
+		})).isRequired
 	};
 
 	DashboardSalinity.defaultProps = {
-		threshold: 1000
+		threshold: _constants.SALINITY_THRESHOLD
 	};
 
 	exports.default = DashboardSalinity;
@@ -45687,6 +45972,12 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _constants = __webpack_require__(248);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45694,6 +45985,10 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function isSelected(type, compare) {
+	  return type === compare;
+	}
 
 	var HistoricalGraph = function (_Component) {
 	  _inherits(HistoricalGraph, _Component);
@@ -45705,8 +46000,27 @@
 	  }
 
 	  _createClass(HistoricalGraph, [{
+	    key: 'clickHandler',
+	    value: function clickHandler(event, type) {
+	      event.preventDefault();
+	      var onClick = this.props.onClick;
+
+	      if (onClick instanceof Function) return onClick(type);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
+	      var _props = this.props;
+	      var type = _props.type;
+	      var data = _props.data;
+	      var monthClass = (0, _classnames2.default)(['historical-selection', { selected: isSelected(_constants.HISTORICAL.MONTH, type) }]);
+	      var todayClass = (0, _classnames2.default)(['historical-selection', { selected: isSelected(_constants.HISTORICAL.TODAY, type) }]);
+	      var weekClass = (0, _classnames2.default)(['historical-selection', { selected: isSelected(_constants.HISTORICAL.WEEK, type) }]);
+
+	      console.log('this is the data', data);
+
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'historical-graph' },
@@ -45715,18 +46029,42 @@
 	          { className: 'historical-selector' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'historical-selection' },
-	            'This Month'
+	            { className: monthClass,
+	              onClick: function onClick(event) {
+	                return _this2.clickHandler(event, _constants.HISTORICAL.MONTH);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'This Month'
+	            )
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'historical-selection' },
-	            'This Week'
+	            { className: weekClass,
+	              onClick: function onClick(event) {
+	                return _this2.clickHandler(event, _constants.HISTORICAL.WEEK);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'This Week'
+	            )
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'historical-selection' },
-	            'Today'
+	            { className: todayClass,
+	              onClick: function onClick(event) {
+	                return _this2.clickHandler(event, _constants.HISTORICAL.TODAY);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Today'
+	            )
 	          )
 	        ),
 	        _react2.default.createElement('canvas', { ref: 'canvas', className: 'historical-graph-canvas' })
@@ -45736,6 +46074,16 @@
 
 	  return HistoricalGraph;
 	}(_react.Component);
+
+	HistoricalGraph.propTypes = {
+	  data: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+	    x: _react.PropTypes.instanceOf(Date).isRequired,
+	    y: _react.PropTypes.number
+	  })).isRequired,
+	  onClick: _react.PropTypes.func,
+	  type: _react.PropTypes.string,
+	  threshold: _react.PropTypes.number.isRequired
+	};
 
 	exports.default = HistoricalGraph;
 
@@ -45751,6 +46099,8 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _FORMATTERS;
+
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -45763,6 +46113,10 @@
 
 	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
 
+	var _constants = __webpack_require__(248);
+
+	var _data = __webpack_require__(306);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45771,6 +46125,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var FORMATTERS = (_FORMATTERS = {}, _defineProperty(_FORMATTERS, _constants.HISTORICAL.TODAY, _data.formatToTodayHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.WEEK, _data.formatToWeekHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.MONTH, _data.formatToMonthHistory), _FORMATTERS);
+
 	function generateStatusText(rate) {
 		if (rate <= 0.3) return 'slow';else if (rate <= 3) return 'medium';else return 'fast';
 	}
@@ -45778,16 +46136,54 @@
 	var DashboardFlow = function (_Component) {
 		_inherits(DashboardFlow, _Component);
 
-		function DashboardFlow() {
+		function DashboardFlow(props) {
 			_classCallCheck(this, DashboardFlow);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).call(this, props));
+
+			var type = _constants.HISTORICAL.TODAY;
+			var readings = _this.props.readings;
+			var formatter = FORMATTERS[type];
+			var graphData = [];
+			if (formatter instanceof Function) graphData = formatter(readings, 'qOut');
+
+			_this.state = {
+				type: type,
+				graphData: graphData
+			};
+			return _this;
 		}
 
 		_createClass(DashboardFlow, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var type = this.state.type;
+				var readings = nextProps.readings;
+				var formatter = FORMATTERS[type];
+				var graphData = [];
+				if (formatter instanceof Function) graphData = formatter(readings, 'qOut');
+				this.setState({ graphData: graphData });
+			}
+		}, {
+			key: 'graphClick',
+			value: function graphClick(type) {
+				var readings = this.props.readings;
+				var formatter = FORMATTERS[type];
+				var graphData = [];
+				if (formatter instanceof Function) graphData = formatter(readings, 'qOut');
+				this.setState({ type: type, graphData: graphData });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var rate = this.props.rate;
+				var _this2 = this;
+
+				var _state = this.state;
+				var type = _state.type;
+				var graphData = _state.graphData;
+				var _props = this.props;
+				var rate = _props.rate;
+				var readings = _props.readings;
 
 
 				return _react2.default.createElement(
@@ -45834,7 +46230,13 @@
 							'flow.'
 						)
 					),
-					_react2.default.createElement(_HistoricalGraph2.default, null)
+					_react2.default.createElement(_HistoricalGraph2.default, { data: graphData,
+						onClick: function onClick(type) {
+							return _this2.graphClick(type);
+						},
+						type: type,
+						threshold: 3
+					})
 				);
 			}
 		}]);
@@ -45843,7 +46245,11 @@
 	}(_react.Component);
 
 	DashboardFlow.propTypes = {
-		rate: _react.PropTypes.number.isRequired
+		rate: _react.PropTypes.number.isRequired,
+		readings: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			date: _react.PropTypes.instanceOf(Date).isRequired,
+			qOut: _react.PropTypes.number.isRequired
+		})).isRequired
 	};
 
 	exports.default = DashboardFlow;
@@ -46022,7 +46428,7 @@
 
 
 	// module
-	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #006d60;\n  text-decoration: none;\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n}\n", ""]);
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  text-decoration: none;\n  color: #006d60;\n}\n#dashboard .dashboard-menu a p {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n  opacity: 0.6;\n  margin: 0;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-menu a.active p {\n  opacity: 1;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n  text-transform: lowercase;\n  font-weight: 300;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection.selected span {\n  border-bottom: 2px solid #006d60;\n  font-weight: 500;\n  color: #006d60;\n}\n", ""]);
 
 	// exports
 
@@ -46409,7 +46815,7 @@
 
 
 	// module
-	exports.push([module.id, ".add-eddi-button {\n  background-color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  color: white;\n  width: 160px;\n  margin: 0 auto;\n}\n", ""]);
+	exports.push([module.id, ".add-eddi-button {\n  background-color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  color: white;\n  width: 160px;\n  margin: 0 auto;\n  text-align: center;\n}\n", ""]);
 
 	// exports
 
@@ -46455,7 +46861,176 @@
 
 
 /***/ },
-/* 424 */,
+/* 424 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(173);
+
+	var _eddis = __webpack_require__(287);
+
+	var _menu = __webpack_require__(305);
+
+	var _AddEddiButton = __webpack_require__(419);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
+
+	var _SettingsEddi = __webpack_require__(425);
+
+	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
+
+	var _Settings = __webpack_require__(431);
+
+	var _Settings2 = _interopRequireDefault(_Settings);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddis: state.eddis.list
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			assignEddi: function assignEddi(eddiId) {
+				return dispatch((0, _eddis.assignEddiThunk)(eddiId));
+			},
+			updateStart: function updateStart(eddiId, hour, minutes) {
+				return dispatch((0, _eddis.setEddiStartThunk)(eddiId, hour, minutes));
+			},
+			updateEnd: function updateEnd(eddiId, hour, minutes) {
+				return dispatch((0, _eddis.setEddiEndThunk)(eddiId, hour, minutes));
+			},
+			updateSalinity: function updateSalinity(eddiId, salinity) {
+				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
+			},
+			getAllEddis: function getAllEddis() {
+				return dispatch((0, _eddis.getAllEddiByUserThunk)());
+			},
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			}
+		};
+	}
+
+	var Settings = function (_Component) {
+		_inherits(Settings, _Component);
+
+		function Settings() {
+			_classCallCheck(this, Settings);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Settings).apply(this, arguments));
+		}
+
+		_createClass(Settings, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _props = this.props;
+				var getAllEddis = _props.getAllEddis;
+				var updateMenuName = _props.updateMenuName;
+
+				getAllEddis();
+				updateMenuName('Settings');
+			}
+		}, {
+			key: 'onSalinityChange',
+			value: function onSalinityChange(id, salinity) {
+				var updateSalinity = this.props.updateSalinity;
+
+				updateSalinity(id, salinity);
+			}
+		}, {
+			key: 'onStartChange',
+			value: function onStartChange(id, hour, minutes) {
+				var updateStart = this.props.updateStart;
+
+				updateStart(id, hour, minutes);
+			}
+		}, {
+			key: 'onEndChange',
+			value: function onEndChange(id, hour, minutes) {
+				var updateEnd = this.props.updateEnd;
+
+				updateEnd(id, hour, minutes);
+			}
+		}, {
+			key: '_renderEddis',
+			value: function _renderEddis() {
+				var _props2 = this.props;
+				var eddis = _props2.eddis;
+				var updateSalinity = _props2.updateSalinity;
+				var updateEnd = _props2.updateEnd;
+				var updateStart = _props2.updateStart;
+
+				return eddis.map(function (eddi) {
+					var eddiId = eddi.id;
+					return _react2.default.createElement(_SettingsEddi2.default, { eddi: eddi,
+						onSalinityChange: function onSalinityChange(salinity) {
+							return updateSalinity(eddiId, salinity);
+						},
+						onStartChange: function onStartChange(hour, minutes) {
+							return updateStart(eddiId, hour, minutes);
+						},
+						onEndChange: function onEndChange(hour, minutes) {
+							return updateEnd(eddiId, hour, minutes);
+						}
+					});
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var EddiElements = this._renderEddis();
+				return _react2.default.createElement(
+					'div',
+					{ id: 'settings', className: 'page' },
+					_react2.default.createElement(
+						'div',
+						null,
+						EddiElements
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'footer' },
+						_react2.default.createElement(_AddEddiButton2.default, null)
+					)
+				);
+			}
+		}]);
+
+		return Settings;
+	}(_react.Component);
+
+	var styles = {
+		addButton: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center'
+		}
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
+
+/***/ },
 /* 425 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -46470,6 +47045,10 @@
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
 
 	var _SettingsEddiHeader = __webpack_require__(426);
 
@@ -46496,15 +47075,30 @@
 	var SettingsEddi = function (_Component) {
 		_inherits(SettingsEddi, _Component);
 
-		function SettingsEddi() {
+		function SettingsEddi(props) {
 			_classCallCheck(this, SettingsEddi);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddi).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddi).call(this, props));
+
+			_this.state = {
+				isOpen: false
+			};
+			return _this;
 		}
 
 		_createClass(SettingsEddi, [{
+			key: 'toggleShow',
+			value: function toggleShow() {
+				var isOpen = this.state.isOpen;
+
+				this.setState({ isOpen: !isOpen });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
+				var isOpen = this.state.isOpen;
 				var _props = this.props;
 				var eddi = _props.eddi;
 				var _onSalinityChange = _props.onSalinityChange;
@@ -46518,33 +47112,49 @@
 				var _settings$timing = settings.timing;
 				var timing = _settings$timing === undefined ? {} : _settings$timing;
 				var salinity = settings.salinity;
-
+				var bodyClass = (0, _classnames2.default)(['settings-container', { hide: !isOpen }]);
+				var footerClass = (0, _classnames2.default)(['arrow-container', { hide: !isOpen }]);
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'settings-eddi' },
 					_react2.default.createElement(_SettingsEddiHeader2.default, {
-						name: settings.name
+						name: settings.name,
+						onClick: function onClick() {
+							return _this2.toggleShow();
+						},
+						isOpen: isOpen
 					}),
-					_react2.default.createElement(_SettingsEddiVersion2.default, {
-						artikNumber: version.artik.number,
-						artikDate: new Date(version.artik.updated),
-						eddiNumber: version.eddi.number,
-						eddiDate: new Date(version.eddi.updated)
-					}),
-					_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(salinity) {
-							return _onSalinityChange(salinity);
-						},
-						onEndChange: function onEndChange(hour, minutes) {
-							return _onEndChange(hour, minutes);
-						},
-						onStartChange: function onStartChange(hour, minutes) {
-							return _onStartChange(hour, minutes);
-						},
-						salinityValue: salinity,
-						startValue: timing.start,
-						endValue: timing.end
-					})
+					_react2.default.createElement(
+						'div',
+						{ className: bodyClass },
+						_react2.default.createElement(_SettingsEddiVersion2.default, {
+							artikNumber: version.artik.number,
+							artikDate: new Date(version.artik.updated),
+							eddiNumber: version.eddi.number,
+							eddiDate: new Date(version.eddi.updated)
+						}),
+						_react2.default.createElement(_SettingsEddiForm2.default, { onSalinityChange: function onSalinityChange(salinity) {
+								return _onSalinityChange(salinity);
+							},
+							onEndChange: function onEndChange(hour, minutes) {
+								return _onEndChange(hour, minutes);
+							},
+							onStartChange: function onStartChange(hour, minutes) {
+								return _onStartChange(hour, minutes);
+							},
+							salinityValue: salinity,
+							startValue: timing.start,
+							endValue: timing.end
+						})
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: footerClass },
+						_react2.default.createElement('div', { className: 'sprite arrow up', onClick: function onClick() {
+								return _this2.toggleShow();
+							} })
+					)
 				);
 			}
 		}]);
@@ -46602,6 +47212,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -46622,17 +47236,40 @@
 		}
 
 		_createClass(SettingsEddiHeader, [{
+			key: 'clickHandler',
+			value: function clickHandler(event) {
+				event.preventDefault();
+				var onClick = this.props.onClick;
+
+				if (onClick instanceof Function) onClick();
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var name = this.props.name;
+				var _this2 = this;
+
+				var _props = this.props;
+				var name = _props.name;
+				var isOpen = _props.isOpen;
+				var containerClass = (0, _classnames2.default)(['arrow-container', { hide: isOpen }]);
 				var formattedName = name.toUpperCase();
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'header',
+						style: { backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')" },
+						onClick: function onClick(event) {
+							return _this2.clickHandler(event);
+						}
+					},
 					_react2.default.createElement(
-						'p',
+						'h3',
 						null,
 						formattedName
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: containerClass },
+						_react2.default.createElement('div', { className: 'sprite arrow down' })
 					)
 				);
 			}
@@ -46642,7 +47279,9 @@
 	}(_react.Component);
 
 	SettingsEddiHeader.propTypes = {
-		name: PropTypes.string.isRequired
+		name: PropTypes.string.isRequired,
+		onClick: PropTypes.func,
+		isOpen: PropTypes.bool
 	};
 
 	exports.default = SettingsEddiHeader;
@@ -46699,32 +47338,32 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'settings-version' },
 					_react2.default.createElement(
 						'div',
-						{ style: styles.row },
+						{ className: 'version-type', style: styles.row },
 						_react2.default.createElement(
 							'p',
-							{ style: styles.bold },
+							{ className: 'info' },
 							'EDDI ' + eddiNumber
 						),
 						_react2.default.createElement(
 							'p',
-							null,
+							{ className: 'date' },
 							'updated ' + formattedEddiDate
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: styles.row },
+						{ className: 'version-type', style: styles.row },
 						_react2.default.createElement(
 							'p',
-							{ style: styles.bold },
+							{ className: 'info' },
 							'ARTIK ' + artikNumber
 						),
 						_react2.default.createElement(
 							'p',
-							null,
+							{ className: 'date' },
 							'released ' + formattedArtikDate
 						)
 					)
@@ -46748,9 +47387,6 @@
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center'
-		},
-		bold: {
-			fontWeight: 'bold'
 		}
 	};
 
@@ -46811,12 +47447,12 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'settings-form' },
 					_react2.default.createElement(
 						'div',
-						null,
+						{ className: 'operate-row' },
 						_react2.default.createElement(
-							'h5',
+							'h4',
 							null,
 							'OPERATING FROM'
 						),
@@ -46848,9 +47484,9 @@
 					),
 					_react2.default.createElement(
 						'div',
-						null,
+						{ className: 'salinity-row' },
 						_react2.default.createElement(
-							'h5',
+							'h4',
 							null,
 							'SALINITY OUTPUT'
 						),
@@ -46934,7 +47570,8 @@
 				event.preventDefault();
 				var onSalinityChange = this.props.onSalinityChange;
 				var value = event.target.value;
-				var formattedValue = parseInt(value);
+				var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
+
 				if (onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
 			}
 		}, {
@@ -46946,12 +47583,13 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'salinity-input' },
 					_react2.default.createElement('input', { type: 'number',
 						onChange: function onChange(event) {
 							return _this2.changeHandler(event);
 						},
-						value: value
+						value: value,
+						placeholder: 'Set Your Own'
 					})
 				);
 			}
@@ -46992,6 +47630,10 @@
 	var _moment2 = _interopRequireDefault(_moment);
 
 	var _data = __webpack_require__(306);
+
+	var _DateTimeSelect = __webpack_require__(439);
+
+	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47123,7 +47765,7 @@
 
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'date-time-select' },
 					_react2.default.createElement(
 						'select',
 						{ value: hr,
@@ -47173,8 +47815,46 @@
 	exports.default = TimeSelect;
 
 /***/ },
-/* 431 */,
-/* 432 */,
+/* 431 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(432);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(262)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Settings.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Settings.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 432 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(261)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
 /* 433 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -47399,7 +48079,6 @@
 			value: function render() {
 				var value = this.props.value;
 
-				console.log('this is hte value', value);
 				return value ? this._renderOn() : this._renderOff();
 			}
 		}]);
@@ -47415,345 +48094,7 @@
 	exports.default = EddiStateButton;
 
 /***/ },
-/* 435 */,
-/* 436 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _data = __webpack_require__(306);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var MONTHS = (0, _data.createMonths)();
-	console.log(MONTHS);
-
-	var DateSelect = function (_Component) {
-		_inherits(DateSelect, _Component);
-
-		function DateSelect() {
-			_classCallCheck(this, DateSelect);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DateSelect).apply(this, arguments));
-		}
-
-		_createClass(DateSelect, [{
-			key: 'onDayChange',
-			value: function onDayChange(event) {
-				event.preventDefault();
-				var onChange = this.props.onChange;
-				var day = parseInt(event.target.value);
-
-				if (onChange instanceof Function) onChange({ day: day });
-			}
-		}, {
-			key: 'onMonthChange',
-			value: function onMonthChange(event) {
-				event.preventDefault();
-				var onChange = this.props.onChange;
-				var month = parseInt(event.target.value);
-				if (onChange instanceof Function) onChange({ month: month });
-			}
-		}, {
-			key: 'onYearChange',
-			value: function onYearChange(event) {
-				event.preventDefault();
-				var onChange = this.props.onChange;
-				var year = parseInt(event.target.value);
-
-				if (onChange instanceof Function) onChange({ year: year });
-			}
-		}, {
-			key: '_renderDays',
-			value: function _renderDays() {
-				var _props = this.props;
-				var month = _props.month;
-				var year = _props.year;
-				var days = (0, _data.createDays)(month, year);
-
-				return days.map(function (day) {
-					return _react2.default.createElement(
-						'option',
-						{ value: day, key: day },
-						day
-					);
-				});
-			}
-		}, {
-			key: '_renderMonths',
-			value: function _renderMonths() {
-				var months = MONTHS;
-				return months.map(function (month, i) {
-					return _react2.default.createElement(
-						'option',
-						{ value: i, key: month },
-						month
-					);
-				});
-			}
-		}, {
-			key: '_renderYears',
-			value: function _renderYears() {
-				var startYear = this.props.startYear;
-				var years = (0, _data.createYears)(startYear);
-
-				return years.map(function (year) {
-					return _react2.default.createElement(
-						'option',
-						{ value: year, key: year },
-						year
-					);
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _props2 = this.props;
-				var year = _props2.year;
-				var day = _props2.day;
-				var month = _props2.month;
-				var YearElements = this._renderYears();
-				var MonthElements = this._renderMonths();
-				var DayElements = this._renderDays();
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'select',
-						{ onChange: function onChange(event) {
-								return _this2.onDayChange(event);
-							},
-							value: day
-						},
-						DayElements
-					),
-					_react2.default.createElement(
-						'select',
-						{ onChange: function onChange(event) {
-								return _this2.onMonthChange(event);
-							},
-							value: month
-						},
-						MonthElements
-					),
-					_react2.default.createElement(
-						'select',
-						{ onChange: function onChange(event) {
-								return _this2.onYearChange(event);
-							},
-							value: year
-						},
-						YearElements
-					)
-				);
-			}
-		}]);
-
-		return DateSelect;
-	}(_react.Component);
-
-	DateSelect.propTypes = {
-		onChange: _react.PropTypes.func.isRequired,
-		startYear: _react.PropTypes.number,
-		year: _react.PropTypes.number,
-		day: _react.PropTypes.number,
-		month: _react.PropTypes.number
-	};
-
-	DateSelect.defaultProps = {
-		startYear: 2014
-	};
-
-	exports.default = DateSelect;
-
-/***/ },
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(173);
-
-	var _eddis = __webpack_require__(287);
-
-	var _menu = __webpack_require__(305);
-
-	var _AddEddiButton = __webpack_require__(419);
-
-	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
-
-	var _SettingsEddi = __webpack_require__(425);
-
-	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddis: state.eddis.list
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			assignEddi: function assignEddi(eddiId) {
-				return dispatch((0, _eddis.assignEddiThunk)(eddiId));
-			},
-			updateStart: function updateStart(eddiId, hour, minutes) {
-				return dispatch((0, _eddis.setEddiStartThunk)(eddiId, hour, minutes));
-			},
-			updateEnd: function updateEnd(eddiId, hour, minutes) {
-				return dispatch((0, _eddis.setEddiEndThunk)(eddiId, hour, minutes));
-			},
-			updateSalinity: function updateSalinity(eddiId, salinity) {
-				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
-			},
-			getAllEddis: function getAllEddis() {
-				return dispatch((0, _eddis.getAllEddiByUserThunk)());
-			},
-			updateMenuName: function updateMenuName(name) {
-				return dispatch((0, _menu.menuNameChange)(name));
-			}
-		};
-	}
-
-	var Settings = function (_Component) {
-		_inherits(Settings, _Component);
-
-		function Settings() {
-			_classCallCheck(this, Settings);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Settings).apply(this, arguments));
-		}
-
-		_createClass(Settings, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _props = this.props;
-				var getAllEddis = _props.getAllEddis;
-				var updateMenuName = _props.updateMenuName;
-
-				getAllEddis();
-				updateMenuName('Settings');
-			}
-		}, {
-			key: 'onSalinityChange',
-			value: function onSalinityChange(id, salinity) {
-				var updateSalinity = this.props.updateSalinity;
-
-				updateSalinity(id, salinity);
-			}
-		}, {
-			key: 'onStartChange',
-			value: function onStartChange(id, hour, minutes) {
-				var updateStart = this.props.updateStart;
-
-				updateStart(id, hour, minutes);
-			}
-		}, {
-			key: 'onEndChange',
-			value: function onEndChange(id, hour, minutes) {
-				var updateEnd = this.props.updateEnd;
-
-				updateEnd(id, hour, minutes);
-			}
-		}, {
-			key: '_renderEddis',
-			value: function _renderEddis() {
-				var _props2 = this.props;
-				var eddis = _props2.eddis;
-				var updateSalinity = _props2.updateSalinity;
-				var updateEnd = _props2.updateEnd;
-				var updateStart = _props2.updateStart;
-
-				return eddis.map(function (eddi) {
-					var eddiId = eddi.id;
-					return _react2.default.createElement(_SettingsEddi2.default, { eddi: eddi,
-						onSalinityChange: function onSalinityChange(salinity) {
-							return updateSalinity(eddiId, salinity);
-						},
-						onStartChange: function onStartChange(hour, minutes) {
-							return updateStart(eddiId, hour, minutes);
-						},
-						onEndChange: function onEndChange(hour, minutes) {
-							return updateEnd(eddiId, hour, minutes);
-						}
-					});
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var EddiElements = this._renderEddis();
-				return _react2.default.createElement(
-					'div',
-					{ id: 'settings', className: 'page' },
-					_react2.default.createElement(
-						'div',
-						null,
-						EddiElements
-					),
-					_react2.default.createElement(_AddEddiButton2.default, null)
-				);
-			}
-		}]);
-
-		return Settings;
-	}(_react.Component);
-
-	var styles = {
-		addButton: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'center'
-		}
-	};
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
-
-/***/ },
-/* 443 */
+/* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47779,6 +48120,10 @@
 	var _DateSelect = __webpack_require__(436);
 
 	var _DateSelect2 = _interopRequireDefault(_DateSelect);
+
+	var _Report = __webpack_require__(437);
+
+	var _Report2 = _interopRequireDefault(_Report);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48033,6 +48378,313 @@
 	}(_react.Component);
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
+
+/***/ },
+/* 436 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _data = __webpack_require__(306);
+
+	var _DateTimeSelect = __webpack_require__(439);
+
+	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MONTHS = (0, _data.createMonths)();
+
+	var DateSelect = function (_Component) {
+		_inherits(DateSelect, _Component);
+
+		function DateSelect() {
+			_classCallCheck(this, DateSelect);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(DateSelect).apply(this, arguments));
+		}
+
+		_createClass(DateSelect, [{
+			key: 'onDayChange',
+			value: function onDayChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var day = parseInt(event.target.value);
+
+				if (onChange instanceof Function) onChange({ day: day });
+			}
+		}, {
+			key: 'onMonthChange',
+			value: function onMonthChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var month = parseInt(event.target.value);
+				if (onChange instanceof Function) onChange({ month: month });
+			}
+		}, {
+			key: 'onYearChange',
+			value: function onYearChange(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var year = parseInt(event.target.value);
+
+				if (onChange instanceof Function) onChange({ year: year });
+			}
+		}, {
+			key: '_renderDays',
+			value: function _renderDays() {
+				var _props = this.props;
+				var month = _props.month;
+				var year = _props.year;
+				var days = (0, _data.createDays)(month, year);
+
+				return days.map(function (day) {
+					return _react2.default.createElement(
+						'option',
+						{ value: day, key: day },
+						day
+					);
+				});
+			}
+		}, {
+			key: '_renderMonths',
+			value: function _renderMonths() {
+				var months = MONTHS;
+				return months.map(function (month, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: i, key: month },
+						month
+					);
+				});
+			}
+		}, {
+			key: '_renderYears',
+			value: function _renderYears() {
+				var startYear = this.props.startYear;
+				var years = (0, _data.createYears)(startYear);
+
+				return years.map(function (year) {
+					return _react2.default.createElement(
+						'option',
+						{ value: year, key: year },
+						year
+					);
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _props2 = this.props;
+				var year = _props2.year;
+				var day = _props2.day;
+				var month = _props2.month;
+				var YearElements = this._renderYears();
+				var MonthElements = this._renderMonths();
+				var DayElements = this._renderDays();
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'date-time-select' },
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onDayChange(event);
+							},
+							value: day
+						},
+						DayElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onMonthChange(event);
+							},
+							value: month
+						},
+						MonthElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ onChange: function onChange(event) {
+								return _this2.onYearChange(event);
+							},
+							value: year
+						},
+						YearElements
+					)
+				);
+			}
+		}]);
+
+		return DateSelect;
+	}(_react.Component);
+
+	DateSelect.propTypes = {
+		onChange: _react.PropTypes.func.isRequired,
+		startYear: _react.PropTypes.number,
+		year: _react.PropTypes.number,
+		day: _react.PropTypes.number,
+		month: _react.PropTypes.number
+	};
+
+	DateSelect.defaultProps = {
+		startYear: 2014
+	};
+
+	exports.default = DateSelect;
+
+/***/ },
+/* 437 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(438);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(262)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Report.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Report.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 438 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(261)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "", ""]);
+
+	// exports
+
+
+/***/ },
+/* 439 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(440);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(262)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 440 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(261)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  margin-right: -2px;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 441 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
 
 /***/ }
 /******/ ]);

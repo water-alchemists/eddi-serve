@@ -1,0 +1,115 @@
+@import '../../less/vars';
+
+#settings {
+	height : 100vh;
+	background-color: @light_color;
+	.settings-eddi {
+		background-color : white;
+		.arrow-container {
+			display:flex;
+			flex-direction : row;
+			-webkit-flex-direction : row;
+			justify-content : center;
+			-webkit-justify-content : center;
+			align-items : center;
+			-webkit-align-items : center;
+
+
+			//sliding
+			overflow-y : hidden;
+			transition-property: all;
+			transition-duration: .5s;
+			transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+		}
+		.header {
+			padding-top: 1rem;
+			padding-bottom : 1rem;
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			h3 {
+				font-weight: normal;
+				text-align : center;
+				margin: 0px;
+			}
+		}
+		
+		.settings-container {
+			padding-top : 10px;
+			padding-left : 20px;
+			padding-right : 20px;
+			padding-bottom : 10px;
+
+			//for sliding
+			overflow-y : hidden;
+			transition-property: all;
+			transition-duration: .5s;
+			transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+			&.hide {
+				max-height: 0;
+				padding-top: 0px;
+				padding-bottom: 0px;
+			}
+
+			.settings-version {
+				
+				
+				.version-type {
+					display : flex;
+					flex-direction : row;
+					justify-content : space-between;
+					align-items: center;
+					
+					.info {
+						color: black;
+						font-weight : 700;
+						font-style: italic;
+					}
+
+					.date {
+						color: @dark_color;
+						font-weight : 400;
+						font-style: italic;
+					}
+				}
+			}
+
+			.settings-form { 
+				h4 {
+					color: black;
+					font-weight: 200;
+					margin : 0;
+				}
+				.operate-row {
+					p {
+						color: @dark_color;
+					}
+				}
+				.salinity-row {
+					.salinity-input {
+						input {
+							border-color : @trim_color;
+							border-width : 2px;
+							padding : 5px;
+							font-size : @input_font_size;
+							text-transform : uppercase;
+							&:focus {
+								outline: none;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+
+	}
+	.footer {
+			position : absolute;
+			width : 100%;
+			bottom : 0;
+			left: 0;
+			padding-top : 5px;
+			padding-bottom : 5px;
+		}
+}

@@ -11,7 +11,6 @@ import { appStartThunk } from '../actions/app';
 import style from '../less/base.less';
 
 
-
 function mapStateToProps(state){
 	return {
 		user : state.user,
@@ -57,9 +56,11 @@ class App extends Component {
 	}
 
 	render(){
-		const { user, modal, menu, eddis, logout,  dispatch } = this.props,
+		const { user, modal, menu, eddis, logout,  dispatch, location } = this.props,
 			{ isOpen } = this.state,
-			children = this._cloneChildrenWithToggle();
+			children = this._cloneChildrenWithToggle(),
+			{ pathname } = location;
+
 		return (
 			<div>
 				<Menu isOpen={isOpen}
@@ -67,6 +68,7 @@ class App extends Component {
 					user={user}
 					eddis={eddis}
 					menu={menu}
+					current={pathname}
 				/>
 				{children}
 				<ModalWrapper dispatch={dispatch}

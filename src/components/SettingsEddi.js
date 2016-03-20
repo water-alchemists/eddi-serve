@@ -1,5 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
+import classNames from 'classnames';
+
 import SettingsEddiHeader from './SettingsEddiHeader';
 import SettingsEddiVersion from './SettingsEddiVersion';
 import SettingsEddiForm from './SettingsEddiForm';
@@ -9,30 +11,51 @@ const {
 } = React;
 
 class SettingsEddi extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			isOpen : false
+		};
+	}
+
+	toggleShow(){
+		const { isOpen } = this.state;
+		this.setState({ isOpen : !isOpen });
+	}
 
 	render(){
-		const { eddi, onSalinityChange, onEndChange, onStartChange } = this.props,
+		const { isOpen } = this.state,
+			{ eddi, onSalinityChange, onEndChange, onStartChange } = this.props,
 			{ version={}, settings={} } = eddi,
-			{ name, timing={}, salinity } = settings;
+			{ name, timing={}, salinity } = settings,
+			bodyClass= classNames(['settings-container', { hide : !isOpen }]),
+			footerClass=classNames(['arrow-container', { hide : !isOpen }]);
 
 		return (
-			<div>
+			<div className='settings-eddi'>
 				<SettingsEddiHeader 
 					name={settings.name}
+					onClick={() => this.toggleShow()}
+					isOpen={isOpen}
 				/>
-				<SettingsEddiVersion 
-					artikNumber={version.artik.number}
-					artikDate={new Date(version.artik.updated)}
-					eddiNumber={version.eddi.number}
-					eddiDate={new Date(version.eddi.updated)}
-				/>
-				<SettingsEddiForm onSalinityChange={salinity => onSalinityChange(salinity)}
-					onEndChange={(hour, minutes) => onEndChange(hour, minutes)}
-					onStartChange={(hour, minutes) => onStartChange(hour, minutes)}
-					salinityValue={salinity}
-					startValue={timing.start}
-					endValue={timing.end}
-				/>
+				<div className={bodyClass}>
+					<SettingsEddiVersion 
+						artikNumber={version.artik.number}
+						artikDate={new Date(version.artik.updated)}
+						eddiNumber={version.eddi.number}
+						eddiDate={new Date(version.eddi.updated)}
+					/>
+					<SettingsEddiForm onSalinityChange={salinity => onSalinityChange(salinity)}
+						onEndChange={(hour, minutes) => onEndChange(hour, minutes)}
+						onStartChange={(hour, minutes) => onStartChange(hour, minutes)}
+						salinityValue={salinity}
+						startValue={timing.start}
+						endValue={timing.end}
+					/>
+				</div>
+				<div className={footerClass}>
+					<div className='sprite arrow up' onClick={() => this.toggleShow()}></div>
+				</div>
 			</div>
 		);
 	}

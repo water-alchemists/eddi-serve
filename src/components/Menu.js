@@ -1,9 +1,14 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import classNames from 'classnames';
 import { PATHS } from '../constants';
 
 import style from '../less/Menu.less';
+
+function isPath(path, compare){
+	return compare.indexOf(path) > -1;
+}
 
 class Menu extends Component {
 
@@ -21,13 +26,38 @@ class Menu extends Component {
 	}
 
 	_renderLoggedIn(){
-		const { menu, eddis } = this.props,
+		const { menu, eddis, current } = this.props,
 			{ name='' } = menu,
 			{ list, selected={} }  = eddis,
 			query = {
 				id : selected.id
-			};
-			console.log('this is the menu', menu, name);
+			},
+			homeSpriteClass = classNames([
+				'sprite', 
+				'home', 
+				{ green : current === PATHS.HOME || isPath(PATHS.LIST, current) }
+			]),
+			settingsSpriteClass = classNames([
+				'sprite',
+				'settings', 
+				{ green : isPath(PATHS.SETTINGS, current) }
+			]),
+			reportSpriteClass = classNames([
+				'sprite',
+				'report',
+				{ green : isPath(PATHS.REPORT, current) }
+			]),
+			troubleshootSpriteClass = classNames([
+				'sprite',
+				'troubleshoot',
+				{ green : isPath(PATHS.TROUBLESHOOT, current) }
+			]),
+			dashboardSpriteClass = classNames([
+				'sprite',
+				'dashboard',
+				{ green : isPath(PATHS.DASHBOARD, current) }
+			]);
+
 		let menuOptions;
 
 		if( list instanceof Array && list.length ){
@@ -36,25 +66,29 @@ class Menu extends Component {
 					activeClassName='active'
 					key={'dashboard'}
 				>
-					Dashboard
+					<div className={dashboardSpriteClass}></div>
+					<p>Dashboard</p>
 				</Link>),
 				(<Link to={ PATHS.SETTINGS } 
 					activeClassName='active'
 					key={'settings'}
 				>
-					Settings
+					<div className={settingsSpriteClass}></div>
+					<p>Settings</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.REPORT, query }}
 					activeClassName='active'
 					key={'report'}
 				>
-					Report
+					<div className={reportSpriteClass}></div>
+					<p>Report</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}
 					activeClassName='active'
 					key={'troubleshoot'}
 				>
-					Troubleshoot
+					<div className={troubleshootSpriteClass}></div>
+					<p>Troubleshoot</p>
 				</Link>),
 		  	];
 		}
@@ -68,10 +102,14 @@ class Menu extends Component {
 						<Link to={PATHS.LIST}
 							activeClassName='active'
 						>
-							Home
+							<div className={homeSpriteClass}></div>
+							<p>Home</p>
 						</Link>
 						{ menuOptions }
-						<a onClick={() => this.logoutHandler()}>Logout</a>
+						<a onClick={() => this.logoutHandler()}>
+							<div className='sprite empty'></div>
+							<p>Logout</p>
+						</a>
 					</div>
 				</div>
 				<h1>{ name }</h1>
@@ -114,7 +152,8 @@ Menu.propTypes = {
 	}), 
 	menu : PropTypes.shape({
 		name : PropTypes.string
-	})
+	}),
+	current : PropTypes.string
 };
 
 export default Menu;
