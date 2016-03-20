@@ -3,6 +3,14 @@ import moment from 'moment';
 import { SALINITY_THRESHOLD } from './constants';
 moment.locale('en');
 
+function getDaysBetween(beginning, end){
+	const days = [];
+	for(let x = beginning; x < end; x++){
+		days.push(x);
+	}
+	return days;
+}
+
 function createHours(num){
 	const hourOptions = [];
 	for(let i = 0; i < num; i++){
@@ -127,3 +135,65 @@ export function formatReadingsToCsv(readings){
 		})
 		.reduce((body, row) => `${body}\n${row}`, first);
 }
+
+export function formatToTodayHistory(readings, yProp){
+	const current = new Date(),
+		todayData = readings.filter(reading => moment(reading.date).isSame(current, 'day')), 
+		hours = createHours();
+
+	function getAverageOfHour(data, hour){
+		const hourData = data.filter(entry => entry.date.getHours() === hour);
+		let average;
+		if(hourData.length) average = hourData.reduce((sum, entry) => sum + entry[yProp], 0) / hourData.length;
+		return average;
+	}
+
+	return hours.map(hour => {
+		return {
+			x : hour,
+			y : getAverageOfHour(todayData, hour)
+		};
+	});
+}
+
+export function formatToWeekHistory(readings, yProp){
+	const current = new Date(),
+		beginning = new Date(current - 7 * 1000 * 60 * 60 * 24),
+		weekData = readings.filter(reading => moment(reading.date).isBetween(beginning, current, 'day')),
+		daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
+
+	function getAverageOfDay(data, day){
+		const dayData = data.filter(entry => entry.date.getDate() === day);
+		let average;
+		if(dayData) average = dayData.reduce((sum, entry) => sum + entry[yProp], 0) / dayData;
+		return average;
+	}
+
+	return daysBetween.map(day => {
+		return {
+			x : day, 
+			y : getAverageOfDay(weekData, day)
+		};
+	});
+}
+
+export function formatToMonthHistory(readings, yProp){
+	const current = new Date(),
+		monthData = readings.filter(reading => moment(reading.date).isSame(current, 'month')),
+		days = createDays(current.getMonth(), current.getFullYear());
+
+	function getAverageOfDay(data, day){
+		const dayData = data.filter(entry => entry.date.getDate() === day);
+		let average;
+		if(dayData) average = dayData.reduce((sum, entry) => sum + entry[yProp], 0) / dayData;
+		return average;
+	}
+
+	return days.map(day => {
+		return {
+			x : day, 
+			y : getAverageOfDay(monthData, day)
+		};
+	});
+}
+

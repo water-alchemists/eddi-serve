@@ -58,7 +58,6 @@ class Menu extends Component {
 				{ green : isPath(PATHS.DASHBOARD, current) }
 			]);
 
-		console.log('this is the current', current);
 		let menuOptions;
 
 		if( list instanceof Array && list.length ){

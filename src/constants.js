@@ -55,3 +55,10 @@ export const BACKGROUND_COLOR = "rgba(13,14,31,1)";
 //Thresholds
 export const FLOW_THRESHOLD = 5;
 export const SALINITY_THRESHOLD = 1000;
+
+//Graphs
+export const HISTORICAL = {
+	TODAY: 'today',
+	MONTH : 'month',
+	WEEK : 'week'
+}

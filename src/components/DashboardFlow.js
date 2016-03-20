@@ -4,6 +4,18 @@ import React, { Component, PropTypes } from 'react';
 import FlowGraph from './graphs/FlowGraph';
 import HistoricalGraph from './graphs/HistoricalGraph';
 
+import { HISTORICAL } from '../constants';
+
+import { formatToTodayHistory, 
+	formatToWeekHistory, 
+	formatToMonthHistory } from '../data';
+
+const FORMATTERS = {
+	[HISTORICAL.TODAY] : formatToTodayHistory,
+	[HISTORICAL.WEEK] : formatToWeekHistory,
+	[HISTORICAL.MONTH] : formatToMonthHistory
+};
+
 function generateStatusText(rate){
 	if(rate <= 0.3) return 'slow';
 	else if(rate <= 3) return 'medium';
@@ -11,8 +23,19 @@ function generateStatusText(rate){
 }
 
 class DashboardFlow extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			type : HISTORICAL.TODAY,
+			graphData : []
+		};
+	}
+	graphClick(type){
+		this.setState({ type });
+	}
 	render(){
-		const { rate } = this.props;
+		const { type } = this.state,
+			{ rate, readings } = this.props;
 
 		return (
 			<div className='dashboard-view flow'>
@@ -31,14 +54,23 @@ class DashboardFlow extends Component {
 						flow.
 					</p>
 				</div>
-				<HistoricalGraph />
+				<HistoricalGraph data={readings}
+					onClick={type => this.graphClick(type)}
+					type={type}
+				/>
 			</div>
 		);
 	}
 }
 
 DashboardFlow.propTypes = {
-	rate : PropTypes.number.isRequired
+	rate : PropTypes.number.isRequired,
+	readings : PropTypes.arrayOf(
+		PropTypes.shape({
+			date : PropTypes.instanceOf(Date).isRequired,
+			qOut : PropTypes.number.isRequired
+		})
+	).isRequired
 };
 
 export default DashboardFlow;

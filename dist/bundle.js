@@ -26688,6 +26688,13 @@
 	var FLOW_THRESHOLD = exports.FLOW_THRESHOLD = 5;
 	var SALINITY_THRESHOLD = exports.SALINITY_THRESHOLD = 1000;
 
+	//Graphs
+	var HISTORICAL = exports.HISTORICAL = {
+		TODAY: 'today',
+		MONTH: 'month',
+		WEEK: 'week'
+	};
+
 /***/ },
 /* 249 */
 /***/ function(module, exports, __webpack_require__) {
@@ -27271,7 +27278,6 @@
 				var troubleshootSpriteClass = (0, _classnames2.default)(['sprite', 'troubleshoot', { green: isPath(_constants.PATHS.TROUBLESHOOT, current) }]);
 				var dashboardSpriteClass = (0, _classnames2.default)(['sprite', 'dashboard', { green: isPath(_constants.PATHS.DASHBOARD, current) }]);
 
-				console.log('this is the current', current);
 				var menuOptions = undefined;
 
 				if (list instanceof Array && list.length) {
@@ -27458,7 +27464,7 @@
 
 
 	// module
-	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 250px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 250px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
@@ -31985,7 +31991,6 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	function getGoodBad(current, threshold) {
-		console.log('this is the threshold', threshold, current);
 		if (!threshold) threshold = _constants.SALINITY_THRESHOLD; //default threshold for salinity
 		var ppmIn = current.ppmIn;
 		var ppmOut = current.ppmOut;
@@ -32049,7 +32054,6 @@
 						//format the readings into an array for data handling
 						var readings = (0, _data.mapDateToReadings)(eddi.readings),
 						    current = readings[readings.length - 1];
-						console.log('these are the readings', readings, current);
 						this.setState({ readings: readings, current: current });
 					}
 				}
@@ -32079,6 +32083,7 @@
 		}, {
 			key: '_renderSalinity',
 			value: function _renderSalinity(current, direction) {
+				var readings = this.state.readings;
 				var _props$eddi2 = this.props.eddi;
 				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
 				var threshold = eddi.settings.salinity;
@@ -32086,13 +32091,18 @@
 				return _react2.default.createElement(_DashboardSalinity2.default, { key: direction,
 					threshold: threshold,
 					current: current,
-					direction: direction
+					direction: direction,
+					readings: readings
 				});
 			}
 		}, {
 			key: '_renderFlow',
 			value: function _renderFlow(rate) {
-				return _react2.default.createElement(_DashboardFlow2.default, { rate: rate });
+				var readings = this.state.readings;
+
+				return _react2.default.createElement(_DashboardFlow2.default, { rate: rate,
+					readings: readings
+				});
 			}
 		}, {
 			key: '_renderViewBasedQuery',
@@ -32201,6 +32211,9 @@
 	exports.convertStringToMinutes = convertStringToMinutes;
 	exports.mapDateToReadings = mapDateToReadings;
 	exports.formatReadingsToCsv = formatReadingsToCsv;
+	exports.formatToTodayHistory = formatToTodayHistory;
+	exports.formatToWeekHistory = formatToWeekHistory;
+	exports.formatToMonthHistory = formatToMonthHistory;
 
 	var _moment = __webpack_require__(307);
 
@@ -32211,6 +32224,14 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_moment2.default.locale('en');
+
+	function getDaysBetween(beginning, end) {
+		var days = [];
+		for (var x = beginning; x < end; x++) {
+			days.push(x);
+		}
+		return days;
+	}
 
 	function createHours(num) {
 		var hourOptions = [];
@@ -32329,6 +32350,85 @@
 		}).reduce(function (body, row) {
 			return body + '\n' + row;
 		}, first);
+	}
+
+	function formatToTodayHistory(readings, yProp) {
+		var current = new Date(),
+		    todayData = readings.filter(function (reading) {
+			return (0, _moment2.default)(reading.date).isSame(current, 'day');
+		}),
+		    hours = createHours();
+
+		function getAverageOfHour(data, hour) {
+			var hourData = data.filter(function (entry) {
+				return entry.date.getHours() === hour;
+			});
+			var average = undefined;
+			if (hourData.length) average = hourData.reduce(function (sum, entry) {
+				return sum + entry[yProp];
+			}, 0) / hourData.length;
+			return average;
+		}
+
+		return hours.map(function (hour) {
+			return {
+				x: hour,
+				y: getAverageOfHour(todayData, hour)
+			};
+		});
+	}
+
+	function formatToWeekHistory(readings, yProp) {
+		var current = new Date(),
+		    beginning = new Date(current - 7 * 1000 * 60 * 60 * 24),
+		    weekData = readings.filter(function (reading) {
+			return (0, _moment2.default)(reading.date).isBetween(beginning, current, 'day');
+		}),
+		    daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
+
+		function getAverageOfDay(data, day) {
+			var dayData = data.filter(function (entry) {
+				return entry.date.getDate() === day;
+			});
+			var average = undefined;
+			if (dayData) average = dayData.reduce(function (sum, entry) {
+				return sum + entry[yProp];
+			}, 0) / dayData;
+			return average;
+		}
+
+		return daysBetween.map(function (day) {
+			return {
+				x: day,
+				y: getAverageOfDay(weekData, day)
+			};
+		});
+	}
+
+	function formatToMonthHistory(readings, yProp) {
+		var current = new Date(),
+		    monthData = readings.filter(function (reading) {
+			return (0, _moment2.default)(reading.date).isSame(current, 'month');
+		}),
+		    days = createDays(current.getMonth(), current.getFullYear());
+
+		function getAverageOfDay(data, day) {
+			var dayData = data.filter(function (entry) {
+				return entry.date.getDate() === day;
+			});
+			var average = undefined;
+			if (dayData) average = dayData.reduce(function (sum, entry) {
+				return sum + entry[yProp];
+			}, 0) / dayData;
+			return average;
+		}
+
+		return days.map(function (day) {
+			return {
+				x: day,
+				y: getAverageOfDay(monthData, day)
+			};
+		});
 	}
 
 /***/ },
@@ -45498,7 +45598,6 @@
 				var flowFont = (0, _classnames2.default)({ 'red-font': !flow });
 				var powerClass = (0, _classnames2.default)(['sprite', 'power', { faded: view !== _constants.QUERY.POWER }, { bad: !power }]);
 				var powerFont = (0, _classnames2.default)({ 'red-font': !power });
-				console.log('this is the view', view);
 
 				return _react2.default.createElement(
 					'div',
@@ -45509,7 +45608,7 @@
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: salinityInClass }),
 						_react2.default.createElement(
-							'div',
+							'p',
 							{ className: salinityInFont },
 							'in'
 						)
@@ -45521,7 +45620,7 @@
 							className: defaultViewClass },
 						_react2.default.createElement('div', { className: salinityOutClass }),
 						_react2.default.createElement(
-							'div',
+							'p',
 							{ className: salinityOutFont },
 							'out'
 						)
@@ -45532,7 +45631,7 @@
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: flowClass }),
 						_react2.default.createElement(
-							'div',
+							'p',
 							{ className: flowFont },
 							'flow'
 						)
@@ -45543,7 +45642,7 @@
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: powerClass }),
 						_react2.default.createElement(
-							'div',
+							'p',
 							{ className: powerFont },
 							'power'
 						)
@@ -45579,6 +45678,8 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _FORMATTERS;
+
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -45593,6 +45694,8 @@
 
 	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
 
+	var _data = __webpack_require__(306);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45600,6 +45703,10 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var FORMATTERS = (_FORMATTERS = {}, _defineProperty(_FORMATTERS, _constants.HISTORICAL.TODAY, _data.formatToTodayHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.WEEK, _data.formatToWeekHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.MONTH, _data.formatToMonthHistory), _FORMATTERS);
 
 	function generateBadText() {
 		return 'which is not well. Please check your settings for your eddi.';
@@ -45612,19 +45719,64 @@
 	var DashboardSalinity = function (_Component) {
 		_inherits(DashboardSalinity, _Component);
 
-		function DashboardSalinity() {
+		function DashboardSalinity(props) {
 			_classCallCheck(this, DashboardSalinity);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinity).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardSalinity).call(this, props));
+
+			var type = _constants.HISTORICAL.TODAY;
+			var _this$props = _this.props;
+			var readings = _this$props.readings;
+			var direction = _this$props.direction;
+			var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+			var formatter = FORMATTERS[type];
+			var graphData = undefined;
+			if (formatter instanceof Function) graphData = formatter(readings, prop);
+			console.log('constructor', readings, 'formater', formatter, 'graph', graphData, prop);
+			_this.state = {
+				type: type,
+				graphData: graphData
+			};
+			return _this;
 		}
 
 		_createClass(DashboardSalinity, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var type = this.state.type;
+				var readings = nextProps.readings;
+				var direction = nextProps.direction;
+				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+				var formatter = FORMATTERS[type];
+				var graphData = undefined;
+				if (formatter instanceof Function) graphData = formatter(readings, prop);
+				this.setState({ graphData: graphData });
+			}
+		}, {
+			key: 'graphClick',
+			value: function graphClick(type) {
+				var _props = this.props;
+				var readings = _props.readings;
+				var direction = _props.direction;
+				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+				var formatter = FORMATTERS[type];
+				var graphData = undefined;
+				if (formatter instanceof Function) graphData = formatter(readings, prop);
+				this.setState({ type: type, graphData: graphData });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var _props = this.props;
-				var threshold = _props.threshold;
-				var current = _props.current;
-				var direction = _props.direction;
+				var _this2 = this;
+
+				var _state = this.state;
+				var type = _state.type;
+				var graphData = _state.graphData;
+				var _props2 = this.props;
+				var threshold = _props2.threshold;
+				var current = _props2.current;
+				var direction = _props2.direction;
+				var readings = _props2.readings;
 				var status = current > threshold ? generateBadText() : generateGoodText();
 				return _react2.default.createElement(
 					'div',
@@ -45671,7 +45823,12 @@
 							'' + status
 						)
 					),
-					_react2.default.createElement(_HistoricalGraph2.default, null)
+					_react2.default.createElement(_HistoricalGraph2.default, { data: graphData,
+						onClick: function onClick(type) {
+							return _this2.graphClick(type);
+						},
+						type: type
+					})
 				);
 			}
 		}]);
@@ -45682,7 +45839,12 @@
 	DashboardSalinity.propTypes = {
 		threshold: _react.PropTypes.number.isRequired,
 		current: _react.PropTypes.number.isRequired,
-		direction: _react.PropTypes.string.isRequired
+		direction: _react.PropTypes.string.isRequired,
+		readings: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			date: _react.PropTypes.instanceOf(Date),
+			ppmIn: _react.PropTypes.number,
+			ppmOut: _react.PropTypes.number
+		})).isRequired
 	};
 
 	DashboardSalinity.defaultProps = {
@@ -45808,6 +45970,12 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _classnames = __webpack_require__(441);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _constants = __webpack_require__(248);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45815,6 +45983,10 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function isSelected(type, compare) {
+	  return type === compare;
+	}
 
 	var HistoricalGraph = function (_Component) {
 	  _inherits(HistoricalGraph, _Component);
@@ -45826,8 +45998,27 @@
 	  }
 
 	  _createClass(HistoricalGraph, [{
+	    key: 'clickHandler',
+	    value: function clickHandler(event, type) {
+	      event.preventDefault();
+	      var onClick = this.props.onClick;
+
+	      if (onClick instanceof Function) return onClick(type);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
+	      var _props = this.props;
+	      var type = _props.type;
+	      var data = _props.data;
+	      var monthClass = (0, _classnames2.default)(['historical-selection', { selected: isSelected(_constants.HISTORICAL.MONTH, type) }]);
+	      var todayClass = (0, _classnames2.default)(['historical-selection', { selected: isSelected(_constants.HISTORICAL.TODAY, type) }]);
+	      var weekClass = (0, _classnames2.default)(['historical-selection', { selected: isSelected(_constants.HISTORICAL.WEEK, type) }]);
+
+	      console.log('this is the data', data);
+
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'historical-graph' },
@@ -45836,18 +46027,42 @@
 	          { className: 'historical-selector' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'historical-selection' },
-	            'This Month'
+	            { className: monthClass,
+	              onClick: function onClick(event) {
+	                return _this2.clickHandler(event, _constants.HISTORICAL.MONTH);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'This Month'
+	            )
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'historical-selection' },
-	            'This Week'
+	            { className: weekClass,
+	              onClick: function onClick(event) {
+	                return _this2.clickHandler(event, _constants.HISTORICAL.WEEK);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'This Week'
+	            )
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'historical-selection' },
-	            'Today'
+	            { className: todayClass,
+	              onClick: function onClick(event) {
+	                return _this2.clickHandler(event, _constants.HISTORICAL.TODAY);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Today'
+	            )
 	          )
 	        ),
 	        _react2.default.createElement('canvas', { ref: 'canvas', className: 'historical-graph-canvas' })
@@ -45857,6 +46072,15 @@
 
 	  return HistoricalGraph;
 	}(_react.Component);
+
+	HistoricalGraph.propTypes = {
+	  data: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+	    x: _react.PropTypes.instanceOf(Date).isRequired,
+	    y: _react.PropTypes.number.isRequired
+	  })).isRequired,
+	  onClick: _react.PropTypes.func,
+	  type: _react.PropTypes.string
+	};
 
 	exports.default = HistoricalGraph;
 
@@ -45872,6 +46096,8 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _FORMATTERS;
+
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -45884,6 +46110,10 @@
 
 	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
 
+	var _constants = __webpack_require__(248);
+
+	var _data = __webpack_require__(306);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45892,6 +46122,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var FORMATTERS = (_FORMATTERS = {}, _defineProperty(_FORMATTERS, _constants.HISTORICAL.TODAY, _data.formatToTodayHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.WEEK, _data.formatToWeekHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.MONTH, _data.formatToMonthHistory), _FORMATTERS);
+
 	function generateStatusText(rate) {
 		if (rate <= 0.3) return 'slow';else if (rate <= 3) return 'medium';else return 'fast';
 	}
@@ -45899,16 +46133,32 @@
 	var DashboardFlow = function (_Component) {
 		_inherits(DashboardFlow, _Component);
 
-		function DashboardFlow() {
+		function DashboardFlow(props) {
 			_classCallCheck(this, DashboardFlow);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DashboardFlow).call(this, props));
+
+			_this.state = {
+				type: _constants.HISTORICAL.TODAY,
+				graphData: []
+			};
+			return _this;
 		}
 
 		_createClass(DashboardFlow, [{
+			key: 'graphClick',
+			value: function graphClick(type) {
+				this.setState({ type: type });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var rate = this.props.rate;
+				var _this2 = this;
+
+				var type = this.state.type;
+				var _props = this.props;
+				var rate = _props.rate;
+				var readings = _props.readings;
 
 
 				return _react2.default.createElement(
@@ -45955,7 +46205,12 @@
 							'flow.'
 						)
 					),
-					_react2.default.createElement(_HistoricalGraph2.default, null)
+					_react2.default.createElement(_HistoricalGraph2.default, { data: readings,
+						onClick: function onClick(type) {
+							return _this2.graphClick(type);
+						},
+						type: type
+					})
 				);
 			}
 		}]);
@@ -45964,7 +46219,11 @@
 	}(_react.Component);
 
 	DashboardFlow.propTypes = {
-		rate: _react.PropTypes.number.isRequired
+		rate: _react.PropTypes.number.isRequired,
+		readings: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			date: _react.PropTypes.instanceOf(Date).isRequired,
+			qOut: _react.PropTypes.number.isRequired
+		})).isRequired
 	};
 
 	exports.default = DashboardFlow;
@@ -46143,7 +46402,7 @@
 
 
 	// module
-	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #006d60;\n  text-decoration: none;\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n}\n", ""]);
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  text-decoration: none;\n  color: #006d60;\n}\n#dashboard .dashboard-menu a p {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n  opacity: 0.6;\n  margin: 0;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-menu a.active p {\n  opacity: 1;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n  text-transform: lowercase;\n  font-weight: 300;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection.selected span {\n  border-bottom: 2px solid #006d60;\n  font-weight: 500;\n  color: #006d60;\n}\n", ""]);
 
 	// exports
 
@@ -47564,7 +47823,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
 
 	// exports
 
@@ -47794,7 +48053,6 @@
 			value: function render() {
 				var value = this.props.value;
 
-				console.log('this is hte value', value);
 				return value ? this._renderOn() : this._renderOff();
 			}
 		}]);
@@ -48343,7 +48601,7 @@
 
 
 	// module
-	exports.push([module.id, ".date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  padding: 5px;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
+	exports.push([module.id, ".date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  margin-right: -2px;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
 
 	// exports
 

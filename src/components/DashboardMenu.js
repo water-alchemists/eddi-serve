@@ -39,32 +39,30 @@ class DashboardMenu extends Component {
 				{ faded : view !== QUERY.POWER },
 				{ bad : !power }
 			]),
-			powerFont = classNames({ 'red-font' : !power });
-		console.log('this is the view', view);
-		
+			powerFont = classNames({ 'red-font' : !power });		
 
  		return (
 			<div className='dashboard-menu'>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_IN }} }
 							activeClassName={ACTIVE_CLASS}>
 					<div className={salinityInClass} />
-					<div className={salinityInFont}>in</div>
+					<p className={salinityInFont}>in</p>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.SALINITY_OUT }} }
 							activeClassName={ACTIVE_CLASS}
 					className={defaultViewClass}>
 					<div className={salinityOutClass} />
-					<div className={salinityOutFont}>out</div>
+					<p className={salinityOutFont}>out</p>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.FLOW }} }
 							activeClassName={ACTIVE_CLASS}>
 					<div className={flowClass} />
-					<div className={flowFont}>flow</div>
+					<p className={flowFont}>flow</p>
 				</Link>
 				<Link to={ {pathname : PATHS.DASHBOARD, query : { id, view : QUERY.POWER }} }
 							activeClassName={ACTIVE_CLASS}>
 					<div className={powerClass} />							
-					<div className={powerFont}>power</div>
+					<p className={powerFont}>power</p>
 				</Link>
 			</div>
 		);
