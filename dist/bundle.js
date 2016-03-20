@@ -31935,7 +31935,7 @@
 
 
 	// module
-	exports.push([module.id, "#home {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px;\n  text-align: center;\n}\n#home .content .logo {\n  background-image: url('https://kingsexperience.files.wordpress.com/2015/06/ks-new-logo-bw-blank-bg-off-white-text.png?w=300');\n  height: 80px;\n  margin-bottom: 20px;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
+	exports.push([module.id, "#home {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo {\n  background-image: url('/assets/logo.png');\n  background-repeat: no-repeat;\n  background-size: cover;\n  height: 80px;\n  margin-bottom: 20px;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
 
 	// exports
 
