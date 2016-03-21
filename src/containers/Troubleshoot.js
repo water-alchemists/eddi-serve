@@ -65,7 +65,7 @@ class Troubleshoot extends Component {
 		else TroubleshootElement = this._renderSelected();
 		
 		return (
-			<div className='page'>
+			<div id='troubleshoot' className='page'>
 				{TroubleshootElement}
 			</div>
 		);

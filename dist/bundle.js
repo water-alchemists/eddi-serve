@@ -26876,6 +26876,8 @@
 
 		switch (type) {
 			case _constants.MENU_NAME_CHANGE:
+				console.log('this is the name', name, 'state', state.name);
+				if (name === state.name) return state;
 				return _extends({}, state, {
 					name: name
 				});
@@ -27230,17 +27232,13 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	function isPath(path, compare) {
-		return compare.indexOf(path) > -1;
-	}
-
 	var Menu = function (_Component) {
 		_inherits(Menu, _Component);
 
-		function Menu(props) {
+		function Menu(props, context) {
 			_classCallCheck(this, Menu);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Menu).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Menu).call(this, props, context));
 
 			_this.state = {
 				optionsOpen: false
@@ -27260,6 +27258,7 @@
 			value: function _renderLoggedIn() {
 				var _this2 = this;
 
+				var router = this.context.router;
 				var _props = this.props;
 				var menu = _props.menu;
 				var eddis = _props.eddis;
@@ -27272,11 +27271,11 @@
 				var query = {
 					id: selected.id
 				};
-				var homeSpriteClass = (0, _classnames2.default)(['sprite', 'home', { green: current === _constants.PATHS.HOME || isPath(_constants.PATHS.LIST, current) }]);
-				var settingsSpriteClass = (0, _classnames2.default)(['sprite', 'settings', { green: isPath(_constants.PATHS.SETTINGS, current) }]);
-				var reportSpriteClass = (0, _classnames2.default)(['sprite', 'report', { green: isPath(_constants.PATHS.REPORT, current) }]);
-				var troubleshootSpriteClass = (0, _classnames2.default)(['sprite', 'troubleshoot', { green: isPath(_constants.PATHS.TROUBLESHOOT, current) }]);
-				var dashboardSpriteClass = (0, _classnames2.default)(['sprite', 'dashboard', { green: isPath(_constants.PATHS.DASHBOARD, current) }]);
+				var homeSpriteClass = (0, _classnames2.default)(['sprite', 'home', { green: current === _constants.PATHS.HOME || router.isActive(_constants.PATHS.LIST) }]);
+				var settingsSpriteClass = (0, _classnames2.default)(['sprite', 'settings', { green: router.isActive(_constants.PATHS.SETTINGS) }]);
+				var reportSpriteClass = (0, _classnames2.default)(['sprite', 'report', { green: router.isActive(_constants.PATHS.REPORT) }]);
+				var troubleshootSpriteClass = (0, _classnames2.default)(['sprite', 'troubleshoot', { green: router.isActive(_constants.PATHS.TROUBLESHOOT) }]);
+				var dashboardSpriteClass = (0, _classnames2.default)(['sprite', 'dashboard', { green: router.isActive(_constants.PATHS.DASHBOARD) }]);
 
 				var menuOptions = undefined;
 
@@ -27378,7 +27377,7 @@
 					),
 					_react2.default.createElement(
 						'h1',
-						null,
+						{ key: name },
 						name
 					)
 				);
@@ -27425,6 +27424,10 @@
 			name: _react.PropTypes.string
 		}),
 		current: _react.PropTypes.string
+	};
+
+	Menu.contextTypes = {
+		router: _react.PropTypes.object.isRequired
 	};
 
 	exports.default = Menu;
@@ -31166,10 +31169,10 @@
 		return function (dispatch) {
 			EddiFire.unauthenticate();
 			EddiCookie.deleteCookie();
-
+			console.log('logging out');
 			//let store know of logout
 			dispatch(userLogoutSuccess());
-			_reactRouter.browserHistory.push(_constants.PATHS.HOME);
+			_reactRouter.browserHistory.replace(_constants.PATHS.HOME);
 		};
 	}
 
@@ -31206,7 +31209,7 @@
 	}
 
 	function formatCookie(token, expires) {
-		return 'token=' + token + ';expires=' + expires + ';';
+		return 'token=' + token + ';path=/;expires=' + expires + ';';
 	}
 
 	var CookieStore = function () {
@@ -31466,7 +31469,7 @@
 
 				if (nextProps.user.email) {
 					// user is logged in. go directly to list screen
-					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
+					_reactRouter.browserHistory.replace(_constants.PATHS.LIST);
 				}
 			}
 		}, {
@@ -31532,7 +31535,11 @@
 					_react2.default.createElement(
 						'div',
 						{ className: 'content' },
-						_react2.default.createElement('div', { className: 'logo' }),
+						_react2.default.createElement(
+							'div',
+							{ className: 'logo-container' },
+							_react2.default.createElement('img', { src: '/assets/logo.png' })
+						),
 						modeContent
 					)
 				);
@@ -31935,7 +31942,7 @@
 
 
 	// module
-	exports.push([module.id, "#home {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo {\n  background-image: url('/assets/logo.png');\n  background-repeat: no-repeat;\n  background-size: cover;\n  height: 80px;\n  margin-bottom: 20px;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
+	exports.push([module.id, "#home {\n  position: absolute;\n  min-height: 100vh;\n  height: auto;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#home .content .logo-container img {\n  width: 100%;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
 
 	// exports
 
@@ -32048,14 +32055,12 @@
 				var _props$eddi = _props.eddi;
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 
-				if (eddi.id) {
-					updateMenuName(eddi.settings.name);
-					if (eddi.readings) {
-						//format the readings into an array for data handling
-						var readings = (0, _data.mapDateToReadings)(eddi.readings),
-						    current = readings[readings.length - 1];
-						this.setState({ readings: readings, current: current });
-					}
+				if (eddi.settings) updateMenuName(eddi.settings.name);
+				if (eddi.readings) {
+					//format the readings into an array for data handling
+					var readings = (0, _data.mapDateToReadings)(eddi.readings),
+					    current = readings[readings.length - 1];
+					this.setState({ readings: readings, current: current });
 				}
 			}
 		}, {
@@ -32069,15 +32074,13 @@
 				var eddi = newProps.eddi;
 
 
-				if (eddi.id !== oldEddi.id) {
-					updateMenuName(eddi.settings.name);
-					if (eddi.readings) {
-						//format the readings into an array for data handling
-						var readings = (0, _data.mapDateToReadings)(eddi.readings),
-						    current = readings[readings.length - 1];
+				if (eddi.settings) updateMenuName(eddi.settings.name);
+				if (eddi.readings) {
+					//format the readings into an array for data handling
+					var readings = (0, _data.mapDateToReadings)(eddi.readings),
+					    current = readings[readings.length - 1];
 
-						this.setState({ readings: readings, current: current });
-					}
+					this.setState({ readings: readings, current: current });
 				}
 			}
 		}, {
@@ -45571,6 +45574,33 @@
 
 	var ACTIVE_CLASS = 'active';
 
+	var ROUTES = {
+		SALINITY_OUT: {
+			pathname: _constants.PATHS.DASHBOARD,
+			query: {
+				view: _constants.QUERY.SALINITY_OUT
+			}
+		},
+		SALINITY_IN: {
+			pathname: _constants.PATHS.DASHBOARD,
+			query: {
+				view: _constants.QUERY.SALINITY_IN
+			}
+		},
+		FLOW: {
+			pathname: _constants.PATHS.DASHBOARD,
+			query: {
+				view: _constants.QUERY.FLOW
+			}
+		},
+		POWER: {
+			pathname: _constants.PATHS.DASHBOARD,
+			query: {
+				view: _constants.QUERY.POWER
+			}
+		}
+	};
+
 	var DashboardMenu = function (_Component) {
 		_inherits(DashboardMenu, _Component);
 
@@ -45583,6 +45613,8 @@
 		_createClass(DashboardMenu, [{
 			key: 'render',
 			value: function render() {
+				console.log('this context', this.context);
+				var router = this.context.router;
 				var _props = this.props;
 				var id = _props.id;
 				var view = _props.view;
@@ -45591,13 +45623,13 @@
 				var flow = _props.flow;
 				var power = _props.power;
 				var defaultViewClass = (0, _classnames2.default)(_defineProperty({}, ACTIVE_CLASS, !view)); //handles appearance of default tab
-				var salinityInClass = (0, _classnames2.default)(['sprite', 'salinityIn', { faded: view !== _constants.QUERY.SALINITY_IN }, { bad: !salinityIn }]);
+				var salinityInClass = (0, _classnames2.default)(['sprite', 'salinityIn', { faded: !router.isActive(ROUTES.SALINITY_IN) }, { bad: !salinityIn }]);
 				var salinityInFont = (0, _classnames2.default)({ 'red-font': !salinityIn });
-				var salinityOutClass = (0, _classnames2.default)(['sprite', 'salinityOut', { faded: view && view !== _constants.QUERY.SALINITY_OUT }, { bad: !salinityOut }]);
+				var salinityOutClass = (0, _classnames2.default)(['sprite', 'salinityOut', { faded: view && !router.isActive(ROUTES.SALINITY_OUT) }, { bad: !salinityOut }]);
 				var salinityOutFont = (0, _classnames2.default)({ 'red-font': !salinityOut });
-				var flowClass = (0, _classnames2.default)(['sprite', 'flow', { faded: view !== _constants.QUERY.FLOW }, { bad: !flow }]);
+				var flowClass = (0, _classnames2.default)(['sprite', 'flow', { faded: !router.isActive(ROUTES.FLOW) }, { bad: !flow }]);
 				var flowFont = (0, _classnames2.default)({ 'red-font': !flow });
-				var powerClass = (0, _classnames2.default)(['sprite', 'power', { faded: view !== _constants.QUERY.POWER }, { bad: !power }]);
+				var powerClass = (0, _classnames2.default)(['sprite', 'power', { faded: !router.isActive(ROUTES.POWER) }, { bad: !power }]);
 				var powerFont = (0, _classnames2.default)({ 'red-font': !power });
 
 				return _react2.default.createElement(
@@ -45605,7 +45637,7 @@
 					{ className: 'dashboard-menu' },
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_IN } },
+						{ to: ROUTES.SALINITY_IN,
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: salinityInClass }),
 						_react2.default.createElement(
@@ -45616,7 +45648,7 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.SALINITY_OUT } },
+						{ to: ROUTES.SALINITY_OUT,
 							activeClassName: ACTIVE_CLASS,
 							className: defaultViewClass },
 						_react2.default.createElement('div', { className: salinityOutClass }),
@@ -45628,7 +45660,7 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.FLOW } },
+						{ to: ROUTES.FLOW,
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: flowClass }),
 						_react2.default.createElement(
@@ -45639,7 +45671,7 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: { pathname: _constants.PATHS.DASHBOARD, query: { id: id, view: _constants.QUERY.POWER } },
+						{ to: ROUTES.POWER,
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: powerClass }),
 						_react2.default.createElement(
@@ -45663,6 +45695,10 @@
 		salinityOut: _react.PropTypes.bool,
 		flow: _react.PropTypes.bool,
 		power: _react.PropTypes.bool
+	};
+
+	DashboardMenu.contextTypes = {
+		router: _react.PropTypes.object.isRequired
 	};
 
 	exports.default = DashboardMenu;
@@ -46759,12 +46795,12 @@
 	  _createClass(AddEddiButton, [{
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var openAddForm = this.props.openAddForm;
 
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'add-eddi-button', onClick: function onClick() {
-	            return _this2.props.openAddForm();
+	            return openAddForm();
 	          } },
 	        _react2.default.createElement(
 	          'span',
@@ -47849,7 +47885,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: absolute;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n  padding-bottom: 50px;\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
 
 	// exports
 
@@ -47989,7 +48025,7 @@
 
 				return _react2.default.createElement(
 					'div',
-					{ className: 'page' },
+					{ id: 'troubleshoot', className: 'page' },
 					TroubleshootElement
 				);
 			}
@@ -48600,7 +48636,7 @@
 
 
 	// module
-	exports.push([module.id, "#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 10px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
+	exports.push([module.id, "#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 20px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
 
 	// exports
 

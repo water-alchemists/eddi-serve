@@ -17,7 +17,8 @@ function mapDispatchToProps(dispatch){
 class AddEddiButton extends Component {
 
   render(){
-    return <div className='add-eddi-button' onClick={() => this.props.openAddForm()}>
+    const { openAddForm } = this.props;
+    return <div className='add-eddi-button' onClick={() => openAddForm()}>
       <span>add new +</span>
     </div>
   }

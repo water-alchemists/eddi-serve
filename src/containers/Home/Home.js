@@ -54,7 +54,7 @@ class Home extends Component {
 
 		if(nextProps.user.email ){
 			// user is logged in. go directly to list screen
-			browserHistory.push(PATHS.LIST);
+			browserHistory.replace(PATHS.LIST);
 		}
 	}
 
@@ -106,7 +106,9 @@ class Home extends Component {
 		return (
 			<div id="home" className="page dark">
 				<div className="content" >
-					<div className="logo" />
+					<div className="logo-container">
+						<img src='/assets/logo.png' />
+					</div>
 					{ modeContent }
 				</div>
 			</div>

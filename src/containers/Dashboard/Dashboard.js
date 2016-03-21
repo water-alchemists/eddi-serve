@@ -55,14 +55,12 @@ class Dashboard extends Component {
 
 	componentWillMount(){
 		const { updateMenuName, eddi={} } = this.props;
-		if( eddi.id ) {
-			updateMenuName(eddi.settings.name);
-			if(eddi.readings){
-				//format the readings into an array for data handling
-				const readings = mapDateToReadings(eddi.readings),
-					current = readings[readings.length - 1];
-				this.setState({ readings, current });
-			}
+		if( eddi.settings ) updateMenuName(eddi.settings.name);
+		if( eddi.readings ){
+			//format the readings into an array for data handling
+			const readings = mapDateToReadings(eddi.readings),
+				current = readings[readings.length - 1];
+			this.setState({ readings, current });
 		}
 	}
 
@@ -70,15 +68,13 @@ class Dashboard extends Component {
 		const { updateMenuName, eddi:oldEddi={}, location } = this.props,
 			{ eddi } = newProps;
 
-		if( eddi.id !== oldEddi.id ) {
-			updateMenuName(eddi.settings.name);
-			if(eddi.readings){
-				//format the readings into an array for data handling
-				const readings = mapDateToReadings(eddi.readings),
-					current = readings[readings.length - 1];
+		if( eddi.settings ) updateMenuName(eddi.settings.name);
+		if( eddi.readings ){
+			//format the readings into an array for data handling
+			const readings = mapDateToReadings(eddi.readings),
+				current = readings[readings.length - 1];
 
-				this.setState({ readings, current });
-			}
+			this.setState({ readings, current });
 		}
 	}
 

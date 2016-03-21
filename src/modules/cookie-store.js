@@ -8,7 +8,7 @@ function parseCookie(cookieString){
 }
 
 function formatCookie(token, expires){
-	return `token=${token};expires=${expires};`;
+	return `token=${token};path=/;expires=${expires};`;
 }
 
 class CookieStore {

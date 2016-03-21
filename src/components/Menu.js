@@ -6,14 +6,10 @@ import { PATHS } from '../constants';
 
 import style from '../less/Menu.less';
 
-function isPath(path, compare){
-	return compare.indexOf(path) > -1;
-}
-
 class Menu extends Component {
 
-	constructor(props){
-		super(props);
+	constructor(props, context){
+		super(props, context);
 		this.state = {
 			optionsOpen: false
 		};
@@ -26,7 +22,8 @@ class Menu extends Component {
 	}
 
 	_renderLoggedIn(){
-		const { menu, eddis, current } = this.props,
+		const { router } = this.context,
+			{ menu, eddis, current } = this.props,
 			{ name='' } = menu,
 			{ list, selected={} }  = eddis,
 			query = {
@@ -35,27 +32,27 @@ class Menu extends Component {
 			homeSpriteClass = classNames([
 				'sprite', 
 				'home', 
-				{ green : current === PATHS.HOME || isPath(PATHS.LIST, current) }
+				{ green : current === PATHS.HOME|| router.isActive(PATHS.LIST) }
 			]),
 			settingsSpriteClass = classNames([
 				'sprite',
 				'settings', 
-				{ green : isPath(PATHS.SETTINGS, current) }
+				{ green : router.isActive(PATHS.SETTINGS) }
 			]),
 			reportSpriteClass = classNames([
 				'sprite',
 				'report',
-				{ green : isPath(PATHS.REPORT, current) }
+				{ green : router.isActive(PATHS.REPORT) }
 			]),
 			troubleshootSpriteClass = classNames([
 				'sprite',
 				'troubleshoot',
-				{ green : isPath(PATHS.TROUBLESHOOT, current) }
+				{ green : router.isActive(PATHS.TROUBLESHOOT) }
 			]),
 			dashboardSpriteClass = classNames([
 				'sprite',
 				'dashboard',
-				{ green : isPath(PATHS.DASHBOARD, current) }
+				{ green : router.isActive(PATHS.DASHBOARD) }
 			]);
 
 		let menuOptions;
@@ -112,7 +109,7 @@ class Menu extends Component {
 						</a>
 					</div>
 				</div>
-				<h1>{ name }</h1>
+				<h1 key={name}>{ name }</h1>
 			</header>
 		);
 	}
@@ -154,6 +151,10 @@ Menu.propTypes = {
 		name : PropTypes.string
 	}),
 	current : PropTypes.string
+};
+
+Menu.contextTypes = {
+	router : PropTypes.object.isRequired
 };
 
 export default Menu;

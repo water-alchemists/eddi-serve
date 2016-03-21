@@ -133,9 +133,9 @@ export function userLogout(){
 	return dispatch => {
 		EddiFire.unauthenticate();
 		EddiCookie.deleteCookie();
-
+		console.log('logging out');
 		//let store know of logout
 		dispatch(userLogoutSuccess());
-		browserHistory.push(PATHS.HOME);
+		browserHistory.replace(PATHS.HOME);
 	}
 }
