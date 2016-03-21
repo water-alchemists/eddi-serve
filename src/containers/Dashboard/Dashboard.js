@@ -15,6 +15,9 @@ import DashboardFlow from '../../components/DashboardFlow';
 
 import style from './Dashboard.less';
 
+import EddiFireStarter from '../../modules/eddi-firebase';
+const EddiFire = EddiFireStarter();
+
 function getGoodBad(current, threshold){
 	if(!threshold) threshold = SALINITY_THRESHOLD; //default threshold for salinity
 	const { ppmIn, ppmOut, qOut } = current,

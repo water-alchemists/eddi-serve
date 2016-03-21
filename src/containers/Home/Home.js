@@ -23,6 +23,11 @@ const Modes = {
 	SIGNUP: 2,
 };
 
+const ROUTES = {
+	LOGIN : { pathname : PATHS.HOME, query : { view : 'login' } },
+	SIGNUP : { pathname : PATHS.HOME, query : { view : 'signup' } }
+}
+
 function mapStateToProps(state){
 	return {
 		user : state.user,
@@ -43,10 +48,17 @@ function mapDispatchToProps(dispatch){
 
 
 class Home extends Component {
-	constructor(props){
-		super(props);
+	constructor(props, context){
+		super(props, context);
+		const { router } = this.context;
+
+		let mode;
+		if(router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;
+		else if(router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;
+		else mode = Modes.BASE;
+		
 		this.state = {
-			mode: Modes.BASE
+			mode
 		};
 	}
 
@@ -56,6 +68,13 @@ class Home extends Component {
 			// user is logged in. go directly to list screen
 			browserHistory.replace(PATHS.LIST);
 		}
+
+		const { router } = this.context;
+		let mode;
+		if(router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;
+		else if(router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;
+		else mode = Modes.BASE;
+		this.setState({ mode });
 	}
 
 	navigateTo(key){
@@ -66,12 +85,12 @@ class Home extends Component {
 	_renderBase(){
 		return [
 			(<div className='auth-button'
-				onClick={ () => this.setState({mode: Modes.LOGIN})}
+				onClick={ () => browserHistory.push(ROUTES.LOGIN)}
 			>
 				Login ›
 			</div>),
 			(<div className='auth-button'
-				onClick={ () => this.setState({mode: Modes.SIGNUP})}
+				onClick={ () => browserHistory.push(ROUTES.SIGNUP)}
 				>
 				Sign Up ›
 			</div>)
@@ -123,6 +142,10 @@ Home.propTypes = {
 			name : PropTypes.string
 		})
 	)
+};
+
+Home.contextTypes = {
+	router : PropTypes.object.isRequired
 };
 
 

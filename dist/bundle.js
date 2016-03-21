@@ -26666,6 +26666,7 @@
 	var EDDI_UPDATESTART_SUCCESS = exports.EDDI_UPDATESTART_SUCCESS = 'EDDI_UPDATESTART_SUCCESS';
 	var EDDI_UPDATEEND_SUCCESS = exports.EDDI_UPDATEEND_SUCCESS = 'EDDI_UPDATEEND_SUCCESS';
 	var EDDI_UPDATESNOOZE_SUCCESS = exports.EDDI_UPDATESNOOZE_SUCCESS = 'EDDI_UPDATESNOOZE_SUCCESS';
+	var EDDI_UPDATEMACHINE_SUCCESS = exports.EDDI_UPDATEMACHINE_SUCCESS = 'EDDI_UPDATEMACHINE_SUCCESS';
 	var EDDI_GETONE_SUCCESS = exports.EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
@@ -29971,6 +29972,7 @@
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
+	exports.updateEddiSuccess = updateEddiSuccess;
 	exports.selectEddi = selectEddi;
 	exports.selectEddiById = selectEddiById;
 	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
@@ -29980,6 +29982,8 @@
 	exports.setEddiSalinityThunk = setEddiSalinityThunk;
 	exports.setEddiStateThunk = setEddiStateThunk;
 	exports.setEddiSnoozeThunk = setEddiSnoozeThunk;
+	exports.getEddiState = getEddiState;
+	exports.getEddiReadings = getEddiReadings;
 
 	var _eddiFirebase = __webpack_require__(288);
 
@@ -30143,7 +30147,6 @@
 		var end = {};
 		if (hour) end.hour = hour;
 		if (minute) end.minute = minute;
-		console.log('this is the end', end);
 
 		return function (dispatch) {
 			if (!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error('Hour and minutes must be numbers.');
@@ -30183,6 +30186,22 @@
 			}).catch(function (error) {
 				return dispatch(updateEddiError(error));
 			});
+		};
+	}
+
+	function getEddiState(id, state) {
+		return {
+			type: _constants.EDDI_UPDATEMACHINE_SUCCESS,
+			id: id,
+			state: state
+		};
+	}
+
+	function getEddiReadings(id, readings) {
+		return {
+			type: _constants.EDDI_UPDATEMACHINE_SUCCESS,
+			id: id,
+			readings: readings
 		};
 	}
 
@@ -30229,7 +30248,14 @@
 		END_TIME: 'end',
 		HOUR: 'hour',
 		MINUTE: 'minute',
-		TESTEDDI_PATH: 'test-eddi'
+		TESTEDDI_PATH: 'test-eddi',
+		READINGS: 'readings'
+	};
+
+	var EVENTS = {
+		SETTINGS: PATHS.SETTINGS_PATH,
+		READINGS: PATHS.READINGS,
+		STATE: PATHS.STATE_PATH
 	};
 
 	var EddiFire = function () {
@@ -30544,6 +30570,26 @@
 							});
 						});
 					});
+				});
+			}
+		}, {
+			key: 'addEddiEventListener',
+			value: function addEddiEventListener(id, event, func) {
+				var path = EVENTS[event];
+				if (!path) throw new Error(event + ' is not a valid event.');
+				this.refs.EDDI.child(id).child(path).on(value, function (snapshot) {
+					var data = snapshot.val();
+					func(data);
+				});
+			}
+		}, {
+			key: 'removeEddiEventListener',
+			value: function removeEddiEventListener(id, event, func) {
+				var path = EVENTS[event];
+				if (!path) throw new Error(event + ' is not a valid event.');
+				this.refs.EDDI.child(id).child(path).on(value, function (snapshot) {
+					var data = snapshot.val();
+					func(data);
 				});
 			}
 		}]);
@@ -31426,6 +31472,11 @@
 		SIGNUP: 2
 	};
 
+	var ROUTES = {
+		LOGIN: { pathname: _constants.PATHS.HOME, query: { view: 'login' } },
+		SIGNUP: { pathname: _constants.PATHS.HOME, query: { view: 'signup' } }
+	};
+
 	function mapStateToProps(state) {
 		return {
 			user: state.user,
@@ -31452,13 +31503,19 @@
 	var Home = function (_Component) {
 		_inherits(Home, _Component);
 
-		function Home(props) {
+		function Home(props, context) {
 			_classCallCheck(this, Home);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props, context));
+
+			var router = _this.context.router;
+
+
+			var mode = undefined;
+			if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
 
 			_this.state = {
-				mode: Modes.BASE
+				mode: mode
 			};
 			return _this;
 		}
@@ -31471,6 +31528,12 @@
 					// user is logged in. go directly to list screen
 					_reactRouter.browserHistory.replace(_constants.PATHS.LIST);
 				}
+
+				var router = this.context.router;
+
+				var mode = undefined;
+				if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
+				this.setState({ mode: mode });
 			}
 		}, {
 			key: 'navigateTo',
@@ -31481,13 +31544,11 @@
 		}, {
 			key: '_renderBase',
 			value: function _renderBase() {
-				var _this2 = this;
-
 				return [_react2.default.createElement(
 					'div',
 					{ className: 'auth-button',
 						onClick: function onClick() {
-							return _this2.setState({ mode: Modes.LOGIN });
+							return _reactRouter.browserHistory.push(ROUTES.LOGIN);
 						}
 					},
 					'Login ›'
@@ -31495,7 +31556,7 @@
 					'div',
 					{ className: 'auth-button',
 						onClick: function onClick() {
-							return _this2.setState({ mode: Modes.SIGNUP });
+							return _reactRouter.browserHistory.push(ROUTES.SIGNUP);
 						}
 					},
 					'Sign Up ›'
@@ -31553,6 +31614,10 @@
 		eddis: _react.PropTypes.arrayOf(_react.PropTypes.shape({
 			name: _react.PropTypes.string
 		}))
+	};
+
+	Home.contextTypes = {
+		router: _react.PropTypes.object.isRequired
 	};
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
@@ -31989,6 +32054,10 @@
 
 	var _Dashboard2 = _interopRequireDefault(_Dashboard);
 
+	var _eddiFirebase = __webpack_require__(288);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31996,6 +32065,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EddiFire = (0, _eddiFirebase2.default)();
 
 	function getGoodBad(current, threshold) {
 		if (!threshold) threshold = _constants.SALINITY_THRESHOLD; //default threshold for salinity
@@ -47885,7 +47956,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n  padding-bottom: 50px;\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
 
 	// exports
 

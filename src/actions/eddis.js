@@ -11,6 +11,7 @@ import {
 	EDDI_UPDATESTART_SUCCESS,
 	EDDI_UPDATEEND_SUCCESS,
 	EDDI_UPDATESNOOZE_SUCCESS,
+	EDDI_UPDATEMACHINE_SUCCESS,
 	EDDI_GETONE_SUCCESS,
 	EDDI_GETONE_ERROR,
 	EDDI_SELECT
@@ -39,7 +40,7 @@ function assignEddiError(error){
 	};
 }
 
-function updateEddiSuccess(id, settings = {}){
+export function updateEddiSuccess(id, settings = {}){
 	return {
 		type : EDDI_UPDATE_SUCCESS,
 		id,
@@ -148,7 +149,6 @@ export function setEddiEndThunk(eddiId, hour, minute){
 	const end = {};
 	if(hour) end.hour = hour;
 	if(minute) end.minute = minute;
-	console.log('this is the end', end);
 
 	return dispatch => {
 		if(!(typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
@@ -182,4 +182,20 @@ export function setEddiSnoozeThunk(eddiId, minute){
 			.then(update => dispatch(updateEddiSnoozeSuccess(updated.id, updated.snooze)))
 			.catch(error => dispatch(updateEddiError(error)));
 	}
+}
+
+export function getEddiState(id, state){
+	return {
+		type : EDDI_UPDATEMACHINE_SUCCESS,
+		id,
+		state
+	};
+}
+
+export function getEddiReadings(id, readings){
+	return {
+		type : EDDI_UPDATEMACHINE_SUCCESS,
+		id,
+		readings
+	};
 }

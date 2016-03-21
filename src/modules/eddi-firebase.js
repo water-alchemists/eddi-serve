@@ -18,8 +18,15 @@ const PATHS = {
 	END_TIME : 'end',
 	HOUR : 'hour',
 	MINUTE : 'minute',
-	TESTEDDI_PATH : 'test-eddi'
+	TESTEDDI_PATH : 'test-eddi',
+	READINGS : 'readings'
 };
+
+const EVENTS = {
+	SETTINGS : PATHS.SETTINGS_PATH,
+	READINGS : PATHS.READINGS,
+	STATE : PATHS.STATE_PATH
+}
 
 class EddiFire {
 	constructor(){
@@ -339,6 +346,24 @@ class EddiFire {
 						);
 				});
 			});
+	}
+
+	addEddiEventListener(id, event, func){
+		const path = EVENTS[event];
+		if(!path) throw new Error(`${event} is not a valid event.`);
+		this.refs.EDDI.child(id).child(path).on(value, snapshot => {
+			const data = snapshot.val();
+			func(data);
+		});
+	}
+
+	removeEddiEventListener(id, event, func){
+		const path = EVENTS[event];
+		if(!path) throw new Error(`${event} is not a valid event.`);
+		this.refs.EDDI.child(id).child(path).on(value, snapshot => {
+			const data = snapshot.val();
+			func(data);
+		});
 	}
 
 }
