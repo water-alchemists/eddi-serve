@@ -1,5 +1,8 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
+
+import { salinityOptions } from '../data';
+
 import SalinityInput from './SalinityInput';
 import TimeSelect from './TimeSelect';
 
@@ -56,13 +59,16 @@ SettingsEddiForm.propTypes = {
 	})
 };
 
-const styles = {
-	row : {
-		display : 'flex', 
-		flexDirection : 'row', 
-		justifyContent : 'space-between',
-		alignItems : 'center'
-	}
-}
+SettingsEddiForm.defaultProps = {
+	startValue : {
+		hour : 9,
+		minute : 0
+	},
+	endValue : {
+		hour : 5,
+		minute : 0
+	},
+	salinityValue : salinityOptions.default
+};
 
 export default SettingsEddiForm;
