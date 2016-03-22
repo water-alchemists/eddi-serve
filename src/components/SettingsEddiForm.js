@@ -18,7 +18,7 @@ class SettingsEddiForm extends Component {
 			<div className='settings-form'>
 				<div className='operate-row'>
 					<h4>OPERATING FROM</h4>
-					<div style={styles.row}>
+					<div className='select-container'>
 						<TimeSelect onChange={ ({ hour, minute }) => onStartChange(hour, minute) }
 							hour={startValue.hour}
 							minute={startValue.minute}

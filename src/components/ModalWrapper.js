@@ -6,11 +6,9 @@ import { modalHide } from '../actions/modal';
 
 import * as modals from '../modals';
 
-
-
 const DEFAULT_STYLES = {
-	overlay: {
-		zIndex: "1"
+	overlay : {
+		zIndex : '2'
 	},
 	content: {
 		top: "0",
@@ -39,11 +37,12 @@ class ModalWrapper extends Component {
 		return modalClass ? React.createElement(modalClass, newProps) : null;
 	}
 	render(){
-		const { modal } = this.props,
+		const { modal, style } = this.props,
 			{ on, props } = modal,
-			customStyles = { ...DEFAULT_STYLES, ...props.style },
+			customStyles = { ...DEFAULT_STYLES, ...style },
 			ContentElement = this._renderContent();
 
+		console.log('modal', modal, customStyles)
 		return (
 			<Modal 	isOpen={on}
 				onRequestClose={() => this.closeModal()}

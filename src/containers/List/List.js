@@ -65,7 +65,7 @@ class List extends Component {
 	_renderEddis(){
 		const { eddis } = this.props;
 		if(eddis) {
-			return eddis.map((eddi, i) => <EddiListItem key={eddi.id} eddi={eddi} />);
+			return eddis.map((eddi, i) => <EddiListItem key={eddi.id} name={eddi.settings.name} id={eddi.id} url={'http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg'}/>);
 		}
 	}
 

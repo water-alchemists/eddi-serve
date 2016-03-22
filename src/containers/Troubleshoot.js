@@ -50,9 +50,12 @@ class Troubleshoot extends Component {
 			{ state } = settings;
 
 		return (
-			<EddiStateButton value={!!state}
-				onClick={state => setEddiState(eddi.id, state)}
-			/>
+			<div>
+				<img src='/assets/troubleshoot.svg' width='100'></img>
+				<EddiStateButton value={!!state}
+					onClick={state => setEddiState(eddi.id, state)}
+				/>
+			</div>
 		);
 	}
 	render(){
