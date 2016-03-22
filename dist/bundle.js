@@ -46261,21 +46261,23 @@
 	    value: function componentDidMount() {
 	      this.canvas = this.refs.canvas;
 	      this.context = this.canvas.getContext('2d');
-	      this.paint();
+	      this.paint(this.props);
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(newProps) {
-	      this.paint();
+	      this.paint(newProps);
 	    }
 	  }, {
 	    key: 'paint',
-	    value: function paint() {
-	      var pointCount = this.props.data.length;
+	    value: function paint(props) {
+	      this.context.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight);
+
+	      var pointCount = props.data.length;
 	      var scaleX = this.canvas.offsetWidth / pointCount;
-	      var maxY = this.props.threshold;
-	      for (var ix in this.props.data) {
-	        var daty = this.props.data[ix].y;
+	      var maxY = props.threshold;
+	      for (var ix in props.data) {
+	        var daty = props.data[ix].y;
 	        if (daty > maxY) {
 	          maxY = daty;
 	        }
@@ -46287,7 +46289,7 @@
 	      this.context.save();
 	      this.context.setLineDash([5, 10]);
 	      this.context.strokeStyle = "rgba(0, 109, 96, 1)";
-	      var thresholdY = this.canvas.offsetHeight - this.props.threshold * scaleY;
+	      var thresholdY = this.canvas.offsetHeight - props.threshold * scaleY;
 	      this.context.beginPath();
 	      this.context.moveTo(0, thresholdY);
 	      this.context.lineTo(this.canvas.offsetWidth, thresholdY);
@@ -46298,11 +46300,11 @@
 
 	      // render data and x axis
 	      var lastData;
-	      for (var _ix in this.props.data) {
-	        var data = this.props.data[_ix];
+	      for (var _ix in props.data) {
+	        var data = props.data[_ix];
 	        var xPt = _ix * scaleX;
 	        if (_ix % 3 === 0) {
-	          switch (this.props.type) {
+	          switch (props.type) {
 	            case _constants.HISTORICAL.TODAY:
 	              var hour = data.x.getHours() % 12;
 	              hour = hour === 0 ? 12 : hour;
@@ -46321,8 +46323,8 @@
 	        }
 	        if (lastData) {
 	          var gradient = this.context.createLinearGradient((_ix - 1) * scaleX, 0, xPt, 0);
-	          gradient.addColorStop("0", colorForPointWithThreshold(lastData.y, this.props.threshold));
-	          gradient.addColorStop("1.0", colorForPointWithThreshold(data.y, this.props.threshold));
+	          gradient.addColorStop("0", colorForPointWithThreshold(lastData.y, props.threshold));
+	          gradient.addColorStop("1.0", colorForPointWithThreshold(data.y, props.threshold));
 	          this.context.strokeStyle = gradient;
 	          this.context.beginPath();
 	          this.context.moveTo((_ix - 1) * scaleX, this.canvas.offsetHeight - lastData.y * scaleY);
@@ -46392,7 +46394,7 @@
 	            )
 	          )
 	        ),
-	        _react2.default.createElement('canvas', { ref: 'canvas', height: '160px', style: { width: "100%" }, className: 'historical-graph-canvas' })
+	        _react2.default.createElement('canvas', { ref: 'canvas', style: { width: "100%", height: "160px" }, className: 'historical-graph-canvas' })
 	      );
 	    }
 	  }]);
