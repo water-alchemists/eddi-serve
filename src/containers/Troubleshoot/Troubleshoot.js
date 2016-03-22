@@ -2,11 +2,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setEddiStateThunk } from '../actions/eddis';
-import { menuNameChange } from '../actions/menu';
+import { setEddiStateThunk } from '../../actions/eddis';
+import { menuNameChange } from '../../actions/menu';
 
-import EddiStateButton from '../components/EddiStateButton';
-import AddEddiButton from '../components/AddEddiButton';
+import EddiStateButton from '../../components/EddiStateButton';
+import AddEddiButton from '../../components/AddEddiButton';
 
 function mapStateToProps(state){
 	return {
