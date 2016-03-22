@@ -5,9 +5,6 @@ import { assignEddiThunk } from '../actions/eddis';
 
 import AddEddiForm from '../components/AddEddiForm';
 
-
-
-
 class AddEddiModal extends Component {
 	_onCancel(){
 		const { closeModal } = this.props;

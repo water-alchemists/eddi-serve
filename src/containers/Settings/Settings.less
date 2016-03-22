@@ -1,11 +1,15 @@
 @import '../../less/vars';
 
 #settings {
-	height : 100vh;
+	min-height : 100vh;
 	background-color: @light_color;
 	
 	.settings-eddi {
 		background-color : white;
+		margin-top: 5px;
+		&:first-child {
+			margin-top: 0px;
+		}
 		.arrow-container {
 			display:flex;
 			flex-direction : row;
@@ -82,16 +86,30 @@
 					margin : 0;
 				}
 				.operate-row {
-					p {
-						color: @dark_color;
-						
+					padding-top: 15px;
+					.select-container {
+						display : flex; 
+						flex-direction : row; 
+						-webkit-flex-direction: row;
+						justify-content : space-between;
+						-webkit-justify-content : space-between;
+						align-items : center;
+						-webkit-align-items : center;
+						margin-top : 0.5rem;
+						p {
+							color: @dark_color;
+							margin: 0;
+						}
+						.date-time-select { 
+							width : 120px;
+						}
 					}
-					.date-time-select { 
-						width : 120px;
-					}
+					
 				}
 				.salinity-row {
+					padding-top: 15px;
 					.salinity-input {
+						margin-top: 0.5rem;
 						input {
 							border-color : @trim_color;
 							border-width : 2px;

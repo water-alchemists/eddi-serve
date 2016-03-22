@@ -27822,6 +27822,9 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var DEFAULT_STYLES = {
+		overlay: {
+			zIndex: '2'
+		},
 		content: {
 			top: "0",
 			right: "0",
@@ -27871,12 +27874,15 @@
 			value: function render() {
 				var _this3 = this;
 
-				var modal = this.props.modal;
+				var _props2 = this.props;
+				var modal = _props2.modal;
+				var style = _props2.style;
 				var on = modal.on;
 				var props = modal.props;
-				var customStyles = _extends({}, DEFAULT_STYLES, props.style);
+				var customStyles = _extends({}, DEFAULT_STYLES, style);
 				var ContentElement = this._renderContent();
 
+				console.log('modal', modal, customStyles);
 				return _react2.default.createElement(
 					_reactModal2.default,
 					{ isOpen: on,
@@ -30898,6 +30904,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _SalinityInput = __webpack_require__(429);
+
+	var _SalinityInput2 = _interopRequireDefault(_SalinityInput);
+
 	var _AddEddiForm = __webpack_require__(291);
 
 	var _AddEddiForm2 = _interopRequireDefault(_AddEddiForm);
@@ -30922,7 +30932,8 @@
 
 			_this.state = {
 				id: null,
-				name: null
+				name: null,
+				salinity: 1000
 			};
 			return _this;
 		}
@@ -30940,6 +30951,11 @@
 				var name = event.target.value;
 				event.preventDefault();
 				this.setState({ name: name });
+			}
+		}, {
+			key: 'onSalinityChange',
+			value: function onSalinityChange(salinity) {
+				this.setState({ salinity: salinity });
 			}
 		}, {
 			key: 'submitHandler',
@@ -30965,9 +30981,10 @@
 			value: function render() {
 				var _this2 = this;
 
-				var _props = this.props;
-				var id = _props.id;
-				var name = _props.name;
+				var _state2 = this.state;
+				var id = _state2.id;
+				var name = _state2.name;
+				var salinity = _state2.salinity;
 
 
 				return _react2.default.createElement(
@@ -30977,38 +30994,62 @@
 						} },
 					_react2.default.createElement(
 						'div',
-						{ className: 'input-container' },
-						_react2.default.createElement('input', { type: 'text',
-							name: 'id',
-							onChange: function onChange(event) {
-								return _this2.onIdChange(event);
-							},
-							value: id,
-							placeholder: 'eddi id'
-						}),
-						_react2.default.createElement('input', { type: 'text',
-							name: 'name',
-							onChange: function onChange(event) {
-								return _this2.onNameChange(event);
-							},
-							value: name,
-							placeholder: 'nickname'
-						})
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'button-container' },
+						null,
 						_react2.default.createElement(
-							'button',
-							{ className: 'cancel', type: 'button', onClick: function onClick(event) {
-									return _this2.cancelHandler(event);
-								} },
-							'Cancel'
+							'h3',
+							null,
+							'ADD EDDI'
 						),
 						_react2.default.createElement(
-							'button',
-							{ type: 'submit' },
-							'Add'
+							'div',
+							{ className: 'input-container' },
+							_react2.default.createElement('input', { type: 'text',
+								name: 'id',
+								onChange: function onChange(event) {
+									return _this2.onIdChange(event);
+								},
+								value: id,
+								placeholder: 'eddi id'
+							}),
+							_react2.default.createElement('input', { type: 'text',
+								name: 'name',
+								onChange: function onChange(event) {
+									return _this2.onNameChange(event);
+								},
+								value: name,
+								placeholder: 'nickname'
+							}),
+							_react2.default.createElement(
+								'div',
+								{ className: 'salinity-container' },
+								_react2.default.createElement(_SalinityInput2.default, { onSalinityChange: function onSalinityChange(salinity) {
+										return _this2.onSalinityChange(salinity);
+									},
+									value: salinity,
+									placeholder: 'desired salinity threshold'
+								}),
+								_react2.default.createElement(
+									'p',
+									null,
+									'ppm'
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'button-container' },
+							_react2.default.createElement(
+								'button',
+								{ className: 'cancel', type: 'button', onClick: function onClick(event) {
+										return _this2.cancelHandler(event);
+									} },
+								'CANCEL'
+							),
+							_react2.default.createElement(
+								'button',
+								{ type: 'submit' },
+								'ADD'
+							)
 						)
 					)
 				);
@@ -31060,7 +31101,7 @@
 
 
 	// module
-	exports.push([module.id, ".eddi-add {\n  padding: 10px;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n}\n", ""]);
+	exports.push([module.id, ".eddi-add {\n  padding: 10px;\n}\n.eddi-add h3 {\n  text-align: center;\n  font-weight: 500;\n  color: black;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .input-container .salinity-container {\n  position: relative;\n}\n.eddi-add .input-container .salinity-container p {\n  color: black;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  margin-right: 5px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n}\n", ""]);
 
 	// exports
 
@@ -46876,7 +46917,7 @@
 	        _react2.default.createElement(
 	          'span',
 	          null,
-	          'add new +'
+	          'ADD NEW +'
 	        )
 	      );
 	    }
@@ -47565,7 +47606,7 @@
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: styles.row },
+							{ className: 'select-container' },
 							_react2.default.createElement(_TimeSelect2.default, { onChange: function onChange(_ref) {
 									var hour = _ref.hour;
 									var minute = _ref.minute;
@@ -47686,7 +47727,9 @@
 			value: function render() {
 				var _this2 = this;
 
-				var value = this.props.value;
+				var _props = this.props;
+				var value = _props.value;
+				var placeholder = _props.placeholder;
 
 				return _react2.default.createElement(
 					'div',
@@ -47696,7 +47739,7 @@
 							return _this2.changeHandler(event);
 						},
 						value: value,
-						placeholder: 'Set Your Own'
+						placeholder: placeholder
 					})
 				);
 			}
@@ -47707,11 +47750,13 @@
 
 	SalinityInput.propTypes = {
 		onSalinityChange: _react.PropTypes.func,
-		value: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number])
+		value: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
+		placeholder: _react.PropTypes.string
 	};
 
 	SalinityInput.defaultProps = {
-		value: _data.salinityOptions.default
+		value: _data.salinityOptions.default,
+		placeholder: 'Set Your Own'
 	};
 
 	exports.default = SalinityInput;
@@ -47956,7 +48001,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row p {\n  color: #0d0e1f;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 15px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 15px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input {\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n", ""]);
 
 	// exports
 
@@ -48075,11 +48120,16 @@
 				var state = settings.state;
 
 
-				return _react2.default.createElement(_EddiStateButton2.default, { value: !!state,
-					onClick: function onClick(state) {
-						return setEddiState(eddi.id, state);
-					}
-				});
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', width: '100' }),
+					_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
+						onClick: function onClick(state) {
+							return setEddiState(eddi.id, state);
+						}
+					})
+				);
 			}
 		}, {
 			key: 'render',

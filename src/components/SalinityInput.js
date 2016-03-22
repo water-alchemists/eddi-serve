@@ -13,13 +13,13 @@ class SalinityInput extends Component {
 	}
 
 	render(){
-		const { value } = this.props;
+		const { value, placeholder } = this.props;
 		return (
 			<div className='salinity-input'>
 				<input type='number'
 					onChange={event => this.changeHandler(event)}
 					value={value}
-					placeholder='Set Your Own'
+					placeholder={placeholder}
 				/>
 			</div>
 		);
@@ -31,11 +31,13 @@ SalinityInput.propTypes = {
 	value : PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.number
-	])
+	]),
+	placeholder : PropTypes.string
 };
 
 SalinityInput.defaultProps = {
-	value : salinityOptions.default
+	value : salinityOptions.default,
+	placeholder : 'Set Your Own'
 }
 
 export default SalinityInput;
