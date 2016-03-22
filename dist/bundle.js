@@ -27029,7 +27029,7 @@
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(433);
+	var _Troubleshoot2 = __webpack_require__(444);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
@@ -46169,21 +46169,23 @@
 	    value: function componentDidMount() {
 	      this.canvas = this.refs.canvas;
 	      this.context = this.canvas.getContext('2d');
-	      this.paint();
+	      this.paint(this.props);
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(newProps) {
-	      this.paint();
+	      this.paint(newProps);
 	    }
 	  }, {
 	    key: 'paint',
-	    value: function paint() {
-	      var pointCount = this.props.data.length;
+	    value: function paint(props) {
+	      this.context.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight);
+
+	      var pointCount = props.data.length;
 	      var scaleX = this.canvas.offsetWidth / pointCount;
-	      var maxY = this.props.threshold;
-	      for (var ix in this.props.data) {
-	        var daty = this.props.data[ix].y;
+	      var maxY = props.threshold;
+	      for (var ix in props.data) {
+	        var daty = props.data[ix].y;
 	        if (daty > maxY) {
 	          maxY = daty;
 	        }
@@ -46195,7 +46197,7 @@
 	      this.context.save();
 	      this.context.setLineDash([5, 10]);
 	      this.context.strokeStyle = "rgba(0, 109, 96, 1)";
-	      var thresholdY = this.canvas.offsetHeight - this.props.threshold * scaleY;
+	      var thresholdY = this.canvas.offsetHeight - props.threshold * scaleY;
 	      this.context.beginPath();
 	      this.context.moveTo(0, thresholdY);
 	      this.context.lineTo(this.canvas.offsetWidth, thresholdY);
@@ -46206,11 +46208,11 @@
 
 	      // render data and x axis
 	      var lastData;
-	      for (var ix in this.props.data) {
-	        var data = this.props.data[ix];
+	      for (var ix in props.data) {
+	        var data = props.data[ix];
 	        var xPt = ix * scaleX;
 	        if (ix % 3 === 0) {
-	          switch (this.props.type) {
+	          switch (props.type) {
 	            case _constants.HISTORICAL.TODAY:
 	              var hour = data.x.getHours() % 12;
 	              hour = hour === 0 ? 12 : hour;
@@ -46229,8 +46231,8 @@
 	        }
 	        if (lastData) {
 	          var gradient = this.context.createLinearGradient((ix - 1) * scaleX, 0, xPt, 0);
-	          gradient.addColorStop("0", colorForPointWithThreshold(lastData.y, this.props.threshold));
-	          gradient.addColorStop("1.0", colorForPointWithThreshold(data.y, this.props.threshold));
+	          gradient.addColorStop("0", colorForPointWithThreshold(lastData.y, props.threshold));
+	          gradient.addColorStop("1.0", colorForPointWithThreshold(data.y, props.threshold));
 	          this.context.strokeStyle = gradient;
 	          this.context.beginPath();
 	          this.context.moveTo((ix - 1) * scaleX, this.canvas.offsetHeight - lastData.y * scaleY);
@@ -46300,7 +46302,7 @@
 	            )
 	          )
 	        ),
-	        _react2.default.createElement('canvas', { ref: 'canvas', height: '160px', style: { width: "100%" }, className: 'historical-graph-canvas' })
+	        _react2.default.createElement('canvas', { ref: 'canvas', style: { width: "100%", height: "160px" }, className: 'historical-graph-canvas' })
 	      );
 	    }
 	  }]);
@@ -48123,157 +48125,7 @@
 
 
 /***/ },
-/* 433 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(173);
-
-	var _eddis = __webpack_require__(287);
-
-	var _menu = __webpack_require__(305);
-
-	var _EddiStateButton = __webpack_require__(434);
-
-	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
-
-	var _AddEddiButton = __webpack_require__(419);
-
-	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddiList: state.eddis.list,
-			eddi: state.eddis.selected
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			setEddiState: function setEddiState(eddiId, state) {
-				return dispatch((0, _eddis.setEddiStateThunk)(eddiId, state));
-			},
-			updateMenuName: function updateMenuName(name) {
-				return dispatch((0, _menu.menuNameChange)(name));
-			}
-		};
-	}
-
-	var Troubleshoot = function (_Component) {
-		_inherits(Troubleshoot, _Component);
-
-		function Troubleshoot() {
-			_classCallCheck(this, Troubleshoot);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
-		}
-
-		_createClass(Troubleshoot, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _props = this.props;
-				var updateMenuName = _props.updateMenuName;
-				var _props$eddi = _props.eddi;
-				var eddi = _props$eddi === undefined ? {} : _props$eddi;
-
-				if (eddi.id) updateMenuName(eddi.settings.name);
-			}
-		}, {
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(newProps) {
-				var _props2 = this.props;
-				var updateMenuName = _props2.updateMenuName;
-				var _props2$eddi = _props2.eddi;
-				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
-				var eddi = newProps.eddi;
-
-
-				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
-			}
-		}, {
-			key: '_renderNoEddis',
-			value: function _renderNoEddis() {
-				return _react2.default.createElement(
-					'div',
-					{ className: 'eddis-empty' },
-					_react2.default.createElement(
-						'p',
-						null,
-						' Currently you are not tracking any eddis. '
-					),
-					_react2.default.createElement(_AddEddiButton2.default, null)
-				);
-			}
-		}, {
-			key: '_renderSelected',
-			value: function _renderSelected() {
-				var _props3 = this.props;
-				var _props3$eddi = _props3.eddi;
-				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
-				var setEddiState = _props3.setEddiState;
-				var _eddi$settings = eddi.settings;
-				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
-				var id = eddi.id;
-				var state = settings.state;
-
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', width: '100' }),
-					_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
-						onClick: function onClick(state) {
-							return setEddiState(eddi.id, state);
-						}
-					})
-				);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _props4 = this.props;
-				var eddi = _props4.eddi;
-				var eddiList = _props4.eddiList;
-				var setEddiState = _props4.setEddiState;
-				var hasEddis = !!eddiList.length;
-
-				var TroubleshootElement = undefined;
-
-				if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderSelected();
-
-				return _react2.default.createElement(
-					'div',
-					{ id: 'troubleshoot', className: 'page' },
-					TroubleshootElement
-				);
-			}
-		}]);
-
-		return Troubleshoot;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
-
-/***/ },
+/* 433 */,
 /* 434 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -48971,6 +48823,159 @@
 		}
 	}());
 
+
+/***/ },
+/* 442 */,
+/* 443 */,
+/* 444 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(173);
+
+	var _eddis = __webpack_require__(287);
+
+	var _menu = __webpack_require__(305);
+
+	var _EddiStateButton = __webpack_require__(434);
+
+	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
+
+	var _AddEddiButton = __webpack_require__(419);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddiList: state.eddis.list,
+			eddi: state.eddis.selected
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			setEddiState: function setEddiState(eddiId, state) {
+				return dispatch((0, _eddis.setEddiStateThunk)(eddiId, state));
+			},
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			}
+		};
+	}
+
+	var Troubleshoot = function (_Component) {
+		_inherits(Troubleshoot, _Component);
+
+		function Troubleshoot() {
+			_classCallCheck(this, Troubleshoot);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
+		}
+
+		_createClass(Troubleshoot, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _props = this.props;
+				var updateMenuName = _props.updateMenuName;
+				var _props$eddi = _props.eddi;
+				var eddi = _props$eddi === undefined ? {} : _props$eddi;
+
+				if (eddi.id) updateMenuName(eddi.settings.name);
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(newProps) {
+				var _props2 = this.props;
+				var updateMenuName = _props2.updateMenuName;
+				var _props2$eddi = _props2.eddi;
+				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
+				var eddi = newProps.eddi;
+
+
+				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
+			}
+		}, {
+			key: '_renderNoEddis',
+			value: function _renderNoEddis() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'eddis-empty' },
+					_react2.default.createElement(
+						'p',
+						null,
+						' Currently you are not tracking any eddis. '
+					),
+					_react2.default.createElement(_AddEddiButton2.default, null)
+				);
+			}
+		}, {
+			key: '_renderSelected',
+			value: function _renderSelected() {
+				var _props3 = this.props;
+				var _props3$eddi = _props3.eddi;
+				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
+				var setEddiState = _props3.setEddiState;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+				var id = eddi.id;
+				var state = settings.state;
+
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', width: '100' }),
+					_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
+						onClick: function onClick(state) {
+							return setEddiState(eddi.id, state);
+						}
+					})
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _props4 = this.props;
+				var eddi = _props4.eddi;
+				var eddiList = _props4.eddiList;
+				var setEddiState = _props4.setEddiState;
+				var hasEddis = !!eddiList.length;
+
+				var TroubleshootElement = undefined;
+
+				if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderSelected();
+
+				return _react2.default.createElement(
+					'div',
+					{ id: 'troubleshoot', className: 'page' },
+					TroubleshootElement
+				);
+			}
+		}]);
+
+		return Troubleshoot;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
 
 /***/ }
 /******/ ]);
