@@ -8,6 +8,17 @@ function isSelected(type, compare){
   return type === compare;
 }
 
+
+
+function colorForPointWithThreshold(point, threshold){
+  var factor = Math.min( 1, point / (1.5 * threshold) );
+  var red   =  Math.round(42  + (129 * factor));
+  var green =  Math.round(191 - (138 * factor));
+  var blue  =  Math.round(208 - (172 * factor));
+  return `rgba(${red}, ${green}, ${blue}, 1)`;
+}
+
+
 class HistoricalGraph extends Component {
   clickHandler(event, type){
     event.preventDefault();
@@ -27,7 +38,66 @@ class HistoricalGraph extends Component {
 
   paint(){
     var pointCount = this.props.data.length;
-    var scaleX = this.canvas.offsetWidth
+    var scaleX = this.canvas.offsetWidth / pointCount;
+    var maxY = this.props.threshold;
+    for( let ix in this.props.data ){
+      var daty = this.props.data[ix].y;
+      if( daty > maxY ){
+        maxY = daty;
+      }
+    }
+    var scaleY = this.canvas.offsetHeight / (1.2 * maxY);
+
+    this.context.lineWidth = 2;
+    // paint scale
+    this.context.save();
+    this.context.setLineDash([5,10]);
+    this.context.strokeStyle = "rgba(0, 109, 96, 1)";
+    var thresholdY = this.canvas.offsetHeight - (this.props.threshold*scaleY);
+    this.context.beginPath();
+    this.context.moveTo(0, thresholdY);
+    this.context.lineTo(this.canvas.offsetWidth, thresholdY);
+    this.context.stroke();
+    this.context.restore();
+
+    this.context.font = "normal normal 300 10px sans-serif";
+
+    // render data and x axis
+    var lastData;
+    for( let ix in this.props.data ){
+      var data = this.props.data[ix];
+      var xPt = ix*scaleX;
+      if( ix % 3 === 0 ){
+        switch(this.props.type){
+          case HISTORICAL.TODAY:
+            var hour = data.x.getHours() % 12;
+            hour = (hour === 0) ? 12 : hour;
+            this.context.fillText(hour, xPt, 150);
+            break;
+          case HISTORICAL.WEEK:
+          case HISTORICAL.MONTH:
+            this.context.fillText(data.x.getDate(), xPt, 150);
+            break;
+        }
+      }
+
+      if( !data.y ){
+        lastData = null;
+        continue;
+      }
+      if( lastData ){
+        var gradient = this.context.createLinearGradient((ix-1)*scaleX, 0, xPt, 0);
+        gradient.addColorStop("0", colorForPointWithThreshold(lastData.y, this.props.threshold));
+        gradient.addColorStop("1.0", colorForPointWithThreshold(data.y, this.props.threshold));
+        this.context.strokeStyle = gradient;
+        this.context.beginPath();
+        this.context.moveTo((ix-1)*scaleX, this.canvas.offsetHeight - (lastData.y*scaleY));
+        this.context.lineTo(xPt, this.canvas.offsetHeight - (data.y*scaleY));
+        this.context.stroke();
+      }
+      lastData = data;
+    }
+
   }
 
   render(){
@@ -65,7 +135,7 @@ class HistoricalGraph extends Component {
           <span>Today</span>
         </div>
       </div>
-      <canvas ref='canvas' width="100%" height="200px" className='historical-graph-canvas' />
+      <canvas ref='canvas' height="160px" style={{width: "100%"}} className='historical-graph-canvas' />
     </div>
   }
 
