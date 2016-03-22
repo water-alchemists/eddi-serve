@@ -72,7 +72,6 @@ class List extends Component {
 	_renderNoEddis(){
 		return <div className='eddis-empty'>
 			<p> Currently you are not tracking any eddis. </p>
-			<AddEddiButton />
 		</div>;
 	}
 
@@ -89,6 +88,7 @@ class List extends Component {
 		return (
 			<div id="list" className="page">
 				{ showEddi }
+				<AddEddiButton />
 			</div>
 		);
 	}

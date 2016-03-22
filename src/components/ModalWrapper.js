@@ -9,11 +9,14 @@ import * as modals from '../modals';
 
 
 const DEFAULT_STYLES = {
+	overlay: {
+		zIndex: "1"
+	},
 	content: {
 		top: "0",
 		right: "0",
 		bottom: "0",
-		left: "0"
+		left: "0",
 	}
 };
 

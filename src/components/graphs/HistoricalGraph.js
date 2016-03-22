@@ -15,6 +15,21 @@ class HistoricalGraph extends Component {
     if(onClick instanceof Function) return onClick(type);
   }
 
+  componentDidMount(){
+    this.canvas = this.refs.canvas;
+    this.context = this.canvas.getContext('2d');
+    this.paint();
+  }
+
+  componentWillReceiveProps(newProps){
+    this.paint();
+  }
+
+  paint(){
+    var pointCount = this.props.data.length;
+    var scaleX = this.canvas.offsetWidth
+  }
+
   render(){
     const { type, data } = this.props,
       monthClass = classNames([
@@ -50,7 +65,7 @@ class HistoricalGraph extends Component {
           <span>Today</span>
         </div>
       </div>
-      <canvas ref='canvas' className='historical-graph-canvas' />
+      <canvas ref='canvas' width="100%" height="200px" className='historical-graph-canvas' />
     </div>
   }
 
