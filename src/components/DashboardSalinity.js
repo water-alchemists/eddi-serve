@@ -62,7 +62,7 @@ class DashboardSalinity extends Component {
 		const { type, graphData } = this.state,
 			{ threshold, current, direction, readings } = this.props,
 			status = current > threshold ? generateBadText() : generateGoodText();
-		console.log('current', current);
+
 		return (
 			<div className='dashboard-view salinity'>
 				<div className='dashboard-current'>

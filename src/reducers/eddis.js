@@ -5,6 +5,7 @@ import {
 	EDDI_UPDATE_SUCCESS,
 	EDDI_UPDATESTART_SUCCESS ,
 	EDDI_UPDATEEND_SUCCESS,
+	EDDI_READINGS_SUCCESS,
 	EDDI_GETONE_SUCCESS,
 	EDDI_SELECT,
 	APP_START_SUCCESS
@@ -21,7 +22,8 @@ export default function(state = initialState, action = {}){
 		selected,
 		id,
 		settings={},
-		timing={}
+		timing={},
+		readings=[]
 	} = action;
 
 	let newList;
@@ -65,7 +67,6 @@ export default function(state = initialState, action = {}){
 			//if not the right one
 			return eddi;
 		});
-
 
 		return {
 			...state,
@@ -113,6 +114,22 @@ export default function(state = initialState, action = {}){
 			...state,
 			list : newList
 		}
+	case EDDI_READINGS_SUCCESS :
+		console.log('at the constant readings success', readings, id);
+		newList = state.list.map(eddi => {
+			if(eddi.id === id){
+				const updatedEddi = eddi;
+				updatedEddi.readings = [ ...readings ];
+
+				return updatedEddi;
+			}
+			return eddi;
+		});
+		console.log('new List', newList);
+		return {
+			...state,
+			list : newList
+		};
 	case EDDI_SELECT :
 		return {
 			...state,

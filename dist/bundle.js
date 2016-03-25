@@ -26666,7 +26666,7 @@
 	var EDDI_UPDATESTART_SUCCESS = exports.EDDI_UPDATESTART_SUCCESS = 'EDDI_UPDATESTART_SUCCESS';
 	var EDDI_UPDATEEND_SUCCESS = exports.EDDI_UPDATEEND_SUCCESS = 'EDDI_UPDATEEND_SUCCESS';
 	var EDDI_UPDATESNOOZE_SUCCESS = exports.EDDI_UPDATESNOOZE_SUCCESS = 'EDDI_UPDATESNOOZE_SUCCESS';
-	var EDDI_UPDATEMACHINE_SUCCESS = exports.EDDI_UPDATEMACHINE_SUCCESS = 'EDDI_UPDATEMACHINE_SUCCESS';
+	var EDDI_READINGS_SUCCESS = exports.EDDI_READINGS_SUCCESS = 'EDDI_READINGS_SUCCESS';
 	var EDDI_GETONE_SUCCESS = exports.EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
@@ -26719,6 +26719,8 @@
 		var settings = _action$settings === undefined ? {} : _action$settings;
 		var _action$timing = action.timing;
 		var timing = _action$timing === undefined ? {} : _action$timing;
+		var _action$readings = action.readings;
+		var readings = _action$readings === undefined ? [] : _action$readings;
 
 
 		var newList = undefined;
@@ -26797,6 +26799,21 @@
 				return _extends({}, state, {
 					list: newList
 				});
+			case _constants.EDDI_READINGS_SUCCESS:
+				console.log('at the constant readings success', readings, id);
+				newList = state.list.map(function (eddi) {
+					if (eddi.id === id) {
+						var updatedEddi = eddi;
+						updatedEddi.readings = [].concat(_toConsumableArray(readings));
+
+						return updatedEddi;
+					}
+					return eddi;
+				});
+				console.log('new List', newList);
+				return _extends({}, state, {
+					list: newList
+				});
 			case _constants.EDDI_SELECT:
 				return _extends({}, state, {
 					selected: selected
@@ -26809,6 +26826,8 @@
 	};
 
 	var _constants = __webpack_require__(248);
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	var initialState = {
 		list: [],
@@ -27013,27 +27032,27 @@
 
 	var _App3 = _interopRequireDefault(_App2);
 
-	var _Home2 = __webpack_require__(298);
+	var _Home2 = __webpack_require__(401);
 
 	var _Home3 = _interopRequireDefault(_Home2);
 
-	var _Dashboard2 = __webpack_require__(304);
+	var _Dashboard2 = __webpack_require__(407);
 
 	var _Dashboard3 = _interopRequireDefault(_Dashboard2);
 
-	var _List2 = __webpack_require__(415);
+	var _List2 = __webpack_require__(417);
 
 	var _List3 = _interopRequireDefault(_List2);
 
-	var _Settings2 = __webpack_require__(424);
+	var _Settings2 = __webpack_require__(426);
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(444);
+	var _Troubleshoot2 = __webpack_require__(436);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(435);
+	var _Report2 = __webpack_require__(438);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -27069,15 +27088,15 @@
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
-	var _ModalWrapper = __webpack_require__(263);
+	var _ModalWrapper = __webpack_require__(264);
 
 	var _ModalWrapper2 = _interopRequireDefault(_ModalWrapper);
 
-	var _user = __webpack_require__(293);
+	var _user = __webpack_require__(396);
 
-	var _app = __webpack_require__(295);
+	var _app = __webpack_require__(398);
 
-	var _base = __webpack_require__(296);
+	var _base = __webpack_require__(399);
 
 	var _base2 = _interopRequireDefault(_base);
 
@@ -27215,13 +27234,13 @@
 
 	var _reactRouter = __webpack_require__(184);
 
-	var _classnames = __webpack_require__(441);
+	var _classnames = __webpack_require__(259);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
 	var _constants = __webpack_require__(248);
 
-	var _Menu = __webpack_require__(259);
+	var _Menu = __webpack_require__(260);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
@@ -27437,13 +27456,67 @@
 /* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(260);
+	var content = __webpack_require__(261);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -27460,10 +27533,10 @@
 	}
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -27474,7 +27547,7 @@
 
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports) {
 
 	/*
@@ -27530,7 +27603,7 @@
 
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -27784,7 +27857,7 @@
 
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27801,13 +27874,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactModal = __webpack_require__(264);
+	var _reactModal = __webpack_require__(265);
 
 	var _reactModal2 = _interopRequireDefault(_reactModal);
 
-	var _modal = __webpack_require__(284);
+	var _modal = __webpack_require__(285);
 
-	var _modals = __webpack_require__(285);
+	var _modals = __webpack_require__(286);
 
 	var modals = _interopRequireWildcard(_modals);
 
@@ -27882,7 +27955,6 @@
 				var customStyles = _extends({}, DEFAULT_STYLES, style);
 				var ContentElement = this._renderContent();
 
-				console.log('modal', modal, customStyles);
 				return _react2.default.createElement(
 					_reactModal2.default,
 					{ isOpen: on,
@@ -27915,23 +27987,23 @@
 	exports.default = ModalWrapper;
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(265);
+	module.exports = __webpack_require__(266);
 
 
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {var React = __webpack_require__(5);
 	var ReactDOM = __webpack_require__(162);
-	var ExecutionEnvironment = __webpack_require__(266);
-	var ModalPortal = React.createFactory(__webpack_require__(267));
-	var ariaAppHider = __webpack_require__(282);
-	var elementClass = __webpack_require__(283);
+	var ExecutionEnvironment = __webpack_require__(267);
+	var ModalPortal = React.createFactory(__webpack_require__(268));
+	var ariaAppHider = __webpack_require__(283);
+	var elementClass = __webpack_require__(284);
 	var renderSubtreeIntoContainer = __webpack_require__(162).unstable_renderSubtreeIntoContainer;
 
 	var SafeHTMLElement = ExecutionEnvironment.canUseDOM ? window.HTMLElement : {};
@@ -28010,7 +28082,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -28055,14 +28127,14 @@
 
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(5);
 	var div = React.DOM.div;
-	var focusManager = __webpack_require__(268);
-	var scopeTab = __webpack_require__(270);
-	var Assign = __webpack_require__(271);
+	var focusManager = __webpack_require__(269);
+	var scopeTab = __webpack_require__(271);
+	var Assign = __webpack_require__(272);
 
 
 	// so that our CSS is statically analyzable
@@ -28259,10 +28331,10 @@
 
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(269);
+	var findTabbable = __webpack_require__(270);
 	var modalElement = null;
 	var focusLaterElement = null;
 	var needToFocus = false;
@@ -28333,7 +28405,7 @@
 
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports) {
 
 	/*!
@@ -28389,10 +28461,10 @@
 
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(269);
+	var findTabbable = __webpack_require__(270);
 
 	module.exports = function(node, event) {
 	  var tabbable = findTabbable(node);
@@ -28410,7 +28482,7 @@
 
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28421,9 +28493,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseAssign = __webpack_require__(272),
-	    createAssigner = __webpack_require__(278),
-	    keys = __webpack_require__(274);
+	var baseAssign = __webpack_require__(273),
+	    createAssigner = __webpack_require__(279),
+	    keys = __webpack_require__(275);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -28496,7 +28568,7 @@
 
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28507,8 +28579,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseCopy = __webpack_require__(273),
-	    keys = __webpack_require__(274);
+	var baseCopy = __webpack_require__(274),
+	    keys = __webpack_require__(275);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -28529,7 +28601,7 @@
 
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports) {
 
 	/**
@@ -28567,7 +28639,7 @@
 
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28578,9 +28650,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var getNative = __webpack_require__(275),
-	    isArguments = __webpack_require__(276),
-	    isArray = __webpack_require__(277);
+	var getNative = __webpack_require__(276),
+	    isArguments = __webpack_require__(277),
+	    isArray = __webpack_require__(278);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -28809,7 +28881,7 @@
 
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports) {
 
 	/**
@@ -28952,7 +29024,7 @@
 
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports) {
 
 	/**
@@ -29201,7 +29273,7 @@
 
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports) {
 
 	/**
@@ -29387,7 +29459,7 @@
 
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -29398,9 +29470,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var bindCallback = __webpack_require__(279),
-	    isIterateeCall = __webpack_require__(280),
-	    restParam = __webpack_require__(281);
+	var bindCallback = __webpack_require__(280),
+	    isIterateeCall = __webpack_require__(281),
+	    restParam = __webpack_require__(282);
 
 	/**
 	 * Creates a function that assigns properties of source object(s) to a given
@@ -29445,7 +29517,7 @@
 
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports) {
 
 	/**
@@ -29516,7 +29588,7 @@
 
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports) {
 
 	/**
@@ -29654,7 +29726,7 @@
 
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports) {
 
 	/**
@@ -29727,7 +29799,7 @@
 
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports) {
 
 	var _element = typeof document !== 'undefined' ? document.body : null;
@@ -29774,7 +29846,7 @@
 
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports) {
 
 	module.exports = function(opts) {
@@ -29839,7 +29911,7 @@
 
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29867,7 +29939,7 @@
 	}
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29877,7 +29949,7 @@
 	});
 	exports.AddEddiModal = undefined;
 
-	var _AddEddiModal = __webpack_require__(286);
+	var _AddEddiModal = __webpack_require__(287);
 
 	var _AddEddiModal2 = _interopRequireDefault(_AddEddiModal);
 
@@ -29886,7 +29958,7 @@
 	exports.AddEddiModal = _AddEddiModal2.default;
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29901,9 +29973,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eddis = __webpack_require__(287);
+	var _eddis = __webpack_require__(288);
 
-	var _AddEddiForm = __webpack_require__(290);
+	var _AddEddiForm = __webpack_require__(291);
 
 	var _AddEddiForm2 = _interopRequireDefault(_AddEddiForm);
 
@@ -29967,7 +30039,7 @@
 	exports.default = AddEddiModal;
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29991,7 +30063,7 @@
 	exports.getEddiState = getEddiState;
 	exports.getEddiReadings = getEddiReadings;
 
-	var _eddiFirebase = __webpack_require__(288);
+	var _eddiFirebase = __webpack_require__(289);
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
 
@@ -30137,7 +30209,6 @@
 		var start = {};
 		if (hour) start.hour = hour;
 		if (minute) start.minute = minute;
-		console.log('this is the start', start);
 
 		return function (dispatch) {
 			if (!(typeof hour === 'undefined' ? 'undefined' : _typeof(hour)) === 'number' || typeof minutes === 'number') throw new Error('Hour and minutes must be numbers.');
@@ -30176,7 +30247,6 @@
 
 	function setEddiStateThunk(eddiId, state) {
 		return function (dispatch) {
-			console.log('eddiID', eddiId, state);
 			return EddiFire.setEddiState(eddiId, state).then(function (update) {
 				return dispatch(updateEddiSuccess(update.id, update.settings));
 			}).catch(function (error) {
@@ -30197,7 +30267,7 @@
 
 	function getEddiState(id, state) {
 		return {
-			type: _constants.EDDI_UPDATEMACHINE_SUCCESS,
+			type: EDDI_UPDATEMACHINE_SUCCESS,
 			id: id,
 			state: state
 		};
@@ -30205,14 +30275,14 @@
 
 	function getEddiReadings(id, readings) {
 		return {
-			type: _constants.EDDI_UPDATEMACHINE_SUCCESS,
+			type: _constants.EDDI_READINGS_SUCCESS,
 			id: id,
 			readings: readings
 		};
 	}
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30235,7 +30305,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Firebase = __webpack_require__(289);
+	var Firebase = __webpack_require__(290);
 
 	var PATHS = {
 		BASE_PATH: 'https://eddi.firebaseIO.com',
@@ -30259,9 +30329,9 @@
 	};
 
 	var EVENTS = {
-		SETTINGS: PATHS.SETTINGS_PATH,
-		READINGS: PATHS.READINGS,
-		STATE: PATHS.STATE_PATH
+		SETTINGS: /eddis\/(.+)\/settings/,
+		READINGS: /eddis\/(.+)\/readings/,
+		STATE: /eddis\/(.+)\/state/
 	};
 
 	var EddiFire = function () {
@@ -30275,6 +30345,8 @@
 				USER: ref.child(PATHS.USER_PATH),
 				EDDI: ref.child(PATHS.EDDI_PATH)
 			};
+
+			this.events = {};
 		}
 
 		_createClass(EddiFire, [{
@@ -30579,24 +30651,34 @@
 				});
 			}
 		}, {
+			key: 'addEventListener',
+			value: function addEventListener(path, func) {
+				this.refs.BASE.child(path).on('value', function (snapshot) {
+					return func(snapshot.val());
+				});
+			}
+		}, {
+			key: 'removeEventListeners',
+			value: function removeEventListeners(path) {
+				this.refs.BASE.child(path).off('value');
+			}
+		}, {
 			key: 'addEddiEventListener',
 			value: function addEddiEventListener(id, event, func) {
-				var path = EVENTS[event];
-				if (!path) throw new Error(event + ' is not a valid event.');
-				this.refs.EDDI.child(id).child(path).on(value, function (snapshot) {
-					var data = snapshot.val();
-					func(data);
-				});
+				var path = PATHS.EDDI_PATH + '/' + id + '/' + event,
+				    isMatch = path.match(EVENTS[event]);
+				if (!isMatch) throw new Error(path + ' is not valid to listen on.');
+				console.log('adding event listener path', path, isMatch);
+				this.addEventListener(path, func);
 			}
 		}, {
 			key: 'removeEddiEventListener',
 			value: function removeEddiEventListener(id, event, func) {
-				var path = EVENTS[event];
-				if (!path) throw new Error(event + ' is not a valid event.');
-				this.refs.EDDI.child(id).child(path).on(value, function (snapshot) {
-					var data = snapshot.val();
-					func(data);
-				});
+				var path = PATHS.EDDI_PATH + '/' + id + '/' + event,
+				    isMatch = path.match(EVENTS[event]);
+				if (!isMatch) throw new Error(event + ' is not valid to remove listeners for.');
+				console.log('removing event listener path', path, isMatch);
+				this.removeEventListeners(path);
 			}
 		}]);
 
@@ -30604,7 +30686,7 @@
 	}();
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports) {
 
 	/*! @license Firebase v2.4.1
@@ -30889,7 +30971,7 @@
 
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30904,11 +30986,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SalinityInput = __webpack_require__(429);
+	var _SalinityInput = __webpack_require__(292);
 
 	var _SalinityInput2 = _interopRequireDefault(_SalinityInput);
 
-	var _AddEddiForm = __webpack_require__(291);
+	var _AddEddiForm = __webpack_require__(394);
 
 	var _AddEddiForm2 = _interopRequireDefault(_AddEddiForm);
 
@@ -31067,1245 +31149,91 @@
 	exports.default = AddEddiForm;
 
 /***/ },
-/* 291 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(292);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiForm.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiForm.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
 /* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
-	// imports
+	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
-	// module
-	exports.push([module.id, ".eddi-add {\n  padding: 10px;\n}\n.eddi-add h3 {\n  text-align: center;\n  font-weight: 500;\n  color: black;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .input-container .salinity-container {\n  position: relative;\n}\n.eddi-add .input-container .salinity-container p {\n  color: black;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  margin-right: 5px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n}\n", ""]);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	// exports
+	var _react = __webpack_require__(5);
 
+	var _react2 = _interopRequireDefault(_react);
+
+	var _data = __webpack_require__(293);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SalinityInput = function (_Component) {
+		_inherits(SalinityInput, _Component);
+
+		function SalinityInput() {
+			_classCallCheck(this, SalinityInput);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(SalinityInput).apply(this, arguments));
+		}
+
+		_createClass(SalinityInput, [{
+			key: 'changeHandler',
+			value: function changeHandler(event) {
+				event.preventDefault();
+				var onSalinityChange = this.props.onSalinityChange;
+				var value = event.target.value;
+				var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
+
+				if (onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _props = this.props;
+				var value = _props.value;
+				var placeholder = _props.placeholder;
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'salinity-input' },
+					_react2.default.createElement('input', { type: 'number',
+						onChange: function onChange(event) {
+							return _this2.changeHandler(event);
+						},
+						value: value,
+						placeholder: placeholder
+					})
+				);
+			}
+		}]);
+
+		return SalinityInput;
+	}(_react.Component);
+
+	SalinityInput.propTypes = {
+		onSalinityChange: _react.PropTypes.func,
+		value: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
+		placeholder: _react.PropTypes.string
+	};
+
+	SalinityInput.defaultProps = {
+		value: _data.salinityOptions.default,
+		placeholder: 'Set Your Own'
+	};
+
+	exports.default = SalinityInput;
 
 /***/ },
 /* 293 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.userLogoutSuccess = userLogoutSuccess;
-	exports.userGetProfile = userGetProfile;
-	exports.userCreateThunk = userCreateThunk;
-	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
-	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
-	exports.userLogout = userLogout;
-
-	var _eddiFirebase = __webpack_require__(288);
-
-	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
-
-	var _cookieStore = __webpack_require__(294);
-
-	var _cookieStore2 = _interopRequireDefault(_cookieStore);
-
-	var _reactRouter = __webpack_require__(184);
-
-	var _constants = __webpack_require__(248);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EddiFire = (0, _eddiFirebase2.default)(),
-	    EddiCookie = (0, _cookieStore2.default)();
-
-	function userLoginSuccess(user) {
-		return {
-			type: _constants.USER_LOGIN_SUCCESS,
-			user: user
-		};
-	}
-
-	function userLoginError(error) {
-		return {
-			export: _constants.USER_LOGIN_ERROR,
-			error: error
-		};
-	}
-
-	function userLogoutSuccess() {
-		return {
-			type: _constants.USER_LOGOUT_SUCCESS
-		};
-	}
-
-	function userUpdateSuccess(user) {
-		return {
-			type: _constants.USER_UPDATE_SUCCESS,
-			user: user
-		};
-	}
-
-	function userUpdateError(user) {
-		return {
-			type: _constants.USER_UPDATE_ERROR,
-			user: user
-		};
-	}
-
-	function userGetProfile(user) {
-		return {
-			type: _constants.USER_GETPROFILE_SUCCESS,
-			user: user
-		};
-	}
-
-	function userCreateError(error) {
-		return {
-			type: _constants.USER_CREATE_ERROR,
-			error: error
-		};
-	}
-
-	function userCreateThunk(user) {
-
-		return function (dispatch) {
-			var email = user.email;
-			var password = user.password;
-
-
-			return EddiFire.createUser(email, password).then(function (userSuccess) {
-				var id = userSuccess.uid;
-				delete user.password;
-				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
-
-					dispatch(userGetProfile(userProfile));
-					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
-				});
-			}).catch(function (err) {
-				return dispatch(userCreateError(err));
-			});
-		};
-	}
-
-	function userLoginWithPasswordThunk(email, password) {
-		return function (dispatch) {
-			return EddiFire.authWithPassword(email, password).then(function (user) {
-				var uid = user.uid;
-				var token = user.token;
-				var expires = user.expires;
-
-				//set the token to cookie
-
-				EddiCookie.setCookie(token, expires);
-
-				//gets the user profile
-				return EddiFire.getUserProfile(uid).then(function (userProfile) {
-					dispatch(userGetProfile(userProfile));
-					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
-				});
-			}).catch(function (err) {
-				return dispatch(userLoginError(err));
-			});
-		};
-	}
-
-	function userLoginWithTokenThunk() {
-		return function (dispatch) {
-			var cookie = EddiCookie.getCookie() || {},
-			    token = cookie.token;
-			if (!token) return; //if there is no token, don't do anything
-			return EddiFire.authWithToken(token).then(function (user) {
-				//gets the user profile
-				var uid = user.uid;
-
-
-				return EddiFire.getUserProfile(uid).then(function (userProfile) {
-					return dispatch(userGetProfile(userProfile));
-				});
-			}).catch(function (err) {
-				var code = err.code;
-
-				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
-				dispatch(userLoginError(err));
-			});
-		};
-	}
-
-	function userLogout() {
-		return function (dispatch) {
-			EddiFire.unauthenticate();
-			EddiCookie.deleteCookie();
-			console.log('logging out');
-			//let store know of logout
-			dispatch(userLogoutSuccess());
-			_reactRouter.browserHistory.replace(_constants.PATHS.HOME);
-		};
-	}
-
-/***/ },
-/* 294 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.default = function () {
-		var init = undefined;
-		if (init) return init;else {
-			init = new CookieStore();
-			return init;
-		}
-	};
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function parseCookie(cookieString) {
-		var sections = cookieString.split('; ').map(function (section) {
-			return section.split('=');
-		});
-		return sections.reduce(function (cookie, section) {
-			cookie[section[0]] = section[1];
-			return cookie;
-		}, {});
-	}
-
-	function formatCookie(token, expires) {
-		return 'token=' + token + ';path=/;expires=' + expires + ';';
-	}
-
-	var CookieStore = function () {
-		function CookieStore() {
-			_classCallCheck(this, CookieStore);
-
-			this.cookie = null;
-		}
-
-		_createClass(CookieStore, [{
-			key: 'setCookie',
-			value: function setCookie(token, expires) {
-				//sets the cookie
-				if (token) {
-					document.cookie = formatCookie(token, expires);
-					this.cookie = {
-						token: token,
-						expires: expires
-					};
-				} else {
-					document.cookie = formatCookie("", -1);
-					this.cookie = null;
-				};
-			}
-		}, {
-			key: 'getCookie',
-			value: function getCookie() {
-				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
-				return this.cookie;
-			}
-		}, {
-			key: 'deleteCookie',
-			value: function deleteCookie() {
-				this.setCookie(null);
-			}
-		}]);
-
-		return CookieStore;
-	}();
-
-	;
-
-/***/ },
-/* 295 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.appStartThunk = appStartThunk;
-
-	var _reactRouter = __webpack_require__(184);
-
-	var _eddiFirebase = __webpack_require__(288);
-
-	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
-
-	var _cookieStore = __webpack_require__(294);
-
-	var _cookieStore2 = _interopRequireDefault(_cookieStore);
-
-	var _constants = __webpack_require__(248);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EddiFire = (0, _eddiFirebase2.default)(),
-	    EddiCookie = (0, _cookieStore2.default)();
-
-	function appStartSuccess(user, list, selected) {
-		return {
-			type: _constants.APP_START_SUCCESS,
-			user: user,
-			list: list,
-			selected: selected
-		};
-	}
-
-	function appStartError(error) {
-		return {
-			type: _constants.APP_START_ERROR,
-			error: error
-		};
-	}
-
-	function appStartThunk(eddiId) {
-		return function (dispatch) {
-			var cookie = EddiCookie.getCookie() || {},
-			    token = cookie.token;
-			if (!token) return _reactRouter.browserHistory.push(_constants.PATHS.HOME); //if there is no token, return the user to home
-			return EddiFire.authWithToken(token).then(function (user) {
-				//gets the user profile and eddis
-				var uid = user.uid;
-				var promises = [EddiFire.getUserProfile(uid), EddiFire.getAllEddiByUser(uid)];
-
-				return Promise.all(promises);
-			}).then(function (data) {
-				//after you got them all, dispatch for update all
-				var profile = data[0],
-				    list = data[1];
-				var selected = undefined;
-				if (list.length) {
-					var potential = list.filter(function (eddi) {
-						return eddi.id === eddiId;
-					})[0];
-					if (!potential) selected = list[0];else selected = potential;
-				}
-
-				dispatch(appStartSuccess(profile, list, selected));
-			}).catch(function (err) {
-				var code = err.code;
-
-				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
-				dispatch(appStartError(err));
-				dispatch();
-			});
-		};
-	}
-
-/***/ },
-/* 296 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(297);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./base.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./base.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 297 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(261)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -10px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -8px -223px;\n}\n.sprite.report.green {\n  background-position: -57px -223px;\n}\n.sprite.arrow.down {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -425px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 298 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(173);
-
-	var _reactRouter = __webpack_require__(184);
-
-	var _constants = __webpack_require__(248);
-
-	var _HomeButton = __webpack_require__(299);
-
-	var _HomeButton2 = _interopRequireDefault(_HomeButton);
-
-	var _LoginForm = __webpack_require__(300);
-
-	var _LoginForm2 = _interopRequireDefault(_LoginForm);
-
-	var _SignupForm = __webpack_require__(301);
-
-	var _SignupForm2 = _interopRequireDefault(_SignupForm);
-
-	var _eddis = __webpack_require__(287);
-
-	var _user = __webpack_require__(293);
-
-	var _Home = __webpack_require__(302);
-
-	var _Home2 = _interopRequireDefault(_Home);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Modes = {
-		BASE: 0,
-		LOGIN: 1,
-		SIGNUP: 2
-	};
-
-	var ROUTES = {
-		LOGIN: { pathname: _constants.PATHS.HOME, query: { view: 'login' } },
-		SIGNUP: { pathname: _constants.PATHS.HOME, query: { view: 'signup' } }
-	};
-
-	function mapStateToProps(state) {
-		return {
-			user: state.user,
-			eddis: state.eddis.list
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			navigateTo: function navigateTo(pathname, query) {
-				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
-			},
-			login: function login(_ref) {
-				var email = _ref.email;
-				var password = _ref.password;
-				return dispatch((0, _user.userLoginWithPasswordThunk)(email, password));
-			},
-			signup: function signup(user) {
-				return dispatch((0, _user.userCreateThunk)(user));
-			}
-		};
-	}
-
-	var Home = function (_Component) {
-		_inherits(Home, _Component);
-
-		function Home(props, context) {
-			_classCallCheck(this, Home);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props, context));
-
-			var router = _this.context.router;
-
-
-			var mode = undefined;
-			if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
-
-			_this.state = {
-				mode: mode
-			};
-			return _this;
-		}
-
-		_createClass(Home, [{
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps) {
-
-				if (nextProps.user.email) {
-					// user is logged in. go directly to list screen
-					_reactRouter.browserHistory.replace(_constants.PATHS.LIST);
-				}
-
-				var router = this.context.router;
-
-				var mode = undefined;
-				if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
-				this.setState({ mode: mode });
-			}
-		}, {
-			key: 'navigateTo',
-			value: function navigateTo(key) {
-				var destination = _constants.PATHS[key];
-				if (destination) return _reactRouter.browserHistory.push(destination);
-			}
-		}, {
-			key: '_renderBase',
-			value: function _renderBase() {
-				return [_react2.default.createElement(
-					'div',
-					{ className: 'auth-button',
-						onClick: function onClick() {
-							return _reactRouter.browserHistory.push(ROUTES.LOGIN);
-						}
-					},
-					'Login ›'
-				), _react2.default.createElement(
-					'div',
-					{ className: 'auth-button',
-						onClick: function onClick() {
-							return _reactRouter.browserHistory.push(ROUTES.SIGNUP);
-						}
-					},
-					'Sign Up ›'
-				)];
-			}
-		}, {
-			key: '_renderLogin',
-			value: function _renderLogin() {
-				return _react2.default.createElement(_LoginForm2.default, { onSubmit: this.props.login });
-			}
-		}, {
-			key: '_renderSignup',
-			value: function _renderSignup() {
-				return _react2.default.createElement(_SignupForm2.default, { onSubmit: this.props.signup });
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var modeContent;
-				switch (this.state.mode) {
-					case Modes.BASE:
-						modeContent = this._renderBase();
-						break;
-					case Modes.LOGIN:
-						modeContent = this._renderLogin();
-						break;
-					case Modes.SIGNUP:
-						modeContent = this._renderSignup();
-						break;
-					default:
-						return null;
-				}
-
-				return _react2.default.createElement(
-					'div',
-					{ id: 'home', className: 'page dark' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'content' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'logo-container' },
-							_react2.default.createElement('img', { src: '/assets/logo.png' })
-						),
-						modeContent
-					)
-				);
-			}
-		}]);
-
-		return Home;
-	}(_react.Component);
-
-	Home.propTypes = {
-		eddis: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-			name: _react.PropTypes.string
-		}))
-	};
-
-	Home.contextTypes = {
-		router: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
-
-/***/ },
-/* 299 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var HomeButton = function (_Component) {
-		_inherits(HomeButton, _Component);
-
-		function HomeButton() {
-			_classCallCheck(this, HomeButton);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(HomeButton).apply(this, arguments));
-		}
-
-		_createClass(HomeButton, [{
-			key: 'clickHandler',
-			value: function clickHandler() {
-				var onClick = this.props.onClick;
-
-				if (onClick instanceof Function) return onClick();
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _props = this.props;
-				var name = _props.name;
-				var image = _props.image;
-
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'home-button', onClick: function onClick() {
-							return _this2.clickHandler();
-						} },
-					image,
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'p',
-							null,
-							' ',
-							name,
-							' '
-						),
-						_react2.default.createElement(
-							'p',
-							null,
-							' ',
-							'>',
-							' '
-						)
-					)
-				);
-			}
-		}]);
-
-		return HomeButton;
-	}(_react.Component);
-
-	HomeButton.propTypes = {
-		name: PropTypes.string.isRequired,
-		image: PropTypes.string,
-		onClick: PropTypes.func
-	};
-
-	exports.default = HomeButton;
-
-/***/ },
-/* 300 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var LoginForm = function (_Component) {
-		_inherits(LoginForm, _Component);
-
-		function LoginForm(props) {
-			_classCallCheck(this, LoginForm);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LoginForm).call(this, props));
-
-			_this.state = {
-				email: '',
-				password: ''
-			};
-			return _this;
-		}
-
-		_createClass(LoginForm, [{
-			key: 'onEmailChange',
-			value: function onEmailChange(event) {
-				var email = event.target.value;
-				event.preventDefault();
-				this.setState({ email: email });
-			}
-		}, {
-			key: 'onPasswordChange',
-			value: function onPasswordChange(event) {
-				var password = event.target.value;
-				event.preventDefault();
-				this.setState({ password: password });
-			}
-		}, {
-			key: 'submitHandler',
-			value: function submitHandler(event) {
-				var onSubmit = this.props.onSubmit;
-				var user = this.state;
-
-				event.preventDefault();
-				if (onSubmit) onSubmit(user);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _state = this.state;
-				var email = _state.email;
-				var password = _state.password;
-
-				return _react2.default.createElement(
-					'form',
-					{ onSubmit: function onSubmit(event) {
-							return _this2.submitHandler(event);
-						} },
-					_react2.default.createElement('input', { onChange: function onChange(event) {
-							return _this2.onEmailChange(event);
-						},
-						type: 'email',
-						name: 'email',
-						value: email,
-						placeholder: 'email'
-					}),
-					_react2.default.createElement('input', { onChange: function onChange(event) {
-							return _this2.onPasswordChange(event);
-						},
-						type: 'password',
-						name: 'password',
-						value: password,
-						placeholder: 'password'
-					}),
-					_react2.default.createElement(
-						'button',
-						{ type: 'submit' },
-						'Login'
-					)
-				);
-			}
-		}]);
-
-		return LoginForm;
-	}(_react.Component);
-
-	LoginForm.propTypes = {
-		onSubmit: PropTypes.func
-	};
-
-	exports.default = LoginForm;
-
-/***/ },
-/* 301 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PropTypes = _react2.default.PropTypes;
-
-	var SignupForm = function (_Component) {
-		_inherits(SignupForm, _Component);
-
-		function SignupForm(props) {
-			_classCallCheck(this, SignupForm);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SignupForm).call(this, props));
-
-			_this.state = {
-				email: '',
-				password: '',
-				name: ''
-			};
-			return _this;
-		}
-
-		_createClass(SignupForm, [{
-			key: 'onEmailChange',
-			value: function onEmailChange(event) {
-				var email = event.target.value;
-				event.preventDefault();
-				this.setState({ email: email });
-			}
-		}, {
-			key: 'onPasswordChange',
-			value: function onPasswordChange(event) {
-				var password = event.target.value;
-				event.preventDefault();
-				this.setState({ password: password });
-			}
-		}, {
-			key: 'onNameChange',
-			value: function onNameChange(event) {
-				var name = event.target.value;
-				event.preventDefault();
-				this.setState({ name: name });
-			}
-		}, {
-			key: 'submitHandler',
-			value: function submitHandler(event) {
-				var onSubmit = this.props.onSubmit;
-				var user = this.state;
-				event.preventDefault();
-				if (onSubmit) onSubmit(user);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _state = this.state;
-				var email = _state.email;
-				var password = _state.password;
-				var name = _state.name;
-
-				return _react2.default.createElement(
-					'form',
-					{ onSubmit: function onSubmit(event) {
-							return _this2.submitHandler(event);
-						} },
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement('input', {
-								onChange: function onChange(event) {
-									return _this2.onEmailChange(event);
-								},
-								name: 'email',
-								type: 'text',
-								placeholder: 'email',
-								value: email
-							})
-						),
-						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement('input', {
-								onChange: function onChange(event) {
-									return _this2.onPasswordChange(event);
-								},
-								name: 'password',
-								type: 'password',
-								placeholder: 'password',
-								value: password
-							})
-						),
-						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement('input', {
-								onChange: function onChange(event) {
-									return _this2.onNameChange(event);
-								},
-								name: 'name',
-								type: 'text',
-								placeholder: 'name',
-								value: name
-							})
-						),
-						_react2.default.createElement(
-							'button',
-							{ type: 'submit' },
-							'Signup'
-						)
-					)
-				);
-			}
-		}]);
-
-		return SignupForm;
-	}(_react.Component);
-
-	SignupForm.propTypes = {
-		onSubmit: PropTypes.func
-	};
-
-	exports.default = SignupForm;
-
-/***/ },
-/* 302 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(303);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Home.less", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Home.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 303 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(261)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "#home {\n  position: absolute;\n  min-height: 100vh;\n  height: auto;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#home .content .logo-container img {\n  width: 100%;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 304 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(173);
-
-	var _menu = __webpack_require__(305);
-
-	var _eddis = __webpack_require__(287);
-
-	var _constants = __webpack_require__(248);
-
-	var _data = __webpack_require__(306);
-
-	var _DashboardMenu = __webpack_require__(407);
-
-	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
-
-	var _DashboardSalinity = __webpack_require__(408);
-
-	var _DashboardSalinity2 = _interopRequireDefault(_DashboardSalinity);
-
-	var _DashboardFlow = __webpack_require__(411);
-
-	var _DashboardFlow2 = _interopRequireDefault(_DashboardFlow);
-
-	var _Dashboard = __webpack_require__(413);
-
-	var _Dashboard2 = _interopRequireDefault(_Dashboard);
-
-	var _eddiFirebase = __webpack_require__(288);
-
-	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var EddiFire = (0, _eddiFirebase2.default)();
-
-	function getGoodBad(current, threshold) {
-		if (!threshold) threshold = _constants.SALINITY_THRESHOLD; //default threshold for salinity
-		var ppmIn = current.ppmIn;
-		var ppmOut = current.ppmOut;
-		var qOut = current.qOut;
-		var flowGood = qOut > _constants.FLOW_THRESHOLD ? false : true;
-		var salinityInGood = ppmIn > threshold ? false : true;
-		var salinityOutGood = ppmOut > threshold ? false : true;
-		var powerGood = true;
-
-		return {
-			salinityIn: salinityInGood,
-			salinityOut: salinityOutGood,
-			power: powerGood,
-			flow: flowGood
-		};
-	}
-
-	function mapStateToProps(state) {
-		return {
-			eddi: state.eddis.selected
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			updateMenuName: function updateMenuName(name) {
-				return dispatch((0, _menu.menuNameChange)(name));
-			},
-			selectEddiById: function selectEddiById(eddi) {
-				return dispatch((0, _eddis.selectEddiById)(eddi));
-			}
-		};
-	}
-
-	var Dashboard = function (_Component) {
-		_inherits(Dashboard, _Component);
-
-		function Dashboard(props) {
-			_classCallCheck(this, Dashboard);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).call(this, props));
-
-			_this.state = {
-				readings: [],
-				current: {}
-			};
-			return _this;
-		}
-
-		_createClass(Dashboard, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _props = this.props;
-				var updateMenuName = _props.updateMenuName;
-				var _props$eddi = _props.eddi;
-				var eddi = _props$eddi === undefined ? {} : _props$eddi;
-
-				if (eddi.settings) updateMenuName(eddi.settings.name);
-				if (eddi.readings) {
-					//format the readings into an array for data handling
-					var readings = (0, _data.mapDateToReadings)(eddi.readings),
-					    current = readings[readings.length - 1];
-					this.setState({ readings: readings, current: current });
-				}
-			}
-		}, {
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(newProps) {
-				var _props2 = this.props;
-				var updateMenuName = _props2.updateMenuName;
-				var _props2$eddi = _props2.eddi;
-				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
-				var location = _props2.location;
-				var eddi = newProps.eddi;
-
-
-				if (eddi.settings) updateMenuName(eddi.settings.name);
-				if (eddi.readings) {
-					//format the readings into an array for data handling
-					var readings = (0, _data.mapDateToReadings)(eddi.readings),
-					    current = readings[readings.length - 1];
-
-					this.setState({ readings: readings, current: current });
-				}
-			}
-		}, {
-			key: '_renderSalinity',
-			value: function _renderSalinity(current, direction) {
-				var readings = this.state.readings;
-				var _props$eddi2 = this.props.eddi;
-				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
-				var threshold = eddi.settings.salinity;
-
-				return _react2.default.createElement(_DashboardSalinity2.default, { key: direction,
-					threshold: threshold,
-					current: current,
-					direction: direction,
-					readings: readings
-				});
-			}
-		}, {
-			key: '_renderFlow',
-			value: function _renderFlow(rate) {
-				var readings = this.state.readings;
-
-				return _react2.default.createElement(_DashboardFlow2.default, { rate: rate,
-					readings: readings
-				});
-			}
-		}, {
-			key: '_renderViewBasedQuery',
-			value: function _renderViewBasedQuery(view) {
-				var _props$eddi3 = this.props.eddi;
-				var eddi = _props$eddi3 === undefined ? {} : _props$eddi3;
-				var current = this.state.current;
-				//defaults to salinity out
-
-				if (eddi.settings) {
-					switch (view) {
-						case _constants.QUERY.SALINITY_IN:
-							return this._renderSalinity(current.ppmIn, 'input');
-							break;
-						case _constants.QUERY.FLOW:
-							return this._renderFlow(current.qOut);
-							break;
-						default:
-							return this._renderSalinity(current.ppmOut, 'output');
-					}
-				}
-				return null;
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var current = this.state.current;
-				var _props3 = this.props;
-				var _props3$eddi = _props3.eddi;
-				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
-				var _props3$location = _props3.location;
-				var location = _props3$location === undefined ? {} : _props3$location;
-				var id = eddi.id;
-				var _eddi$settings = eddi.settings;
-				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
-				var view = location.query.view;
-
-				var _getGoodBad = getGoodBad(current, settings.salinity);
-
-				var salinityIn = _getGoodBad.salinityIn;
-				var salinityOut = _getGoodBad.salinityOut;
-				var flow = _getGoodBad.flow;
-				var power = _getGoodBad.power;
-
-
-				var DashboardElement = this._renderViewBasedQuery(view);
-				return _react2.default.createElement(
-					'div',
-					{ id: 'dashboard', className: 'page' },
-					_react2.default.createElement(_DashboardMenu2.default, { id: id,
-						view: view,
-						salinityIn: salinityIn,
-						salinityOut: salinityOut,
-						flow: flow,
-						power: power
-					}),
-					DashboardElement
-				);
-			}
-		}]);
-
-		return Dashboard;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
-
-/***/ },
-/* 305 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.menuNameChange = menuNameChange;
-
-	var _constants = __webpack_require__(248);
-
-	function menuNameChange(newName) {
-		return {
-			type: _constants.MENU_NAME_CHANGE,
-			name: newName
-		};
-	}
-
-/***/ },
-/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32330,7 +31258,7 @@
 	exports.formatToWeekHistory = formatToWeekHistory;
 	exports.formatToMonthHistory = formatToMonthHistory;
 
-	var _moment = __webpack_require__(307);
+	var _moment = __webpack_require__(294);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
@@ -32548,7 +31476,7 @@
 	}
 
 /***/ },
-/* 307 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -32902,7 +31830,7 @@
 	                module && module.exports) {
 	            try {
 	                oldLocale = globalLocale._abbr;
-	                __webpack_require__(309)("./" + name);
+	                __webpack_require__(296)("./" + name);
 	                // because defineLocale currently also sets the global locale, we
 	                // want to undo that for lazy loaded locales
 	                locale_locales__getSetGlobalLocale(oldLocale);
@@ -36239,10 +35167,10 @@
 	    return _moment;
 
 	}));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(308)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(295)(module)))
 
 /***/ },
-/* 308 */
+/* 295 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -36258,204 +35186,204 @@
 
 
 /***/ },
-/* 309 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./af": 310,
-		"./af.js": 310,
-		"./ar": 311,
-		"./ar-ma": 312,
-		"./ar-ma.js": 312,
-		"./ar-sa": 313,
-		"./ar-sa.js": 313,
-		"./ar-tn": 314,
-		"./ar-tn.js": 314,
-		"./ar.js": 311,
-		"./az": 315,
-		"./az.js": 315,
-		"./be": 316,
-		"./be.js": 316,
-		"./bg": 317,
-		"./bg.js": 317,
-		"./bn": 318,
-		"./bn.js": 318,
-		"./bo": 319,
-		"./bo.js": 319,
-		"./br": 320,
-		"./br.js": 320,
-		"./bs": 321,
-		"./bs.js": 321,
-		"./ca": 322,
-		"./ca.js": 322,
-		"./cs": 323,
-		"./cs.js": 323,
-		"./cv": 324,
-		"./cv.js": 324,
-		"./cy": 325,
-		"./cy.js": 325,
-		"./da": 326,
-		"./da.js": 326,
-		"./de": 327,
-		"./de-at": 328,
-		"./de-at.js": 328,
-		"./de.js": 327,
-		"./dv": 329,
-		"./dv.js": 329,
-		"./el": 330,
-		"./el.js": 330,
-		"./en-au": 331,
-		"./en-au.js": 331,
-		"./en-ca": 332,
-		"./en-ca.js": 332,
-		"./en-gb": 333,
-		"./en-gb.js": 333,
-		"./en-ie": 334,
-		"./en-ie.js": 334,
-		"./en-nz": 335,
-		"./en-nz.js": 335,
-		"./eo": 336,
-		"./eo.js": 336,
-		"./es": 337,
-		"./es.js": 337,
-		"./et": 338,
-		"./et.js": 338,
-		"./eu": 339,
-		"./eu.js": 339,
-		"./fa": 340,
-		"./fa.js": 340,
-		"./fi": 341,
-		"./fi.js": 341,
-		"./fo": 342,
-		"./fo.js": 342,
-		"./fr": 343,
-		"./fr-ca": 344,
-		"./fr-ca.js": 344,
-		"./fr-ch": 345,
-		"./fr-ch.js": 345,
-		"./fr.js": 343,
-		"./fy": 346,
-		"./fy.js": 346,
-		"./gd": 347,
-		"./gd.js": 347,
-		"./gl": 348,
-		"./gl.js": 348,
-		"./he": 349,
-		"./he.js": 349,
-		"./hi": 350,
-		"./hi.js": 350,
-		"./hr": 351,
-		"./hr.js": 351,
-		"./hu": 352,
-		"./hu.js": 352,
-		"./hy-am": 353,
-		"./hy-am.js": 353,
-		"./id": 354,
-		"./id.js": 354,
-		"./is": 355,
-		"./is.js": 355,
-		"./it": 356,
-		"./it.js": 356,
-		"./ja": 357,
-		"./ja.js": 357,
-		"./jv": 358,
-		"./jv.js": 358,
-		"./ka": 359,
-		"./ka.js": 359,
-		"./kk": 360,
-		"./kk.js": 360,
-		"./km": 361,
-		"./km.js": 361,
-		"./ko": 362,
-		"./ko.js": 362,
-		"./lb": 363,
-		"./lb.js": 363,
-		"./lo": 364,
-		"./lo.js": 364,
-		"./lt": 365,
-		"./lt.js": 365,
-		"./lv": 366,
-		"./lv.js": 366,
-		"./me": 367,
-		"./me.js": 367,
-		"./mk": 368,
-		"./mk.js": 368,
-		"./ml": 369,
-		"./ml.js": 369,
-		"./mr": 370,
-		"./mr.js": 370,
-		"./ms": 371,
-		"./ms-my": 372,
-		"./ms-my.js": 372,
-		"./ms.js": 371,
-		"./my": 373,
-		"./my.js": 373,
-		"./nb": 374,
-		"./nb.js": 374,
-		"./ne": 375,
-		"./ne.js": 375,
-		"./nl": 376,
-		"./nl.js": 376,
-		"./nn": 377,
-		"./nn.js": 377,
-		"./pa-in": 378,
-		"./pa-in.js": 378,
-		"./pl": 379,
-		"./pl.js": 379,
-		"./pt": 380,
-		"./pt-br": 381,
-		"./pt-br.js": 381,
-		"./pt.js": 380,
-		"./ro": 382,
-		"./ro.js": 382,
-		"./ru": 383,
-		"./ru.js": 383,
-		"./se": 384,
-		"./se.js": 384,
-		"./si": 385,
-		"./si.js": 385,
-		"./sk": 386,
-		"./sk.js": 386,
-		"./sl": 387,
-		"./sl.js": 387,
-		"./sq": 388,
-		"./sq.js": 388,
-		"./sr": 389,
-		"./sr-cyrl": 390,
-		"./sr-cyrl.js": 390,
-		"./sr.js": 389,
-		"./sv": 391,
-		"./sv.js": 391,
-		"./sw": 392,
-		"./sw.js": 392,
-		"./ta": 393,
-		"./ta.js": 393,
-		"./te": 394,
-		"./te.js": 394,
-		"./th": 395,
-		"./th.js": 395,
-		"./tl-ph": 396,
-		"./tl-ph.js": 396,
-		"./tlh": 397,
-		"./tlh.js": 397,
-		"./tr": 398,
-		"./tr.js": 398,
-		"./tzl": 399,
-		"./tzl.js": 399,
-		"./tzm": 400,
-		"./tzm-latn": 401,
-		"./tzm-latn.js": 401,
-		"./tzm.js": 400,
-		"./uk": 402,
-		"./uk.js": 402,
-		"./uz": 403,
-		"./uz.js": 403,
-		"./vi": 404,
-		"./vi.js": 404,
-		"./zh-cn": 405,
-		"./zh-cn.js": 405,
-		"./zh-tw": 406,
-		"./zh-tw.js": 406
+		"./af": 297,
+		"./af.js": 297,
+		"./ar": 298,
+		"./ar-ma": 299,
+		"./ar-ma.js": 299,
+		"./ar-sa": 300,
+		"./ar-sa.js": 300,
+		"./ar-tn": 301,
+		"./ar-tn.js": 301,
+		"./ar.js": 298,
+		"./az": 302,
+		"./az.js": 302,
+		"./be": 303,
+		"./be.js": 303,
+		"./bg": 304,
+		"./bg.js": 304,
+		"./bn": 305,
+		"./bn.js": 305,
+		"./bo": 306,
+		"./bo.js": 306,
+		"./br": 307,
+		"./br.js": 307,
+		"./bs": 308,
+		"./bs.js": 308,
+		"./ca": 309,
+		"./ca.js": 309,
+		"./cs": 310,
+		"./cs.js": 310,
+		"./cv": 311,
+		"./cv.js": 311,
+		"./cy": 312,
+		"./cy.js": 312,
+		"./da": 313,
+		"./da.js": 313,
+		"./de": 314,
+		"./de-at": 315,
+		"./de-at.js": 315,
+		"./de.js": 314,
+		"./dv": 316,
+		"./dv.js": 316,
+		"./el": 317,
+		"./el.js": 317,
+		"./en-au": 318,
+		"./en-au.js": 318,
+		"./en-ca": 319,
+		"./en-ca.js": 319,
+		"./en-gb": 320,
+		"./en-gb.js": 320,
+		"./en-ie": 321,
+		"./en-ie.js": 321,
+		"./en-nz": 322,
+		"./en-nz.js": 322,
+		"./eo": 323,
+		"./eo.js": 323,
+		"./es": 324,
+		"./es.js": 324,
+		"./et": 325,
+		"./et.js": 325,
+		"./eu": 326,
+		"./eu.js": 326,
+		"./fa": 327,
+		"./fa.js": 327,
+		"./fi": 328,
+		"./fi.js": 328,
+		"./fo": 329,
+		"./fo.js": 329,
+		"./fr": 330,
+		"./fr-ca": 331,
+		"./fr-ca.js": 331,
+		"./fr-ch": 332,
+		"./fr-ch.js": 332,
+		"./fr.js": 330,
+		"./fy": 333,
+		"./fy.js": 333,
+		"./gd": 334,
+		"./gd.js": 334,
+		"./gl": 335,
+		"./gl.js": 335,
+		"./he": 336,
+		"./he.js": 336,
+		"./hi": 337,
+		"./hi.js": 337,
+		"./hr": 338,
+		"./hr.js": 338,
+		"./hu": 339,
+		"./hu.js": 339,
+		"./hy-am": 340,
+		"./hy-am.js": 340,
+		"./id": 341,
+		"./id.js": 341,
+		"./is": 342,
+		"./is.js": 342,
+		"./it": 343,
+		"./it.js": 343,
+		"./ja": 344,
+		"./ja.js": 344,
+		"./jv": 345,
+		"./jv.js": 345,
+		"./ka": 346,
+		"./ka.js": 346,
+		"./kk": 347,
+		"./kk.js": 347,
+		"./km": 348,
+		"./km.js": 348,
+		"./ko": 349,
+		"./ko.js": 349,
+		"./lb": 350,
+		"./lb.js": 350,
+		"./lo": 351,
+		"./lo.js": 351,
+		"./lt": 352,
+		"./lt.js": 352,
+		"./lv": 353,
+		"./lv.js": 353,
+		"./me": 354,
+		"./me.js": 354,
+		"./mk": 355,
+		"./mk.js": 355,
+		"./ml": 356,
+		"./ml.js": 356,
+		"./mr": 357,
+		"./mr.js": 357,
+		"./ms": 358,
+		"./ms-my": 359,
+		"./ms-my.js": 359,
+		"./ms.js": 358,
+		"./my": 360,
+		"./my.js": 360,
+		"./nb": 361,
+		"./nb.js": 361,
+		"./ne": 362,
+		"./ne.js": 362,
+		"./nl": 363,
+		"./nl.js": 363,
+		"./nn": 364,
+		"./nn.js": 364,
+		"./pa-in": 365,
+		"./pa-in.js": 365,
+		"./pl": 366,
+		"./pl.js": 366,
+		"./pt": 367,
+		"./pt-br": 368,
+		"./pt-br.js": 368,
+		"./pt.js": 367,
+		"./ro": 369,
+		"./ro.js": 369,
+		"./ru": 370,
+		"./ru.js": 370,
+		"./se": 371,
+		"./se.js": 371,
+		"./si": 372,
+		"./si.js": 372,
+		"./sk": 373,
+		"./sk.js": 373,
+		"./sl": 374,
+		"./sl.js": 374,
+		"./sq": 375,
+		"./sq.js": 375,
+		"./sr": 376,
+		"./sr-cyrl": 377,
+		"./sr-cyrl.js": 377,
+		"./sr.js": 376,
+		"./sv": 378,
+		"./sv.js": 378,
+		"./sw": 379,
+		"./sw.js": 379,
+		"./ta": 380,
+		"./ta.js": 380,
+		"./te": 381,
+		"./te.js": 381,
+		"./th": 382,
+		"./th.js": 382,
+		"./tl-ph": 383,
+		"./tl-ph.js": 383,
+		"./tlh": 384,
+		"./tlh.js": 384,
+		"./tr": 385,
+		"./tr.js": 385,
+		"./tzl": 386,
+		"./tzl.js": 386,
+		"./tzm": 387,
+		"./tzm-latn": 388,
+		"./tzm-latn.js": 388,
+		"./tzm.js": 387,
+		"./uk": 389,
+		"./uk.js": 389,
+		"./uz": 390,
+		"./uz.js": 390,
+		"./vi": 391,
+		"./vi.js": 391,
+		"./zh-cn": 392,
+		"./zh-cn.js": 392,
+		"./zh-tw": 393,
+		"./zh-tw.js": 393
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -36468,11 +35396,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 309;
+	webpackContext.id = 296;
 
 
 /***/ },
-/* 310 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36480,7 +35408,7 @@
 	//! author : Werner Mollentze : https://github.com/wernerm
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36549,7 +35477,7 @@
 	}));
 
 /***/ },
-/* 311 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36559,7 +35487,7 @@
 	//! Native plural forms: forabi https://github.com/forabi
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36689,7 +35617,7 @@
 	}));
 
 /***/ },
-/* 312 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36698,7 +35626,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36752,7 +35680,7 @@
 	}));
 
 /***/ },
-/* 313 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36760,7 +35688,7 @@
 	//! author : Suhail Alkowaileet : https://github.com/xsoh
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36859,14 +35787,14 @@
 	}));
 
 /***/ },
-/* 314 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale  : Tunisian Arabic (ar-tn)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36920,7 +35848,7 @@
 	}));
 
 /***/ },
-/* 315 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36928,7 +35856,7 @@
 	//! author : topchiyev : https://github.com/topchiyev
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37028,7 +35956,7 @@
 	}));
 
 /***/ },
-/* 316 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37038,7 +35966,7 @@
 	//! Author : Menelion Elensúle : https://github.com/Oire
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37166,7 +36094,7 @@
 	}));
 
 /***/ },
-/* 317 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37174,7 +36102,7 @@
 	//! author : Krasen Borisov : https://github.com/kraz
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37260,7 +36188,7 @@
 	}));
 
 /***/ },
-/* 318 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37268,7 +36196,7 @@
 	//! author : Kaushik Gandhi : https://github.com/kaushikgandhi
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37383,7 +36311,7 @@
 	}));
 
 /***/ },
-/* 319 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37391,7 +36319,7 @@
 	//! author : Thupten N. Chakrishar : https://github.com/vajradog
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37506,7 +36434,7 @@
 	}));
 
 /***/ },
-/* 320 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37514,7 +36442,7 @@
 	//! author : Jean-Baptiste Le Duigou : https://github.com/jbleduigou
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37617,7 +36545,7 @@
 	}));
 
 /***/ },
-/* 321 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37626,7 +36554,7 @@
 	//! based on (hr) translation by Bojan Marković
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37762,7 +36690,7 @@
 	}));
 
 /***/ },
-/* 322 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37770,7 +36698,7 @@
 	//! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37845,7 +36773,7 @@
 	}));
 
 /***/ },
-/* 323 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37853,7 +36781,7 @@
 	//! author : petrbela : https://github.com/petrbela
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38020,7 +36948,7 @@
 	}));
 
 /***/ },
-/* 324 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38028,7 +36956,7 @@
 	//! author : Anatoly Mironov : https://github.com/mirontoli
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38087,7 +37015,7 @@
 	}));
 
 /***/ },
-/* 325 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38095,7 +37023,7 @@
 	//! author : Robert Allen
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38170,7 +37098,7 @@
 	}));
 
 /***/ },
-/* 326 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38178,7 +37106,7 @@
 	//! author : Ulrik Nielsen : https://github.com/mrbase
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38234,7 +37162,7 @@
 	}));
 
 /***/ },
-/* 327 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38244,7 +37172,7 @@
 	//! author : Mikolaj Dadela : https://github.com/mik01aj
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38314,7 +37242,7 @@
 	}));
 
 /***/ },
-/* 328 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38325,7 +37253,7 @@
 	//! author : Mikolaj Dadela : https://github.com/mik01aj
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38395,7 +37323,7 @@
 	}));
 
 /***/ },
-/* 329 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38403,7 +37331,7 @@
 	//! author : Jawish Hameed : https://github.com/jawish
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38498,7 +37426,7 @@
 	}));
 
 /***/ },
-/* 330 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38506,7 +37434,7 @@
 	//! author : Aggelos Karalias : https://github.com/mehiel
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38600,14 +37528,14 @@
 	}));
 
 /***/ },
-/* 331 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale : australian english (en-au)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38670,7 +37598,7 @@
 	}));
 
 /***/ },
-/* 332 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38678,7 +37606,7 @@
 	//! author : Jonathan Abourbih : https://github.com/jonbca
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38737,7 +37665,7 @@
 	}));
 
 /***/ },
-/* 333 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38745,7 +37673,7 @@
 	//! author : Chris Gedrim : https://github.com/chrisgedrim
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38808,7 +37736,7 @@
 	}));
 
 /***/ },
-/* 334 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38816,7 +37744,7 @@
 	//! author : Chris Cartlidge : https://github.com/chriscartlidge
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38879,14 +37807,14 @@
 	}));
 
 /***/ },
-/* 335 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale : New Zealand english (en-nz)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38949,7 +37877,7 @@
 	}));
 
 /***/ },
-/* 336 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38959,7 +37887,7 @@
 	//!          Se ne, bonvolu korekti kaj avizi min por ke mi povas lerni!
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39026,7 +37954,7 @@
 	}));
 
 /***/ },
-/* 337 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39034,7 +37962,7 @@
 	//! author : Julio Napurí : https://github.com/julionc
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39109,7 +38037,7 @@
 	}));
 
 /***/ },
-/* 338 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39118,7 +38046,7 @@
 	//! improvements : Illimar Tambek : https://github.com/ragulka
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39193,7 +38121,7 @@
 	}));
 
 /***/ },
-/* 339 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39201,7 +38129,7 @@
 	//! author : Eneko Illarramendi : https://github.com/eillarra
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39261,7 +38189,7 @@
 	}));
 
 /***/ },
-/* 340 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39269,7 +38197,7 @@
 	//! author : Ebrahim Byagowi : https://github.com/ebraminio
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39370,7 +38298,7 @@
 	}));
 
 /***/ },
-/* 341 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39378,7 +38306,7 @@
 	//! author : Tarmo Aidantausta : https://github.com/bleadof
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39481,7 +38409,7 @@
 	}));
 
 /***/ },
-/* 342 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39489,7 +38417,7 @@
 	//! author : Ragnar Johannesen : https://github.com/ragnar123
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39545,7 +38473,7 @@
 	}));
 
 /***/ },
-/* 343 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39553,7 +38481,7 @@
 	//! author : John Fischer : https://github.com/jfroffice
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39611,7 +38539,7 @@
 	}));
 
 /***/ },
-/* 344 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39619,7 +38547,7 @@
 	//! author : Jonathan Abourbih : https://github.com/jonbca
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39673,7 +38601,7 @@
 	}));
 
 /***/ },
-/* 345 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39681,7 +38609,7 @@
 	//! author : Gaspard Bucher : https://github.com/gaspard
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39739,7 +38667,7 @@
 	}));
 
 /***/ },
-/* 346 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39747,7 +38675,7 @@
 	//! author : Robin van der Vliet : https://github.com/robin0van0der0v
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39814,7 +38742,7 @@
 	}));
 
 /***/ },
-/* 347 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39822,7 +38750,7 @@
 	//! author : Jon Ashdown : https://github.com/jonashdown
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39894,7 +38822,7 @@
 	}));
 
 /***/ },
-/* 348 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39902,7 +38830,7 @@
 	//! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39973,7 +38901,7 @@
 	}));
 
 /***/ },
-/* 349 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39983,7 +38911,7 @@
 	//! author : Tal Ater : https://github.com/TalAter
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40076,7 +39004,7 @@
 	}));
 
 /***/ },
-/* 350 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40084,7 +39012,7 @@
 	//! author : Mayank Singhal : https://github.com/mayanksinghal
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40203,7 +39131,7 @@
 	}));
 
 /***/ },
-/* 351 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40211,7 +39139,7 @@
 	//! author : Bojan Marković : https://github.com/bmarkovic
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40350,7 +39278,7 @@
 	}));
 
 /***/ },
-/* 352 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40358,7 +39286,7 @@
 	//! author : Adam Brunner : https://github.com/adambrunner
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40463,7 +39391,7 @@
 	}));
 
 /***/ },
-/* 353 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40471,7 +39399,7 @@
 	//! author : Armendarabyan : https://github.com/armendarabyan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40562,7 +39490,7 @@
 	}));
 
 /***/ },
-/* 354 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40571,7 +39499,7 @@
 	//! reference: http://id.wikisource.org/wiki/Pedoman_Umum_Ejaan_Bahasa_Indonesia_yang_Disempurnakan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40649,7 +39577,7 @@
 	}));
 
 /***/ },
-/* 355 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40657,7 +39585,7 @@
 	//! author : Hinrik Örn Sigurðsson : https://github.com/hinrik
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40780,7 +39708,7 @@
 	}));
 
 /***/ },
-/* 356 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40789,7 +39717,7 @@
 	//! author: Mattia Larentis: https://github.com/nostalgiaz
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40854,7 +39782,7 @@
 	}));
 
 /***/ },
-/* 357 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40862,7 +39790,7 @@
 	//! author : LI Long : https://github.com/baryon
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40934,7 +39862,7 @@
 	}));
 
 /***/ },
-/* 358 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40943,7 +39871,7 @@
 	//! reference: http://jv.wikipedia.org/wiki/Basa_Jawa
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41021,7 +39949,7 @@
 	}));
 
 /***/ },
-/* 359 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41029,7 +39957,7 @@
 	//! author : Irakli Janiashvili : https://github.com/irakli-janiashvili
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41114,7 +40042,7 @@
 	}));
 
 /***/ },
-/* 360 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41122,7 +40050,7 @@
 	//! authors : Nurlan Rakhimzhanov : https://github.com/nurlan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41205,7 +40133,7 @@
 	}));
 
 /***/ },
-/* 361 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41213,7 +40141,7 @@
 	//! author : Kruy Vanna : https://github.com/kruyvanna
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41267,7 +40195,7 @@
 	}));
 
 /***/ },
-/* 362 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41279,7 +40207,7 @@
 	//! - Jeeeyul Lee <jeeeyul@gmail.com>
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41339,7 +40267,7 @@
 	}));
 
 /***/ },
-/* 363 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41347,7 +40275,7 @@
 	//! author : mweimerskirch : https://github.com/mweimerskirch, David Raison : https://github.com/kwisatz
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41477,7 +40405,7 @@
 	}));
 
 /***/ },
-/* 364 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41485,7 +40413,7 @@
 	//! author : Ryan Hart : https://github.com/ryanhart2
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41550,7 +40478,7 @@
 	}));
 
 /***/ },
-/* 365 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41558,7 +40486,7 @@
 	//! author : Mindaugas Mozūras : https://github.com/mmozuras
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41669,7 +40597,7 @@
 	}));
 
 /***/ },
-/* 366 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41678,7 +40606,7 @@
 	//! author : Jānis Elmeris : https://github.com/JanisE
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41769,7 +40697,7 @@
 	}));
 
 /***/ },
-/* 367 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41777,7 +40705,7 @@
 	//! author : Miodrag Nikač <miodrag@restartit.me> : https://github.com/miodragnikac
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41882,7 +40810,7 @@
 	}));
 
 /***/ },
-/* 368 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41890,7 +40818,7 @@
 	//! author : Borislav Mickov : https://github.com/B0k0
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41976,7 +40904,7 @@
 	}));
 
 /***/ },
-/* 369 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41984,7 +40912,7 @@
 	//! author : Floyd Pink : https://github.com/floydpink
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42060,7 +40988,7 @@
 	}));
 
 /***/ },
-/* 370 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42069,7 +40997,7 @@
 	//! author : Vivek Athalye : https://github.com/vnathalye
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42222,7 +41150,7 @@
 	}));
 
 /***/ },
-/* 371 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42230,7 +41158,7 @@
 	//! author : Weldan Jamili : https://github.com/weldan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42308,7 +41236,7 @@
 	}));
 
 /***/ },
-/* 372 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42316,7 +41244,7 @@
 	//! author : Weldan Jamili : https://github.com/weldan
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42394,7 +41322,7 @@
 	}));
 
 /***/ },
-/* 373 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42402,7 +41330,7 @@
 	//! author : Squar team, mysquar.com
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42491,7 +41419,7 @@
 	}));
 
 /***/ },
-/* 374 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42500,7 +41428,7 @@
 	//!           Sigurd Gartmann : https://github.com/sigurdga
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42556,7 +41484,7 @@
 	}));
 
 /***/ },
-/* 375 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42564,7 +41492,7 @@
 	//! author : suvash : https://github.com/suvash
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42681,7 +41609,7 @@
 	}));
 
 /***/ },
-/* 376 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42689,7 +41617,7 @@
 	//! author : Joris Röling : https://github.com/jjupiter
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42756,7 +41684,7 @@
 	}));
 
 /***/ },
-/* 377 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42764,7 +41692,7 @@
 	//! author : https://github.com/mechuwind
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42820,7 +41748,7 @@
 	}));
 
 /***/ },
-/* 378 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42828,7 +41756,7 @@
 	//! author : Harpreet Singh : https://github.com/harpreetkhalsagtbit
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -42948,7 +41876,7 @@
 	}));
 
 /***/ },
-/* 379 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -42956,7 +41884,7 @@
 	//! author : Rafal Hirsz : https://github.com/evoL
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43057,7 +41985,7 @@
 	}));
 
 /***/ },
-/* 380 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43065,7 +41993,7 @@
 	//! author : Jefferson : https://github.com/jalex79
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43125,7 +42053,7 @@
 	}));
 
 /***/ },
-/* 381 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43133,7 +42061,7 @@
 	//! author : Caio Ribeiro Pereira : https://github.com/caio-ribeiro-pereira
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43189,7 +42117,7 @@
 	}));
 
 /***/ },
-/* 382 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43198,7 +42126,7 @@
 	//! author : Valentin Agachi : https://github.com/avaly
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43267,7 +42195,7 @@
 	}));
 
 /***/ },
-/* 383 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43277,7 +42205,7 @@
 	//! author : Коренберг Марк : https://github.com/socketpair
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43439,7 +42367,7 @@
 	}));
 
 /***/ },
-/* 384 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43447,7 +42375,7 @@
 	//! authors : Bård Rolstad Henriksen : https://github.com/karamell
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43504,7 +42432,7 @@
 	}));
 
 /***/ },
-/* 385 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43512,7 +42440,7 @@
 	//! author : Sampath Sitinamaluwa : https://github.com/sampathsris
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43578,7 +42506,7 @@
 	}));
 
 /***/ },
-/* 386 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43587,7 +42515,7 @@
 	//! based on work of petrbela : https://github.com/petrbela
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43732,7 +42660,7 @@
 	}));
 
 /***/ },
-/* 387 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43740,7 +42668,7 @@
 	//! author : Robert Sedovšek : https://github.com/sedovsek
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43896,7 +42824,7 @@
 	}));
 
 /***/ },
-/* 388 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43906,7 +42834,7 @@
 	//! author : Oerd Cukalla : https://github.com/oerd (fixes)
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -43969,7 +42897,7 @@
 	}));
 
 /***/ },
-/* 389 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -43977,7 +42905,7 @@
 	//! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44081,7 +43009,7 @@
 	}));
 
 /***/ },
-/* 390 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44089,7 +43017,7 @@
 	//! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44193,7 +43121,7 @@
 	}));
 
 /***/ },
-/* 391 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44201,7 +43129,7 @@
 	//! author : Jens Alm : https://github.com/ulmus
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44264,7 +43192,7 @@
 	}));
 
 /***/ },
-/* 392 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44272,7 +43200,7 @@
 	//! author : Fahad Kassim : https://github.com/fadsel
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44326,7 +43254,7 @@
 	}));
 
 /***/ },
-/* 393 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44334,7 +43262,7 @@
 	//! author : Arjunkumar Krishnamoorthy : https://github.com/tk120404
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44459,7 +43387,7 @@
 	}));
 
 /***/ },
-/* 394 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44467,7 +43395,7 @@
 	//! author : Krishna Chaitanya Thota : https://github.com/kcthota
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44551,7 +43479,7 @@
 	}));
 
 /***/ },
-/* 395 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44559,7 +43487,7 @@
 	//! author : Kridsada Thanabulpong : https://github.com/sirn
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44620,7 +43548,7 @@
 	}));
 
 /***/ },
-/* 396 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44628,7 +43556,7 @@
 	//! author : Dan Hagman
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44686,7 +43614,7 @@
 	}));
 
 /***/ },
-/* 397 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44694,7 +43622,7 @@
 	//! author : Dominika Kruk : https://github.com/amaranthrose
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44809,7 +43737,7 @@
 	}));
 
 /***/ },
-/* 398 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44818,7 +43746,7 @@
 	//!           Burak Yiğit Kaya: https://github.com/BYK
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44903,7 +43831,7 @@
 	}));
 
 /***/ },
-/* 399 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -44911,7 +43839,7 @@
 	//! author : Robin van der Vliet : https://github.com/robin0van0der0v with the help of Iustì Canun
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -44998,7 +43926,7 @@
 	}));
 
 /***/ },
-/* 400 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45006,7 +43934,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45060,7 +43988,7 @@
 	}));
 
 /***/ },
-/* 401 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45068,7 +43996,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45122,7 +44050,7 @@
 	}));
 
 /***/ },
-/* 402 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45131,7 +44059,7 @@
 	//! Author : Menelion Elensúle : https://github.com/Oire
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45272,7 +44200,7 @@
 	}));
 
 /***/ },
-/* 403 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45280,7 +44208,7 @@
 	//! author : Sardor Muminov : https://github.com/muminoff
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45334,7 +44262,7 @@
 	}));
 
 /***/ },
-/* 404 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45342,7 +44270,7 @@
 	//! author : Bang Nguyen : https://github.com/bangnk
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45415,7 +44343,7 @@
 	}));
 
 /***/ },
-/* 405 */
+/* 392 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45424,7 +44352,7 @@
 	//! author : Zeno Zeng : https://github.com/zenozeng
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45546,7 +44474,7 @@
 	}));
 
 /***/ },
-/* 406 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -45554,7 +44482,7 @@
 	//! author : Ben : https://github.com/ben-lin
 
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(307)) :
+	    true ? factory(__webpack_require__(294)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -45651,7 +44579,1307 @@
 	}));
 
 /***/ },
+/* 394 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(395);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(263)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiForm.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./AddEddiForm.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 395 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(262)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".eddi-add {\n  padding: 10px;\n}\n.eddi-add h3 {\n  text-align: center;\n  font-weight: 500;\n  color: black;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .input-container .salinity-container {\n  position: relative;\n}\n.eddi-add .input-container .salinity-container p {\n  color: black;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  margin-right: 5px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 396 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.userLogoutSuccess = userLogoutSuccess;
+	exports.userGetProfile = userGetProfile;
+	exports.userCreateThunk = userCreateThunk;
+	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
+	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
+	exports.userLogout = userLogout;
+
+	var _eddiFirebase = __webpack_require__(289);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	var _cookieStore = __webpack_require__(397);
+
+	var _cookieStore2 = _interopRequireDefault(_cookieStore);
+
+	var _reactRouter = __webpack_require__(184);
+
+	var _constants = __webpack_require__(248);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EddiFire = (0, _eddiFirebase2.default)(),
+	    EddiCookie = (0, _cookieStore2.default)();
+
+	function userLoginSuccess(user) {
+		return {
+			type: _constants.USER_LOGIN_SUCCESS,
+			user: user
+		};
+	}
+
+	function userLoginError(error) {
+		return {
+			export: _constants.USER_LOGIN_ERROR,
+			error: error
+		};
+	}
+
+	function userLogoutSuccess() {
+		return {
+			type: _constants.USER_LOGOUT_SUCCESS
+		};
+	}
+
+	function userUpdateSuccess(user) {
+		return {
+			type: _constants.USER_UPDATE_SUCCESS,
+			user: user
+		};
+	}
+
+	function userUpdateError(user) {
+		return {
+			type: _constants.USER_UPDATE_ERROR,
+			user: user
+		};
+	}
+
+	function userGetProfile(user) {
+		return {
+			type: _constants.USER_GETPROFILE_SUCCESS,
+			user: user
+		};
+	}
+
+	function userCreateError(error) {
+		return {
+			type: _constants.USER_CREATE_ERROR,
+			error: error
+		};
+	}
+
+	function userCreateThunk(user) {
+
+		return function (dispatch) {
+			var email = user.email;
+			var password = user.password;
+
+
+			return EddiFire.createUser(email, password).then(function (userSuccess) {
+				var id = userSuccess.uid;
+				delete user.password;
+				return EddiFire.createUserProfile(id, user).then(function (userProfile) {
+
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
+				});
+			}).catch(function (err) {
+				return dispatch(userCreateError(err));
+			});
+		};
+	}
+
+	function userLoginWithPasswordThunk(email, password) {
+		return function (dispatch) {
+			return EddiFire.authWithPassword(email, password).then(function (user) {
+				var uid = user.uid;
+				var token = user.token;
+				var expires = user.expires;
+
+				//set the token to cookie
+
+				EddiCookie.setCookie(token, expires);
+
+				//gets the user profile
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					dispatch(userGetProfile(userProfile));
+					_reactRouter.browserHistory.push(_constants.PATHS.LIST);
+				});
+			}).catch(function (err) {
+				return dispatch(userLoginError(err));
+			});
+		};
+	}
+
+	function userLoginWithTokenThunk() {
+		return function (dispatch) {
+			var cookie = EddiCookie.getCookie() || {},
+			    token = cookie.token;
+			if (!token) return; //if there is no token, don't do anything
+			return EddiFire.authWithToken(token).then(function (user) {
+				//gets the user profile
+				var uid = user.uid;
+
+
+				return EddiFire.getUserProfile(uid).then(function (userProfile) {
+					return dispatch(userGetProfile(userProfile));
+				});
+			}).catch(function (err) {
+				var code = err.code;
+
+				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
+				dispatch(userLoginError(err));
+			});
+		};
+	}
+
+	function userLogout() {
+		return function (dispatch) {
+			EddiFire.unauthenticate();
+			EddiCookie.deleteCookie();
+			console.log('logging out');
+			//let store know of logout
+			dispatch(userLogoutSuccess());
+			_reactRouter.browserHistory.replace(_constants.PATHS.HOME);
+		};
+	}
+
+/***/ },
+/* 397 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = function () {
+		var init = undefined;
+		if (init) return init;else {
+			init = new CookieStore();
+			return init;
+		}
+	};
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function parseCookie(cookieString) {
+		var sections = cookieString.split('; ').map(function (section) {
+			return section.split('=');
+		});
+		return sections.reduce(function (cookie, section) {
+			cookie[section[0]] = section[1];
+			return cookie;
+		}, {});
+	}
+
+	function formatCookie(token, expires) {
+		return 'token=' + token + ';path=/;expires=' + expires + ';';
+	}
+
+	var CookieStore = function () {
+		function CookieStore() {
+			_classCallCheck(this, CookieStore);
+
+			this.cookie = null;
+		}
+
+		_createClass(CookieStore, [{
+			key: 'setCookie',
+			value: function setCookie(token, expires) {
+				//sets the cookie
+				if (token) {
+					document.cookie = formatCookie(token, expires);
+					this.cookie = {
+						token: token,
+						expires: expires
+					};
+				} else {
+					document.cookie = formatCookie("", -1);
+					this.cookie = null;
+				};
+			}
+		}, {
+			key: 'getCookie',
+			value: function getCookie() {
+				if (!this.cookie && document.cookie) this.cookie = parseCookie(document.cookie);
+				return this.cookie;
+			}
+		}, {
+			key: 'deleteCookie',
+			value: function deleteCookie() {
+				this.setCookie(null);
+			}
+		}]);
+
+		return CookieStore;
+	}();
+
+	;
+
+/***/ },
+/* 398 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.appStartThunk = appStartThunk;
+
+	var _reactRouter = __webpack_require__(184);
+
+	var _eddiFirebase = __webpack_require__(289);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	var _cookieStore = __webpack_require__(397);
+
+	var _cookieStore2 = _interopRequireDefault(_cookieStore);
+
+	var _constants = __webpack_require__(248);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EddiFire = (0, _eddiFirebase2.default)(),
+	    EddiCookie = (0, _cookieStore2.default)();
+
+	function appStartSuccess(user, list, selected) {
+		return {
+			type: _constants.APP_START_SUCCESS,
+			user: user,
+			list: list,
+			selected: selected
+		};
+	}
+
+	function appStartError(error) {
+		return {
+			type: _constants.APP_START_ERROR,
+			error: error
+		};
+	}
+
+	function appStartThunk(eddiId) {
+		return function (dispatch) {
+			var cookie = EddiCookie.getCookie() || {},
+			    token = cookie.token;
+			if (!token) return _reactRouter.browserHistory.push(_constants.PATHS.HOME); //if there is no token, return the user to home
+			return EddiFire.authWithToken(token).then(function (user) {
+				//gets the user profile and eddis
+				var uid = user.uid;
+				var promises = [EddiFire.getUserProfile(uid), EddiFire.getAllEddiByUser(uid)];
+
+				return Promise.all(promises);
+			}).then(function (data) {
+				//after you got them all, dispatch for update all
+				var profile = data[0],
+				    list = data[1];
+				var selected = undefined;
+				if (list.length) {
+					var potential = list.filter(function (eddi) {
+						return eddi.id === eddiId;
+					})[0];
+					if (!potential) selected = list[0];else selected = potential;
+				}
+
+				dispatch(appStartSuccess(profile, list, selected));
+			}).catch(function (err) {
+				var code = err.code;
+
+				if (code === 'EXPIRED_TOKEN') return EddiCookie.deleteCookie();
+				dispatch(appStartError(err));
+				dispatch();
+			});
+		};
+	}
+
+/***/ },
+/* 399 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(400);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(263)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./base.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./base.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 400 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(262)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -10px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -8px -223px;\n}\n.sprite.report.green {\n  background-position: -57px -223px;\n}\n.sprite.arrow.down {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -425px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 401 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(173);
+
+	var _reactRouter = __webpack_require__(184);
+
+	var _constants = __webpack_require__(248);
+
+	var _HomeButton = __webpack_require__(402);
+
+	var _HomeButton2 = _interopRequireDefault(_HomeButton);
+
+	var _LoginForm = __webpack_require__(403);
+
+	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+
+	var _SignupForm = __webpack_require__(404);
+
+	var _SignupForm2 = _interopRequireDefault(_SignupForm);
+
+	var _eddis = __webpack_require__(288);
+
+	var _user = __webpack_require__(396);
+
+	var _Home = __webpack_require__(405);
+
+	var _Home2 = _interopRequireDefault(_Home);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Modes = {
+		BASE: 0,
+		LOGIN: 1,
+		SIGNUP: 2
+	};
+
+	var ROUTES = {
+		LOGIN: { pathname: _constants.PATHS.HOME, query: { view: 'login' } },
+		SIGNUP: { pathname: _constants.PATHS.HOME, query: { view: 'signup' } }
+	};
+
+	function mapStateToProps(state) {
+		return {
+			user: state.user,
+			eddis: state.eddis.list
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			navigateTo: function navigateTo(pathname, query) {
+				return _reactRouter.browserHistory.push({ pathname: pathname, query: query });
+			},
+			login: function login(_ref) {
+				var email = _ref.email;
+				var password = _ref.password;
+				return dispatch((0, _user.userLoginWithPasswordThunk)(email, password));
+			},
+			signup: function signup(user) {
+				return dispatch((0, _user.userCreateThunk)(user));
+			}
+		};
+	}
+
+	var Home = function (_Component) {
+		_inherits(Home, _Component);
+
+		function Home(props, context) {
+			_classCallCheck(this, Home);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props, context));
+
+			var router = _this.context.router;
+
+
+			var mode = undefined;
+			if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
+
+			_this.state = {
+				mode: mode
+			};
+			return _this;
+		}
+
+		_createClass(Home, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+
+				if (nextProps.user.email) {
+					// user is logged in. go directly to list screen
+					_reactRouter.browserHistory.replace(_constants.PATHS.LIST);
+				}
+
+				var router = this.context.router;
+
+				var mode = undefined;
+				if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
+				this.setState({ mode: mode });
+			}
+		}, {
+			key: 'navigateTo',
+			value: function navigateTo(key) {
+				var destination = _constants.PATHS[key];
+				if (destination) return _reactRouter.browserHistory.push(destination);
+			}
+		}, {
+			key: '_renderBase',
+			value: function _renderBase() {
+				return [_react2.default.createElement(
+					'div',
+					{ className: 'auth-button',
+						onClick: function onClick() {
+							return _reactRouter.browserHistory.push(ROUTES.LOGIN);
+						}
+					},
+					'Login ›'
+				), _react2.default.createElement(
+					'div',
+					{ className: 'auth-button',
+						onClick: function onClick() {
+							return _reactRouter.browserHistory.push(ROUTES.SIGNUP);
+						}
+					},
+					'Sign Up ›'
+				)];
+			}
+		}, {
+			key: '_renderLogin',
+			value: function _renderLogin() {
+				return _react2.default.createElement(_LoginForm2.default, { onSubmit: this.props.login });
+			}
+		}, {
+			key: '_renderSignup',
+			value: function _renderSignup() {
+				return _react2.default.createElement(_SignupForm2.default, { onSubmit: this.props.signup });
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var modeContent;
+				switch (this.state.mode) {
+					case Modes.BASE:
+						modeContent = this._renderBase();
+						break;
+					case Modes.LOGIN:
+						modeContent = this._renderLogin();
+						break;
+					case Modes.SIGNUP:
+						modeContent = this._renderSignup();
+						break;
+					default:
+						return null;
+				}
+
+				return _react2.default.createElement(
+					'div',
+					{ id: 'home', className: 'page dark' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'content' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'logo-container' },
+							_react2.default.createElement('img', { src: '/assets/logo.png' })
+						),
+						modeContent
+					)
+				);
+			}
+		}]);
+
+		return Home;
+	}(_react.Component);
+
+	Home.propTypes = {
+		eddis: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			name: _react.PropTypes.string
+		}))
+	};
+
+	Home.contextTypes = {
+		router: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
+
+/***/ },
+/* 402 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var HomeButton = function (_Component) {
+		_inherits(HomeButton, _Component);
+
+		function HomeButton() {
+			_classCallCheck(this, HomeButton);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(HomeButton).apply(this, arguments));
+		}
+
+		_createClass(HomeButton, [{
+			key: 'clickHandler',
+			value: function clickHandler() {
+				var onClick = this.props.onClick;
+
+				if (onClick instanceof Function) return onClick();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _props = this.props;
+				var name = _props.name;
+				var image = _props.image;
+
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'home-button', onClick: function onClick() {
+							return _this2.clickHandler();
+						} },
+					image,
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'p',
+							null,
+							' ',
+							name,
+							' '
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							' ',
+							'>',
+							' '
+						)
+					)
+				);
+			}
+		}]);
+
+		return HomeButton;
+	}(_react.Component);
+
+	HomeButton.propTypes = {
+		name: PropTypes.string.isRequired,
+		image: PropTypes.string,
+		onClick: PropTypes.func
+	};
+
+	exports.default = HomeButton;
+
+/***/ },
+/* 403 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var LoginForm = function (_Component) {
+		_inherits(LoginForm, _Component);
+
+		function LoginForm(props) {
+			_classCallCheck(this, LoginForm);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LoginForm).call(this, props));
+
+			_this.state = {
+				email: '',
+				password: ''
+			};
+			return _this;
+		}
+
+		_createClass(LoginForm, [{
+			key: 'onEmailChange',
+			value: function onEmailChange(event) {
+				var email = event.target.value;
+				event.preventDefault();
+				this.setState({ email: email });
+			}
+		}, {
+			key: 'onPasswordChange',
+			value: function onPasswordChange(event) {
+				var password = event.target.value;
+				event.preventDefault();
+				this.setState({ password: password });
+			}
+		}, {
+			key: 'submitHandler',
+			value: function submitHandler(event) {
+				var onSubmit = this.props.onSubmit;
+				var user = this.state;
+
+				event.preventDefault();
+				if (onSubmit) onSubmit(user);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _state = this.state;
+				var email = _state.email;
+				var password = _state.password;
+
+				return _react2.default.createElement(
+					'form',
+					{ onSubmit: function onSubmit(event) {
+							return _this2.submitHandler(event);
+						} },
+					_react2.default.createElement('input', { onChange: function onChange(event) {
+							return _this2.onEmailChange(event);
+						},
+						type: 'email',
+						name: 'email',
+						value: email,
+						placeholder: 'email'
+					}),
+					_react2.default.createElement('input', { onChange: function onChange(event) {
+							return _this2.onPasswordChange(event);
+						},
+						type: 'password',
+						name: 'password',
+						value: password,
+						placeholder: 'password'
+					}),
+					_react2.default.createElement(
+						'button',
+						{ type: 'submit' },
+						'Login'
+					)
+				);
+			}
+		}]);
+
+		return LoginForm;
+	}(_react.Component);
+
+	LoginForm.propTypes = {
+		onSubmit: PropTypes.func
+	};
+
+	exports.default = LoginForm;
+
+/***/ },
+/* 404 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var SignupForm = function (_Component) {
+		_inherits(SignupForm, _Component);
+
+		function SignupForm(props) {
+			_classCallCheck(this, SignupForm);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SignupForm).call(this, props));
+
+			_this.state = {
+				email: '',
+				password: '',
+				name: ''
+			};
+			return _this;
+		}
+
+		_createClass(SignupForm, [{
+			key: 'onEmailChange',
+			value: function onEmailChange(event) {
+				var email = event.target.value;
+				event.preventDefault();
+				this.setState({ email: email });
+			}
+		}, {
+			key: 'onPasswordChange',
+			value: function onPasswordChange(event) {
+				var password = event.target.value;
+				event.preventDefault();
+				this.setState({ password: password });
+			}
+		}, {
+			key: 'onNameChange',
+			value: function onNameChange(event) {
+				var name = event.target.value;
+				event.preventDefault();
+				this.setState({ name: name });
+			}
+		}, {
+			key: 'submitHandler',
+			value: function submitHandler(event) {
+				var onSubmit = this.props.onSubmit;
+				var user = this.state;
+				event.preventDefault();
+				if (onSubmit) onSubmit(user);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _state = this.state;
+				var email = _state.email;
+				var password = _state.password;
+				var name = _state.name;
+
+				return _react2.default.createElement(
+					'form',
+					{ onSubmit: function onSubmit(event) {
+							return _this2.submitHandler(event);
+						} },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('input', {
+								onChange: function onChange(event) {
+									return _this2.onEmailChange(event);
+								},
+								name: 'email',
+								type: 'text',
+								placeholder: 'email',
+								value: email
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('input', {
+								onChange: function onChange(event) {
+									return _this2.onPasswordChange(event);
+								},
+								name: 'password',
+								type: 'password',
+								placeholder: 'password',
+								value: password
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('input', {
+								onChange: function onChange(event) {
+									return _this2.onNameChange(event);
+								},
+								name: 'name',
+								type: 'text',
+								placeholder: 'name',
+								value: name
+							})
+						),
+						_react2.default.createElement(
+							'button',
+							{ type: 'submit' },
+							'Signup'
+						)
+					)
+				);
+			}
+		}]);
+
+		return SignupForm;
+	}(_react.Component);
+
+	SignupForm.propTypes = {
+		onSubmit: PropTypes.func
+	};
+
+	exports.default = SignupForm;
+
+/***/ },
+/* 405 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(406);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(263)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Home.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Home.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 406 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(262)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#home {\n  position: absolute;\n  min-height: 100vh;\n  width: 100%;\n  height: auto;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#home .content .logo-container img {\n  width: 100%;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
 /* 407 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(173);
+
+	var _menu = __webpack_require__(408);
+
+	var _eddis = __webpack_require__(288);
+
+	var _constants = __webpack_require__(248);
+
+	var _data = __webpack_require__(293);
+
+	var _DashboardMenu = __webpack_require__(409);
+
+	var _DashboardMenu2 = _interopRequireDefault(_DashboardMenu);
+
+	var _DashboardSalinity = __webpack_require__(410);
+
+	var _DashboardSalinity2 = _interopRequireDefault(_DashboardSalinity);
+
+	var _DashboardFlow = __webpack_require__(413);
+
+	var _DashboardFlow2 = _interopRequireDefault(_DashboardFlow);
+
+	var _Dashboard = __webpack_require__(415);
+
+	var _Dashboard2 = _interopRequireDefault(_Dashboard);
+
+	var _eddiFirebase = __webpack_require__(289);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EddiFire = (0, _eddiFirebase2.default)();
+
+	function getGoodBad(current, threshold) {
+		if (!threshold) threshold = _constants.SALINITY_THRESHOLD; //default threshold for salinity
+		var ppmIn = current.ppmIn;
+		var ppmOut = current.ppmOut;
+		var qOut = current.qOut;
+		var flowGood = qOut > _constants.FLOW_THRESHOLD ? false : true;
+		var salinityInGood = ppmIn > threshold ? false : true;
+		var salinityOutGood = ppmOut > threshold ? false : true;
+		var powerGood = true;
+
+		return {
+			salinityIn: salinityInGood,
+			salinityOut: salinityOutGood,
+			power: powerGood,
+			flow: flowGood
+		};
+	}
+
+	function mapStateToProps(state) {
+		return {
+			eddi: state.eddis.selected
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			},
+			selectEddiById: function selectEddiById(eddi) {
+				return dispatch((0, _eddis.selectEddiById)(eddi));
+			},
+			updateEddiSettings: function updateEddiSettings(id, settings) {
+				return dispatch((0, _eddis.updateEddiSuccess)(id, settings));
+			},
+			updateEddiReadings: function updateEddiReadings(id, readings) {
+				return dispatch((0, _eddis.getEddiReadings)(id, readings));
+			}
+		};
+	}
+
+	var Dashboard = function (_Component) {
+		_inherits(Dashboard, _Component);
+
+		function Dashboard(props) {
+			_classCallCheck(this, Dashboard);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dashboard).call(this, props));
+
+			_this.state = {
+				readings: [],
+				current: {}
+			};
+			return _this;
+		}
+
+		_createClass(Dashboard, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				console.log('mounting...');
+
+				var _props = this.props;
+				var updateMenuName = _props.updateMenuName;
+				var updateEddiSettings = _props.updateEddiSettings;
+				var updateEddiReadings = _props.updateEddiReadings;
+				var selectEddiById = _props.selectEddiById;
+				var _props$eddi = _props.eddi;
+				var eddi = _props$eddi === undefined ? {} : _props$eddi;
+				var _props$location = _props.location;
+				var location = _props$location === undefined ? {} : _props$location;
+
+				console.log('location', location.query.id, 'state', eddi.id);
+
+				//if the id in the query changes, update the selected to that id
+				if (location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
+
+				//if there is id, update the eddi's info
+				if (eddi.settings) updateMenuName(eddi.settings.name);
+				if (eddi.readings) {
+					//format the readings into an array for data handling
+					var readings = (0, _data.mapDateToReadings)(eddi.readings),
+					    current = readings[readings.length - 1];
+					this.setState({ readings: readings, current: current });
+				}
+				if (eddi.id) {
+					EddiFire.addEddiEventListener(eddi.id, 'settings', function (settings) {
+						return updateEddiSettings(eddi.id, settings);
+					});
+					EddiFire.addEddiEventListener(eddi.id, 'readings', function (readings) {
+						return updateEddiReadings(eddi.id, readings);
+					});
+				}
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(newProps) {
+				var _props2 = this.props;
+				var updateMenuName = _props2.updateMenuName;
+				var updateEddiReadings = _props2.updateEddiReadings;
+				var updateEddiSettings = _props2.updateEddiSettings;
+				var selectEddiById = _props2.selectEddiById;
+				var _props2$eddi = _props2.eddi;
+				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
+				var location = _props2.location;
+				var eddi = newProps.eddi;
+				//if the id in the query changes, update the selected to that id
+
+				if (location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
+
+				//if there is id, update the eddi's info
+				if (eddi.id && oldEddi.id !== eddi.id) {
+					if (eddi.settings) updateMenuName(eddi.settings.name);
+					if (eddi.readings) {
+						//format the readings into an array for data handling
+						var readings = (0, _data.mapDateToReadings)(eddi.readings),
+						    current = readings[readings.length - 1];
+
+						this.setState({ readings: readings, current: current });
+					}
+					EddiFire.addEddiEventListener(eddi.id, 'settings', function (settings) {
+						return updateEddiSettings(eddi.id, settings);
+					});
+					EddiFire.addEddiEventListener(eddi.id, 'readings', function (readings) {
+						return updateEddiReadings(eddi.id, readings);
+					});
+				}
+			}
+		}, {
+			key: 'componentWillUnmount',
+			value: function componentWillUnmount() {
+				var _props$eddi2 = this.props.eddi;
+				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
+
+				EddiFire.removeEddiEventListener(eddi.id, 'settings');
+				EddiFire.removeEddiEventListener(eddi.id, 'readings');
+			}
+		}, {
+			key: '_renderNoReadings',
+			value: function _renderNoReadings() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					'This eddi currently do not have any readings.'
+				);
+			}
+		}, {
+			key: '_renderSalinity',
+			value: function _renderSalinity(current, direction) {
+				var readings = this.state.readings;
+				var _props$eddi3 = this.props.eddi;
+				var eddi = _props$eddi3 === undefined ? {} : _props$eddi3;
+				var threshold = eddi.settings.salinity;
+
+				return _react2.default.createElement(_DashboardSalinity2.default, { key: direction,
+					threshold: threshold,
+					current: current,
+					direction: direction,
+					readings: readings
+				});
+			}
+		}, {
+			key: '_renderFlow',
+			value: function _renderFlow(rate) {
+				var readings = this.state.readings;
+
+				if (!readings.length) return this._renderNoReadings();
+				return _react2.default.createElement(_DashboardFlow2.default, { rate: rate,
+					readings: readings
+				});
+			}
+		}, {
+			key: '_renderViewBasedQuery',
+			value: function _renderViewBasedQuery(view) {
+				var _props$eddi4 = this.props.eddi;
+				var eddi = _props$eddi4 === undefined ? {} : _props$eddi4;
+				var current = this.state.current;
+				//defaults to salinity out
+
+				if (eddi.settings) {
+					switch (view) {
+						case _constants.QUERY.SALINITY_IN:
+							return this._renderSalinity(current.ppmIn, 'input');
+							break;
+						case _constants.QUERY.FLOW:
+							return this._renderFlow(current.qOut);
+							break;
+						default:
+							return this._renderSalinity(current.ppmOut, 'output');
+					}
+				}
+				return null;
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _state = this.state;
+				var current = _state.current;
+				var readings = _state.readings;
+				var _props3 = this.props;
+				var _props3$eddi = _props3.eddi;
+				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
+				var _props3$location = _props3.location;
+				var location = _props3$location === undefined ? {} : _props3$location;
+				var id = eddi.id;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+				var view = location.query.view;
+
+				var _getGoodBad = getGoodBad(current, settings.salinity);
+
+				var salinityIn = _getGoodBad.salinityIn;
+				var salinityOut = _getGoodBad.salinityOut;
+				var flow = _getGoodBad.flow;
+				var power = _getGoodBad.power;
+
+
+				var DashboardElement = readings.length ? this._renderViewBasedQuery(view) : this._renderNoReadings();
+				return _react2.default.createElement(
+					'div',
+					{ id: 'dashboard', className: 'page' },
+					_react2.default.createElement(_DashboardMenu2.default, { id: id,
+						view: view,
+						salinityIn: salinityIn,
+						salinityOut: salinityOut,
+						flow: flow,
+						power: power
+					}),
+					DashboardElement
+				);
+			}
+		}]);
+
+		return Dashboard;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
+
+/***/ },
+/* 408 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.menuNameChange = menuNameChange;
+
+	var _constants = __webpack_require__(248);
+
+	function menuNameChange(newName) {
+		return {
+			type: _constants.MENU_NAME_CHANGE,
+			name: newName
+		};
+	}
+
+/***/ },
+/* 409 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45668,7 +45896,7 @@
 
 	var _reactRouter = __webpack_require__(184);
 
-	var _classnames = __webpack_require__(441);
+	var _classnames = __webpack_require__(259);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -45687,29 +45915,40 @@
 	var ACTIVE_CLASS = 'active';
 
 	var ROUTES = {
-		SALINITY_OUT: {
-			pathname: _constants.PATHS.DASHBOARD,
-			query: {
-				view: _constants.QUERY.SALINITY_OUT
-			}
+		SALINITY_OUT: function SALINITY_OUT(id) {
+			return {
+				pathname: _constants.PATHS.DASHBOARD,
+				query: {
+					view: _constants.QUERY.SALINITY_OUT,
+					id: id
+				}
+			};
 		},
-		SALINITY_IN: {
-			pathname: _constants.PATHS.DASHBOARD,
-			query: {
-				view: _constants.QUERY.SALINITY_IN
-			}
+		SALINITY_IN: function SALINITY_IN(id) {
+			return {
+				pathname: _constants.PATHS.DASHBOARD,
+				query: {
+					view: _constants.QUERY.SALINITY_IN,
+					id: id
+				}
+			};
 		},
-		FLOW: {
-			pathname: _constants.PATHS.DASHBOARD,
-			query: {
-				view: _constants.QUERY.FLOW
-			}
+		FLOW: function FLOW(id) {
+			return {
+				pathname: _constants.PATHS.DASHBOARD,
+				query: {
+					view: _constants.QUERY.FLOW,
+					id: id
+				}
+			};
 		},
-		POWER: {
-			pathname: _constants.PATHS.DASHBOARD,
-			query: {
-				view: _constants.QUERY.POWER
-			}
+		POWER: function POWER(id) {
+			return {
+				pathname: _constants.PATHS.DASHBOARD,
+				query: {
+					view: _constants.QUERY.POWER
+				}
+			};
 		}
 	};
 
@@ -45725,7 +45964,6 @@
 		_createClass(DashboardMenu, [{
 			key: 'render',
 			value: function render() {
-				console.log('this context', this.context);
 				var router = this.context.router;
 				var _props = this.props;
 				var id = _props.id;
@@ -45749,7 +45987,7 @@
 					{ className: 'dashboard-menu' },
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: ROUTES.SALINITY_IN,
+						{ to: ROUTES.SALINITY_IN(id),
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: salinityInClass }),
 						_react2.default.createElement(
@@ -45760,7 +45998,7 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: ROUTES.SALINITY_OUT,
+						{ to: ROUTES.SALINITY_OUT(id),
 							activeClassName: ACTIVE_CLASS,
 							className: defaultViewClass },
 						_react2.default.createElement('div', { className: salinityOutClass }),
@@ -45772,7 +46010,7 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: ROUTES.FLOW,
+						{ to: ROUTES.FLOW(id),
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: flowClass }),
 						_react2.default.createElement(
@@ -45783,7 +46021,7 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: ROUTES.POWER,
+						{ to: ROUTES.POWER(id),
 							activeClassName: ACTIVE_CLASS },
 						_react2.default.createElement('div', { className: powerClass }),
 						_react2.default.createElement(
@@ -45816,7 +46054,7 @@
 	exports.default = DashboardMenu;
 
 /***/ },
-/* 408 */
+/* 410 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45835,15 +46073,15 @@
 
 	var _constants = __webpack_require__(248);
 
-	var _SalinityGraph = __webpack_require__(409);
+	var _SalinityGraph = __webpack_require__(411);
 
 	var _SalinityGraph2 = _interopRequireDefault(_SalinityGraph);
 
-	var _HistoricalGraph = __webpack_require__(410);
+	var _HistoricalGraph = __webpack_require__(412);
 
 	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
 
-	var _data = __webpack_require__(306);
+	var _data = __webpack_require__(293);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45927,7 +46165,7 @@
 				var direction = _props2.direction;
 				var readings = _props2.readings;
 				var status = current > threshold ? generateBadText() : generateGoodText();
-				console.log('current', current);
+
 				return _react2.default.createElement(
 					'div',
 					{ className: 'dashboard-view salinity' },
@@ -46005,7 +46243,7 @@
 	exports.default = DashboardSalinity;
 
 /***/ },
-/* 409 */
+/* 411 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46106,7 +46344,7 @@
 	};
 
 /***/ },
-/* 410 */
+/* 412 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46121,7 +46359,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(441);
+	var _classnames = __webpack_require__(259);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -46323,7 +46561,7 @@
 	exports.default = HistoricalGraph;
 
 /***/ },
-/* 411 */
+/* 413 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46340,17 +46578,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FlowGraph = __webpack_require__(412);
+	var _FlowGraph = __webpack_require__(414);
 
 	var _FlowGraph2 = _interopRequireDefault(_FlowGraph);
 
-	var _HistoricalGraph = __webpack_require__(410);
+	var _HistoricalGraph = __webpack_require__(412);
 
 	var _HistoricalGraph2 = _interopRequireDefault(_HistoricalGraph);
 
 	var _constants = __webpack_require__(248);
 
-	var _data = __webpack_require__(306);
+	var _data = __webpack_require__(293);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46490,7 +46728,7 @@
 	exports.default = DashboardFlow;
 
 /***/ },
-/* 412 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46629,16 +46867,16 @@
 	};
 
 /***/ },
-/* 413 */
+/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(414);
+	var content = __webpack_require__(416);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -46655,10 +46893,10 @@
 	}
 
 /***/ },
-/* 414 */
+/* 416 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -46669,7 +46907,7 @@
 
 
 /***/ },
-/* 415 */
+/* 417 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46690,19 +46928,19 @@
 
 	var _constants = __webpack_require__(248);
 
-	var _EddiListItem = __webpack_require__(416);
+	var _EddiListItem = __webpack_require__(418);
 
 	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
 
-	var _AddEddiButton = __webpack_require__(419);
+	var _AddEddiButton = __webpack_require__(421);
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
-	var _eddis = __webpack_require__(287);
+	var _eddis = __webpack_require__(288);
 
-	var _menu = __webpack_require__(305);
+	var _menu = __webpack_require__(408);
 
-	var _List = __webpack_require__(422);
+	var _List = __webpack_require__(424);
 
 	var _List2 = _interopRequireDefault(_List);
 
@@ -46841,7 +47079,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(List);
 
 /***/ },
-/* 416 */
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46860,7 +47098,7 @@
 
 	var _reactRouter = __webpack_require__(184);
 
-	var _EddiListItem = __webpack_require__(417);
+	var _EddiListItem = __webpack_require__(419);
 
 	var _EddiListItem2 = _interopRequireDefault(_EddiListItem);
 
@@ -46929,16 +47167,16 @@
 	exports.default = EddiListItem;
 
 /***/ },
-/* 417 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(418);
+	var content = __webpack_require__(420);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -46955,10 +47193,10 @@
 	}
 
 /***/ },
-/* 418 */
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -46969,7 +47207,7 @@
 
 
 /***/ },
-/* 419 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46986,9 +47224,9 @@
 
 	var _reactRedux = __webpack_require__(173);
 
-	var _modal = __webpack_require__(284);
+	var _modal = __webpack_require__(285);
 
-	var _AddEddiButton = __webpack_require__(420);
+	var _AddEddiButton = __webpack_require__(422);
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
@@ -47042,16 +47280,16 @@
 	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(AddEddiButton);
 
 /***/ },
-/* 420 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(421);
+	var content = __webpack_require__(423);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -47068,10 +47306,10 @@
 	}
 
 /***/ },
-/* 421 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -47082,16 +47320,16 @@
 
 
 /***/ },
-/* 422 */
+/* 424 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(423);
+	var content = __webpack_require__(425);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -47108,10 +47346,10 @@
 	}
 
 /***/ },
-/* 423 */
+/* 425 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -47122,7 +47360,7 @@
 
 
 /***/ },
-/* 424 */
+/* 426 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47139,19 +47377,19 @@
 
 	var _reactRedux = __webpack_require__(173);
 
-	var _eddis = __webpack_require__(287);
+	var _eddis = __webpack_require__(288);
 
-	var _menu = __webpack_require__(305);
+	var _menu = __webpack_require__(408);
 
-	var _AddEddiButton = __webpack_require__(419);
+	var _AddEddiButton = __webpack_require__(421);
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
-	var _SettingsEddi = __webpack_require__(425);
+	var _SettingsEddi = __webpack_require__(427);
 
 	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
 
-	var _Settings = __webpack_require__(431);
+	var _Settings = __webpack_require__(434);
 
 	var _Settings2 = _interopRequireDefault(_Settings);
 
@@ -47292,7 +47530,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Settings);
 
 /***/ },
-/* 425 */
+/* 427 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47307,19 +47545,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(441);
+	var _classnames = __webpack_require__(259);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _SettingsEddiHeader = __webpack_require__(426);
+	var _SettingsEddiHeader = __webpack_require__(428);
 
 	var _SettingsEddiHeader2 = _interopRequireDefault(_SettingsEddiHeader);
 
-	var _SettingsEddiVersion = __webpack_require__(427);
+	var _SettingsEddiVersion = __webpack_require__(429);
 
 	var _SettingsEddiVersion2 = _interopRequireDefault(_SettingsEddiVersion);
 
-	var _SettingsEddiForm = __webpack_require__(428);
+	var _SettingsEddiForm = __webpack_require__(430);
 
 	var _SettingsEddiForm2 = _interopRequireDefault(_SettingsEddiForm);
 
@@ -47458,7 +47696,7 @@
 	exports.default = SettingsEddi;
 
 /***/ },
-/* 426 */
+/* 428 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47473,7 +47711,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(441);
+	var _classnames = __webpack_require__(259);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -47548,7 +47786,7 @@
 	exports.default = SettingsEddiHeader;
 
 /***/ },
-/* 427 */
+/* 429 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47563,7 +47801,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _moment = __webpack_require__(307);
+	var _moment = __webpack_require__(294);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
@@ -47654,7 +47892,7 @@
 	exports.default = SettingsEddiVersion;
 
 /***/ },
-/* 428 */
+/* 430 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47669,13 +47907,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _data = __webpack_require__(306);
+	var _data = __webpack_require__(293);
 
-	var _SalinityInput = __webpack_require__(429);
+	var _SalinityInput = __webpack_require__(292);
 
 	var _SalinityInput2 = _interopRequireDefault(_SalinityInput);
 
-	var _TimeSelect = __webpack_require__(430);
+	var _TimeSelect = __webpack_require__(431);
 
 	var _TimeSelect2 = _interopRequireDefault(_TimeSelect);
 
@@ -47796,7 +48034,7 @@
 	exports.default = SettingsEddiForm;
 
 /***/ },
-/* 429 */
+/* 431 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47811,97 +48049,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _data = __webpack_require__(306);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var SalinityInput = function (_Component) {
-		_inherits(SalinityInput, _Component);
-
-		function SalinityInput() {
-			_classCallCheck(this, SalinityInput);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(SalinityInput).apply(this, arguments));
-		}
-
-		_createClass(SalinityInput, [{
-			key: 'changeHandler',
-			value: function changeHandler(event) {
-				event.preventDefault();
-				var onSalinityChange = this.props.onSalinityChange;
-				var value = event.target.value;
-				var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
-
-				if (onSalinityChange instanceof Function) return onSalinityChange(formattedValue);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _props = this.props;
-				var value = _props.value;
-				var placeholder = _props.placeholder;
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'salinity-input' },
-					_react2.default.createElement('input', { type: 'number',
-						onChange: function onChange(event) {
-							return _this2.changeHandler(event);
-						},
-						value: value,
-						placeholder: placeholder
-					})
-				);
-			}
-		}]);
-
-		return SalinityInput;
-	}(_react.Component);
-
-	SalinityInput.propTypes = {
-		onSalinityChange: _react.PropTypes.func,
-		value: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
-		placeholder: _react.PropTypes.string
-	};
-
-	SalinityInput.defaultProps = {
-		value: _data.salinityOptions.default,
-		placeholder: 'Set Your Own'
-	};
-
-	exports.default = SalinityInput;
-
-/***/ },
-/* 430 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _moment = __webpack_require__(307);
+	var _moment = __webpack_require__(294);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _data = __webpack_require__(306);
+	var _data = __webpack_require__(293);
 
-	var _DateTimeSelect = __webpack_require__(439);
+	var _DateTimeSelect = __webpack_require__(432);
 
 	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
 
@@ -48085,16 +48239,56 @@
 	exports.default = TimeSelect;
 
 /***/ },
-/* 431 */
+/* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(432);
+	var content = __webpack_require__(433);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 433 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(262)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".date-time-select {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: space-between;\n}\n.date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  cursor: pointer;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 434 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(435);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -48111,10 +48305,10 @@
 	}
 
 /***/ },
-/* 432 */
+/* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -48125,8 +48319,158 @@
 
 
 /***/ },
-/* 433 */,
-/* 434 */
+/* 436 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(173);
+
+	var _eddis = __webpack_require__(288);
+
+	var _menu = __webpack_require__(408);
+
+	var _EddiStateButton = __webpack_require__(437);
+
+	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
+
+	var _AddEddiButton = __webpack_require__(421);
+
+	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function mapStateToProps(state) {
+		return {
+			eddiList: state.eddis.list,
+			eddi: state.eddis.selected
+		};
+	}
+
+	function mapDispatchToProps(dispatch) {
+		return {
+			setEddiState: function setEddiState(eddiId, state) {
+				return dispatch((0, _eddis.setEddiStateThunk)(eddiId, state));
+			},
+			updateMenuName: function updateMenuName(name) {
+				return dispatch((0, _menu.menuNameChange)(name));
+			}
+		};
+	}
+
+	var Troubleshoot = function (_Component) {
+		_inherits(Troubleshoot, _Component);
+
+		function Troubleshoot() {
+			_classCallCheck(this, Troubleshoot);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
+		}
+
+		_createClass(Troubleshoot, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _props = this.props;
+				var updateMenuName = _props.updateMenuName;
+				var _props$eddi = _props.eddi;
+				var eddi = _props$eddi === undefined ? {} : _props$eddi;
+
+				if (eddi.id) updateMenuName(eddi.settings.name);
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(newProps) {
+				var _props2 = this.props;
+				var updateMenuName = _props2.updateMenuName;
+				var _props2$eddi = _props2.eddi;
+				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
+				var eddi = newProps.eddi;
+
+
+				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
+			}
+		}, {
+			key: '_renderNoEddis',
+			value: function _renderNoEddis() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'eddis-empty' },
+					_react2.default.createElement(
+						'p',
+						null,
+						' Currently you are not tracking any eddis. '
+					),
+					_react2.default.createElement(_AddEddiButton2.default, null)
+				);
+			}
+		}, {
+			key: '_renderSelected',
+			value: function _renderSelected() {
+				var _props3 = this.props;
+				var _props3$eddi = _props3.eddi;
+				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
+				var setEddiState = _props3.setEddiState;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+				var id = eddi.id;
+				var state = settings.state;
+
+
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', width: '100' }),
+					_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
+						onClick: function onClick(state) {
+							return setEddiState(eddi.id, state);
+						}
+					})
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _props4 = this.props;
+				var eddi = _props4.eddi;
+				var eddiList = _props4.eddiList;
+				var setEddiState = _props4.setEddiState;
+				var hasEddis = !!eddiList.length;
+
+				var TroubleshootElement = undefined;
+
+				if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderSelected();
+
+				return _react2.default.createElement(
+					'div',
+					{ id: 'troubleshoot', className: 'page' },
+					TroubleshootElement
+				);
+			}
+		}]);
+
+		return Troubleshoot;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
+
+/***/ },
+/* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48219,7 +48563,7 @@
 	exports.default = EddiStateButton;
 
 /***/ },
-/* 435 */
+/* 438 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48238,19 +48582,19 @@
 
 	var _reactRedux = __webpack_require__(173);
 
-	var _classnames = __webpack_require__(441);
+	var _classnames = __webpack_require__(259);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _menu = __webpack_require__(305);
+	var _menu = __webpack_require__(408);
 
-	var _data = __webpack_require__(306);
+	var _data = __webpack_require__(293);
 
-	var _DateSelect = __webpack_require__(436);
+	var _DateSelect = __webpack_require__(439);
 
 	var _DateSelect2 = _interopRequireDefault(_DateSelect);
 
-	var _Report = __webpack_require__(437);
+	var _Report = __webpack_require__(440);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -48518,7 +48862,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 436 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48533,9 +48877,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _data = __webpack_require__(306);
+	var _data = __webpack_require__(293);
 
-	var _DateTimeSelect = __webpack_require__(439);
+	var _DateTimeSelect = __webpack_require__(432);
 
 	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
 
@@ -48691,16 +49035,16 @@
 	exports.default = DateSelect;
 
 /***/ },
-/* 437 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(438);
+	var content = __webpack_require__(441);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -48717,10 +49061,10 @@
 	}
 
 /***/ },
-/* 438 */
+/* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -48729,253 +49073,6 @@
 
 	// exports
 
-
-/***/ },
-/* 439 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(440);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 440 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(261)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".date-time-select {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: space-between;\n}\n.date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  cursor: pointer;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 441 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames () {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg;
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
-
-/***/ },
-/* 442 */,
-/* 443 */,
-/* 444 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(173);
-
-	var _eddis = __webpack_require__(287);
-
-	var _menu = __webpack_require__(305);
-
-	var _EddiStateButton = __webpack_require__(434);
-
-	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
-
-	var _AddEddiButton = __webpack_require__(419);
-
-	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function mapStateToProps(state) {
-		return {
-			eddiList: state.eddis.list,
-			eddi: state.eddis.selected
-		};
-	}
-
-	function mapDispatchToProps(dispatch) {
-		return {
-			setEddiState: function setEddiState(eddiId, state) {
-				return dispatch((0, _eddis.setEddiStateThunk)(eddiId, state));
-			},
-			updateMenuName: function updateMenuName(name) {
-				return dispatch((0, _menu.menuNameChange)(name));
-			}
-		};
-	}
-
-	var Troubleshoot = function (_Component) {
-		_inherits(Troubleshoot, _Component);
-
-		function Troubleshoot() {
-			_classCallCheck(this, Troubleshoot);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Troubleshoot).apply(this, arguments));
-		}
-
-		_createClass(Troubleshoot, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _props = this.props;
-				var updateMenuName = _props.updateMenuName;
-				var _props$eddi = _props.eddi;
-				var eddi = _props$eddi === undefined ? {} : _props$eddi;
-
-				if (eddi.id) updateMenuName(eddi.settings.name);
-			}
-		}, {
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(newProps) {
-				var _props2 = this.props;
-				var updateMenuName = _props2.updateMenuName;
-				var _props2$eddi = _props2.eddi;
-				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
-				var eddi = newProps.eddi;
-
-
-				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
-			}
-		}, {
-			key: '_renderNoEddis',
-			value: function _renderNoEddis() {
-				return _react2.default.createElement(
-					'div',
-					{ className: 'eddis-empty' },
-					_react2.default.createElement(
-						'p',
-						null,
-						' Currently you are not tracking any eddis. '
-					),
-					_react2.default.createElement(_AddEddiButton2.default, null)
-				);
-			}
-		}, {
-			key: '_renderSelected',
-			value: function _renderSelected() {
-				var _props3 = this.props;
-				var _props3$eddi = _props3.eddi;
-				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
-				var setEddiState = _props3.setEddiState;
-				var _eddi$settings = eddi.settings;
-				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
-				var id = eddi.id;
-				var state = settings.state;
-
-
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', width: '100' }),
-					_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
-						onClick: function onClick(state) {
-							return setEddiState(eddi.id, state);
-						}
-					})
-				);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _props4 = this.props;
-				var eddi = _props4.eddi;
-				var eddiList = _props4.eddiList;
-				var setEddiState = _props4.setEddiState;
-				var hasEddis = !!eddiList.length;
-
-				var TroubleshootElement = undefined;
-
-				if (!hasEddis) TroubleshootElement = this._renderNoEddis();else TroubleshootElement = this._renderSelected();
-
-				return _react2.default.createElement(
-					'div',
-					{ id: 'troubleshoot', className: 'page' },
-					TroubleshootElement
-				);
-			}
-		}]);
-
-		return Troubleshoot;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
 
 /***/ }
 /******/ ]);

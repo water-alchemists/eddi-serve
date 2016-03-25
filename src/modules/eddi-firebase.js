@@ -23,9 +23,9 @@ const PATHS = {
 };
 
 const EVENTS = {
-	SETTINGS : PATHS.SETTINGS_PATH,
-	READINGS : PATHS.READINGS,
-	STATE : PATHS.STATE_PATH
+	SETTINGS : /eddis\/(.+)\/settings/,
+	READINGS : /eddis\/(.+)\/readings/,
+	STATE : /eddis\/(.+)\/state/
 }
 
 class EddiFire {
@@ -37,6 +37,8 @@ class EddiFire {
 			USER : ref.child(PATHS.USER_PATH),
 			EDDI : ref.child(PATHS.EDDI_PATH)
 		};
+
+		this.events = {};
 	}
 
 	isAuthenticated(){
@@ -159,7 +161,7 @@ class EddiFire {
 								resolve();
 							}
 						);
-					});
+				});
 			});
 	}
 
@@ -348,22 +350,28 @@ class EddiFire {
 			});
 	}
 
+	addEventListener(path, func){
+		this.refs.BASE.child(path).on('value', snapshot => func(snapshot.val()));
+	}
+
+	removeEventListeners(path){
+		this.refs.BASE.child(path).off('value');
+	}
+
 	addEddiEventListener(id, event, func){
-		const path = EVENTS[event];
-		if(!path) throw new Error(`${event} is not a valid event.`);
-		this.refs.EDDI.child(id).child(path).on(value, snapshot => {
-			const data = snapshot.val();
-			func(data);
-		});
+		const path = `${PATHS.EDDI_PATH}/${id}/${event}`,
+			isMatch = path.match(EVENTS[event]);
+		if(!isMatch) throw new Error(`${path} is not valid to listen on.`);
+		console.log('adding event listener path', path, isMatch);
+		this.addEventListener(path, func);
 	}
 
 	removeEddiEventListener(id, event, func){
-		const path = EVENTS[event];
-		if(!path) throw new Error(`${event} is not a valid event.`);
-		this.refs.EDDI.child(id).child(path).on(value, snapshot => {
-			const data = snapshot.val();
-			func(data);
-		});
+		const path = `${PATHS.EDDI_PATH}/${id}/${event}`,
+			isMatch = path.match(EVENTS[event]);
+		if(!isMatch) throw new Error(`${event} is not valid to remove listeners for.`);
+		console.log('removing event listener path', path, isMatch);
+		this.removeEventListeners(path);
 	}
 
 }

@@ -11,7 +11,7 @@ import {
 	EDDI_UPDATESTART_SUCCESS,
 	EDDI_UPDATEEND_SUCCESS,
 	EDDI_UPDATESNOOZE_SUCCESS,
-	EDDI_UPDATEMACHINE_SUCCESS,
+	EDDI_READINGS_SUCCESS,
 	EDDI_GETONE_SUCCESS,
 	EDDI_GETONE_ERROR,
 	EDDI_SELECT
@@ -135,7 +135,6 @@ export function setEddiStartThunk(eddiId, hour, minute){
 	const start = {};
 	if(hour) start.hour = hour;
 	if(minute) start.minute = minute;
-	console.log('this is the start', start);
 
 	return dispatch => {
 		if((!typeof hour === 'number' || typeof minutes === 'number')) throw new Error(`Hour and minutes must be numbers.`);
@@ -169,7 +168,6 @@ export function setEddiSalinityThunk(eddiId, salinity){
 
 export function setEddiStateThunk(eddiId, state){
 	return dispatch => {
-		console.log('eddiID', eddiId, state)
 		return EddiFire.setEddiState(eddiId, state)
 			.then(update => dispatch(updateEddiSuccess(update.id, update.settings)))
 			.catch(error => dispatch(updateEddiError(error)));
@@ -194,7 +192,7 @@ export function getEddiState(id, state){
 
 export function getEddiReadings(id, readings){
 	return {
-		type : EDDI_UPDATEMACHINE_SUCCESS,
+		type : EDDI_READINGS_SUCCESS,
 		id,
 		readings
 	};

@@ -8,35 +8,45 @@ import { PATHS, QUERY } from '../constants';
 const ACTIVE_CLASS = 'active';
 
 const ROUTES = {
-	SALINITY_OUT: { 
-		pathname : PATHS.DASHBOARD, 
-		query : { 
-			view : QUERY.SALINITY_OUT 
-		} 
+	SALINITY_OUT: function(id){
+		return { 
+			pathname : PATHS.DASHBOARD, 
+			query : { 
+				view : QUERY.SALINITY_OUT,
+				id
+			}
+		};
 	},
-	SALINITY_IN : { 
-		pathname : PATHS.DASHBOARD, 
-		query : { 
-			view : QUERY.SALINITY_IN 
-		} 
+	SALINITY_IN : function(id){ 
+		return {
+			pathname : PATHS.DASHBOARD, 
+			query : { 
+				view : QUERY.SALINITY_IN,
+				id
+			}
+		};
 	},
-	FLOW : { 
-		pathname : PATHS.DASHBOARD, 
-		query : { 
-			view : QUERY.FLOW 
-		} 
+	FLOW : function(id){ 
+		return {
+			pathname : PATHS.DASHBOARD, 
+			query : { 
+				view : QUERY.FLOW,
+				id
+			}
+		};
 	},
-	POWER : { 
-		pathname : PATHS.DASHBOARD, 
-		query : { 
-			view : QUERY.POWER
-		}
+	POWER : function(id){ 
+		return {
+			pathname : PATHS.DASHBOARD, 
+			query : {
+				view : QUERY.POWER
+			}
+		};
 	}
 }
 
 class DashboardMenu extends Component {
 	render(){
-		console.log('this context', this.context);
 		const { router } = this.context,
 			{ id, view, salinityIn, salinityOut, flow, power } = this.props,
 			defaultViewClass = classNames({ [ACTIVE_CLASS] : !view }), //handles appearance of default tab
@@ -71,23 +81,23 @@ class DashboardMenu extends Component {
 
  		return (
 			<div className='dashboard-menu'>
-				<Link to={ ROUTES.SALINITY_IN }
+				<Link to={ ROUTES.SALINITY_IN(id) }
 							activeClassName={ACTIVE_CLASS}>
 					<div className={salinityInClass} />
 					<p className={salinityInFont}>in</p>
 				</Link>
-				<Link to={ ROUTES.SALINITY_OUT }
+				<Link to={ ROUTES.SALINITY_OUT(id) }
 							activeClassName={ACTIVE_CLASS}
 					className={defaultViewClass}>
 					<div className={salinityOutClass} />
 					<p className={salinityOutFont}>out</p>
 				</Link>
-				<Link to={ ROUTES.FLOW }
+				<Link to={ ROUTES.FLOW(id) }
 							activeClassName={ACTIVE_CLASS}>
 					<div className={flowClass} />
 					<p className={flowFont}>flow</p>
 				</Link>
-				<Link to={ ROUTES.POWER }
+				<Link to={ ROUTES.POWER(id) }
 							activeClassName={ACTIVE_CLASS}>
 					<div className={powerClass} />							
 					<p className={powerFont}>power</p>

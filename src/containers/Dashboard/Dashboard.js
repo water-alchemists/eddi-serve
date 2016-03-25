@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { menuNameChange } from '../../actions/menu';
-import { selectEddiById } from '../../actions/eddis';
+import { selectEddiById, updateEddiSuccess, getEddiReadings } from '../../actions/eddis';
 
 import { QUERY, FLOW_THRESHOLD, SALINITY_THRESHOLD } from '../../constants';
 
@@ -44,6 +44,8 @@ function mapDispatchToProps(dispatch){
 	return {
 		updateMenuName:	(name) => dispatch(menuNameChange(name)),
 		selectEddiById: (eddi) => dispatch(selectEddiById(eddi)),
+		updateEddiSettings : (id, settings) => dispatch(updateEddiSuccess(id, settings)),
+		updateEddiReadings : (id, readings) => dispatch(getEddiReadings(id, readings ))
 	};
 }
 
@@ -57,7 +59,15 @@ class Dashboard extends Component {
 	}
 
 	componentWillMount(){
-		const { updateMenuName, eddi={} } = this.props;
+		console.log('mounting...');
+
+		const { updateMenuName, updateEddiSettings, updateEddiReadings, selectEddiById, eddi={}, location={} } = this.props;
+		console.log('location', location.query.id, 'state', eddi.id);
+
+		//if the id in the query changes, update the selected to that id
+		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
+		
+		//if there is id, update the eddi's info
 		if( eddi.settings ) updateMenuName(eddi.settings.name);
 		if( eddi.readings ){
 			//format the readings into an array for data handling
@@ -65,26 +75,53 @@ class Dashboard extends Component {
 				current = readings[readings.length - 1];
 			this.setState({ readings, current });
 		}
+		if(eddi.id){
+			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+			EddiFire.addEddiEventListener(eddi.id, 'readings', readings => updateEddiReadings(eddi.id, readings));
+		}
+		
 	}
 
 	componentWillReceiveProps(newProps){
-		const { updateMenuName, eddi:oldEddi={}, location } = this.props,
+		const { updateMenuName, updateEddiReadings, updateEddiSettings, selectEddiById, eddi:oldEddi={}, location } = this.props,
 			{ eddi } = newProps;
+		//if the id in the query changes, update the selected to that id
+		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
+		
+		//if there is id, update the eddi's info
+		if(eddi.id && oldEddi.id !== eddi.id) {
+			if( eddi.settings ) updateMenuName(eddi.settings.name);
+			if( eddi.readings ){
+				//format the readings into an array for data handling
+				const readings = mapDateToReadings(eddi.readings),
+					current = readings[readings.length - 1];
 
-		if( eddi.settings ) updateMenuName(eddi.settings.name);
-		if( eddi.readings ){
-			//format the readings into an array for data handling
-			const readings = mapDateToReadings(eddi.readings),
-				current = readings[readings.length - 1];
-
-			this.setState({ readings, current });
+				this.setState({ readings, current });
+			}
+			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+			EddiFire.addEddiEventListener(eddi.id, 'readings', readings => updateEddiReadings(eddi.id, readings));
 		}
+	}
+
+	componentWillUnmount(){
+		const { eddi={} } = this.props;
+		EddiFire.removeEddiEventListener(eddi.id, 'settings');
+		EddiFire.removeEddiEventListener(eddi.id, 'readings');
+	}
+
+	_renderNoReadings(){
+		return (
+			<div>
+				This eddi currently do not have any readings.
+			</div>
+		);
 	}
 
 	_renderSalinity(current, direction){
 		const { readings } = this.state,
 			{ eddi={} } = this.props,
 			threshold = eddi.settings.salinity;
+
 
 		return (
 			<DashboardSalinity key={direction} 
@@ -98,6 +135,7 @@ class Dashboard extends Component {
 
 	_renderFlow(rate){
 		const { readings } = this.state;
+		if(!readings.length) return this._renderNoReadings();
 		return (
 			<DashboardFlow rate={rate}
 				readings={readings}
@@ -125,13 +163,13 @@ class Dashboard extends Component {
 	}
 
 	render(){
-		const { current } = this.state,
+		const { current, readings } = this.state,
 			{ eddi={}, location={} } = this.props,
 			{ id, settings={} } = eddi,
 			{ view } = location.query,
 			{ salinityIn, salinityOut, flow, power } = getGoodBad(current, settings.salinity);
 
-		let DashboardElement = this._renderViewBasedQuery(view);
+		let DashboardElement = readings.length ? this._renderViewBasedQuery(view) : this._renderNoReadings();
 		return (
 			<div id="dashboard" className="page">
 				<DashboardMenu id={id} 
