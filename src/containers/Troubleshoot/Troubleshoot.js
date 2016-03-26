@@ -11,7 +11,7 @@ import AddEddiButton from '../../components/AddEddiButton';
 function mapStateToProps(state){
 	return {
 		eddiList : state.eddis.list,
-		eddi : state.eddis.selected
+		eddi : state.selected
 	};
 }
 

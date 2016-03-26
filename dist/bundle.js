@@ -45762,7 +45762,7 @@
 
 	function mapStateToProps(state) {
 		return {
-			eddi: state.eddis.selected
+			eddi: state.selected
 		};
 	}
 
@@ -48482,7 +48482,7 @@
 	function mapStateToProps(state) {
 		return {
 			eddiList: state.eddis.list,
-			eddi: state.eddis.selected
+			eddi: state.selected
 		};
 	}
 
@@ -48736,7 +48736,7 @@
 
 	function mapStateToProps(state) {
 		return {
-			eddi: state.eddis.selected
+			eddi: state.selected
 		};
 	}
 

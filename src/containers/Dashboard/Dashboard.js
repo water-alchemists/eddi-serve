@@ -36,7 +36,7 @@ function getGoodBad(current, threshold){
 
 function mapStateToProps(state){
 	return {
-		eddi : state.eddis.selected,
+		eddi : state.selected,
 	};
 }
 
