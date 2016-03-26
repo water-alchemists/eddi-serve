@@ -5,6 +5,27 @@
 	margin-bottom : 35px;
 	.content {
 		height: 100%;
+		.image-container {
+			display: flex;
+			justify-content : center;
+			align-items : center;
+			flex-direction : row;
+			padding : 10px;
+		}
+		.cycle-list {
+			background-color: white;
+			.cycle {
+				padding: 10px 20px;
+				color: black;
+
+				display: flex;
+				flex-direction : row;
+				&.active{
+					color : @trim_color;
+				}
+			}
+		}
+
 		.footer {
 			position : fixed;
 			width : 100%;

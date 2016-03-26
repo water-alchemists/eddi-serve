@@ -1,6 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import className from 'classnames';
 
 import { setEddiStateThunk, getEddiCycleSuccess } from '../../actions/eddis';
 import { menuNameChange } from '../../actions/menu';
@@ -64,18 +65,26 @@ class Troubleshoot extends Component {
 
 	_renderSelected(){
 		const { eddi={} , setEddiState } = this.props,
-			{ state={} , id } = eddi;
+			{ state={} , id } = eddi,
+			cycles = ['off', 'prime', 'channel a', 'channel b'];
 
 		return (
 			<div className='content'>
 				<div className='image-container'>
-					<img src='/assets/troubleshoot.svg' width='100'></img>
+					<img src='/assets/troubleshoot.svg' height='200'></img>
 				</div>
-				<div className='options'>
-					<div>OFF</div>
-					<div>PRIME</div>
-					<div>CHANNEL A</div>
-					<div>CHANNEL B</div>
+				<div className='cycle-list'>
+					{ 
+						cycles.map( (cycle, index) => {
+							const cycleClassName = className(['cycle', { active : index === state.state }]);
+							return (
+								<div key={cycle} className={ cycleClassName }>
+									<div>{`${index + 1}. `}</div>
+									<div>{cycle.toUpperCase()}</div>
+								</div>
+								);
+						} )
+					}
 				</div>
 				<div className='footer'>
 					<EddiStateButton value={!!state}
