@@ -7,13 +7,11 @@ import {
 	EDDI_UPDATEEND_SUCCESS,
 	EDDI_READINGS_SUCCESS,
 	EDDI_GETONE_SUCCESS,
-	EDDI_SELECT,
 	APP_START_SUCCESS
 } from '../constants';
 
 const initialState = {
-	list : [],
-	selected : undefined
+	list : []
 };
 
 export default function(state = initialState, action = {}){
@@ -47,8 +45,7 @@ export default function(state = initialState, action = {}){
 
 		return {
 			...state,
-			list,
-			selected : newSelected
+			list
 		};
 	case EDDI_UPDATE_SUCCESS:
 		newList = state.list.map(eddi => {
@@ -129,11 +126,6 @@ export default function(state = initialState, action = {}){
 		return {
 			...state,
 			list : newList
-		};
-	case EDDI_SELECT :
-		return {
-			...state,
-			selected
 		};
 	case USER_LOGOUT :
 		return {

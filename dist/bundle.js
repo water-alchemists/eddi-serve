@@ -26749,8 +26749,7 @@
 				}
 
 				return _extends({}, state, {
-					list: list,
-					selected: newSelected
+					list: list
 				});
 			case _constants.EDDI_UPDATE_SUCCESS:
 				newList = state.list.map(function (eddi) {
@@ -26819,10 +26818,6 @@
 				return _extends({}, state, {
 					list: newList
 				});
-			case _constants.EDDI_SELECT:
-				return _extends({}, state, {
-					selected: selected
-				});
 			case _constants.USER_LOGOUT:
 				return _extends({}, initialState);
 			default:
@@ -26833,8 +26828,7 @@
 	var _constants = __webpack_require__(248);
 
 	var initialState = {
-		list: [],
-		selected: undefined
+		list: []
 	};
 
 /***/ },
