@@ -33,8 +33,8 @@ class EddiListItem extends Component {
 EddiListItem.propTypes = {
 	name : PropTypes.string.isRequired,
 	url : PropTypes.string.isRequired,
-	id : PropTypes.string.isRequire
-}
+	id : PropTypes.string.isRequired
+};
 
 export default EddiListItem;
 

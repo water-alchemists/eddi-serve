@@ -70,9 +70,11 @@ class List extends Component {
 	}
 
 	_renderNoEddis(){
-		return <div className='eddis-empty'>
-			<p> Currently you are not tracking any eddis. </p>
-		</div>;
+		return (
+			<div className='eddis-empty'>
+				<p> Currently you are not tracking any eddis. </p>
+			</div>
+		);
 	}
 
 	render(){

@@ -119,8 +119,8 @@ export default function(state = initialState, action = {}){
 		newList = state.list.map(eddi => {
 			if(eddi.id === id){
 				const updatedEddi = eddi;
-				updatedEddi.readings = [ ...readings ];
-
+				updatedEddi.readings = { ...readings };
+				console.log(updatedEddi)
 				return updatedEddi;
 			}
 			return eddi;

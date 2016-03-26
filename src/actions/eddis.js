@@ -1,3 +1,4 @@
+'use strict';
 import EddiFireStarter from '../modules/eddi-firebase';
 
 import { browserHistory } from 'react-router';

@@ -39,7 +39,8 @@ const ROUTES = {
 		return {
 			pathname : PATHS.DASHBOARD, 
 			query : {
-				view : QUERY.POWER
+				view : QUERY.POWER,
+				id
 			}
 		};
 	}

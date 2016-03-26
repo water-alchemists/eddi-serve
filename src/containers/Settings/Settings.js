@@ -62,7 +62,8 @@ class Settings extends Component {
 		return eddis.map(eddi => {
 			const eddiId = eddi.id;
 			return (
-				<SettingsEddi eddi={eddi}
+				<SettingsEddi key={eddiId}
+					eddi={eddi}
 					onSalinityChange={salinity => updateSalinity(eddiId, salinity)}
 					onStartChange={(hour, minutes) => updateStart(eddiId, hour, minutes)}
 					onEndChange={(hour, minutes) => updateEnd(eddiId, hour, minutes)}

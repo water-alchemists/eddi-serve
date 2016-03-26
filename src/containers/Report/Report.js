@@ -128,6 +128,7 @@ class Report extends Component {
 					endDate = new Date(end.year, end.month, end.day);
 				return date >= startDate && date <= endDate;
 			});
+		console.log()
 		if(isActive(OPTIONS.CSV, type)) console.log(formatReadingsToCsv(focus));
 	}
 
