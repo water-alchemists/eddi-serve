@@ -26805,7 +26805,6 @@
 					list: newList
 				});
 			case _constants.EDDI_READINGS_SUCCESS:
-				console.log('at the constant readings success', readings, id);
 				newList = state.list.map(function (eddi) {
 					if (eddi.id === id) {
 						var updatedEddi = eddi;
@@ -26815,7 +26814,6 @@
 					}
 					return eddi;
 				});
-				console.log('new List', newList);
 				return _extends({}, state, {
 					list: newList
 				});
@@ -45826,10 +45824,8 @@
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 				var _props$location = _props.location;
 				var location = _props$location === undefined ? {} : _props$location;
-
-				console.log('location', location.query.id, 'state', eddi.id);
-
 				//if the id in the query changes, update the selected to that id
+
 				if (location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
 
 				//if there is id, update the eddi's info
@@ -45868,19 +45864,20 @@
 				//if there is id, update the eddi's info
 				if (eddi.id && oldEddi.id !== eddi.id) {
 					if (eddi.settings) updateMenuName(eddi.settings.name);
-					if (eddi.readings) {
-						//format the readings into an array for data handling
-						var readings = (0, _data.mapDateToReadings)(eddi.readings),
-						    current = readings[readings.length - 1];
-
-						this.setState({ readings: readings, current: current });
-					}
 					EddiFire.addEddiEventListener(eddi.id, 'settings', function (settings) {
 						return updateEddiSettings(eddi.id, settings);
 					});
 					EddiFire.addEddiEventListener(eddi.id, 'readings', function (readings) {
 						return updateEddiReadings(eddi.id, readings);
 					});
+				}
+
+				if (eddi.readings) {
+					//format the readings into an array for data handling
+					var readings = (0, _data.mapDateToReadings)(eddi.readings),
+					    current = readings[readings.length - 1];
+
+					this.setState({ readings: readings, current: current });
 				}
 			}
 		}, {

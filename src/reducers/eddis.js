@@ -112,7 +112,6 @@ export default function(state = initialState, action = {}){
 			list : newList
 		}
 	case EDDI_READINGS_SUCCESS :
-		console.log('at the constant readings success', readings, id);
 		newList = state.list.map(eddi => {
 			if(eddi.id === id){
 				const updatedEddi = eddi;
@@ -122,7 +121,6 @@ export default function(state = initialState, action = {}){
 			}
 			return eddi;
 		});
-		console.log('new List', newList);
 		return {
 			...state,
 			list : newList

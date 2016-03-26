@@ -62,8 +62,6 @@ class Dashboard extends Component {
 		console.log('mounting...');
 
 		const { updateMenuName, updateEddiSettings, updateEddiReadings, selectEddiById, eddi={}, location={} } = this.props;
-		console.log('location', location.query.id, 'state', eddi.id);
-
 		//if the id in the query changes, update the selected to that id
 		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
 		
@@ -87,19 +85,20 @@ class Dashboard extends Component {
 			{ eddi } = newProps;
 		//if the id in the query changes, update the selected to that id
 		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
-		
+
 		//if there is id, update the eddi's info
 		if(eddi.id && oldEddi.id !== eddi.id) {
 			if( eddi.settings ) updateMenuName(eddi.settings.name);
-			if( eddi.readings ){
-				//format the readings into an array for data handling
-				const readings = mapDateToReadings(eddi.readings),
-					current = readings[readings.length - 1];
-
-				this.setState({ readings, current });
-			}
 			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 			EddiFire.addEddiEventListener(eddi.id, 'readings', readings => updateEddiReadings(eddi.id, readings));
+		}
+
+		if( eddi.readings ){
+			//format the readings into an array for data handling
+			const readings = mapDateToReadings(eddi.readings),
+				current = readings[readings.length - 1];
+
+			this.setState({ readings, current });
 		}
 	}
 
