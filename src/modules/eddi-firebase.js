@@ -351,11 +351,7 @@ class EddiFire {
 	}
 
 	addEventListener(path, func){
-		console.log('this is hte path', path);
-		this.refs.BASE.child(path).on('value', snapshot => {
-			console.log('this is the snapshot', snapshot.val());
-			func(snapshot.val())
-		});
+		this.refs.BASE.child(path).on('value', snapshot => func(snapshot.val()));
 	}
 
 	removeEventListeners(path){
@@ -373,7 +369,6 @@ class EddiFire {
 		const path = `${PATHS.EDDI_PATH}/${id}/${event}`,
 			isMatch = path.match(EVENTS[event]);
 		if(!isMatch) throw new Error(`${event} is not valid to remove listeners for.`);
-		console.log('removing event listener path', path, isMatch);
 		this.removeEventListeners(path);
 	}
 

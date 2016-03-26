@@ -59,8 +59,6 @@ class Dashboard extends Component {
 	}
 
 	componentWillMount(){
-		console.log('mounting...');
-
 		const { updateMenuName, updateEddiSettings, updateEddiReadings, selectEddiById, eddi={}, location={} } = this.props;
 		//if the id in the query changes, update the selected to that id
 		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);

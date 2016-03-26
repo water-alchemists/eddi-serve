@@ -30785,10 +30785,8 @@
 		}, {
 			key: 'addEventListener',
 			value: function addEventListener(path, func) {
-				console.log('this is hte path', path);
 				this.refs.BASE.child(path).on('value', function (snapshot) {
-					console.log('this is the snapshot', snapshot.val());
-					func(snapshot.val());
+					return func(snapshot.val());
 				});
 			}
 		}, {
@@ -30810,7 +30808,6 @@
 				var path = PATHS.EDDI_PATH + '/' + id + '/' + event,
 				    isMatch = path.match(EVENTS[event]);
 				if (!isMatch) throw new Error(event + ' is not valid to remove listeners for.');
-				console.log('removing event listener path', path, isMatch);
 				this.removeEventListeners(path);
 			}
 		}]);
@@ -45813,8 +45810,6 @@
 		_createClass(Dashboard, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				console.log('mounting...');
-
 				var _props = this.props;
 				var updateMenuName = _props.updateMenuName;
 				var updateEddiSettings = _props.updateEddiSettings;
