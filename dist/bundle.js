@@ -49348,7 +49348,7 @@
 
 
 	// module
-	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  display: flex;\n  flex-direction: row;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #006d60;\n}\n#troubleshoot .content .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  display: flex;\n  flex-direction: row;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #006d60;\n}\n#troubleshoot .content .footer {\n  bottom: 0;\n  left: 0;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
