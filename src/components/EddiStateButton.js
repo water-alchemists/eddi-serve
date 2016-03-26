@@ -1,6 +1,8 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 
+import style from '../less/EddiStateButton.less';
+
 class EddiStateButton extends Component {
 	clickHandler(event, value, cb){
 		event.preventDefault();
@@ -22,11 +24,11 @@ class EddiStateButton extends Component {
 		const { onClick } = this.props;
 
 		return (
-			<button onClick={ event => this.clickHandler(event, 0, onClick) }
-				type='button'
+			<div className='eddi-state-button'
+				onClick={ event => this.clickHandler(event, 0, onClick) }
 			>
 				OFF
-			</button>
+			</div>
 		);
 	}
 	render(){

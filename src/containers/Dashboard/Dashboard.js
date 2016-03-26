@@ -111,7 +111,7 @@ class Dashboard extends Component {
 
 	_renderNoReadings(){
 		return (
-			<div>
+			<div className='readings-empty'>
 				This eddi currently do not have any readings.
 			</div>
 		);

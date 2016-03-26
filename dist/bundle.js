@@ -26672,6 +26672,7 @@
 	var EDDI_UPDATEEND_SUCCESS = exports.EDDI_UPDATEEND_SUCCESS = 'EDDI_UPDATEEND_SUCCESS';
 	var EDDI_UPDATESNOOZE_SUCCESS = exports.EDDI_UPDATESNOOZE_SUCCESS = 'EDDI_UPDATESNOOZE_SUCCESS';
 	var EDDI_READINGS_SUCCESS = exports.EDDI_READINGS_SUCCESS = 'EDDI_READINGS_SUCCESS';
+	var EDDI_STATE_SUCCESS = exports.EDDI_STATE_SUCCESS = 'EDDI_STATE_SUCCESS';
 	var EDDI_GETONE_SUCCESS = exports.EDDI_GETONE_SUCCESS = 'EDDI_GETONE_SUCCESS';
 	var EDDI_GETONE_ERROR = exports.EDDI_GETONE_ERROR = 'EDDI_GETONE_ERROR';
 	var EDDI_SELECT = exports.EDDI_SELECT = 'EDDI_SELECT';
@@ -26991,6 +26992,13 @@
 					});
 				} else return state;
 				break;
+			case _constants.EDDI_STATE_SUCCESS:
+				if (state.id === id) {
+					return _extends({}, state, {
+						state: _extends({}, action.state)
+					});
+				} else return state;
+				break;
 			case _constants.USER_LOGOUT:
 				return _extends({}, initialState);
 				break;
@@ -27015,11 +27023,11 @@
 		},
 		version: {
 			artik: {
-				number: 0.1,
+				number: "0.1",
 				date: new Date()
 			},
 			eddi: {
-				number: 0.1,
+				number: "0.1",
 				date: new Date()
 			}
 		},
@@ -30166,6 +30174,7 @@
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	exports.updateEddiSuccess = updateEddiSuccess;
+	exports.getEddiCycleSuccess = getEddiCycleSuccess;
 	exports.selectEddi = selectEddi;
 	exports.selectEddiById = selectEddiById;
 	exports.getAllEddiByUserThunk = getAllEddiByUserThunk;
@@ -30255,6 +30264,16 @@
 			type: _constants.EDDI_UPDATESNOOZE_SUCCESS,
 			id: id,
 			snooze: snooze
+		};
+	}
+
+	function getEddiCycleSuccess(id) {
+		var state = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+		return {
+			type: _constants.EDDI_STATE_SUCCESS,
+			id: id,
+			state: state
 		};
 	}
 
@@ -30410,6 +30429,8 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _EVENTS;
+
 	exports.default = function () {
 		var init = undefined;
 		if (init) return init;else {
@@ -30419,6 +30440,8 @@
 	};
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	var Firebase = __webpack_require__(291);
 
@@ -30443,11 +30466,7 @@
 		READINGS: 'readings'
 	};
 
-	var EVENTS = {
-		SETTINGS: /eddis\/(.+)\/settings/,
-		READINGS: /eddis\/(.+)\/readings/,
-		STATE: /eddis\/(.+)\/state/
-	};
+	var EVENTS = (_EVENTS = {}, _defineProperty(_EVENTS, PATHS.SETTINGS_PATH, /eddis\/(.+)\/settings/), _defineProperty(_EVENTS, PATHS.READINGS, /eddis\/(.+)\/readings/), _defineProperty(_EVENTS, PATHS.STATE, /eddis\/(.+)\/state/), _EVENTS);
 
 	var EddiFire = function () {
 		function EddiFire() {
@@ -30768,8 +30787,10 @@
 		}, {
 			key: 'addEventListener',
 			value: function addEventListener(path, func) {
+				console.log('this is hte path', path);
 				this.refs.BASE.child(path).on('value', function (snapshot) {
-					return func(snapshot.val());
+					console.log('this is the snapshot', snapshot.val());
+					func(snapshot.val());
 				});
 			}
 		}, {
@@ -30783,7 +30804,6 @@
 				var path = PATHS.EDDI_PATH + '/' + id + '/' + event,
 				    isMatch = path.match(EVENTS[event]);
 				if (!isMatch) throw new Error(path + ' is not valid to listen on.');
-				console.log('adding event listener path', path, isMatch);
 				this.addEventListener(path, func);
 			}
 		}, {
@@ -45877,7 +45897,7 @@
 			value: function _renderNoReadings() {
 				return _react2.default.createElement(
 					'div',
-					null,
+					{ className: 'readings-empty' },
 					'This eddi currently do not have any readings.'
 				);
 			}
@@ -47017,7 +47037,7 @@
 
 
 	// module
-	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  text-decoration: none;\n  color: #006d60;\n}\n#dashboard .dashboard-menu a p {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n  opacity: 0.6;\n  margin: 0;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-menu a.active p {\n  opacity: 1;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n  text-transform: lowercase;\n  font-weight: 300;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection.selected span {\n  border-bottom: 2px solid #006d60;\n  font-weight: 500;\n  color: #006d60;\n}\n", ""]);
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  text-decoration: none;\n  color: #006d60;\n}\n#dashboard .dashboard-menu a p {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n  opacity: 0.6;\n  margin: 0;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-menu a.active p {\n  opacity: 1;\n}\n#dashboard .readings-empty {\n  text-align: center;\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n  text-transform: lowercase;\n  font-weight: 300;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection.selected span {\n  border-bottom: 2px solid #006d60;\n  font-weight: 500;\n  color: #006d60;\n}\n", ""]);
 
 	// exports
 
@@ -48465,6 +48485,14 @@
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
+	var _eddiFirebase = __webpack_require__(290);
+
+	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
+
+	var _Troubleshoot = __webpack_require__(445);
+
+	var _Troubleshoot2 = _interopRequireDefault(_Troubleshoot);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -48472,6 +48500,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EddiFire = (0, _eddiFirebase2.default)();
 
 	function mapStateToProps(state) {
 		return {
@@ -48487,6 +48517,9 @@
 			},
 			updateMenuName: function updateMenuName(name) {
 				return dispatch((0, _menu.menuNameChange)(name));
+			},
+			getEddiCycle: function getEddiCycle(eddiId, cycle) {
+				return dispatch((0, _eddis.getEddiCycleSuccess)(eddiId, cycle));
 			}
 		};
 	}
@@ -48505,22 +48538,42 @@
 			value: function componentWillMount() {
 				var _props = this.props;
 				var updateMenuName = _props.updateMenuName;
+				var getEddiCycle = _props.getEddiCycle;
 				var _props$eddi = _props.eddi;
 				var eddi = _props$eddi === undefined ? {} : _props$eddi;
 
-				if (eddi.id) updateMenuName(eddi.settings.name);
+				if (eddi.id) {
+					updateMenuName(eddi.settings.name);
+					EddiFire.addEddiEventListener(eddi.id, 'state', function (cycle) {
+						return getEddiCycle(eddi.id, cycle);
+					});
+				}
 			}
 		}, {
 			key: 'componentWillReceiveProps',
 			value: function componentWillReceiveProps(newProps) {
 				var _props2 = this.props;
 				var updateMenuName = _props2.updateMenuName;
+				var getEddiCycle = _props2.getEddiCycle;
 				var _props2$eddi = _props2.eddi;
 				var oldEddi = _props2$eddi === undefined ? {} : _props2$eddi;
 				var eddi = newProps.eddi;
 
 
-				if (eddi.id !== oldEddi.id) updateMenuName(eddi.settings.name);
+				if (eddi.id && eddi.id !== oldEddi.id) {
+					updateMenuName(eddi.settings.name);
+					EddiFire.addEddiEventListener(eddi.id, 'state', function (cycle) {
+						return getEddiCycle(eddi.id, cycle);
+					});
+				}
+			}
+		}, {
+			key: 'componentWillUnmount',
+			value: function componentWillUnmount() {
+				var _props$eddi2 = this.props.eddi;
+				var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
+
+				if (eddi.id) EddiFire.removeEddiEventListener(eddi.id, 'state');
 			}
 		}, {
 			key: '_renderNoEddis',
@@ -48543,21 +48596,52 @@
 				var _props3$eddi = _props3.eddi;
 				var eddi = _props3$eddi === undefined ? {} : _props3$eddi;
 				var setEddiState = _props3.setEddiState;
-				var _eddi$settings = eddi.settings;
-				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+				var _eddi$state = eddi.state;
+				var state = _eddi$state === undefined ? {} : _eddi$state;
 				var id = eddi.id;
-				var state = settings.state;
 
 
 				return _react2.default.createElement(
 					'div',
-					null,
-					_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', width: '100' }),
-					_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
-						onClick: function onClick(state) {
-							return setEddiState(eddi.id, state);
-						}
-					})
+					{ className: 'content' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'image-container' },
+						_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', width: '100' })
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'options' },
+						_react2.default.createElement(
+							'div',
+							null,
+							'OFF'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							'PRIME'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							'CHANNEL A'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							'CHANNEL B'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'footer' },
+						_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
+							onClick: function onClick(state) {
+								return setEddiState(eddi.id, state);
+							}
+						})
+					)
 				);
 			}
 		}, {
@@ -48601,6 +48685,10 @@
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _EddiStateButton = __webpack_require__(443);
+
+	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48651,11 +48739,11 @@
 
 
 				return _react2.default.createElement(
-					'button',
-					{ onClick: function onClick(event) {
+					'div',
+					{ className: 'eddi-state-button',
+						onClick: function onClick(event) {
 							return _this3.clickHandler(event, 0, _onClick2);
-						},
-						type: 'button'
+						}
 					},
 					'OFF'
 				);
@@ -49188,6 +49276,86 @@
 
 	// module
 	exports.push([module.id, "#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 20px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 443 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(444);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(264)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiStateButton.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./EddiStateButton.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 444 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(263)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".eddi-state-button {\n  background-color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  color: white;\n  width: 160px;\n  margin: 20px auto;\n  text-align: center;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 445 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(446);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(264)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Troubleshoot.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Troubleshoot.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 446 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(263)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 

@@ -1,3 +1,4 @@
+'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -16,9 +17,11 @@ class AddEddiButton extends Component {
 
   render(){
     const { openAddForm } = this.props;
-    return <div className='add-eddi-button' onClick={() => openAddForm()}>
-      <span>ADD NEW +</span>
-    </div>
+    return (
+      <div className='add-eddi-button' onClick={() => openAddForm()}>
+        <span>ADD NEW +</span>
+      </div>
+    );
   }
 
 }

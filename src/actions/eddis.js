@@ -15,7 +15,8 @@ import {
 	EDDI_READINGS_SUCCESS,
 	EDDI_GETONE_SUCCESS,
 	EDDI_GETONE_ERROR,
-	EDDI_SELECT
+	EDDI_SELECT,
+	EDDI_STATE_SUCCESS
 } from '../constants';
 
 const EddiFire = EddiFireStarter();
@@ -77,6 +78,14 @@ function updateEddiSnoozeSuccess(id, snooze={}){
 		type : EDDI_UPDATESNOOZE_SUCCESS,
 		id,
 		snooze
+	}
+}
+
+export function getEddiCycleSuccess(id, state={}){
+	return {
+		type : EDDI_STATE_SUCCESS,
+		id,
+		state
 	}
 }
 

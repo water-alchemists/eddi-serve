@@ -7,6 +7,7 @@ import {
 	EDDI_UPDATE_SUCCESS,
 	EDDI_UPDATESTART_SUCCESS,
 	EDDI_UPDATEEND_SUCCESS,
+	EDDI_STATE_SUCCESS,
 	EDDI_SELECT,
 	USER_LOGOUT
 } from '../constants';
@@ -25,11 +26,11 @@ const initialState = {
 	},
 	version : {
 		artik : {
-			number : 0.1,
+			number : "0.1",
 			date : new Date()
 		},
 		eddi : {
-			number : 0.1,
+			number : "0.1",
 			date : new Date()
 		}
 	},
@@ -126,6 +127,16 @@ export default function(state = initialState, action = {}){
 					...readings
 				}
 			}
+		} else return state;
+		break;
+	case EDDI_STATE_SUCCESS : 
+		if(state.id === id){
+			return {
+				...state,
+				state : {
+					...action.state
+				}
+			};
 		} else return state;
 		break;
 	case USER_LOGOUT : 

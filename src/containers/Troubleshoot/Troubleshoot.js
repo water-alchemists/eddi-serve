@@ -2,11 +2,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setEddiStateThunk } from '../../actions/eddis';
+import { setEddiStateThunk, getEddiCycleSuccess } from '../../actions/eddis';
 import { menuNameChange } from '../../actions/menu';
 
 import EddiStateButton from '../../components/EddiStateButton';
 import AddEddiButton from '../../components/AddEddiButton';
+
+import EddiFireStarter from '../../modules/eddi-firebase';
+
+import style from './Troubleshoot.less';
+
+const EddiFire = EddiFireStarter();
 
 function mapStateToProps(state){
 	return {
@@ -19,20 +25,32 @@ function mapDispatchToProps(dispatch){
 	return {
 		setEddiState : (eddiId, state) => dispatch(setEddiStateThunk(eddiId, state)),
 		updateMenuName: name => dispatch(menuNameChange(name)),
+		getEddiCycle : (eddiId, cycle) => dispatch(getEddiCycleSuccess(eddiId, cycle))
 	};
 }
 
 class Troubleshoot extends Component {
 	componentWillMount(){
-		const { updateMenuName, eddi={} } = this.props;
-		if( eddi.id ) updateMenuName(eddi.settings.name);
+		const { updateMenuName, getEddiCycle, eddi={} } = this.props;
+		if( eddi.id ) {
+			updateMenuName(eddi.settings.name);
+			EddiFire.addEddiEventListener(eddi.id, 'state', cycle => getEddiCycle(eddi.id, cycle));
+		}
 	}
 
 	componentWillReceiveProps(newProps){
-		const { updateMenuName, eddi:oldEddi={} } = this.props,
+		const { updateMenuName, getEddiCycle, eddi:oldEddi={} } = this.props,
 			{ eddi } = newProps;
 
-		if( eddi.id !== oldEddi.id ) updateMenuName(eddi.settings.name);
+		if( eddi.id && eddi.id !== oldEddi.id ) {
+			updateMenuName(eddi.settings.name);
+			EddiFire.addEddiEventListener(eddi.id, 'state', cycle => getEddiCycle(eddi.id, cycle));
+		}
+	}
+
+	componentWillUnmount(){
+		const { eddi={} } = this.props;
+		if(eddi.id) EddiFire.removeEddiEventListener(eddi.id, 'state');
 	}
 
 	_renderNoEddis(){
@@ -46,15 +64,24 @@ class Troubleshoot extends Component {
 
 	_renderSelected(){
 		const { eddi={} , setEddiState } = this.props,
-			{ settings={} , id } = eddi,
-			{ state } = settings;
+			{ state={} , id } = eddi;
 
 		return (
-			<div>
-				<img src='/assets/troubleshoot.svg' width='100'></img>
-				<EddiStateButton value={!!state}
-					onClick={state => setEddiState(eddi.id, state)}
-				/>
+			<div className='content'>
+				<div className='image-container'>
+					<img src='/assets/troubleshoot.svg' width='100'></img>
+				</div>
+				<div className='options'>
+					<div>OFF</div>
+					<div>PRIME</div>
+					<div>CHANNEL A</div>
+					<div>CHANNEL B</div>
+				</div>
+				<div className='footer'>
+					<EddiStateButton value={!!state}
+						onClick={state => setEddiState(eddi.id, state)}
+					/>
+				</div>
 			</div>
 		);
 	}
