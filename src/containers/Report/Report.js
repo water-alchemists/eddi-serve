@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { menuNameChange } from '../../actions/menu';
 
 import { mapDateToReadings, formatReadingsToCsv } from '../../data';
+import { triggerDownload, triggerPdf } from '../../modules/download-trigger';
 
 import DateSelect from '../../components/DateSelect';
 
@@ -122,6 +123,7 @@ class Report extends Component {
 	submitHandler(event){
 		event.preventDefault();
 		const { start, end, readings, type } = this.state,
+			{ eddi } = this.props,
 			focus = readings.filter(reading => {
 				const { date } = reading,
 					startDate = new Date(start.year, start.month, start.day),
@@ -129,7 +131,18 @@ class Report extends Component {
 				return date >= startDate && date <= endDate;
 			});
 		console.log()
-		if(isActive(OPTIONS.CSV, type)) console.log(formatReadingsToCsv(focus));
+		let data, filename;
+
+		if(isActive(OPTIONS.CSV, type)) {
+			data = formatReadingsToCsv(focus);
+			filename = `${ eddi.id }-${start.month}${start.day}${start.year}-${end.month}${end.day}${end.year}.csv`;
+			triggerDownload(data, filename)
+		}
+		else {
+			data = 'hello';
+			filename = `${ eddi.id }-${start.month}${start.day}${start.year}-${end.month}${end.day}${end.year}.pdf`;
+			triggerPdf(data, filename);
+		}
 	}
 
 	render(){

@@ -3,6 +3,12 @@ import React, { Component, PropTypes } from 'react';
 import { salinityOptions } from '../data';
 
 class SalinityInput extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			value : null
+		};
+	}
 	changeHandler(event){
 		event.preventDefault();
 		const { onSalinityChange } = this.props,
@@ -20,6 +26,7 @@ class SalinityInput extends Component {
 					onChange={event => this.changeHandler(event)}
 					value={value}
 					placeholder={placeholder}
+					pattern='[0-9]*'
 				/>
 			</div>
 		);
