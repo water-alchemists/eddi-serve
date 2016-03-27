@@ -31331,7 +31331,6 @@
 			key: 'changeHandler',
 			value: function changeHandler(event) {
 				event.preventDefault();
-				console.log('at change handler', event.target.value);
 				var value = event.target.value;
 				this.setState({ value: value });
 			}

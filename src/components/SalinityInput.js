@@ -18,7 +18,6 @@ class SalinityInput extends Component {
 
 	changeHandler(event){
 		event.preventDefault();
-		console.log('at change handler', event.target.value);
 		const value = event.target.value;
 		this.setState({ value });
 	}
