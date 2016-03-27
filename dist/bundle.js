@@ -31312,6 +31312,8 @@
 
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SalinityInput).call(this, props));
 
+			var value = _this.props.value;
+
 			_this.state = {
 				value: null
 			};
@@ -31319,8 +31321,23 @@
 		}
 
 		_createClass(SalinityInput, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var value = nextProps.value;
+
+				this.setState({ value: value });
+			}
+		}, {
 			key: 'changeHandler',
 			value: function changeHandler(event) {
+				event.preventDefault();
+				console.log('at change handler', event.target.value);
+				var value = event.target.value;
+				this.setState({ value: value });
+			}
+		}, {
+			key: 'blurHandler',
+			value: function blurHandler(event) {
 				event.preventDefault();
 				var onSalinityChange = this.props.onSalinityChange;
 				var value = event.target.value;
@@ -31333,9 +31350,8 @@
 			value: function render() {
 				var _this2 = this;
 
-				var _props = this.props;
-				var value = _props.value;
-				var placeholder = _props.placeholder;
+				var placeholder = this.props.placeholder;
+				var value = this.state.value;
 
 				return _react2.default.createElement(
 					'div',
@@ -31346,7 +31362,10 @@
 						},
 						value: value,
 						placeholder: placeholder,
-						pattern: '[0-9]*'
+						pattern: '[0-9]*',
+						onBlur: function onBlur(event) {
+							return _this2.blurHandler(event);
+						}
 					})
 				);
 			}

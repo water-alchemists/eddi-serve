@@ -5,11 +5,25 @@ import { salinityOptions } from '../data';
 class SalinityInput extends Component {
 	constructor(props){
 		super(props);
+		const { value } = this.props;
 		this.state = {
 			value : null
 		};
 	}
+
+	componentWillReceiveProps(nextProps){
+		const { value } = nextProps;
+		this.setState({ value });
+	}
+
 	changeHandler(event){
+		event.preventDefault();
+		console.log('at change handler', event.target.value);
+		const value = event.target.value;
+		this.setState({ value });
+	}
+
+	blurHandler(event){
 		event.preventDefault();
 		const { onSalinityChange } = this.props,
 			value = event.target.value,
@@ -19,7 +33,8 @@ class SalinityInput extends Component {
 	}
 
 	render(){
-		const { value, placeholder } = this.props;
+		const { placeholder } = this.props,
+			{ value } = this.state;
 		return (
 			<div className='salinity-input'>
 				<input type='number'
@@ -27,6 +42,7 @@ class SalinityInput extends Component {
 					value={value}
 					placeholder={placeholder}
 					pattern='[0-9]*'
+					onBlur={event => this.blurHandler(event)}
 				/>
 			</div>
 		);
