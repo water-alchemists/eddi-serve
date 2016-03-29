@@ -1,5 +1,6 @@
 'use strict';
 import moment from 'moment';
+
 import { SALINITY_THRESHOLD } from './constants';
 moment.locale('en');
 
@@ -194,6 +195,8 @@ export function formatToWeekHistory(readings, yProp){
 		};
 	});
 }
+
+
 // TODO: fix syntax. returning wrong array
 export function formatToMonthHistory(readings, yProp){
 	const current = new Date(),
@@ -225,5 +228,32 @@ export function commaSeparateNumber(val){
 	}
 
 	return stringified;
+}
+
+export function averageReadingsByHour(readings){
+	const format = 'M D YYYY H',
+		hoursList = readings.reduce((dates, reading) => { // groups all the readings by hour
+			const hour = moment(reading.date).format(format);
+			if(dates[hour]) dates[hour].push(reading);
+			else dates[hour] = [reading];
+			return dates;
+		}, {}), 
+		averageByHour = Object.keys(hoursList).map(hour => { // averages each group
+			const readingsSet = hoursList[hour],
+				summary = readingsSet.reduce((accum, reading, i) => {
+					//add each key of the reading to the accumulator
+					Object.keys(reading).forEach(key => {
+						let initialValue = accum[key] || 0;
+						accum[key] = initialValue + reading[key];
+						if(i === readingsSet.length - 1) accum[key] = Math.floor(accum[key] / readingsSet.length);
+					});
+					return accum;
+				}, {});
+			//set date to the hour
+			summary.date = moment(hour, format).toDate();
+			return summary;
+		});
+
+	return averageByHour;
 }
 

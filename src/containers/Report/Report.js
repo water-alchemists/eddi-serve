@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { menuNameChange } from '../../actions/menu';
 
-import { mapDateToReadings, formatReadingsToCsv, formatReadingsToPdf } from '../../data';
+import { mapDateToReadings, formatReadingsToCsv, formatReadingsToPdf, averageReadingsByHour } from '../../data';
 import { triggerDownload, triggerPdf } from '../../modules/download-trigger';
 
 import DateSelect from '../../components/DateSelect';
@@ -131,12 +131,13 @@ class Report extends Component {
 				return date >= startDate && date <= endDate;
 			});
 
-		let data = formatReadingsToCsv(focus), 
+		let data = averageReadingsByHour(focus),
 			filename = `${ eddi.id }-${start.month}${start.day}${start.year}-${end.month}${end.day}${end.year}`;
 
 		if(isActive(OPTIONS.CSV, type)) {
+			let delimited = formatReadingsToCsv(data);
 			filename = `${ filename }.csv`;
-			triggerDownload(data, filename);
+			triggerDownload(delimited, filename);
 		}
 		else {
 			let columns = [
@@ -165,15 +166,22 @@ class Report extends Component {
 					title : 'Water Flow'
 				}
 			],
-			rows = formatReadingsToPdf(focus), 
+			rows = formatReadingsToPdf(data), 
 			options = {
-				start, 
-				end, 
+				start : {
+					...start,
+					month : start.month + 1
+				}, 
+				end : {
+					...end,
+					month : end.month + 1
+				}, 
 				name : eddi.id
 			};
 			filename = `${ filename }.pdf`;
 			triggerPdf(columns, rows, filename, options);
 		}
+		console.log('readings', readings, averageReadingsByHour(readings));
 	}
 
 	render(){

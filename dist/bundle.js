@@ -31406,6 +31406,7 @@
 	exports.formatToWeekHistory = formatToWeekHistory;
 	exports.formatToMonthHistory = formatToMonthHistory;
 	exports.commaSeparateNumber = commaSeparateNumber;
+	exports.averageReadingsByHour = averageReadingsByHour;
 
 	var _moment = __webpack_require__(295);
 
@@ -31610,6 +31611,7 @@
 			};
 		});
 	}
+
 	// TODO: fix syntax. returning wrong array
 	function formatToMonthHistory(readings, yProp) {
 		var current = new Date(),
@@ -31646,6 +31648,34 @@
 		}
 
 		return stringified;
+	}
+
+	function averageReadingsByHour(readings) {
+		var format = 'M D YYYY H',
+		    hoursList = readings.reduce(function (dates, reading) {
+			// groups all the readings by hour
+			var hour = (0, _moment2.default)(reading.date).format(format);
+			if (dates[hour]) dates[hour].push(reading);else dates[hour] = [reading];
+			return dates;
+		}, {}),
+		    averageByHour = Object.keys(hoursList).map(function (hour) {
+			// averages each group
+			var readingsSet = hoursList[hour],
+			    summary = readingsSet.reduce(function (accum, reading, i) {
+				//add each key of the reading to the accumulator
+				Object.keys(reading).forEach(function (key) {
+					var initialValue = accum[key] || 0;
+					accum[key] = initialValue + reading[key];
+					if (i === readingsSet.length - 1) accum[key] = Math.floor(accum[key] / readingsSet.length);
+				});
+				return accum;
+			}, {});
+			//set date to the hour
+			summary.date = (0, _moment2.default)(hour, format).toDate();
+			return summary;
+		});
+
+		return averageByHour;
 	}
 
 /***/ },
@@ -49080,12 +49110,13 @@
 					return date >= startDate && date <= endDate;
 				});
 
-				var data = (0, _data.formatReadingsToCsv)(focus),
+				var data = (0, _data.averageReadingsByHour)(focus),
 				    filename = eddi.id + '-' + start.month + start.day + start.year + '-' + end.month + end.day + end.year;
 
 				if (isActive(OPTIONS.CSV, type)) {
+					var delimited = (0, _data.formatReadingsToCsv)(data);
 					filename = filename + '.csv';
-					(0, _downloadTrigger.triggerDownload)(data, filename);
+					(0, _downloadTrigger.triggerDownload)(delimited, filename);
 				} else {
 					var columns = [{
 						dataKey: 'date',
@@ -49106,15 +49137,20 @@
 						dataKey: 'qOut',
 						title: 'Water Flow'
 					}],
-					    rows = (0, _data.formatReadingsToPdf)(focus),
+					    rows = (0, _data.formatReadingsToPdf)(data),
 					    options = {
-						start: start,
-						end: end,
+						start: _extends({}, start, {
+							month: start.month + 1
+						}),
+						end: _extends({}, end, {
+							month: end.month + 1
+						}),
 						name: eddi.id
 					};
 					filename = filename + '.pdf';
 					(0, _downloadTrigger.triggerPdf)(columns, rows, filename, options);
 				}
+				console.log('readings', readings, (0, _data.averageReadingsByHour)(readings));
 			}
 		}, {
 			key: 'render',
