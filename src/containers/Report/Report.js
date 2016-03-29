@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { menuNameChange } from '../../actions/menu';
 
-import { mapDateToReadings, formatReadingsToCsv } from '../../data';
+import { mapDateToReadings, formatReadingsToCsv, formatReadingsToPdf } from '../../data';
 import { triggerDownload, triggerPdf } from '../../modules/download-trigger';
 
 import DateSelect from '../../components/DateSelect';
@@ -165,9 +165,14 @@ class Report extends Component {
 					title : 'Water Flow'
 				}
 			],
-			rows = [ ...focus ];
+			rows = formatReadingsToPdf(focus), 
+			options = {
+				start, 
+				end, 
+				name : eddi.id
+			};
 			filename = `${ filename }.pdf`;
-			triggerPdf(columns, rows, filename);
+			triggerPdf(columns, rows, filename, options);
 		}
 	}
 

@@ -26690,6 +26690,7 @@
 
 	// Style Related
 	var BACKGROUND_COLOR = exports.BACKGROUND_COLOR = "rgba(13,14,31,1)";
+	var TRIM_COLOR = exports.TRIM_COLOR = "rgba(0,109,96,1)";
 
 	//Thresholds
 	var FLOW_THRESHOLD = exports.FLOW_THRESHOLD = 5;
@@ -27414,7 +27415,7 @@
 				var reportSpriteClass = (0, _classnames2.default)(['sprite', 'report', { green: router.isActive(_constants.PATHS.REPORT) }]);
 				var troubleshootSpriteClass = (0, _classnames2.default)(['sprite', 'troubleshoot', { green: router.isActive(_constants.PATHS.TROUBLESHOOT) }]);
 				var dashboardSpriteClass = (0, _classnames2.default)(['sprite', 'dashboard', { green: router.isActive(_constants.PATHS.DASHBOARD) }]);
-				console.log('menu got new eddi', selected);
+
 				var menuOptions = undefined;
 
 				if (selected.id) {
@@ -31400,6 +31401,7 @@
 	exports.convertStringToMinutes = convertStringToMinutes;
 	exports.mapDateToReadings = mapDateToReadings;
 	exports.formatReadingsToCsv = formatReadingsToCsv;
+	exports.formatReadingsToPdf = formatReadingsToPdf;
 	exports.formatToTodayHistory = formatToTodayHistory;
 	exports.formatToWeekHistory = formatToWeekHistory;
 	exports.formatToMonthHistory = formatToMonthHistory;
@@ -31530,7 +31532,7 @@
 		}).reduce(function (row, header) {
 			return row + ',' + header;
 		});
-		console.log('this is the mapping', first);
+
 		return readings.map(function (reading) {
 			return mapping.reduce(function (row, map, i) {
 				var value = reading[map.dataKey];
@@ -31540,6 +31542,19 @@
 		}).reduce(function (body, row) {
 			return body + '\n' + row;
 		}, first);
+	}
+
+	function formatReadingsToPdf(readings) {
+		return readings.map(function (reading) {
+			return Object.keys(reading).reduce(function (accum, key) {
+				var value = reading[key],
+				    formattedValue = undefined;
+				if (value instanceof Date) formattedValue = (0, _moment2.default)(value).format('MM-DD-YYYY HH:mm');else if (typeof value === 'number') formattedValue = commaSeparateNumber(value);else formattedValue = value;
+
+				accum[key] = formattedValue;
+				return accum;
+			}, {});
+		});
 	}
 
 	function formatToTodayHistory(readings, yProp) {
@@ -48913,8 +48928,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -49093,9 +49106,14 @@
 						dataKey: 'qOut',
 						title: 'Water Flow'
 					}],
-					    rows = [].concat(_toConsumableArray(focus));
+					    rows = (0, _data.formatReadingsToPdf)(focus),
+					    options = {
+						start: start,
+						end: end,
+						name: eddi.id
+					};
 					filename = filename + '.pdf';
-					(0, _downloadTrigger.triggerPdf)(columns, rows, filename);
+					(0, _downloadTrigger.triggerPdf)(columns, rows, filename, options);
 				}
 			}
 		}, {
@@ -49221,21 +49239,31 @@
 
 	var _filesaverjs = __webpack_require__(445);
 
+	var _constants = __webpack_require__(248);
+
 	// require('jspdf-autotable');
 	function triggerDownload(data, name) {
 		var blob = new Blob([data], { type: 'text/csv', ending: 'charset=utf-8' });
 		(0, _filesaverjs.saveAs)(blob, name);
 	}
 
-	function triggerPdf(columns, rows, name) {
-		var doc = new jsPDF('p', 'pt');
-		console.log('columns', columns);
+	function triggerPdf(columns, rows, filename, options) {
+		var doc = new jsPDF('l', 'pt');
+		doc.setFontSize(20);
+		doc.text('EDDI - electrodialysis desalination system', 40, 30);
+		doc.setFontSize(14);
+		if (options.name) {
+			doc.text('ID : ' + options.name, 40, 60);
+		}
+		if (options.start && options.end) {
+			var start = options.start,
+			    end = options.end;
+			doc.text('Date Range : ' + start.month + '/' + start.day + '/' + start.year + ' to ' + end.month + '/' + end.day + '/' + end.year, 40, 90);
+		}
 		doc.autoTable(columns, rows, {
-			beforePageContent: function beforePageContent(data) {
-				doc.text('EDDI', 40, 30);
-			}
+			startY: 110
 		});
-		doc.save(name);
+		doc.save(filename);
 	}
 
 /***/ },

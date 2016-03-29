@@ -124,7 +124,7 @@ export function formatReadingsToCsv(readings){
 	];
 	const first = mapping.map(map => map.title)
 				.reduce((row, header) => `${row},${header}`);
-				console.log('this is the mapping', first);
+
 	return readings
 		.map(reading => {
 			return mapping.reduce((row, map, i) => {
@@ -134,6 +134,23 @@ export function formatReadingsToCsv(readings){
 			},'');
 		})
 		.reduce((body, row) => `${body}\n${row}`, first);
+}
+
+export function formatReadingsToPdf(readings){
+	return readings.
+		map(reading => {
+			return Object.keys(reading)
+				.reduce((accum, key) => {
+					let value = reading[key],
+						formattedValue;
+					if(value instanceof Date) formattedValue = moment(value).format('MM-DD-YYYY HH:mm');
+					else if(typeof value === 'number') formattedValue = commaSeparateNumber(value);
+					else formattedValue = value;
+
+					accum[key] = formattedValue;
+					return accum;
+				}, {});
+		});
 }
 
 export function formatToTodayHistory(readings, yProp){

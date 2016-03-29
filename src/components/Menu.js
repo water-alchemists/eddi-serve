@@ -53,7 +53,7 @@ class Menu extends Component {
 				'dashboard',
 				{ green : router.isActive(PATHS.DASHBOARD) }
 			]);
-		console.log('menu got new eddi', selected);
+
 		let menuOptions;
 
 		if( selected.id ){
