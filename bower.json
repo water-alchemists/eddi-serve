@@ -1,0 +1,22 @@
+{
+  "name": "water-alchemists.github.io",
+  "description": "frontend for eddi management",
+  "main": "index.js",
+  "authors": [
+    "Tony <terimyaki@users.noreply.github.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/water-alchemists/water-alchemists.github.io",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jspdf": "~1.2.61",
+    "jspdf-autotable": "~2.0.24"
+  }
+}

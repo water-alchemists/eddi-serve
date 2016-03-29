@@ -27234,7 +27234,7 @@
 			user: state.user,
 			modal: state.modal,
 			menu: state.menu,
-			eddis: state.eddis
+			selected: state.selected
 		};
 	}
 
@@ -27305,7 +27305,7 @@
 				var user = _props2.user;
 				var modal = _props2.modal;
 				var menu = _props2.menu;
-				var eddis = _props2.eddis;
+				var selected = _props2.selected;
 				var logout = _props2.logout;
 				var dispatch = _props2.dispatch;
 				var location = _props2.location;
@@ -27320,7 +27320,7 @@
 					_react2.default.createElement(_Menu2.default, { isOpen: isOpen,
 						logout: logout,
 						user: user,
-						eddis: eddis,
+						selected: selected,
 						menu: menu,
 						current: pathname
 					}),
@@ -27402,13 +27402,10 @@
 				var router = this.context.router;
 				var _props = this.props;
 				var menu = _props.menu;
-				var eddis = _props.eddis;
+				var selected = _props.selected;
 				var current = _props.current;
 				var _menu$name = menu.name;
 				var name = _menu$name === undefined ? '' : _menu$name;
-				var list = eddis.list;
-				var _eddis$selected = eddis.selected;
-				var selected = _eddis$selected === undefined ? {} : _eddis$selected;
 				var query = {
 					id: selected.id
 				};
@@ -27417,10 +27414,10 @@
 				var reportSpriteClass = (0, _classnames2.default)(['sprite', 'report', { green: router.isActive(_constants.PATHS.REPORT) }]);
 				var troubleshootSpriteClass = (0, _classnames2.default)(['sprite', 'troubleshoot', { green: router.isActive(_constants.PATHS.TROUBLESHOOT) }]);
 				var dashboardSpriteClass = (0, _classnames2.default)(['sprite', 'dashboard', { green: router.isActive(_constants.PATHS.DASHBOARD) }]);
-
+				console.log('menu got new eddi', selected);
 				var menuOptions = undefined;
 
-				if (list instanceof Array && list.length) {
+				if (selected.id) {
 					menuOptions = [_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: { pathname: _constants.PATHS.DASHBOARD, query: query },
@@ -27553,13 +27550,8 @@
 		user: _react.PropTypes.shape({
 			email: _react.PropTypes.string
 		}),
-		eddis: _react.PropTypes.shape({
-			list: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-				id: _react.PropTypes.string
-			})),
-			selected: _react.PropTypes.shape({
-				id: _react.PropTypes.string
-			})
+		selected: _react.PropTypes.shape({
+			id: _react.PropTypes.string
 		}),
 		menu: _react.PropTypes.shape({
 			name: _react.PropTypes.string
@@ -31512,35 +31504,36 @@
 		});
 	}
 
+	var mapping = [{
+		dataKey: 'date',
+		title: 'Date'
+	}, {
+		dataKey: 'ppmIn',
+		title: 'Salinity In'
+	}, {
+		dataKey: 'ppmOut',
+		title: 'Salinity Out'
+	}, {
+		dataKey: 'ppmRec',
+		title: 'Salinity Recycled'
+	}, {
+		dataKey: 'qDump',
+		title: 'Dump Flow'
+	}, {
+		dataKey: 'qOut',
+		title: 'Water Flow'
+	}];
+
 	function formatReadingsToCsv(readings) {
-		var mapping = [{
-			key: 'date',
-			name: 'Date'
-		}, {
-			key: 'ppmIn',
-			name: 'Salinity In'
-		}, {
-			key: 'ppmOut',
-			name: 'Salinity Out'
-		}, {
-			key: 'ppmRec',
-			name: 'Salinity Recycled'
-		}, {
-			key: 'qDump',
-			name: 'Dump Flow'
-		}, {
-			key: 'qOut',
-			name: 'Water Flow'
-		}],
-		    first = mapping.map(function (map) {
-			return map.name;
+		var first = mapping.map(function (map) {
+			return map.title;
 		}).reduce(function (row, header) {
 			return row + ',' + header;
 		});
 
 		return readings.map(function (reading) {
 			return mapping.reduce(function (row, map, i) {
-				var value = reading[map.key];
+				var value = reading[map.dataKey];
 				if (!i) return (0, _moment2.default)(value).format('MM-DD-YYYY HH:mm');
 				return row + ',' + value;
 			}, '');
@@ -31548,6 +31541,8 @@
 			return body + '\n' + row;
 		}, first);
 	}
+
+	function formatReadingsToTable(readings) {}
 
 	function formatToTodayHistory(readings, yProp) {
 		var current = new Date(),
@@ -45852,7 +45847,9 @@
 				if (eddi.readings) {
 					//format the readings into an array for data handling
 					var readings = (0, _data.mapDateToReadings)(eddi.readings),
-					    current = readings[readings.length - 1];
+					    readingsLength = readings.length,
+					    current = readingsLength ? readings[readingsLength - 1] : {};
+
 					this.setState({ readings: readings, current: current });
 				}
 				if (eddi.id) {
@@ -45894,7 +45891,8 @@
 				if (eddi.readings) {
 					//format the readings into an array for data handling
 					var readings = (0, _data.mapDateToReadings)(eddi.readings),
-					    current = readings[readings.length - 1];
+					    readingsLength = readings.length,
+					    current = readingsLength ? readings[readingsLength - 1] : {};
 
 					this.setState({ readings: readings, current: current });
 				}
@@ -45914,7 +45912,7 @@
 				return _react2.default.createElement(
 					'div',
 					{ className: 'readings-empty' },
-					'This eddi currently do not have any readings.'
+					'This eddi currently does not have any readings.'
 				);
 			}
 		}, {
@@ -46248,7 +46246,7 @@
 	var FORMATTERS = (_FORMATTERS = {}, _defineProperty(_FORMATTERS, _constants.HISTORICAL.TODAY, _data.formatToTodayHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.WEEK, _data.formatToWeekHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.MONTH, _data.formatToMonthHistory), _FORMATTERS);
 
 	function generateBadText() {
-		return 'which is not well. Please check your settings for your eddi.';
+		return 'which is not good. Please check the settings for your eddi.';
 	}
 
 	function generateGoodText() {
@@ -46348,7 +46346,7 @@
 						_react2.default.createElement(
 							'p',
 							{ className: 'dashboard-note' },
-							'Your current level of salinity for the water your EDDI is pushing out is',
+							'The current level of salinity for the water your EDDI is pushing out is',
 							_react2.default.createElement(
 								'span',
 								null,
@@ -49055,17 +49053,15 @@
 					var endDate = new Date(end.year, end.month, end.day);
 					return date >= startDate && date <= endDate;
 				});
-				console.log();
-				var data = undefined,
-				    filename = undefined;
+
+				var data = (0, _data.formatReadingsToCsv)(focus),
+				    filename = eddi.id + '-' + start.month + start.day + start.year + '-' + end.month + end.day + end.year;
 
 				if (isActive(OPTIONS.CSV, type)) {
-					data = (0, _data.formatReadingsToCsv)(focus);
-					filename = eddi.id + '-' + start.month + start.day + start.year + '-' + end.month + end.day + end.year + '.csv';
+					filename = filename + '.csv';
 					(0, _downloadTrigger.triggerDownload)(data, filename);
 				} else {
-					data = 'hello';
-					filename = eddi.id + '-' + start.month + start.day + start.year + '-' + end.month + end.day + end.year + '.pdf';
+					filename = filename + '.pdf';
 					(0, _downloadTrigger.triggerPdf)(data, filename);
 				}
 			}
@@ -49192,9 +49188,7 @@
 
 	var _filesaverjs = __webpack_require__(445);
 
-	// import { jsPdf} from 'jspdf';
-	// const jspdf = require('jspdf');
-
+	// require('jspdf-autotable');
 	function triggerDownload(data, name) {
 		var blob = new Blob([data], { type: 'text/csv', ending: 'charset=utf-8' });
 		(0, _filesaverjs.saveAs)(blob, name);
@@ -49202,6 +49196,7 @@
 
 	function triggerPdf(data, name) {
 		console.log('pdf', data, name);
+		console.log('jspdf', jsPDF);
 	}
 
 /***/ },

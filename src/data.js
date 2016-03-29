@@ -95,45 +95,50 @@ export function mapDateToReadings(readings){
 		.sort((a,b) => a.date > b.date);
 }
 
+const mapping = [
+	{
+		dataKey : 'date',
+		title : 'Date'
+	},
+	{
+		dataKey : 'ppmIn',
+		title : 'Salinity In'
+	},
+	{
+		dataKey : 'ppmOut',
+		title : 'Salinity Out'
+	},
+	{
+		dataKey : 'ppmRec',
+		title : 'Salinity Recycled'
+	},
+	{
+		dataKey : 'qDump',
+		title : 'Dump Flow'
+	},
+	{
+		dataKey : 'qOut',
+		title : 'Water Flow'
+	}
+];
+
 export function formatReadingsToCsv(readings){
-	const mapping = [
-		{
-			key : 'date',
-			name : 'Date'
-		},
-		{
-			key : 'ppmIn',
-			name : 'Salinity In'
-		},
-		{
-			key : 'ppmOut',
-			name : 'Salinity Out'
-		},
-		{
-			key : 'ppmRec',
-			name : 'Salinity Recycled'
-		},
-		{
-			key : 'qDump',
-			name : 'Dump Flow'
-		},
-		{
-			key : 'qOut',
-			name : 'Water Flow'
-		}
-	],
-	first = mapping.map(map => map.name)
+	const first = mapping.map(map => map.title)
 				.reduce((row, header) => `${row},${header}`);
 
 	return readings
 		.map(reading => {
 			return mapping.reduce((row, map, i) => {
-				let value = reading[map.key]
+				let value = reading[map.dataKey]
 				if(!i) return moment(value).format('MM-DD-YYYY HH:mm');
 				return`${row},${value}`;
 			},'');
 		})
 		.reduce((body, row) => `${body}\n${row}`, first);
+}
+
+function formatReadingsToTable(readings){
+	
 }
 
 export function formatToTodayHistory(readings, yProp){

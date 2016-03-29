@@ -68,7 +68,9 @@ class Dashboard extends Component {
 		if( eddi.readings ){
 			//format the readings into an array for data handling
 			const readings = mapDateToReadings(eddi.readings),
-				current = readings[readings.length - 1];
+				readingsLength = readings.length,
+				current = readingsLength ? readings[readingsLength - 1] : {};
+
 			this.setState({ readings, current });
 		}
 		if(eddi.id){
@@ -94,7 +96,8 @@ class Dashboard extends Component {
 		if( eddi.readings ){
 			//format the readings into an array for data handling
 			const readings = mapDateToReadings(eddi.readings),
-				current = readings[readings.length - 1];
+				readingsLength = readings.length,
+				current = readingsLength ? readings[readingsLength - 1] : {};
 
 			this.setState({ readings, current });
 		}
@@ -109,7 +112,7 @@ class Dashboard extends Component {
 	_renderNoReadings(){
 		return (
 			<div className='readings-empty'>
-				This eddi currently do not have any readings.
+				This eddi currently does not have any readings.
 			</div>
 		);
 	}

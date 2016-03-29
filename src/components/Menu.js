@@ -23,9 +23,8 @@ class Menu extends Component {
 
 	_renderLoggedIn(){
 		const { router } = this.context,
-			{ menu, eddis, current } = this.props,
+			{ menu, selected, current } = this.props,
 			{ name='' } = menu,
-			{ list, selected={} }  = eddis,
 			query = {
 				id : selected.id
 			},
@@ -54,10 +53,10 @@ class Menu extends Component {
 				'dashboard',
 				{ green : router.isActive(PATHS.DASHBOARD) }
 			]);
-
+		console.log('menu got new eddi', selected);
 		let menuOptions;
 
-		if( list instanceof Array && list.length ){
+		if( selected.id ){
 		  	menuOptions = [
 				(<Link to={{ pathname : PATHS.DASHBOARD, query }}
 					activeClassName='active'
@@ -75,14 +74,14 @@ class Menu extends Component {
 				</Link>),
 				(<Link to={{ pathname : PATHS.REPORT, query }}
 					activeClassName='active'
-					key={'report'}
+					key={`report`}
 				>
 					<div className={reportSpriteClass}></div>
 					<p>Report</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.TROUBLESHOOT, query }}
 					activeClassName='active'
-					key={'troubleshoot'}
+					key={`troubleshoot`}
 				>
 					<div className={troubleshootSpriteClass}></div>
 					<p>Troubleshoot</p>
@@ -137,15 +136,8 @@ Menu.propTypes = {
 	user : PropTypes.shape({
 		email : PropTypes.string
 	}),
-	eddis : PropTypes.shape({
-		list : PropTypes.arrayOf(
-			PropTypes.shape({
-				id : PropTypes.string
-			})
-		),
-		selected : PropTypes.shape({
-			id : PropTypes.string
-		})
+	selected : PropTypes.shape({
+		id : PropTypes.string
 	}), 
 	menu : PropTypes.shape({
 		name : PropTypes.string

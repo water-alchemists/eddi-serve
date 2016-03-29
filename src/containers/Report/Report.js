@@ -130,17 +130,16 @@ class Report extends Component {
 					endDate = new Date(end.year, end.month, end.day);
 				return date >= startDate && date <= endDate;
 			});
-		console.log()
-		let data, filename;
+
+		let data = formatReadingsToCsv(focus), 
+			filename = `${ eddi.id }-${start.month}${start.day}${start.year}-${end.month}${end.day}${end.year}`;
 
 		if(isActive(OPTIONS.CSV, type)) {
-			data = formatReadingsToCsv(focus);
-			filename = `${ eddi.id }-${start.month}${start.day}${start.year}-${end.month}${end.day}${end.year}.csv`;
-			triggerDownload(data, filename)
+			filename = `${ filename }.csv`;
+			triggerDownload(data, filename);
 		}
 		else {
-			data = 'hello';
-			filename = `${ eddi.id }-${start.month}${start.day}${start.year}-${end.month}${end.day}${end.year}.pdf`;
+			filename = `${ filename }.pdf`;
 			triggerPdf(data, filename);
 		}
 	}

@@ -16,7 +16,7 @@ function mapStateToProps(state){
 		user : state.user,
 		modal : state.modal,
 		menu : state.menu,
-		eddis : state.eddis,
+		selected : state.selected,
 	};
 }
 
@@ -56,7 +56,7 @@ class App extends Component {
 	}
 
 	render(){
-		const { user, modal, menu, eddis, logout,  dispatch, location } = this.props,
+		const { user, modal, menu, selected, logout,  dispatch, location } = this.props,
 			{ isOpen } = this.state,
 			children = this._cloneChildrenWithToggle(),
 			{ pathname } = location;
@@ -66,7 +66,7 @@ class App extends Component {
 				<Menu isOpen={isOpen}
 					logout={logout}
 					user={user}
-					eddis={eddis}
+					selected={selected}
 					menu={menu}
 					current={pathname}
 				/>
