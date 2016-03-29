@@ -8,7 +8,9 @@ import HistoricalGraph from './graphs/HistoricalGraph';
 
 import { formatToTodayHistory, 
 	formatToWeekHistory, 
-	formatToMonthHistory } from '../data';
+	formatToMonthHistory,
+	commaSeparateNumber
+} from '../data';
 
 const FORMATTERS = {
 	[HISTORICAL.TODAY] : formatToTodayHistory,
@@ -61,23 +63,25 @@ class DashboardSalinity extends Component {
 	render(){
 		const { type, graphData } = this.state,
 			{ threshold, current, direction, readings } = this.props,
-			status = current > threshold ? generateBadText() : generateGoodText();
+			status = current > threshold ? generateBadText() : generateGoodText(),
+			currentString = commaSeparateNumber(current),
+			thresholdString = commaSeparateNumber(threshold);
 
 		return (
 			<div className='dashboard-view salinity'>
 				<div className='dashboard-current'>
 					<div className='dashboard-current-numbers'>
 						<h1>Salinity {direction.toUpperCase()}</h1>
-						<h3>{`${current.toLocaleString()}`}</h3>
+						<h3>{`${currentString}`}</h3>
 						<p>parts per million</p>
 					</div>
 					<SalinityGraph salinity={current}/>
 					<p className='dashboard-note'>
 						The current level of salinity for the water your EDDI
 						is pushing out is
-						<span>{` ${current.toLocaleString()} ppm. `}</span>
+						<span>{` ${currentString} ppm. `}</span>
 						Your current threshold is set at
-						<span>{` ${threshold.toLocaleString()} ppm, `}</span>
+						<span>{` ${thresholdString} ppm, `}</span>
 						{`${status}`}
 					</p>
 				</div>

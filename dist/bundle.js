@@ -31403,6 +31403,7 @@
 	exports.formatToTodayHistory = formatToTodayHistory;
 	exports.formatToWeekHistory = formatToWeekHistory;
 	exports.formatToMonthHistory = formatToMonthHistory;
+	exports.commaSeparateNumber = commaSeparateNumber;
 
 	var _moment = __webpack_require__(295);
 
@@ -31504,33 +31505,32 @@
 		});
 	}
 
-	var mapping = [{
-		dataKey: 'date',
-		title: 'Date'
-	}, {
-		dataKey: 'ppmIn',
-		title: 'Salinity In'
-	}, {
-		dataKey: 'ppmOut',
-		title: 'Salinity Out'
-	}, {
-		dataKey: 'ppmRec',
-		title: 'Salinity Recycled'
-	}, {
-		dataKey: 'qDump',
-		title: 'Dump Flow'
-	}, {
-		dataKey: 'qOut',
-		title: 'Water Flow'
-	}];
-
 	function formatReadingsToCsv(readings) {
+		var mapping = [{
+			dataKey: 'date',
+			title: 'Date'
+		}, {
+			dataKey: 'ppmIn',
+			title: 'Salinity In'
+		}, {
+			dataKey: 'ppmOut',
+			title: 'Salinity Out'
+		}, {
+			dataKey: 'ppmRec',
+			title: 'Salinity Recycled'
+		}, {
+			dataKey: 'qDump',
+			title: 'Dump Flow'
+		}, {
+			dataKey: 'qOut',
+			title: 'Water Flow'
+		}];
 		var first = mapping.map(function (map) {
 			return map.title;
 		}).reduce(function (row, header) {
 			return row + ',' + header;
 		});
-
+		console.log('this is the mapping', first);
 		return readings.map(function (reading) {
 			return mapping.reduce(function (row, map, i) {
 				var value = reading[map.dataKey];
@@ -31541,8 +31541,6 @@
 			return body + '\n' + row;
 		}, first);
 	}
-
-	function formatReadingsToTable(readings) {}
 
 	function formatToTodayHistory(readings, yProp) {
 		var current = new Date(),
@@ -31622,6 +31620,17 @@
 				y: getAverageOfDay(monthData, day)
 			};
 		});
+	}
+
+	function commaSeparateNumber(val) {
+		var stringified = undefined;
+		if (typeof val === 'string') stringified = val;else stringified = val.toString();
+
+		if (/(\d+)(\d{3})/.test(stringified)) {
+			stringified = stringified.replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
+		}
+
+		return stringified;
 	}
 
 /***/ },
@@ -46315,6 +46324,8 @@
 				var direction = _props2.direction;
 				var readings = _props2.readings;
 				var status = current > threshold ? generateBadText() : generateGoodText();
+				var currentString = (0, _data.commaSeparateNumber)(current);
+				var thresholdString = (0, _data.commaSeparateNumber)(threshold);
 
 				return _react2.default.createElement(
 					'div',
@@ -46334,7 +46345,7 @@
 							_react2.default.createElement(
 								'h3',
 								null,
-								'' + current.toLocaleString()
+								'' + currentString
 							),
 							_react2.default.createElement(
 								'p',
@@ -46350,13 +46361,13 @@
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + current.toLocaleString() + ' ppm. '
+								' ' + currentString + ' ppm. '
 							),
 							'Your current threshold is set at',
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + threshold.toLocaleString() + ' ppm, '
+								' ' + thresholdString + ' ppm, '
 							),
 							'' + status
 						)
@@ -48902,6 +48913,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -49061,8 +49074,28 @@
 					filename = filename + '.csv';
 					(0, _downloadTrigger.triggerDownload)(data, filename);
 				} else {
+					var columns = [{
+						dataKey: 'date',
+						title: 'Date'
+					}, {
+						dataKey: 'ppmIn',
+						title: 'Salinity In'
+					}, {
+						dataKey: 'ppmOut',
+						title: 'Salinity Out'
+					}, {
+						dataKey: 'ppmRec',
+						title: 'Salinity Recycled'
+					}, {
+						dataKey: 'qDump',
+						title: 'Dump Flow'
+					}, {
+						dataKey: 'qOut',
+						title: 'Water Flow'
+					}],
+					    rows = [].concat(_toConsumableArray(focus));
 					filename = filename + '.pdf';
-					(0, _downloadTrigger.triggerPdf)(data, filename);
+					(0, _downloadTrigger.triggerPdf)(columns, rows, filename);
 				}
 			}
 		}, {
@@ -49194,9 +49227,15 @@
 		(0, _filesaverjs.saveAs)(blob, name);
 	}
 
-	function triggerPdf(data, name) {
-		console.log('pdf', data, name);
-		console.log('jspdf', jsPDF);
+	function triggerPdf(columns, rows, name) {
+		var doc = new jsPDF('p', 'pt');
+		console.log('columns', columns);
+		doc.autoTable(columns, rows, {
+			beforePageContent: function beforePageContent(data) {
+				doc.text('EDDI', 40, 30);
+			}
+		});
+		doc.save(name);
 	}
 
 /***/ },

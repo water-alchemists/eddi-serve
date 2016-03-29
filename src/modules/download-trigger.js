@@ -6,7 +6,13 @@ export function triggerDownload(data, name){
 	saveAs(blob, name);
 }
 
-export function triggerPdf(data, name){
-	console.log('pdf', data, name);
-	console.log('jspdf', jsPDF)
+export function triggerPdf(columns, rows, name){
+	const doc = new jsPDF('p', 'pt');
+	console.log('columns', columns);
+	doc.autoTable(columns, rows, {
+		beforePageContent: function(data) {
+	        doc.text('EDDI', 40, 30);
+	    }
+	});
+	doc.save(name);
 }

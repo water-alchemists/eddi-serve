@@ -139,8 +139,35 @@ class Report extends Component {
 			triggerDownload(data, filename);
 		}
 		else {
+			let columns = [
+				{
+					dataKey : 'date',
+					title : 'Date'
+				},
+				{
+					dataKey : 'ppmIn',
+					title : 'Salinity In'
+				},
+				{
+					dataKey : 'ppmOut',
+					title : 'Salinity Out'
+				},
+				{
+					dataKey : 'ppmRec',
+					title : 'Salinity Recycled'
+				},
+				{
+					dataKey : 'qDump',
+					title : 'Dump Flow'
+				},
+				{
+					dataKey : 'qOut',
+					title : 'Water Flow'
+				}
+			],
+			rows = [ ...focus ];
 			filename = `${ filename }.pdf`;
-			triggerPdf(data, filename);
+			triggerPdf(columns, rows, filename);
 		}
 	}
 

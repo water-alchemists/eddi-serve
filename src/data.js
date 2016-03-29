@@ -95,37 +95,36 @@ export function mapDateToReadings(readings){
 		.sort((a,b) => a.date > b.date);
 }
 
-const mapping = [
-	{
-		dataKey : 'date',
-		title : 'Date'
-	},
-	{
-		dataKey : 'ppmIn',
-		title : 'Salinity In'
-	},
-	{
-		dataKey : 'ppmOut',
-		title : 'Salinity Out'
-	},
-	{
-		dataKey : 'ppmRec',
-		title : 'Salinity Recycled'
-	},
-	{
-		dataKey : 'qDump',
-		title : 'Dump Flow'
-	},
-	{
-		dataKey : 'qOut',
-		title : 'Water Flow'
-	}
-];
-
 export function formatReadingsToCsv(readings){
+	const mapping = [
+		{
+			dataKey : 'date',
+			title : 'Date'
+		},
+		{
+			dataKey : 'ppmIn',
+			title : 'Salinity In'
+		},
+		{
+			dataKey : 'ppmOut',
+			title : 'Salinity Out'
+		},
+		{
+			dataKey : 'ppmRec',
+			title : 'Salinity Recycled'
+		},
+		{
+			dataKey : 'qDump',
+			title : 'Dump Flow'
+		},
+		{
+			dataKey : 'qOut',
+			title : 'Water Flow'
+		}
+	];
 	const first = mapping.map(map => map.title)
 				.reduce((row, header) => `${row},${header}`);
-
+				console.log('this is the mapping', first);
 	return readings
 		.map(reading => {
 			return mapping.reduce((row, map, i) => {
@@ -135,10 +134,6 @@ export function formatReadingsToCsv(readings){
 			},'');
 		})
 		.reduce((body, row) => `${body}\n${row}`, first);
-}
-
-function formatReadingsToTable(readings){
-	
 }
 
 export function formatToTodayHistory(readings, yProp){
@@ -201,5 +196,17 @@ export function formatToMonthHistory(readings, yProp){
 			y : getAverageOfDay(monthData, day)
 		};
 	});
+}
+
+export function commaSeparateNumber(val){
+	let stringified;
+	if(typeof val === 'string') stringified = val;
+	else stringified = val.toString();
+
+	if(/(\d+)(\d{3})/.test(stringified)){
+		stringified = stringified.replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+	}
+
+	return stringified;
 }
 
