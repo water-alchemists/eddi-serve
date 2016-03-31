@@ -46192,7 +46192,8 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: ROUTES.SALINITY_IN(id),
-							activeClassName: ACTIVE_CLASS },
+							activeClassName: ACTIVE_CLASS
+						},
 						_react2.default.createElement('div', { className: salinityInClass }),
 						_react2.default.createElement(
 							'p',
@@ -46204,7 +46205,8 @@
 						_reactRouter.Link,
 						{ to: ROUTES.SALINITY_OUT(id),
 							activeClassName: ACTIVE_CLASS,
-							className: defaultViewClass },
+							className: defaultViewClass
+						},
 						_react2.default.createElement('div', { className: salinityOutClass }),
 						_react2.default.createElement(
 							'p',
@@ -46215,7 +46217,8 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: ROUTES.FLOW(id),
-							activeClassName: ACTIVE_CLASS },
+							activeClassName: ACTIVE_CLASS
+						},
 						_react2.default.createElement('div', { className: flowClass }),
 						_react2.default.createElement(
 							'p',
@@ -46226,7 +46229,8 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: ROUTES.POWER(id),
-							activeClassName: ACTIVE_CLASS },
+							activeClassName: ACTIVE_CLASS
+						},
 						_react2.default.createElement('div', { className: powerClass }),
 						_react2.default.createElement(
 							'p',
@@ -46820,6 +46824,10 @@
 		if (rate <= 0.3) return 'slow';else if (rate <= 3) return 'medium';else return 'fast';
 	}
 
+	function roundDecimals(number) {
+		return Math.round(number * 100) / 100;
+	}
+
 	var DashboardFlow = function (_Component) {
 		_inherits(DashboardFlow, _Component);
 
@@ -46871,7 +46879,7 @@
 				var _props = this.props;
 				var rate = _props.rate;
 				var readings = _props.readings;
-
+				var formattedRate = roundDecimals(rate);
 
 				return _react2.default.createElement(
 					'div',
@@ -46890,7 +46898,7 @@
 							_react2.default.createElement(
 								'h3',
 								null,
-								'' + rate
+								'' + formattedRate
 							),
 							_react2.default.createElement(
 								'p',
@@ -46902,17 +46910,17 @@
 						_react2.default.createElement(
 							'p',
 							{ className: 'dashboard-note' },
-							'Your current level of water flow is',
+							'Your current water flow rate is',
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + rate + ' lpm, '
+								' ' + formattedRate + ' lpm, '
 							),
 							'which is a',
 							_react2.default.createElement(
 								'span',
 								null,
-								' ' + generateStatusText(rate) + ' '
+								' ' + generateStatusText(formattedRate) + ' '
 							),
 							'flow.'
 						)
@@ -48921,7 +48929,7 @@
 
 
 	// module
-	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  display: flex;\n  flex-direction: row;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #006d60;\n}\n#troubleshoot .content .footer {\n  bottom: 0;\n  left: 0;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #006d60;\n}\n#troubleshoot .content .footer {\n  bottom: 0;\n  left: 0;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 

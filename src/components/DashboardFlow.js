@@ -22,6 +22,10 @@ function generateStatusText(rate){
 	else return 'fast';
 }
 
+function roundDecimals(number){
+	return Math.round(number * 100) / 100
+}
+
 class DashboardFlow extends Component {
 	constructor(props){
 		super(props);
@@ -55,22 +59,23 @@ class DashboardFlow extends Component {
 	}
 	render(){
 		const { type, graphData } = this.state,
-			{ rate, readings } = this.props;
+			{ rate, readings } = this.props,
+			formattedRate = roundDecimals(rate);
 
 		return (
 			<div className='dashboard-view flow'>
 				<div className='dashboard-current'>
 					<div className='dashboard-current-numbers'>
 						<h1>WATER FLOW</h1>
-						<h3>{`${rate}`}</h3>
+						<h3>{`${formattedRate}`}</h3>
 						<p>liters per minute</p>
 					</div>
 					<FlowGraph rate={rate} />
 					<p className='dashboard-note'>
-						Your current level of water flow is
-						<span>{` ${rate} lpm, `}</span>
+						Your current water flow rate is
+						<span>{` ${formattedRate} lpm, `}</span>
 						which is a
-						<span>{` ${generateStatusText(rate)} `}</span>
+						<span>{` ${generateStatusText(formattedRate)} `}</span>
 						flow.
 					</p>
 				</div>
