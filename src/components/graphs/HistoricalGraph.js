@@ -83,7 +83,7 @@ class HistoricalGraph extends Component {
         }
       }
 
-      if( !data.y ){
+      if( (!data) || (!data.y) ){
         lastData = null;
         continue;
       }
