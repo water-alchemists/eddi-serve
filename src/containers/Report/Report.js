@@ -70,12 +70,11 @@ class Report extends Component {
 			{ id, readings, settings } = eddi;
 		if( id ) updateMenuName(settings.name);
 		if(readings) {
-			const formattedReadings = mapDateToReadings(readings),
-				start = getDateObject(formattedReadings[0].date);
-			this.setState({
-				start,
-				readings : formattedReadings
-			});
+			const newState = {},
+				formattedReadings = mapDateToReadings(readings);
+			if(formattedReadings.length) newState.start = getDateObject(formattedReadings[0].date);
+			newState.readings = formattedReadings;
+			this.setState(newState);
 		}
 	}
 
@@ -87,12 +86,11 @@ class Report extends Component {
 		if( id !== oldEddi.id ) {
 			updateMenuName(settings.name);
 			if(readings) {
-				const formattedReadings = mapDateToReadings(readings),
-					start = getDateObject(formattedReadings[0].date);
-				this.setState({
-					start,
-					readings: formattedReadings
-				});
+				const newState = {},
+				formattedReadings = mapDateToReadings(readings);
+				if(formattedReadings.length) newState.start = getDateObject(formattedReadings[0].date);
+				newState.readings = formattedReadings;
+				this.setState(newState);
 			}
 		}
 	}

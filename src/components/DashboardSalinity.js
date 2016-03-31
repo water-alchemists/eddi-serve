@@ -19,11 +19,20 @@ const FORMATTERS = {
 };
 
 function generateBadText(){
-	return 'which is not good. Please check the settings for your eddi.';
+	return 'so this is not good. Please check the settings for your eddi.';
 }
 
 function generateGoodText(){
-	return 'so everything is doing well.';
+	return 'so everything is working correctly.';
+}
+
+function generateInput(){
+	return 'The current level of salinity of the water entering your EDDI is';
+}
+
+function generateOutput(){
+	return 'The current level of salinity of the water your EDDI is pushing out is';
+
 }
 
 class DashboardSalinity extends Component {
@@ -77,8 +86,7 @@ class DashboardSalinity extends Component {
 					</div>
 					<SalinityGraph salinity={current}/>
 					<p className='dashboard-note'>
-						The current level of salinity for the water your EDDI
-						is pushing out is
+						{ direction === 'input' ? generateInput() : generateOutput() }
 						<span>{` ${currentString} ppm. `}</span>
 						Your current threshold is set at
 						<span>{` ${thresholdString} ppm, `}</span>

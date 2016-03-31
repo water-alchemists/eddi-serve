@@ -27655,7 +27655,7 @@
 
 
 	// module
-	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 250px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: lowercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #0d0e1f;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 250px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
@@ -46300,11 +46300,19 @@
 	var FORMATTERS = (_FORMATTERS = {}, _defineProperty(_FORMATTERS, _constants.HISTORICAL.TODAY, _data.formatToTodayHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.WEEK, _data.formatToWeekHistory), _defineProperty(_FORMATTERS, _constants.HISTORICAL.MONTH, _data.formatToMonthHistory), _FORMATTERS);
 
 	function generateBadText() {
-		return 'which is not good. Please check the settings for your eddi.';
+		return 'so this is not good. Please check the settings for your eddi.';
 	}
 
 	function generateGoodText() {
-		return 'so everything is doing well.';
+		return 'so everything is working correctly.';
+	}
+
+	function generateInput() {
+		return 'The current level of salinity of the water entering your EDDI is';
+	}
+
+	function generateOutput() {
+		return 'The current level of salinity of the water your EDDI is pushing out is';
 	}
 
 	var DashboardSalinity = function (_Component) {
@@ -46402,7 +46410,7 @@
 						_react2.default.createElement(
 							'p',
 							{ className: 'dashboard-note' },
-							'The current level of salinity for the water your EDDI is pushing out is',
+							direction === 'input' ? generateInput() : generateOutput(),
 							_react2.default.createElement(
 								'span',
 								null,
@@ -47199,7 +47207,7 @@
 				var getEddisByUser = _props.getEddisByUser;
 				var updateMenuName = _props.updateMenuName;
 
-				updateMenuName('my eddis');
+				updateMenuName('HOME');
 				if (user) getEddisByUser();
 			}
 		}, {
@@ -47787,7 +47795,7 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsEddi).call(this, props));
 
 			_this.state = {
-				isOpen: false
+				isOpen: true
 			};
 			return _this;
 		}
@@ -49040,12 +49048,11 @@
 
 				if (id) updateMenuName(settings.name);
 				if (readings) {
-					var formattedReadings = (0, _data.mapDateToReadings)(readings),
-					    start = getDateObject(formattedReadings[0].date);
-					this.setState({
-						start: start,
-						readings: formattedReadings
-					});
+					var newState = {},
+					    formattedReadings = (0, _data.mapDateToReadings)(readings);
+					if (formattedReadings.length) newState.start = getDateObject(formattedReadings[0].date);
+					newState.readings = formattedReadings;
+					this.setState(newState);
 				}
 			}
 		}, {
@@ -49064,12 +49071,11 @@
 				if (id !== oldEddi.id) {
 					updateMenuName(settings.name);
 					if (readings) {
-						var formattedReadings = (0, _data.mapDateToReadings)(readings),
-						    start = getDateObject(formattedReadings[0].date);
-						this.setState({
-							start: start,
-							readings: formattedReadings
-						});
+						var newState = {},
+						    formattedReadings = (0, _data.mapDateToReadings)(readings);
+						if (formattedReadings.length) newState.start = getDateObject(formattedReadings[0].date);
+						newState.readings = formattedReadings;
+						this.setState(newState);
 					}
 				}
 			}

@@ -38,7 +38,7 @@ class List extends Component {
 
 	componentWillMount(){
 		const { user, getEddisByUser, updateMenuName } = this.props;
-		updateMenuName('my eddis');
+		updateMenuName('HOME');
 		if(user) getEddisByUser();
 	}
 
