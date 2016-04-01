@@ -90,7 +90,9 @@ class List extends Component {
 		return (
 			<div id="list" className="page">
 				{ showEddi }
-				<AddEddiButton />
+				<div className='footer'>
+					<AddEddiButton />
+				</div>
 			</div>
 		);
 	}

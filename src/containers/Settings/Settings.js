@@ -79,9 +79,6 @@ class Settings extends Component {
 				<div>
 					{EddiElements}
 				</div>
-				<div className='footer'>
-					<AddEddiButton />
-				</div>
 			</div>
 		);
 	}

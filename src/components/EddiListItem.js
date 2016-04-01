@@ -1,4 +1,4 @@
-'use strict';
+  'use strict';
 import React, { Component, PropTypes } from 'react';
 
 import { PATHS } from '../constants';
@@ -10,16 +10,15 @@ import style from '../less/EddiListItem.less';
 class EddiListItem extends Component {
 
   render(){
-  	const { name, url, id } = this.props;
+  	const { name, url, id } = this.props,
+      itemStyle = {
+        'background-image' : `linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url("${url}")`
+      };
     return (
     	<Link to={{ pathname: PATHS.DASHBOARD, query: { id } }}
         	className='eddi-list-item' 
+          style={itemStyle}
         >
-        	<div className='image-container'>
-        		<div className='image-cropper'>
-        			<img src={url} />
-        		</div>
-        	</div>
       		<div className='text-container'>
       			<div className='eddi-item-overlay'>{ name }</div>
       			<div className='sprite arrow right'></div>
