@@ -257,3 +257,8 @@ export function averageReadingsByHour(readings){
 	return averageByHour;
 }
 
+export function formatEpochToTime(epoch){
+	const date = new Date(epoch * 1000);
+	return moment(date).format('h:mm a');
+}
+

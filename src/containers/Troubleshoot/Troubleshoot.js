@@ -11,6 +11,7 @@ import AddEddiButton from '../../components/AddEddiButton';
 import TroubleshootImage from '../../components/TroubleshootImage';
 
 import EddiFireStarter from '../../modules/eddi-firebase';
+import { formatEpochToTime } from '../../data';
 
 import style from './Troubleshoot.less';
 
@@ -67,11 +68,19 @@ class Troubleshoot extends Component {
 	_renderSelected(){
 		const { eddi={} , setEddiState } = this.props,
 			{ state={} , id } = eddi,
-			cycles = ['off', 'prime', 'channel a', 'channel b'];
+			cycles = ['off', 'prime', 'channel a', 'channel b'],
+			updatedTime = formatEpochToTime(state.updated);
 		console.log('this is the state', state);
 		return (
 			<div className='content'>
-				<TroubleshootImage />
+				<TroubleshootImage current={state.state}
+					onClick={state => setEddiState(eddi.id, state)}
+				/>
+				<div className='troubleshoot-header'>
+					<p className='troubleshoot-warning'>note: turns off entire eddi</p>
+					<h3>STAGE</h3>
+					<p>last cycle completion: {updatedTime}</p>
+				</div>
 				<div className='cycle-list'>
 					{ 
 						cycles.map( (cycle, index) => {
@@ -85,11 +94,6 @@ class Troubleshoot extends Component {
 								);
 						} )
 					}
-				</div>
-				<div className='footer'>
-					<EddiStateButton value={!!state}
-						onClick={state => setEddiState(eddi.id, state)}
-					/>
 				</div>
 			</div>
 		);

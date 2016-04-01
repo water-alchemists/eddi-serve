@@ -12,11 +12,11 @@ class EddiStateButton extends Component {
 	_renderOff(){
 		const { onClick } = this.props;
 		return (
-			<button onClick={ event => this.clickHandler(event, 1, onClick) }
-				type='button'
+			<div className='eddi-state-button' 
+				onClick={ event => this.clickHandler(event, 1, onClick) }
 			>
 				ON
-			</button>
+			</div>
 		);
 	}
 

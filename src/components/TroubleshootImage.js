@@ -1,5 +1,6 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
+import classNames from 'classnames';
 
 import EddiStateButton from './EddiStateButton';
 
@@ -14,8 +15,10 @@ class TroubleshootImage extends Component {
 			<div className='troubleshoot-image'>
 				<div className='sprite circle'><span>1</span></div>
 				<div className='sprite circle blue'><span>2</span></div>
+				<div className='sprite circle'><span>3</span></div>
+				<div className='sprite circle'><span>4</span></div>
 				<div className='image-footer'>
-					<EddiStateButton 
+					<EddiStateButton value={current}
 						onClick={value => this.clickHandler(value)}
 					/>
 				</div>

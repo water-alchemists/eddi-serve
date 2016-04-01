@@ -31407,6 +31407,7 @@
 	exports.formatToMonthHistory = formatToMonthHistory;
 	exports.commaSeparateNumber = commaSeparateNumber;
 	exports.averageReadingsByHour = averageReadingsByHour;
+	exports.formatEpochToTime = formatEpochToTime;
 
 	var _moment = __webpack_require__(295);
 
@@ -31676,6 +31677,11 @@
 		});
 
 		return averageByHour;
+	}
+
+	function formatEpochToTime(epoch) {
+		var date = new Date(epoch * 1000);
+		return (0, _moment2.default)(date).format('h:mm a');
 	}
 
 /***/ },
@@ -48583,6 +48589,8 @@
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
 
+	var _data = __webpack_require__(294);
+
 	var _Troubleshoot = __webpack_require__(441);
 
 	var _Troubleshoot2 = _interopRequireDefault(_Troubleshoot);
@@ -48694,11 +48702,36 @@
 				var state = _eddi$state === undefined ? {} : _eddi$state;
 				var id = eddi.id;
 				var cycles = ['off', 'prime', 'channel a', 'channel b'];
+				var updatedTime = (0, _data.formatEpochToTime)(state.updated);
 				console.log('this is the state', state);
 				return _react2.default.createElement(
 					'div',
 					{ className: 'content' },
-					_react2.default.createElement(_TroubleshootImage2.default, null),
+					_react2.default.createElement(_TroubleshootImage2.default, { current: state.state,
+						onClick: function onClick(state) {
+							return setEddiState(eddi.id, state);
+						}
+					}),
+					_react2.default.createElement(
+						'div',
+						{ className: 'troubleshoot-header' },
+						_react2.default.createElement(
+							'p',
+							{ className: 'troubleshoot-warning' },
+							'note: turns off entire eddi'
+						),
+						_react2.default.createElement(
+							'h3',
+							null,
+							'STAGE'
+						),
+						_react2.default.createElement(
+							'p',
+							null,
+							'last cycle completion: ',
+							updatedTime
+						)
+					),
 					_react2.default.createElement(
 						'div',
 						{ className: 'cycle-list' },
@@ -48723,15 +48756,6 @@
 									cycle.toUpperCase()
 								)
 							);
-						})
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'footer' },
-						_react2.default.createElement(_EddiStateButton2.default, { value: !!state,
-							onClick: function onClick(state) {
-								return setEddiState(eddi.id, state);
-							}
 						})
 					)
 				);
@@ -48813,11 +48837,11 @@
 				var _onClick = this.props.onClick;
 
 				return _react2.default.createElement(
-					'button',
-					{ onClick: function onClick(event) {
+					'div',
+					{ className: 'eddi-state-button',
+						onClick: function onClick(event) {
 							return _this2.clickHandler(event, 1, _onClick);
-						},
-						type: 'button'
+						}
 					},
 					'ON'
 				);
@@ -48894,7 +48918,7 @@
 
 
 	// module
-	exports.push([module.id, ".eddi-state-button {\n  background-color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  color: white;\n  width: 160px;\n  margin: 20px auto;\n  text-align: center;\n}\n", ""]);
+	exports.push([module.id, ".eddi-state-button {\n  background-color: white;\n  border-radius: 5px;\n  cursor: pointer;\n  padding: 8px;\n  color: #006d60;\n  width: 100px;\n  margin: 0px;\n  text-align: center;\n}\n", ""]);
 
 	// exports
 
@@ -48934,7 +48958,7 @@
 
 
 	// module
-	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #2abfd0;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  border-bottom: 3px solid #2abfd0;\n}\n#troubleshoot .content .footer {\n  bottom: 0;\n  left: 0;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 300px;\n  height: 400px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image .image-footer {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n}\n#troubleshoot .content .troubleshoot-image .image-footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #2abfd0;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  border-bottom: 3px solid #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 400px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image .image-footer {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  padding: 10px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: rgba(241, 241, 242, 0.9);\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
 
 	// exports
 
@@ -49841,6 +49865,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _classnames = __webpack_require__(260);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	var _EddiStateButton = __webpack_require__(438);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
@@ -49899,8 +49927,26 @@
 					),
 					_react2.default.createElement(
 						'div',
+						{ className: 'sprite circle' },
+						_react2.default.createElement(
+							'span',
+							null,
+							'3'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'sprite circle' },
+						_react2.default.createElement(
+							'span',
+							null,
+							'4'
+						)
+					),
+					_react2.default.createElement(
+						'div',
 						{ className: 'image-footer' },
-						_react2.default.createElement(_EddiStateButton2.default, {
+						_react2.default.createElement(_EddiStateButton2.default, { value: current,
 							onClick: function onClick(value) {
 								return _this2.clickHandler(value);
 							}

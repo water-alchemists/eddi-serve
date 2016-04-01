@@ -2,7 +2,6 @@
 
 #troubleshoot {
 	min-height : 100vh;
-	margin-bottom : 35px;
 	.content {
 		height: 100%;
 		.sprite {
@@ -23,6 +22,7 @@
 		}
 		.cycle-list {
 			background-color: white;
+			padding-bottom : 10px;
 			.cycle {
 				padding: 10px 20px;
 				color: black;
@@ -43,32 +43,40 @@
 			}
 		}
 
-		.footer {
-			bottom : 0;
-			left: 0;
-			.eddi-state-button {
-				width : 100%;
-				margin : 0px;
-				padding-top: 10px;
-				padding-bottom : 10px;
-			}
-		}
 		.troubleshoot-image {
 			background-image: url("/assets/troubleshoot.svg");
 			background-repeat: no-repeat;
 			background-position: center center;
-			background-size : auto 300px;
+			background-size : auto 250px;
 			height : 400px;
 			position : relative;
 			.image-footer {
 				position : absolute;
 				bottom : 0;
 				right : 0;
-				.eddi-state-button {
-					width : 100%;
-					margin : 0px;
-					padding-top: 10px;
-					padding-bottom : 10px;
+				padding : 10px;
+			}
+		}
+
+		.troubleshoot-header {
+			background-color: white;
+			padding-left: 30px;
+			padding-right: 20px;
+			padding-top: 10px;
+			padding-bottom : 20px;
+
+			h3 {
+				color: black;
+				margin : 0;
+				font-weight: 200;
+				margin-bottom : 10px;
+			}
+			p {
+				color: @light_color;
+				margin : 0;
+
+				&.troubleshoot-warning {
+					text-align : right;
 				}
 			}
 		}
