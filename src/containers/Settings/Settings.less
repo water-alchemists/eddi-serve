@@ -85,7 +85,7 @@
 					margin : 0;
 				}
 				.operate-row {
-					padding-top: 15px;
+					padding-top: 30px;
 					.select-container {
 						display : flex; 
 						flex-direction : row; 
@@ -108,9 +108,11 @@
 					
 				}
 				.salinity-row {
-					padding-top: 15px;
+					padding-top: 50px;
+					padding-bottom: 50px;
+					max-width: 200px; 
 					.select-container {
-						display : flex; 
+						display : flex;
 						flex-direction : row; 
 						-webkit-flex-direction: row;
 						justify-content : space-between;
@@ -129,18 +131,17 @@
 						p {
 							margin: 0;
 							color: black;
-							margin-left: 5px;
-							margin-right : 5px;
-							padding-top : 5px;
+							margin: 10px;
+							padding: 10px;
 						}
 						.salinity-input {
 							input {
 								border-color : @trim_color;
 								border-width : 2px;
-								padding : 5px;
+								padding : 5px 5px 5px 20px;
 								font-size : @input_font_size;
 								text-transform : uppercase;
-								width : auto;
+								width : 100px;
 								&:focus {
 									outline: none;
 								}

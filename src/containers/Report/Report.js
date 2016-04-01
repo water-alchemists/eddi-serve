@@ -238,7 +238,7 @@ class Report extends Component {
 							</div>
 						</div>
 						<div className='document-section'>
-							<button type='submit'>
+							<button type='submit'className='export'>
 								EXPORT
 							</button>
 						</div>
