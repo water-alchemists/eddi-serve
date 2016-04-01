@@ -14,11 +14,23 @@ class TroubleshootImage extends Component {
 			states = [0, 1, 2, 3];
 
 		return states.map(state => {
-			const spriteClass = classNames(['sprite', 'circle', { blue : state === current }]);
+			const spriteClass = classNames(['sprite', 'circle', { blue : state === current }, `state-${state}`]);
 			return (
-				<div key={state} className={spriteClass}>
+				<div key={`sprite-${state}`} className={spriteClass}>
 					<span>{ state + 1 }</span>
 				</div>
+			);
+		})
+	}
+
+	_renderBoxes(){
+		const { current } = this.props,
+			states = [2, 3];
+
+		return states.map(state => {
+			const boxClass = classNames(['extensions', { blue : state === current }, `state-${state}`]);
+			return (
+				<div key={`box-${state}`} className={boxClass}></div>
 			);
 		})
 	}
@@ -26,9 +38,8 @@ class TroubleshootImage extends Component {
 		const { current } = this.props;
 		return (
 			<div className='troubleshoot-image'>
-				{
-					this._renderSprites()
-				}
+				{ this._renderSprites() }
+				{ this._renderBoxes() }
 				<div className='image-footer'>
 					<EddiStateButton value={!!current}
 						onClick={value => this.clickHandler(value)}

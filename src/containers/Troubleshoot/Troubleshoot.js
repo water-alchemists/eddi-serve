@@ -77,7 +77,7 @@ class Troubleshoot extends Component {
 					onClick={state => setEddiState(eddi.id, state)}
 				/>
 				<div className='troubleshoot-header'>
-					<p className='troubleshoot-warning'>note: turns off entire eddi</p>
+					{ state.state ? <p className='troubleshoot-warning'>note: turns off entire eddi</p> : null }
 					<h3>STAGE</h3>
 					<p>last cycle completion: {updatedTime}</p>
 				</div>

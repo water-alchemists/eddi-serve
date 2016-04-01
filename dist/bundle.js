@@ -48715,11 +48715,11 @@
 					_react2.default.createElement(
 						'div',
 						{ className: 'troubleshoot-header' },
-						_react2.default.createElement(
+						state.state ? _react2.default.createElement(
 							'p',
 							{ className: 'troubleshoot-warning' },
 							'note: turns off entire eddi'
-						),
+						) : null,
 						_react2.default.createElement(
 							'h3',
 							null,
@@ -48958,7 +48958,7 @@
 
 
 	// module
-	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #2abfd0;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  border-bottom: 3px solid #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 400px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image .image-footer {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  padding: 10px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: rgba(241, 241, 242, 0.9);\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .sprite > span {\n    top: 35%;\n  }\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #2abfd0;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  border-bottom: 3px solid #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 400px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image .sprite {\n  position: absolute;\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-0 {\n  bottom: 80px;\n  left: 40%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-0 {\n    left: 20%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-1 {\n  bottom: 55px;\n  right: 45%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-1 {\n    right: 28%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-2 {\n  top: 70px;\n  right: 30%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-2 {\n    right: 5%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-3 {\n  top: 180px;\n  right: 30%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-3 {\n    right: 5%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions {\n  position: absolute;\n  border-right: 2px solid;\n  border-bottom: 2px solid;\n  border-color: #ab3524;\n  width: 80px;\n  height: 35px;\n}\n#troubleshoot .content .troubleshoot-image .extensions.state-2 {\n  top: 120px;\n  right: 40%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .extensions.state-2 {\n    right: 14%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions.state-3 {\n  top: 230px;\n  right: 40%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .extensions.state-3 {\n    right: 14%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions.blue {\n  border-color: #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image .image-footer {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  padding: 10px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n  margin-top: 10px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: rgba(241, 241, 242, 0.9);\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
 
 	// exports
 
@@ -49904,16 +49904,27 @@
 				var states = [0, 1, 2, 3];
 
 				return states.map(function (state) {
-					var spriteClass = (0, _classnames2.default)(['sprite', 'circle', { blue: state === current }]);
+					var spriteClass = (0, _classnames2.default)(['sprite', 'circle', { blue: state === current }, 'state-' + state]);
 					return _react2.default.createElement(
 						'div',
-						{ key: state, className: spriteClass },
+						{ key: 'sprite-' + state, className: spriteClass },
 						_react2.default.createElement(
 							'span',
 							null,
 							state + 1
 						)
 					);
+				});
+			}
+		}, {
+			key: '_renderBoxes',
+			value: function _renderBoxes() {
+				var current = this.props.current;
+				var states = [2, 3];
+
+				return states.map(function (state) {
+					var boxClass = (0, _classnames2.default)(['extensions', { blue: state === current }, 'state-' + state]);
+					return _react2.default.createElement('div', { key: 'box-' + state, className: boxClass });
 				});
 			}
 		}, {
@@ -49927,6 +49938,7 @@
 					'div',
 					{ className: 'troubleshoot-image' },
 					this._renderSprites(),
+					this._renderBoxes(),
 					_react2.default.createElement(
 						'div',
 						{ className: 'image-footer' },
