@@ -8,6 +8,7 @@ import { menuNameChange } from '../../actions/menu';
 
 import EddiStateButton from '../../components/EddiStateButton';
 import AddEddiButton from '../../components/AddEddiButton';
+import TroubleshootImage from '../../components/TroubleshootImage';
 
 import EddiFireStarter from '../../modules/eddi-firebase';
 
@@ -67,20 +68,19 @@ class Troubleshoot extends Component {
 		const { eddi={} , setEddiState } = this.props,
 			{ state={} , id } = eddi,
 			cycles = ['off', 'prime', 'channel a', 'channel b'];
-
+		console.log('this is the state', state);
 		return (
 			<div className='content'>
-				<div className='image-container'>
-					<img src='/assets/troubleshoot.svg' height='200'></img>
-				</div>
+				<TroubleshootImage />
 				<div className='cycle-list'>
 					{ 
 						cycles.map( (cycle, index) => {
-							const cycleClassName = className(['cycle', { active : index === state.state }]);
+							const cycleClassName = className(['cycle', { active : index === state.state }]),
+								imageClassName = className(['sprite', 'circle', { blue : index === state.state}]);
 							return (
 								<div key={cycle} className={ cycleClassName }>
-									<div>{`${index + 1}. `}</div>
-									<div>{cycle.toUpperCase()}</div>
+									<div className={imageClassName}><span>{`${index + 1}`}</span></div>
+									<p>{cycle.toUpperCase()}</p>
 								</div>
 								);
 						} )

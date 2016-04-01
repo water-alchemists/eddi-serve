@@ -5,6 +5,15 @@
 	margin-bottom : 35px;
 	.content {
 		height: 100%;
+		.sprite {
+			position: relative;
+			& > span {
+				position : absolute;
+				top: 40%;
+				right : 45%;
+				color: white;
+			}
+		}
 		.image-container {
 			display: flex;
 			justify-content : center;
@@ -20,8 +29,16 @@
 				text-transform: lowercase;
 				display: flex;
 				flex-direction : row;
+				align-items : center;
+				& p {
+					margin-left : 10px;
+					font-size: 18px;
+				}
 				&.active{
-					color : @trim_color;
+					color : @true_blue;
+					& p {
+						border-bottom : 3px solid @true_blue;
+					}
 				}
 			}
 		}
@@ -34,6 +51,25 @@
 				margin : 0px;
 				padding-top: 10px;
 				padding-bottom : 10px;
+			}
+		}
+		.troubleshoot-image {
+			background-image: url("/assets/troubleshoot.svg");
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size : auto 300px;
+			height : 400px;
+			position : relative;
+			.image-footer {
+				position : absolute;
+				bottom : 0;
+				right : 0;
+				.eddi-state-button {
+					width : 100%;
+					margin : 0px;
+					padding-top: 10px;
+					padding-bottom : 10px;
+				}
 			}
 		}
 	}

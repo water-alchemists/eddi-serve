@@ -45167,7 +45167,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/nice-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -10px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -8px -223px;\n}\n.sprite.report.green {\n  background-position: -57px -223px;\n}\n.sprite.arrow.down {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -425px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: #006d60;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/new-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -8px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -5px -223px;\n}\n.sprite.report.green {\n  background-position: -55px -223px;\n}\n.sprite.arrow.down {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -425px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\n.sprite.circle {\n  height: 60px;\n  width: 60px;\n  background-position: -312px -420px;\n}\n.sprite.circle.blue {\n  background-position: -312px -355px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
 
 	// exports
 
@@ -46681,7 +46681,7 @@
 	          }
 	        }
 
-	        if (!data.y) {
+	        if (!data || !data.y) {
 	          lastData = null;
 	          continue;
 	        }
@@ -48575,6 +48575,10 @@
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
+	var _TroubleshootImage = __webpack_require__(451);
+
+	var _TroubleshootImage2 = _interopRequireDefault(_TroubleshootImage);
+
 	var _eddiFirebase = __webpack_require__(290);
 
 	var _eddiFirebase2 = _interopRequireDefault(_eddiFirebase);
@@ -48690,30 +48694,31 @@
 				var state = _eddi$state === undefined ? {} : _eddi$state;
 				var id = eddi.id;
 				var cycles = ['off', 'prime', 'channel a', 'channel b'];
-
+				console.log('this is the state', state);
 				return _react2.default.createElement(
 					'div',
 					{ className: 'content' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'image-container' },
-						_react2.default.createElement('img', { src: '/assets/troubleshoot.svg', height: '200' })
-					),
+					_react2.default.createElement(_TroubleshootImage2.default, null),
 					_react2.default.createElement(
 						'div',
 						{ className: 'cycle-list' },
 						cycles.map(function (cycle, index) {
-							var cycleClassName = (0, _classnames2.default)(['cycle', { active: index === state.state }]);
+							var cycleClassName = (0, _classnames2.default)(['cycle', { active: index === state.state }]),
+							    imageClassName = (0, _classnames2.default)(['sprite', 'circle', { blue: index === state.state }]);
 							return _react2.default.createElement(
 								'div',
 								{ key: cycle, className: cycleClassName },
 								_react2.default.createElement(
 									'div',
-									null,
-									index + 1 + '. '
+									{ className: imageClassName },
+									_react2.default.createElement(
+										'span',
+										null,
+										'' + (index + 1)
+									)
 								),
 								_react2.default.createElement(
-									'div',
+									'p',
 									null,
 									cycle.toUpperCase()
 								)
@@ -48929,7 +48934,7 @@
 
 
 	// module
-	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #006d60;\n}\n#troubleshoot .content .footer {\n  bottom: 0;\n  left: 0;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n  margin-bottom: 35px;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #2abfd0;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  border-bottom: 3px solid #2abfd0;\n}\n#troubleshoot .content .footer {\n  bottom: 0;\n  left: 0;\n}\n#troubleshoot .content .footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 300px;\n  height: 400px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image .image-footer {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n}\n#troubleshoot .content .troubleshoot-image .image-footer .eddi-state-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
@@ -49819,6 +49824,101 @@
 
 	// exports
 
+
+/***/ },
+/* 451 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _EddiStateButton = __webpack_require__(438);
+
+	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TroubleshootImage = function (_Component) {
+		_inherits(TroubleshootImage, _Component);
+
+		function TroubleshootImage() {
+			_classCallCheck(this, TroubleshootImage);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(TroubleshootImage).apply(this, arguments));
+		}
+
+		_createClass(TroubleshootImage, [{
+			key: 'clickHandler',
+			value: function clickHandler(value) {
+				var onClick = this.props.onClick;
+
+				if (onClick instanceof Function) onClick(value);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var current = this.props.current;
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'troubleshoot-image' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'sprite circle' },
+						_react2.default.createElement(
+							'span',
+							null,
+							'1'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'sprite circle blue' },
+						_react2.default.createElement(
+							'span',
+							null,
+							'2'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'image-footer' },
+						_react2.default.createElement(_EddiStateButton2.default, {
+							onClick: function onClick(value) {
+								return _this2.clickHandler(value);
+							}
+						})
+					)
+				);
+			}
+		}]);
+
+		return TroubleshootImage;
+	}(_react.Component);
+
+	TroubleshootImage.propTypes = {
+		onClick: _react.PropTypes.func,
+		current: _react.PropTypes.number
+	};
+
+	exports.default = TroubleshootImage;
 
 /***/ }
 /******/ ]);
