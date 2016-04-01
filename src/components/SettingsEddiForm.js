@@ -5,6 +5,7 @@ import { salinityOptions } from '../data';
 
 import SalinityInput from './SalinityInput';
 import TimeSelect from './TimeSelect';
+import CropInput from './CropInput';
 
 class SettingsEddiForm extends Component {
 	render(){
@@ -35,9 +36,14 @@ class SettingsEddiForm extends Component {
 				</div>
 				<div className='salinity-row'>
 					<h4>SALINITY OUTPUT</h4>
-					<SalinityInput value={salinityValue}
-						onSalinityChange={salinity => onSalinityChange(salinity)}
-					/>
+					<div className='select-container'>
+						<CropInput onChange={ salinity => onSalinityChange(salinity) } 
+						/>
+						<p>OR</p>
+						<SalinityInput value={salinityValue}
+							onSalinityChange={salinity => onSalinityChange(salinity)}
+						/>
+					</div>
 				</div>
 			</div>
 		);

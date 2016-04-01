@@ -262,3 +262,22 @@ export function formatEpochToTime(epoch){
 	return moment(date).format('h:mm a');
 }
 
+function convertDsmToPpm(number){
+	return number * 640;
+}
+
+export const crops = [
+	{
+		display : 'Alfalfa',
+		value : convertDsmToPpm(2.0)
+	},
+	{
+		display : 'Almond',
+		value : convertDsmToPpm(1.5)
+	},
+	{
+		display : 'Grape', 
+		value : convertDsmToPpm(1.5)
+	}
+];
+

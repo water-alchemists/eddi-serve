@@ -18,8 +18,9 @@ const FORMATTERS = {
 	[HISTORICAL.MONTH] : formatToMonthHistory
 };
 
-function generateBadText(){
-	return 'so this is not good. Please check the settings for your eddi.';
+function generateBadText(isIn){
+	const checkEddiText = 'Please check the settings for your eddi.';
+	return `so this is not good. ${isIn ? '' : checkEddiText }`;
 }
 
 function generateGoodText(){
@@ -72,7 +73,8 @@ class DashboardSalinity extends Component {
 	render(){
 		const { type, graphData } = this.state,
 			{ threshold, current, direction, readings } = this.props,
-			status = current > threshold ? generateBadText() : generateGoodText(),
+			isIn = direction === 'input',
+			status = current > threshold ? generateBadText(isIn) : generateGoodText(),
 			currentString = commaSeparateNumber(current),
 			thresholdString = commaSeparateNumber(threshold);
 
