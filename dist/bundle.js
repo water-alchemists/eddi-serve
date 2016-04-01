@@ -45582,7 +45582,7 @@
 					_react2.default.createElement(
 						'button',
 						{ type: 'submit' },
-						'Login'
+						'Login > '
 					)
 				);
 			}
