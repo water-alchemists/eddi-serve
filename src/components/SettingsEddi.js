@@ -54,7 +54,7 @@ class SettingsEddi extends Component {
 					/>
 				</div>
 				<div className={footerClass}>
-					<div className='sprite arrow up' onClick={() => this.toggleShow()}></div>
+					<div className='sprite arrow up faded' onClick={() => this.toggleShow()}></div>
 				</div>
 			</div>
 		);

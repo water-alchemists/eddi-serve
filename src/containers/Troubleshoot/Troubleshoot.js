@@ -70,7 +70,6 @@ class Troubleshoot extends Component {
 			{ state={} , id } = eddi,
 			cycles = ['off', 'prime', 'channel a', 'channel b'],
 			updatedTime = formatEpochToTime(state.updated);
-		console.log('this is the state', state);
 		return (
 			<div className='content'>
 				<TroubleshootImage current={state.state}
