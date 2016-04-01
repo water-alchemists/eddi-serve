@@ -9,16 +9,28 @@ class TroubleshootImage extends Component {
 		const { onClick } = this.props;
 		if(onClick instanceof Function) onClick(value);
 	}
+	_renderSprites(){
+		const { current } = this.props,
+			states = [0, 1, 2, 3];
+
+		return states.map(state => {
+			const spriteClass = classNames(['sprite', 'circle', { blue : state === current }]);
+			return (
+				<div key={state} className={spriteClass}>
+					<span>{ state + 1 }</span>
+				</div>
+			);
+		})
+	}
 	render(){
 		const { current } = this.props;
 		return (
 			<div className='troubleshoot-image'>
-				<div className='sprite circle'><span>1</span></div>
-				<div className='sprite circle blue'><span>2</span></div>
-				<div className='sprite circle'><span>3</span></div>
-				<div className='sprite circle'><span>4</span></div>
+				{
+					this._renderSprites()
+				}
 				<div className='image-footer'>
-					<EddiStateButton value={current}
+					<EddiStateButton value={!!current}
 						onClick={value => this.clickHandler(value)}
 					/>
 				</div>

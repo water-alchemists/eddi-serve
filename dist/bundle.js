@@ -49898,6 +49898,25 @@
 				if (onClick instanceof Function) onClick(value);
 			}
 		}, {
+			key: '_renderSprites',
+			value: function _renderSprites() {
+				var current = this.props.current;
+				var states = [0, 1, 2, 3];
+
+				return states.map(function (state) {
+					var spriteClass = (0, _classnames2.default)(['sprite', 'circle', { blue: state === current }]);
+					return _react2.default.createElement(
+						'div',
+						{ key: state, className: spriteClass },
+						_react2.default.createElement(
+							'span',
+							null,
+							state + 1
+						)
+					);
+				});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var _this2 = this;
@@ -49907,46 +49926,11 @@
 				return _react2.default.createElement(
 					'div',
 					{ className: 'troubleshoot-image' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'sprite circle' },
-						_react2.default.createElement(
-							'span',
-							null,
-							'1'
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'sprite circle blue' },
-						_react2.default.createElement(
-							'span',
-							null,
-							'2'
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'sprite circle' },
-						_react2.default.createElement(
-							'span',
-							null,
-							'3'
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'sprite circle' },
-						_react2.default.createElement(
-							'span',
-							null,
-							'4'
-						)
-					),
+					this._renderSprites(),
 					_react2.default.createElement(
 						'div',
 						{ className: 'image-footer' },
-						_react2.default.createElement(_EddiStateButton2.default, { value: current,
+						_react2.default.createElement(_EddiStateButton2.default, { value: !!current,
 							onClick: function onClick(value) {
 								return _this2.clickHandler(value);
 							}
