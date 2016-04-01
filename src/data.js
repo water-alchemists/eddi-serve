@@ -276,8 +276,25 @@ export const crops = [
 		value : convertDsmToPpm(1.5)
 	},
 	{
+		display : 'Artichoke',
+		value : convertDsmToPpm(0.4)
+	},
+	{
+		display: 'Barley',
+		value : convertDsmToPpm(6.0)
+	},
+	{
+		display : 'Corn',
+		value : convertDsmToPpm(1.8)
+	},
+	{
 		display : 'Grape', 
 		value : convertDsmToPpm(1.5)
+	},
+	
+	{
+		display : 'Wheat',
+		value : convertDsmToPpm(5.9)
 	}
 ];
 
