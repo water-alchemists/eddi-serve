@@ -27170,11 +27170,11 @@
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(434);
+	var _Troubleshoot2 = __webpack_require__(440);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(441);
+	var _Report2 = __webpack_require__(447);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
@@ -47644,7 +47644,7 @@
 
 	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
 
-	var _Settings = __webpack_require__(432);
+	var _Settings = __webpack_require__(438);
 
 	var _Settings2 = _interopRequireDefault(_Settings);
 
@@ -48164,11 +48164,11 @@
 
 	var _SalinityInput2 = _interopRequireDefault(_SalinityInput);
 
-	var _TimeSelect = __webpack_require__(451);
+	var _TimeSelect = __webpack_require__(432);
 
 	var _TimeSelect2 = _interopRequireDefault(_TimeSelect);
 
-	var _CropInput = __webpack_require__(452);
+	var _CropInput = __webpack_require__(435);
 
 	var _CropInput2 = _interopRequireDefault(_CropInput);
 
@@ -48305,10 +48305,398 @@
 /* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _moment = __webpack_require__(295);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	var _data = __webpack_require__(294);
+
+	var _DateTimeSelect = __webpack_require__(433);
+
+	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TimeSelect = function (_Component) {
+		_inherits(TimeSelect, _Component);
+
+		function TimeSelect(props) {
+			_classCallCheck(this, TimeSelect);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSelect).call(this, props));
+
+			var _this$props = _this.props;
+			var hour = _this$props.hour;
+			var minute = _this$props.minute;
+			var hourAndAm = (0, _data.convertMilitaryToNormal)(hour);
+			var hr = parseInt(hourAndAm[0]);
+			var min = (0, _data.convertMinutesToString)(minute);
+			var a = hourAndAm[1];
+
+			_this.state = {
+				hr: hr,
+				min: min,
+				a: a
+			};
+			return _this;
+		}
+
+		_createClass(TimeSelect, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps, oldProps) {
+				var hour = nextProps.hour;
+				var minute = nextProps.minute;
+				var hourAndAm = (0, _data.convertMilitaryToNormal)(hour);
+				var hr = parseInt(hourAndAm[0]);
+				var min = (0, _data.convertMinutesToString)(minute);
+				var a = hourAndAm[1];
+
+				this.setState({ hr: hr, min: min, a: a });
+			}
+		}, {
+			key: 'onHourChanges',
+			value: function onHourChanges(event) {
+				event.preventDefault();
+
+				var onChange = this.props.onChange;
+				var a = this.state.a;
+				var hour = event.target.value;
+				var formattedHour = (0, _data.convertNormalToMilitary)(hour, a);
+				if (onChange) return onChange({ hour: formattedHour });
+			}
+		}, {
+			key: 'onMinuteChanges',
+			value: function onMinuteChanges(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var minute = event.target.value;
+				var formattedMinute = (0, _data.convertStringToMinutes)(minute);
+
+				if (onChange) return onChange({ minute: formattedMinute });
+			}
+		}, {
+			key: 'onAmPmChanges',
+			value: function onAmPmChanges(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var hr = this.state.hr;
+				var a = event.target.value;
+				var formattedHour = (0, _data.convertNormalToMilitary)(hr, a);
+
+				if (onChange) return onChange({ hour: formattedHour });
+			}
+		}, {
+			key: '_renderHours',
+			value: function _renderHours() {
+				var hr = this.state.hr;
+
+				return _data.hourOptions.map(function (h, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: h, key: h },
+						h
+					);
+				});
+			}
+		}, {
+			key: '_renderMinutes',
+			value: function _renderMinutes() {
+				var min = this.state.min;
+
+				return _data.minutesOptions.map(function (m, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: m, key: m },
+						m
+					);
+				});
+			}
+		}, {
+			key: '_renderAmPm',
+			value: function _renderAmPm() {
+				var a = this.state.a;
+
+				return _data.aOptions.map(function (am, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: am, key: am },
+						am
+					);
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _state = this.state;
+				var hr = _state.hr;
+				var min = _state.min;
+				var a = _state.a;
+				var HourElements = this._renderHours();
+				var MinuteElements = this._renderMinutes();
+				var AmPmElements = this._renderAmPm();
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'date-time-select' },
+					_react2.default.createElement(
+						'select',
+						{ value: hr,
+							onChange: function onChange(event) {
+								return _this2.onHourChanges(event);
+							}
+						},
+						HourElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ value: min,
+							onChange: function onChange(event) {
+								return _this2.onMinuteChanges(event);
+							}
+
+						},
+						MinuteElements
+					),
+					_react2.default.createElement(
+						'select',
+						{ defaultValue: a,
+							onChange: function onChange(event) {
+								return _this2.onAmPmChanges(event);
+							}
+						},
+						AmPmElements
+					)
+				);
+			}
+		}]);
+
+		return TimeSelect;
+	}(_react.Component);
+
+	TimeSelect.propTypes = {
+		onChange: _react.PropTypes.func,
+		hour: _react.PropTypes.number,
+		minute: _react.PropTypes.number
+	};
+
+	TimeSelect.defaultProps = {
+		hour: 1,
+		minute: 0
+	};
+
+	exports.default = TimeSelect;
+
+/***/ },
+/* 433 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(433);
+	var content = __webpack_require__(434);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(264)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 434 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(263)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".date-time-select {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: space-between;\n}\n.date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  cursor: pointer;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 435 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _data = __webpack_require__(294);
+
+	var _CropInput = __webpack_require__(436);
+
+	var _CropInput2 = _interopRequireDefault(_CropInput);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CropInput = function (_Component) {
+		_inherits(CropInput, _Component);
+
+		function CropInput(props) {
+			_classCallCheck(this, CropInput);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CropInput).call(this, props));
+
+			_this.state = {
+				index: null
+			};
+			return _this;
+		}
+
+		_createClass(CropInput, [{
+			key: 'changeHandler',
+			value: function changeHandler(event) {
+				event.preventDefault();
+				var onChange = this.props.onChange;
+				var index = event.target.value;
+				var crop = Object.assign({}, _data.crops[index]);
+
+				if (onChange instanceof Function) onChange(crop.value);
+				this.setState({ index: index });
+			}
+		}, {
+			key: '_renderOptions',
+			value: function _renderOptions() {
+				return _data.crops.map(function (crop, i) {
+					return _react2.default.createElement(
+						'option',
+						{ value: i, key: crop.display },
+						crop.display
+					);
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var index = this.state.index;
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'crop-input' },
+					_react2.default.createElement(
+						'select',
+						{ value: index,
+							onChange: function onChange(event) {
+								return _this2.changeHandler(event);
+							}
+						},
+						_react2.default.createElement(
+							'option',
+							{ disabled: true, selected: true, value: true },
+							'PICK A CROP'
+						),
+						this._renderOptions()
+					)
+				);
+			}
+		}]);
+
+		return CropInput;
+	}(_react.Component);
+
+	CropInput.propTypes = {
+		onChange: _react.PropTypes.func
+	};
+
+	exports.default = CropInput;
+
+/***/ },
+/* 436 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(437);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(264)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./CropInput.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./CropInput.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 437 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(263)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".crop-input select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  padding: 5px;\n  cursor: pointer;\n  min-width: 198px;\n  text-align: center;\n}\n.crop-input select:focus {\n  outline: none;\n}\n.crop-input select option:first-child {\n  color: grey;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 438 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(439);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(264)(content, {});
@@ -48328,7 +48716,7 @@
 	}
 
 /***/ },
-/* 433 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(263)();
@@ -48336,13 +48724,13 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 15px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 15px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media only screen and (max-device-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: auto;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 15px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 15px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-left: 5px;\n  margin-right: 5px;\n  padding-top: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: auto;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 434 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48367,7 +48755,7 @@
 
 	var _menu = __webpack_require__(409);
 
-	var _EddiStateButton = __webpack_require__(435);
+	var _EddiStateButton = __webpack_require__(441);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
@@ -48375,7 +48763,7 @@
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
-	var _TroubleshootImage = __webpack_require__(438);
+	var _TroubleshootImage = __webpack_require__(444);
 
 	var _TroubleshootImage2 = _interopRequireDefault(_TroubleshootImage);
 
@@ -48385,7 +48773,7 @@
 
 	var _data = __webpack_require__(294);
 
-	var _Troubleshoot = __webpack_require__(439);
+	var _Troubleshoot = __webpack_require__(445);
 
 	var _Troubleshoot2 = _interopRequireDefault(_Troubleshoot);
 
@@ -48580,7 +48968,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
 
 /***/ },
-/* 435 */
+/* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48595,7 +48983,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _EddiStateButton = __webpack_require__(436);
+	var _EddiStateButton = __webpack_require__(442);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
@@ -48677,13 +49065,13 @@
 	exports.default = EddiStateButton;
 
 /***/ },
-/* 436 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(437);
+	var content = __webpack_require__(443);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(264)(content, {});
@@ -48703,7 +49091,7 @@
 	}
 
 /***/ },
-/* 437 */
+/* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(263)();
@@ -48717,7 +49105,7 @@
 
 
 /***/ },
-/* 438 */
+/* 444 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48736,7 +49124,7 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _EddiStateButton = __webpack_require__(435);
+	var _EddiStateButton = __webpack_require__(441);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
@@ -48830,13 +49218,13 @@
 	exports.default = TroubleshootImage;
 
 /***/ },
-/* 439 */
+/* 445 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(440);
+	var content = __webpack_require__(446);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(264)(content, {});
@@ -48856,7 +49244,7 @@
 	}
 
 /***/ },
-/* 440 */
+/* 446 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(263)();
@@ -48864,13 +49252,13 @@
 
 
 	// module
-	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .sprite > span {\n    top: 35%;\n  }\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #2abfd0;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  border-bottom: 3px solid #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 400px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image .sprite {\n  position: absolute;\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-0 {\n  bottom: 80px;\n  left: 40%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-0 {\n    left: 20%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-1 {\n  bottom: 55px;\n  right: 45%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-1 {\n    right: 28%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-2 {\n  top: 70px;\n  right: 30%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-2 {\n    right: 5%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-3 {\n  top: 180px;\n  right: 30%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-3 {\n    right: 5%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions {\n  position: absolute;\n  border-right: 2px solid;\n  border-bottom: 2px solid;\n  border-color: #ab3524;\n  width: 80px;\n  height: 35px;\n}\n#troubleshoot .content .troubleshoot-image .extensions.state-2 {\n  top: 120px;\n  right: 40%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .extensions.state-2 {\n    right: 14%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions.state-3 {\n  top: 230px;\n  right: 40%;\n}\n@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .extensions.state-3 {\n    right: 14%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions.blue {\n  border-color: #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image .image-footer {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  padding: 10px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n  margin-top: 10px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: black;\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .sprite > span {\n    top: 35%;\n  }\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: #2abfd0;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  border-bottom: 3px solid #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 400px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image .sprite {\n  position: absolute;\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-0 {\n  bottom: 80px;\n  left: 40%;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-0 {\n    left: 20%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-1 {\n  bottom: 55px;\n  right: 45%;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-1 {\n    right: 28%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-2 {\n  top: 70px;\n  right: 30%;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-2 {\n    right: 5%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .sprite.state-3 {\n  top: 180px;\n  right: 30%;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .sprite.state-3 {\n    right: 5%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions {\n  position: absolute;\n  border-right: 2px solid;\n  border-bottom: 2px solid;\n  border-color: #ab3524;\n  width: 80px;\n  height: 35px;\n}\n#troubleshoot .content .troubleshoot-image .extensions.state-2 {\n  top: 120px;\n  right: 40%;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .extensions.state-2 {\n    right: 14%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions.state-3 {\n  top: 230px;\n  right: 40%;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .troubleshoot-image .extensions.state-3 {\n    right: 14%;\n  }\n}\n#troubleshoot .content .troubleshoot-image .extensions.blue {\n  border-color: #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image .image-footer {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  padding: 10px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n  margin-top: 10px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: black;\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 441 */
+/* 447 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48897,13 +49285,13 @@
 
 	var _data = __webpack_require__(294);
 
-	var _downloadTrigger = __webpack_require__(442);
+	var _downloadTrigger = __webpack_require__(448);
 
-	var _DateSelect = __webpack_require__(446);
+	var _DateSelect = __webpack_require__(452);
 
 	var _DateSelect2 = _interopRequireDefault(_DateSelect);
 
-	var _Report = __webpack_require__(449);
+	var _Report = __webpack_require__(453);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -49211,7 +49599,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 442 */
+/* 448 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49222,7 +49610,7 @@
 	exports.triggerDownload = triggerDownload;
 	exports.triggerPdf = triggerPdf;
 
-	var _filesaverjs = __webpack_require__(443);
+	var _filesaverjs = __webpack_require__(449);
 
 	var _constants = __webpack_require__(248);
 
@@ -49252,7 +49640,7 @@
 	}
 
 /***/ },
-/* 443 */
+/* 449 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
@@ -49520,7 +49908,7 @@
 
 	if (typeof module !== "undefined" && module.exports) {
 	  module.exports.saveAs = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(444) !== null) && (__webpack_require__(445) != null)) {
+	} else if (("function" !== "undefined" && __webpack_require__(450) !== null) && (__webpack_require__(451) != null)) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
 	    return saveAs;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -49528,14 +49916,14 @@
 
 
 /***/ },
-/* 444 */
+/* 450 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 445 */
+/* 451 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -49543,7 +49931,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 446 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49560,7 +49948,7 @@
 
 	var _data = __webpack_require__(294);
 
-	var _DateTimeSelect = __webpack_require__(447);
+	var _DateTimeSelect = __webpack_require__(433);
 
 	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
 
@@ -49716,53 +50104,13 @@
 	exports.default = DateSelect;
 
 /***/ },
-/* 447 */
+/* 453 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(448);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(264)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./DateTimeSelect.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 448 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(263)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".date-time-select {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: space-between;\n}\n.date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  cursor: pointer;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 449 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(450);
+	var content = __webpack_require__(454);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(264)(content, {});
@@ -49782,354 +50130,6 @@
 	}
 
 /***/ },
-/* 450 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(263)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 20px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 451 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _moment = __webpack_require__(295);
-
-	var _moment2 = _interopRequireDefault(_moment);
-
-	var _data = __webpack_require__(294);
-
-	var _DateTimeSelect = __webpack_require__(447);
-
-	var _DateTimeSelect2 = _interopRequireDefault(_DateTimeSelect);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var TimeSelect = function (_Component) {
-		_inherits(TimeSelect, _Component);
-
-		function TimeSelect(props) {
-			_classCallCheck(this, TimeSelect);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSelect).call(this, props));
-
-			var _this$props = _this.props;
-			var hour = _this$props.hour;
-			var minute = _this$props.minute;
-			var hourAndAm = (0, _data.convertMilitaryToNormal)(hour);
-			var hr = parseInt(hourAndAm[0]);
-			var min = (0, _data.convertMinutesToString)(minute);
-			var a = hourAndAm[1];
-
-			_this.state = {
-				hr: hr,
-				min: min,
-				a: a
-			};
-			return _this;
-		}
-
-		_createClass(TimeSelect, [{
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps, oldProps) {
-				var hour = nextProps.hour;
-				var minute = nextProps.minute;
-				var hourAndAm = (0, _data.convertMilitaryToNormal)(hour);
-				var hr = parseInt(hourAndAm[0]);
-				var min = (0, _data.convertMinutesToString)(minute);
-				var a = hourAndAm[1];
-
-				this.setState({ hr: hr, min: min, a: a });
-			}
-		}, {
-			key: 'onHourChanges',
-			value: function onHourChanges(event) {
-				event.preventDefault();
-
-				var onChange = this.props.onChange;
-				var a = this.state.a;
-				var hour = event.target.value;
-				var formattedHour = (0, _data.convertNormalToMilitary)(hour, a);
-				if (onChange) return onChange({ hour: formattedHour });
-			}
-		}, {
-			key: 'onMinuteChanges',
-			value: function onMinuteChanges(event) {
-				event.preventDefault();
-				var onChange = this.props.onChange;
-				var minute = event.target.value;
-				var formattedMinute = (0, _data.convertStringToMinutes)(minute);
-
-				if (onChange) return onChange({ minute: formattedMinute });
-			}
-		}, {
-			key: 'onAmPmChanges',
-			value: function onAmPmChanges(event) {
-				event.preventDefault();
-				var onChange = this.props.onChange;
-				var hr = this.state.hr;
-				var a = event.target.value;
-				var formattedHour = (0, _data.convertNormalToMilitary)(hr, a);
-
-				if (onChange) return onChange({ hour: formattedHour });
-			}
-		}, {
-			key: '_renderHours',
-			value: function _renderHours() {
-				var hr = this.state.hr;
-
-				return _data.hourOptions.map(function (h, i) {
-					return _react2.default.createElement(
-						'option',
-						{ value: h, key: h },
-						h
-					);
-				});
-			}
-		}, {
-			key: '_renderMinutes',
-			value: function _renderMinutes() {
-				var min = this.state.min;
-
-				return _data.minutesOptions.map(function (m, i) {
-					return _react2.default.createElement(
-						'option',
-						{ value: m, key: m },
-						m
-					);
-				});
-			}
-		}, {
-			key: '_renderAmPm',
-			value: function _renderAmPm() {
-				var a = this.state.a;
-
-				return _data.aOptions.map(function (am, i) {
-					return _react2.default.createElement(
-						'option',
-						{ value: am, key: am },
-						am
-					);
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var _state = this.state;
-				var hr = _state.hr;
-				var min = _state.min;
-				var a = _state.a;
-				var HourElements = this._renderHours();
-				var MinuteElements = this._renderMinutes();
-				var AmPmElements = this._renderAmPm();
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'date-time-select' },
-					_react2.default.createElement(
-						'select',
-						{ value: hr,
-							onChange: function onChange(event) {
-								return _this2.onHourChanges(event);
-							}
-						},
-						HourElements
-					),
-					_react2.default.createElement(
-						'select',
-						{ value: min,
-							onChange: function onChange(event) {
-								return _this2.onMinuteChanges(event);
-							}
-
-						},
-						MinuteElements
-					),
-					_react2.default.createElement(
-						'select',
-						{ defaultValue: a,
-							onChange: function onChange(event) {
-								return _this2.onAmPmChanges(event);
-							}
-						},
-						AmPmElements
-					)
-				);
-			}
-		}]);
-
-		return TimeSelect;
-	}(_react.Component);
-
-	TimeSelect.propTypes = {
-		onChange: _react.PropTypes.func,
-		hour: _react.PropTypes.number,
-		minute: _react.PropTypes.number
-	};
-
-	TimeSelect.defaultProps = {
-		hour: 1,
-		minute: 0
-	};
-
-	exports.default = TimeSelect;
-
-/***/ },
-/* 452 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _data = __webpack_require__(294);
-
-	var _CropInput = __webpack_require__(453);
-
-	var _CropInput2 = _interopRequireDefault(_CropInput);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var CropInput = function (_Component) {
-		_inherits(CropInput, _Component);
-
-		function CropInput(props) {
-			_classCallCheck(this, CropInput);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CropInput).call(this, props));
-
-			_this.state = {
-				index: null
-			};
-			return _this;
-		}
-
-		_createClass(CropInput, [{
-			key: 'changeHandler',
-			value: function changeHandler(event) {
-				event.preventDefault();
-				var onChange = this.props.onChange;
-				var index = event.target.value;
-				var crop = Object.assign({}, _data.crops[index]);
-
-				if (onChange instanceof Function) onChange(crop.value);
-				this.setState({ index: index });
-			}
-		}, {
-			key: '_renderOptions',
-			value: function _renderOptions() {
-				return _data.crops.map(function (crop, i) {
-					return _react2.default.createElement(
-						'option',
-						{ value: i, key: crop.display },
-						crop.display
-					);
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var index = this.state.index;
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'crop-input' },
-					_react2.default.createElement(
-						'select',
-						{ value: index,
-							onChange: function onChange(event) {
-								return _this2.changeHandler(event);
-							}
-						},
-						_react2.default.createElement(
-							'option',
-							{ disabled: true, selected: true, value: true },
-							'PICK A CROP'
-						),
-						this._renderOptions()
-					)
-				);
-			}
-		}]);
-
-		return CropInput;
-	}(_react.Component);
-
-	CropInput.propTypes = {
-		onChange: _react.PropTypes.func
-	};
-
-	exports.default = CropInput;
-
-/***/ },
-/* 453 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(454);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(264)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./CropInput.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./CropInput.less");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
 /* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -50138,7 +50138,7 @@
 
 
 	// module
-	exports.push([module.id, ".crop-input select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  padding: 5px;\n  cursor: pointer;\n  min-width: 150px;\n  text-align: center;\n}\n.crop-input select:focus {\n  outline: none;\n}\n.crop-input select option:first-child {\n  color: grey;\n}\n", ""]);
+	exports.push([module.id, "#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 20px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
 
 	// exports
 
