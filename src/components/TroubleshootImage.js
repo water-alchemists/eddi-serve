@@ -37,9 +37,13 @@ class TroubleshootImage extends Component {
 	render(){
 		const { current } = this.props;
 		return (
-			<div className='troubleshoot-image'>
-				{ this._renderSprites() }
-				{ this._renderBoxes() }
+			<div className='troubleshoot-image-header'>
+				<div className='troubleshoot-image-container'>
+					<div className='troubleshoot-image'>
+						{ this._renderSprites() }
+						{ this._renderBoxes() }
+					</div>
+				</div>
 				<div className='image-footer'>
 					<EddiStateButton value={!!current}
 						onClick={value => this.clickHandler(value)}
