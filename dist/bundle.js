@@ -47621,7 +47621,7 @@
 
 
 	// module
-	exports.push([module.id, "#list {\n  min-height: 75vh;\n  margin-bottom: 25px;\n}\n#list .eddis-empty {\n  margin: 40px;\n  text-align: center;\n}\n#list .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  right: 0;\n}\n#list .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#list {\n  min-height: 75vh;\n  margin-bottom: 25px;\n}\n#list .eddis-empty {\n  margin: 40px;\n  text-align: center;\n}\n#list .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  right: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding-bottom: 10px;\n}\n#list .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
