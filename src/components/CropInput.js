@@ -22,7 +22,6 @@ class CropInput extends Component {
 	componentWillReceiveProps(nextProps){
 		// if the value was changed somewhere else, reset this
 		const { value } = this.state;
-		console.log('value', value, 'next', nextProps.value);
 		if(value && nextProps.value !== value) this.setState({ ... initialState });
 	}
 
@@ -34,7 +33,6 @@ class CropInput extends Component {
 			newState = Object.assign({ index }, crop);
 
 		if(onChange instanceof Function) onChange(crop.value);
-		console.log('newState', newState);
 		this.setState(newState);
 	}
 

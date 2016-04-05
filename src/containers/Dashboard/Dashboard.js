@@ -12,6 +12,7 @@ import { mapDateToReadings } from '../../data';
 import DashboardMenu from '../../components/DashboardMenu';
 import DashboardSalinity from '../../components/DashboardSalinity';
 import DashboardFlow from '../../components/DashboardFlow';
+import DashboardPower from '../../components/DashboardPower';
 
 import style from './Dashboard.less';
 
@@ -143,6 +144,12 @@ class Dashboard extends Component {
 		);
 	}
 
+	_renderPower(){
+		return (
+			<DashboardPower />
+		);
+	}
+
 	_renderViewBasedQuery(view){
 		const { eddi={} } = this.props,
 			{ current } = this.state;
@@ -154,6 +161,9 @@ class Dashboard extends Component {
 				break;
 			case QUERY.FLOW:
 				return this._renderFlow(current.qOut);
+				break;
+			case QUERY.POWER : 
+				return this._renderPower();
 				break;
 			default:
 				return this._renderSalinity(current.ppmOut, 'output');
