@@ -37,7 +37,8 @@ class SettingsEddiForm extends Component {
 				<div className='salinity-row'>
 					<h4>SALINITY OUTPUT</h4>
 					<div className='select-container'>
-						<CropInput onChange={ salinity => onSalinityChange(salinity) } 
+						<CropInput value={salinityValue}
+							onChange={ salinity => onSalinityChange(salinity) } 
 						/>
 						<p>OR</p>
 						<SalinityInput value={salinityValue}

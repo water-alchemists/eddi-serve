@@ -5,22 +5,37 @@ import { crops } from '../data';
 
 import style from '../less/CropInput.less';
 
+const initialState = {
+	index : null,
+	display : null,
+	value : null
+}
+
 class CropInput extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			index : null
+			...initialState
 		};
+	}
+
+	componentWillReceiveProps(nextProps){
+		// if the value was changed somewhere else, reset this
+		const { value } = this.state;
+		console.log('value', value, 'next', nextProps.value);
+		if(value && nextProps.value !== value) this.setState({ ... initialState });
 	}
 
 	changeHandler(event){
 		event.preventDefault();
 		const { onChange } = this.props,
 			index = event.target.value,
-			crop = Object.assign({}, crops[index]);
+			crop = Object.assign({}, crops[index]),
+			newState = Object.assign({ index }, crop);
 
 		if(onChange instanceof Function) onChange(crop.value);
-		this.setState({ index });
+		console.log('newState', newState);
+		this.setState(newState);
 	}
 
 	_renderOptions(){
@@ -34,13 +49,18 @@ class CropInput extends Component {
 	}
 
 	render(){
-		const { index } = this.state;
+		const { index } = this.state,
+			defaultOptionProps = {
+				disabled : true,
+				selected : !index,
+				value : null
+			};
 		return (
 			<div className='crop-input'>
 				<select value={index} 
 					onChange={event => this.changeHandler(event)}
 				>
-					<option disabled selected value>PICK A CROP</option>
+					<option {...defaultOptionProps} >PICK A CROP</option>
 					{ this._renderOptions() }
 				</select>
 			</div>
@@ -49,7 +69,8 @@ class CropInput extends Component {
 }
 
 CropInput.propTypes = {
-	onChange : PropTypes.func
+	onChange : PropTypes.func,
+	value : PropTypes.number
 };
 
 export default CropInput;

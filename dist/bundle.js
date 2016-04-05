@@ -48249,7 +48249,8 @@
 						_react2.default.createElement(
 							'div',
 							{ className: 'select-container' },
-							_react2.default.createElement(_CropInput2.default, { onChange: function onChange(salinity) {
+							_react2.default.createElement(_CropInput2.default, { value: salinityValue,
+								onChange: function onChange(salinity) {
 									return _onSalinityChange(salinity);
 								}
 							}),
@@ -48556,6 +48557,8 @@
 		value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(5);
@@ -48576,6 +48579,12 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var initialState = {
+		index: null,
+		display: null,
+		value: null
+	};
+
 	var CropInput = function (_Component) {
 		_inherits(CropInput, _Component);
 
@@ -48584,22 +48593,31 @@
 
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CropInput).call(this, props));
 
-			_this.state = {
-				index: null
-			};
+			_this.state = _extends({}, initialState);
 			return _this;
 		}
 
 		_createClass(CropInput, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				// if the value was changed somewhere else, reset this
+				var value = this.state.value;
+
+				console.log('value', value, 'next', nextProps.value);
+				if (value && nextProps.value !== value) this.setState(_extends({}, initialState));
+			}
+		}, {
 			key: 'changeHandler',
 			value: function changeHandler(event) {
 				event.preventDefault();
 				var onChange = this.props.onChange;
 				var index = event.target.value;
 				var crop = Object.assign({}, _data.crops[index]);
+				var newState = Object.assign({ index: index }, crop);
 
 				if (onChange instanceof Function) onChange(crop.value);
-				this.setState({ index: index });
+				console.log('newState', newState);
+				this.setState(newState);
 			}
 		}, {
 			key: '_renderOptions',
@@ -48618,7 +48636,11 @@
 				var _this2 = this;
 
 				var index = this.state.index;
-
+				var defaultOptionProps = {
+					disabled: true,
+					selected: !index,
+					value: null
+				};
 				return _react2.default.createElement(
 					'div',
 					{ className: 'crop-input' },
@@ -48631,7 +48653,7 @@
 						},
 						_react2.default.createElement(
 							'option',
-							{ disabled: true, selected: true, value: true },
+							defaultOptionProps,
 							'PICK A CROP'
 						),
 						this._renderOptions()
@@ -48644,7 +48666,8 @@
 	}(_react.Component);
 
 	CropInput.propTypes = {
-		onChange: _react.PropTypes.func
+		onChange: _react.PropTypes.func,
+		value: _react.PropTypes.number
 	};
 
 	exports.default = CropInput;
@@ -48724,7 +48747,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 30px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 50px;\n  padding-bottom: 50px;\n  max-width: 200px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin: 10px;\n  padding: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 100px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 30px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 50px;\n  padding-bottom: 50px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 100px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
