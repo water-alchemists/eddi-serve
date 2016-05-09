@@ -4,7 +4,8 @@
   "description": "frontend for eddi management",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,11 +18,14 @@
   },
   "homepage": "https://github.com/water-alchemists/water-alchemists.github.io#readme",
   "dependencies": {
+    "body-parser": "^1.15.1",
     "classnames": "^2.2.3",
+    "express": "^4.13.4",
     "filesaverjs": "^0.2.1",
     "firebase": "^2.4.1",
     "jspdf-autotable": "^2.0.24",
     "moment": "^2.12.0",
+    "morgan": "^1.7.0",
     "pdfmake": "^0.1.18",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
@@ -30,6 +34,8 @@
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",
     "redux": "^3.3.1",
+    "serve-favicon": "^2.3.0",
+    "superagent": "^1.8.3",
     "webpack-dev-server": "^1.14.1"
   },
   "devDependencies": {
