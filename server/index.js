@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 });
 
 // returns the index html
-app.get('/*', (req, res, next) => {
+app.get('*', (req, res, next) => {
     res.sendFile(path.resolve(__dirname, './views/index.html'));
 });
 
