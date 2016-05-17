@@ -74,6 +74,17 @@ class EddiFire {
 	unauthenticate(){
 		return this.refs.BASE.unauth();
 	}
+	
+	resetPassword(email){
+		return new Promise((resolve, reject) => {
+			this.refs.BASE.resetPassword(
+				{ email },
+				err => {
+					if(err) return reject(err);
+					resolve();
+				});
+		});
+	}
 
 	getUserProfile(id){
 		return new Promise((resolve, reject) => {
