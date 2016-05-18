@@ -15,6 +15,8 @@ import {
 	USER_CREATE_ERROR
 } from '../constants';
 
+import { formUpdate } from './form';
+
 const EddiFire = EddiFireStarter(),
 	EddiCookie = CookieStoreMaker();
 
@@ -137,5 +139,30 @@ export function userLogout(){
 		//let store know of logout
 		dispatch(userLogoutSuccess());
 		browserHistory.replace(PATHS.HOME);
+	}
+}
+
+export function userResetPasswordThunk(email){
+	return dispatch => {
+		return EddiFire.resetPassword(email)
+			.then(() => dispatch(formUpdate({submitted : true, success : true, message : 'Email to reset your password has been sent.'})))
+			.catch(error => {
+				const generic = {
+					submitted : true,
+					success: false	
+				};
+				let update;
+				switch(error.code){
+				case 'INVALID_USER':
+					update = Object.assign({}, generic, { message : 'Email is not found in the system.'});
+					break;
+				default :
+					update = Object.assign({}, generic, { message : 'There was an error processing your request.'});
+					break;
+				}
+				// update the form reducer
+				dispatch(formUpdate(update));
+			})
+			
 	}
 }

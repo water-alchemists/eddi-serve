@@ -27293,7 +27293,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.selected = exports.menu = exports.modal = exports.eddis = exports.user = undefined;
+	exports.form = exports.selected = exports.menu = exports.modal = exports.eddis = exports.user = undefined;
 
 	var _user2 = __webpack_require__(256);
 
@@ -27315,6 +27315,10 @@
 
 	var _selected3 = _interopRequireDefault(_selected2);
 
+	var _form2 = __webpack_require__(469);
+
+	var _form3 = _interopRequireDefault(_form2);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.user = _user3.default;
@@ -27322,6 +27326,7 @@
 	exports.modal = _modal3.default;
 	exports.menu = _menu3.default;
 	exports.selected = _selected3.default;
+	exports.form = _form3.default;
 
 /***/ },
 /* 256 */
@@ -27418,6 +27423,10 @@
 	//Modal Related
 	var MODAL_ON = exports.MODAL_ON = 'MODAL_ON';
 	var MODAL_OFF = exports.MODAL_OFF = 'MODAL_OFF';
+
+	//Forms Related
+	var FORM_UPDATE = exports.FORM_UPDATE = 'FORM_UPDATE';
+	var FORM_CLEAR = exports.FORM_CLEAR = 'FORM_CLEAR';
 
 	// Style Related
 	var BACKGROUND_COLOR = exports.BACKGROUND_COLOR = "rgba(13,14,31,1)";
@@ -27624,7 +27633,6 @@
 
 		switch (type) {
 			case _constants.MENU_NAME_CHANGE:
-				console.log('this is the name', name, 'state', state.name);
 				if (name === state.name) return state;
 				return _extends({}, state, {
 					name: name
@@ -31250,10 +31258,14 @@
 				var _this4 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this4.refs.BASE.resetPassword({ email: email }, function (err) {
-						if (err) return reject(err);
-						resolve();
-					});
+					try {
+						_this4.refs.BASE.resetPassword({ email: email }, function (err) {
+							if (err) return reject(err);
+							resolve();
+						});
+					} catch (e) {
+						console.log(e);
+					}
 				});
 			}
 		}, {
@@ -46301,6 +46313,7 @@
 	exports.userLoginWithPasswordThunk = userLoginWithPasswordThunk;
 	exports.userLoginWithTokenThunk = userLoginWithTokenThunk;
 	exports.userLogout = userLogout;
+	exports.userResetPasswordThunk = userResetPasswordThunk;
 
 	var _eddiFirebase = __webpack_require__(299);
 
@@ -46313,6 +46326,8 @@
 	var _reactRouter = __webpack_require__(189);
 
 	var _constants = __webpack_require__(257);
+
+	var _form = __webpack_require__(470);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46440,6 +46455,30 @@
 			//let store know of logout
 			dispatch(userLogoutSuccess());
 			_reactRouter.browserHistory.replace(_constants.PATHS.HOME);
+		};
+	}
+
+	function userResetPasswordThunk(email) {
+		return function (dispatch) {
+			return EddiFire.resetPassword(email).then(function () {
+				return dispatch((0, _form.formUpdate)({ submitted: true, success: true, message: 'Email to reset your password has been sent.' }));
+			}).catch(function (error) {
+				var generic = {
+					submitted: true,
+					success: false
+				};
+				var update = void 0;
+				switch (error.code) {
+					case 'INVALID_USER':
+						update = Object.assign({}, generic, { message: 'Email is not found in the system.' });
+						break;
+					default:
+						update = Object.assign({}, generic, { message: 'There was an error processing your request.' });
+						break;
+				}
+				// update the form reducer
+				dispatch((0, _form.formUpdate)(update));
+			});
 		};
 	}
 
@@ -46671,9 +46710,15 @@
 
 	var _SignupForm2 = _interopRequireDefault(_SignupForm);
 
+	var _ResetPasswordForm = __webpack_require__(468);
+
+	var _ResetPasswordForm2 = _interopRequireDefault(_ResetPasswordForm);
+
 	var _eddis = __webpack_require__(298);
 
 	var _user = __webpack_require__(409);
+
+	var _form = __webpack_require__(470);
 
 	var _Home = __webpack_require__(418);
 
@@ -46690,18 +46735,21 @@
 	var Modes = {
 		BASE: 0,
 		LOGIN: 1,
-		SIGNUP: 2
+		SIGNUP: 2,
+		RESET: 3
 	};
 
 	var ROUTES = {
 		LOGIN: { pathname: _constants.PATHS.HOME, query: { view: 'login' } },
-		SIGNUP: { pathname: _constants.PATHS.HOME, query: { view: 'signup' } }
+		SIGNUP: { pathname: _constants.PATHS.HOME, query: { view: 'signup' } },
+		RESET: { pathname: _constants.PATHS.HOME, query: { view: 'reset' } }
 	};
 
 	function mapStateToProps(state) {
 		return {
 			user: state.user,
-			eddis: state.eddis.list
+			eddis: state.eddis.list,
+			form: state.form
 		};
 	}
 
@@ -46717,6 +46765,12 @@
 			},
 			signup: function signup(user) {
 				return dispatch((0, _user.userCreateThunk)(user));
+			},
+			reset: function reset(result) {
+				return dispatch((0, _user.userResetPasswordThunk)(result.email));
+			},
+			formClear: function formClear() {
+				return dispatch(_form.formClear);
 			}
 		};
 	}
@@ -46733,7 +46787,7 @@
 
 
 			var mode = void 0;
-			if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
+			if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else if (router.isActive(ROUTES.RESET)) mode = Modes.RESET;else mode = Modes.BASE;
 
 			_this.state = {
 				mode: mode
@@ -46753,7 +46807,7 @@
 				var router = this.context.router;
 
 				var mode = void 0;
-				if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else mode = Modes.BASE;
+				if (router.isActive(ROUTES.LOGIN)) mode = Modes.LOGIN;else if (router.isActive(ROUTES.SIGNUP)) mode = Modes.SIGNUP;else if (router.isActive(ROUTES.RESET)) mode = Modes.RESET;else mode = Modes.BASE;
 				this.setState({ mode: mode });
 			}
 		}, {
@@ -46781,6 +46835,14 @@
 						}
 					},
 					'Sign Up ›'
+				), _react2.default.createElement(
+					'div',
+					{ className: 'auth-button',
+						onClick: function onClick() {
+							return _reactRouter.browserHistory.push(ROUTES.RESET);
+						}
+					},
+					'Reset Password ›'
 				)];
 			}
 		}, {
@@ -46792,6 +46854,25 @@
 			key: '_renderSignup',
 			value: function _renderSignup() {
 				return _react2.default.createElement(_SignupForm2.default, { onSubmit: this.props.signup });
+			}
+		}, {
+			key: '_renderReset',
+			value: function _renderReset() {
+				var _props = this.props;
+				var reset = _props.reset;
+				var formClear = _props.formClear;
+				var form = _props.form;
+				var submitted = form.submitted;
+				var success = form.success;
+				var message = form.message;
+
+				return _react2.default.createElement(_ResetPasswordForm2.default, {
+					submitted: submitted,
+					success: success,
+					message: message,
+					onSubmit: this.props.reset,
+					componentWillUnmount: this.props.formClear
+				});
 			}
 		}, {
 			key: 'render',
@@ -46806,6 +46887,9 @@
 						break;
 					case Modes.SIGNUP:
 						modeContent = this._renderSignup();
+						break;
+					case Modes.RESET:
+						modeContent = this._renderReset();
 						break;
 					default:
 						return null;
@@ -51674,6 +51758,192 @@
 
 	// exports
 
+
+/***/ },
+/* 468 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropTypes = _react2.default.PropTypes;
+
+	var ResetPasswordForm = function (_Component) {
+		_inherits(ResetPasswordForm, _Component);
+
+		function ResetPasswordForm(props) {
+			_classCallCheck(this, ResetPasswordForm);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ResetPasswordForm).call(this, props));
+
+			_this.state = {
+				email: ''
+			};
+			return _this;
+		}
+
+		_createClass(ResetPasswordForm, [{
+			key: 'componentWillUnmount',
+			value: function componentWillUnmount() {
+				var componentWillUnmount = this.props.componentWillUnmount;
+
+				if (componentWillUnmount instanceof Function) componentWillUnmount();
+			}
+		}, {
+			key: 'onEmailChange',
+			value: function onEmailChange(event) {
+				var email = event.target.value;
+				event.preventDefault();
+				this.setState({ email: email });
+			}
+		}, {
+			key: 'submitHandler',
+			value: function submitHandler(event) {
+				var onSubmit = this.props.onSubmit;
+				var user = this.state;
+
+				event.preventDefault();
+				if (onSubmit) onSubmit(user);
+			}
+		}, {
+			key: '_renderMessage',
+			value: function _renderMessage() {
+				var _props = this.props;
+				var submitted = _props.submitted;
+				var success = _props.success;
+				var message = _props.message;
+
+				if (!submitted) return null;
+				return _react2.default.createElement(
+					'div',
+					{ className: 'message' },
+					message
+				);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var _state = this.state;
+				var email = _state.email;
+				var password = _state.password;
+
+				return _react2.default.createElement(
+					'form',
+					{ onSubmit: function onSubmit(event) {
+							return _this2.submitHandler(event);
+						} },
+					this._renderMessage(),
+					_react2.default.createElement('input', { onChange: function onChange(event) {
+							return _this2.onEmailChange(event);
+						},
+						type: 'email',
+						name: 'email',
+						value: email,
+						placeholder: 'email'
+					}),
+					_react2.default.createElement(
+						'button',
+						{ type: 'submit' },
+						'Reset Password > '
+					)
+				);
+			}
+		}]);
+
+		return ResetPasswordForm;
+	}(_react.Component);
+
+	ResetPasswordForm.propTypes = {
+		onSubmit: PropTypes.func,
+		componentWillUnmount: PropTypes.func,
+		message: PropTypes.string,
+		success: PropTypes.bool,
+		submitted: PropTypes.bool
+	};
+
+	exports.default = ResetPasswordForm;
+
+/***/ },
+/* 469 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.default = function () {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	    var type = action.type;
+	    var update = action.update;
+
+	    switch (type) {
+	        case _constants.FORM_UPDATE:
+	            return _extends({}, state, update);
+	        case _constants.FORM_CLEAR:
+	            return _extends({}, initialState);
+	        default:
+	            return state;
+	    }
+	};
+
+	var _constants = __webpack_require__(257);
+
+	var initialState = {
+	    submitted: false,
+	    success: undefined,
+	    message: undefined
+	};
+
+/***/ },
+/* 470 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.formClear = formClear;
+	exports.formUpdate = formUpdate;
+
+	var _constants = __webpack_require__(257);
+
+	function formClear() {
+	    return {
+	        type: _constants.FORM_CLEAR
+	    };
+	}
+
+	function formUpdate(update) {
+	    return {
+	        type: _constants.FORM_UPDATE,
+	        update: update
+	    };
+	}
 
 /***/ }
 /******/ ]);

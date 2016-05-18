@@ -28,7 +28,7 @@ function getByCoords(latitude, longitude){
     .then(res => res.data);
 }
 
-module.exports = {
+export default {
     getByZip,
     getByCoords
 };

@@ -77,12 +77,18 @@ class EddiFire {
 	
 	resetPassword(email){
 		return new Promise((resolve, reject) => {
-			this.refs.BASE.resetPassword(
-				{ email },
-				err => {
-					if(err) return reject(err);
-					resolve();
-				});
+			try {
+				this.refs.BASE.resetPassword(
+					{ email : email },
+					err => {
+						if(err) return reject(err);
+						resolve();
+					}
+				);
+			}
+			catch(e){
+				console.log(e);
+			}
 		});
 	}
 

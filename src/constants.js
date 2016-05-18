@@ -51,6 +51,10 @@ export const MENU_NAME_CHANGE = 'MENU_NAME_CHANGE';
 export const MODAL_ON = 'MODAL_ON';
 export const MODAL_OFF = 'MODAL_OFF';
 
+//Forms Related
+export const FORM_UPDATE = 'FORM_UPDATE';
+export const FORM_CLEAR = 'FORM_CLEAR';
+
 // Style Related
 export const BACKGROUND_COLOR = "rgba(13,14,31,1)";
 export const TRIM_COLOR = "rgba(0,109,96,1)";
@@ -65,3 +69,5 @@ export const HISTORICAL = {
 	MONTH : 'month',
 	WEEK : 'week'
 }
+
+
