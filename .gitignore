@@ -5,3 +5,5 @@ dist/bundle.js
 dist/bundle.js
 *.DS_Store
 browse.VC.db
+
+*.log
