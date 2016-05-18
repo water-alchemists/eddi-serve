@@ -16,7 +16,7 @@ Object.keys(config).forEach(key => app.set(key, config[key]));
 app.set('root', path.resolve(__dirname, '../'));
 
 middleware(app);
-api(app);
+app.use('/api', api(app));
 
 // properly sends 404 for any request for files with extensions
 app.use((req, res, next) => {

@@ -31245,12 +31245,24 @@
 				return this.refs.BASE.unauth();
 			}
 		}, {
-			key: 'getUserProfile',
-			value: function getUserProfile(id) {
+			key: 'resetPassword',
+			value: function resetPassword(email) {
 				var _this4 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this4.refs.USER.child(id).once('value', function (snapshot) {
+					_this4.refs.BASE.resetPassword({ email: email }, function (err) {
+						if (err) return reject(err);
+						resolve();
+					});
+				});
+			}
+		}, {
+			key: 'getUserProfile',
+			value: function getUserProfile(id) {
+				var _this5 = this;
+
+				return new Promise(function (resolve, reject) {
+					_this5.refs.USER.child(id).once('value', function (snapshot) {
 						var user = snapshot.val();
 						if (!user) return reject(new Error('Profile does not exist for this user.'));
 						resolve(user);
@@ -31260,12 +31272,12 @@
 		}, {
 			key: 'createUser',
 			value: function createUser(email, password) {
-				var _this5 = this;
+				var _this6 = this;
 
 				var submission = { email: email, password: password };
 				console.log('this is the submission', submission);
 				return new Promise(function (resolve, reject) {
-					_this5.refs.BASE.createUser(submission, function (error, user) {
+					_this6.refs.BASE.createUser(submission, function (error, user) {
 						if (error) return reject(error);
 						resolve(user);
 					});
@@ -31274,10 +31286,10 @@
 		}, {
 			key: 'createUserProfile',
 			value: function createUserProfile(id, user) {
-				var _this6 = this;
+				var _this7 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this6.refs.USER.child(id).set(user, function (error) {
+					_this7.refs.USER.child(id).set(user, function (error) {
 						if (error) return reject(error);
 						var submission = {};
 						submission[id] = user;
@@ -31288,10 +31300,10 @@
 		}, {
 			key: 'updateUserProfile',
 			value: function updateUserProfile(id, update) {
-				var _this7 = this;
+				var _this8 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this7.refs.USER.child(id).update(update, function (error) {
+					_this8.refs.USER.child(id).update(update, function (error) {
 						if (error) return reject(error);
 						resolve();
 					});
@@ -31300,10 +31312,10 @@
 		}, {
 			key: 'getAllEddiByUser',
 			value: function getAllEddiByUser(userId) {
-				var _this8 = this;
+				var _this9 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this8.refs.EDDI.orderByChild(PATHS.USER_PATH).equalTo(userId).once('value', function (data) {
+					_this9.refs.EDDI.orderByChild(PATHS.USER_PATH).equalTo(userId).once('value', function (data) {
 						var eddiList = data.val() || [],
 						    eddiIdList = Object.keys(eddiList).map(function (key) {
 							return eddiList[key];
@@ -31315,10 +31327,10 @@
 		}, {
 			key: 'findByEddi',
 			value: function findByEddi(id) {
-				var _this9 = this;
+				var _this10 = this;
 
 				return new Promise(function (resolve, reject) {
-					_this9.refs.EDDI.child(id).once('value', function (snapshot) {
+					_this10.refs.EDDI.child(id).once('value', function (snapshot) {
 						var eddi = snapshot.val();
 						if (!eddi) return reject(new Error('Eddi machine ' + id + ' does not exist.'));
 						resolve(eddi);
@@ -31328,11 +31340,11 @@
 		}, {
 			key: 'assignEddiToUser',
 			value: function assignEddiToUser(userId, eddiId) {
-				var _this10 = this;
+				var _this11 = this;
 
 				return this.findByEddi(eddiId).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this10.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).set(userId, function (error) {
+						_this11.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).set(userId, function (error) {
 							if (error) return reject(error);
 							resolve();
 						});
@@ -31342,11 +31354,11 @@
 		}, {
 			key: 'unassignEddiToUser',
 			value: function unassignEddiToUser(userId, eddiId) {
-				var _this11 = this;
+				var _this12 = this;
 
 				return this.findByEddi(eddiId).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this11.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).set(null, function (error) {
+						_this12.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).set(null, function (error) {
 							if (error) return reject(error);
 							resolve();
 						});
@@ -31356,12 +31368,12 @@
 		}, {
 			key: 'isEddiOwner',
 			value: function isEddiOwner(eddiId) {
-				var _this12 = this;
+				var _this13 = this;
 
 				return this.isAuthenticated().then(function (user) {
 					var userId = user.uid;
 					return new Promise(function (resolve, reject) {
-						_this12.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).once('value', function (snapshot) {
+						_this13.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).once('value', function (snapshot) {
 							var data = snapshot && snapshot.val();
 							if (data === userId) return resolve(userId);else reject(new Error('User is not the owner of this eddi.'));
 						}, reject);
@@ -31371,13 +31383,13 @@
 		}, {
 			key: 'updateEddiSettings',
 			value: function updateEddiSettings(eddiId, settings) {
-				var _this13 = this;
+				var _this14 = this;
 
 				return this.findByEddi(eddiId).then(function () {
-					return _this13.isEddiOwner(eddiId);
+					return _this14.isEddiOwner(eddiId);
 				}).then(function (userId) {
 					return new Promise(function (resolve, reject) {
-						_this13.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).update(settings, function (error) {
+						_this14.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).update(settings, function (error) {
 							if (error) return reject(error);
 							resolve(_extends({}, settings));
 						});
@@ -31387,13 +31399,13 @@
 		}, {
 			key: 'setName',
 			value: function setName(eddiId, name) {
-				var _this14 = this;
+				var _this15 = this;
 
 				return this.findByEddi(eddiId).then(function () {
-					return _this14.isEddiOwner(eddiId);
+					return _this15.isEddiOwner(eddiId);
 				}).then(function (userId) {
 					return new Promise(function (resolve, reject) {
-						_this14.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.NAME_PATH).update(name, function (error) {
+						_this15.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.NAME_PATH).update(name, function (error) {
 							if (error) return reject(error);
 							resolve();
 						});
@@ -31403,14 +31415,14 @@
 		}, {
 			key: 'setSalinity',
 			value: function setSalinity(id, salinity) {
-				var _this15 = this;
+				var _this16 = this;
 
 				if (typeof salinity !== 'number') throw new Error('Salinity must be a number.');
 				return this.findByEddi(id).then(function () {
-					return _this15.isEddiOwner(id);
+					return _this16.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this15.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinity, function (error) {
+						_this16.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinity, function (error) {
 							if (error) return reject(error);
 							resolve({ id: id, settings: { salinity: salinity } });
 						});
@@ -31420,15 +31432,15 @@
 		}, {
 			key: 'setStartTime',
 			value: function setStartTime(id) {
-				var _this16 = this;
+				var _this17 = this;
 
 				var start = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 				return this.findByEddi(id).then(function () {
-					return _this16.isEddiOwner(id);
+					return _this17.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this16.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.START_TIME).update(start, function (error) {
+						_this17.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.START_TIME).update(start, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31441,15 +31453,15 @@
 		}, {
 			key: 'setEndTime',
 			value: function setEndTime(id) {
-				var _this17 = this;
+				var _this18 = this;
 
 				var end = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 				return this.findByEddi(id).then(function () {
-					return _this17.isEddiOwner(id);
+					return _this18.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this17.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.END_TIME).update(end, function (error) {
+						_this18.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.END_TIME).update(end, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31462,15 +31474,15 @@
 		}, {
 			key: 'setEddiState',
 			value: function setEddiState(id, state) {
-				var _this18 = this;
+				var _this19 = this;
 
 				if (typeof state !== 'number') throw new Error('State must be a number.');
 				if (!(state === 0 || state === 1)) throw new Error('State must be a number either: 0 = off, 1 = on.');
 				return this.findByEddi(id).then(function () {
-					return _this18.isEddiOwner(id);
+					return _this19.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this18.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(state, function (error) {
+						_this19.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(state, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31483,7 +31495,7 @@
 		}, {
 			key: 'setEddiSnooze',
 			value: function setEddiSnooze(id, minute) {
-				var _this19 = this;
+				var _this20 = this;
 
 				if (typeof minute !== 'number') throw new Error('Minutes must be a number.');
 				var snooze = {
@@ -31491,10 +31503,10 @@
 					requested: new Date()
 				};
 				return this.findByEddi(id).then(function () {
-					return _this19.isEddiOwner(id);
+					return _this20.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this19.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(snooze, function (error) {
+						_this20.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(snooze, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
