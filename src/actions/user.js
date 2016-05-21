@@ -166,3 +166,32 @@ export function userResetPasswordThunk(email){
 			
 	}
 }
+
+export function userChangePasswordThunk(email, oldPassword, newPassword){
+	return dispatch => {
+		return EddiFire.changePassword(email, oldPassword, newPassword)
+			.then(() => dispatch(formUpdate({submitted : true, success : true, message : 'Password has been successfully changed.'})))
+			.catch(error => {
+				const generic = {
+					submitted : true,
+					success: false	
+				};
+				let update;
+				switch(error.code){
+				case 'INVALID_PASSWORD':
+					update = Object.assign({}, generic, { message : 'The specified user account password is incorrect.' });
+					break;
+				case 'INVALID_USER':
+					update = Object.assign({}, generic, { message : 'The specified user account does not exist.' });
+					break;
+				default :
+					update = Object.assign({}, generic, { message : 'There was an error processing your request.'});
+					break;
+				}
+				
+				// update the form reducer
+				dispatch(formUpdate(update));
+			})
+			
+	}
+}
