@@ -168,10 +168,12 @@ export function userResetPasswordThunk(email){
 }
 
 export function userChangePasswordThunk(email, oldPassword, newPassword){
+	console.log('this is the', email, oldPassword, newPassword);
 	return dispatch => {
 		return EddiFire.changePassword(email, oldPassword, newPassword)
 			.then(() => dispatch(formUpdate({submitted : true, success : true, message : 'Password has been successfully changed.'})))
 			.catch(error => {
+				console.log('this is the error', error);
 				const generic = {
 					submitted : true,
 					success: false	

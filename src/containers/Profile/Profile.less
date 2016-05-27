@@ -1,0 +1,38 @@
+@import '../../less/vars';
+
+#profile {
+    .password-form {
+        padding-top: 10px;
+        padding-bottom : 10px;
+        h3 {
+            margin : 0;
+            text-align: center;
+            color: black;
+        }
+        .message {
+            text-align : center;
+            padding-top : 5px;
+            padding-bottom : 5px;
+            
+            &.success {
+                color: @true_blue;
+            }
+            
+            &.warning {
+                color : @salt_red;
+            }
+        }
+        
+        .button-container {
+            display : flex;
+            flex-direction : row;
+            justify-content : center;
+            align-items : center;
+            
+            button {
+               color : @trim_color;
+               background-color: white;
+            }
+        }
+    }
+}

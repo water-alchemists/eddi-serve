@@ -8,6 +8,7 @@ export const PATHS = {
 	REPORT : '/report',
 	DASHBOARD : '/dashboard',
 	TROUBLESHOOT : '/troubleshoot',
+	PROFILE : '/profile',
 };
 
 export const QUERY = {

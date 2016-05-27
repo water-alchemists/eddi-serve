@@ -291,10 +291,13 @@ export const crops = [
 		display : 'Grape', 
 		value : convertDsmToPpm(1.5)
 	},
-	
 	{
 		display : 'Wheat',
-		value : convertDsmToPpm(5.9)
+		value : convertDsmToPpm(4.5)
+	},
+	{
+		display : 'Cotton',
+		value : convertDsmToPpm(7.7)
 	}
-];
+].sort((a, b) => a.display > b.display);
 

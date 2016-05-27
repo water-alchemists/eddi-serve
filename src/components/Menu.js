@@ -22,7 +22,8 @@ class Menu extends Component {
 	}
 
 	_renderLoggedIn(){
-		const { router } = this.context,
+		const { optionsOpen } = this.state,
+			{ router } = this.context,
 			{ menu, selected, current } = this.props,
 			{ name='' } = menu,
 			query = {
@@ -52,6 +53,11 @@ class Menu extends Component {
 				'sprite',
 				'dashboard',
 				{ green : router.isActive(PATHS.DASHBOARD) }
+			]),
+			burgerSpriteClass = classNames([
+				'sprite',
+				'burger',
+				{ dark : optionsOpen }
 			]);
 
 		let menuOptions;
@@ -93,7 +99,9 @@ class Menu extends Component {
 			<header id="menu">
 				<div className={"burger-menu" + (this.state.optionsOpen ? ' open' : '') }
 					onClick={ () => this.toggleMenu() } >
-					<div className="icon">☰</div>
+					<div className="icon">
+						<div className={burgerSpriteClass}></div>
+					</div>
 					<div className='menu-options'>
 						<Link to={PATHS.LIST}
 							activeClassName='active'
@@ -102,10 +110,17 @@ class Menu extends Component {
 							<p>Home</p>
 						</Link>
 						{ menuOptions }
+						<Link to={PATHS.PROFILE}
+							activeClassName='active'
+						>
+							<div className='sprite empty'></div>
+							<p>Profile</p>
+						</Link>
 						<a onClick={() => this.logoutHandler()}>
 							<div className='sprite empty'></div>
 							<p>Logout</p>
 						</a>
+						
 					</div>
 				</div>
 				<h1 key={name}>{ name }</h1>
