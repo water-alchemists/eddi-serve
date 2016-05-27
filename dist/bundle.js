@@ -46560,12 +46560,10 @@
 	}
 
 	function userChangePasswordThunk(email, oldPassword, newPassword) {
-		console.log('this is the', email, oldPassword, newPassword);
 		return function (dispatch) {
 			return EddiFire.changePassword(email, oldPassword, newPassword).then(function () {
 				return dispatch((0, _form.formUpdate)({ submitted: true, success: true, message: 'Password has been successfully changed.' }));
 			}).catch(function (error) {
-				console.log('this is the error', error);
 				var generic = {
 					submitted: true,
 					success: false
@@ -52239,7 +52237,7 @@
 	            if (!submitted) return null;
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'message' },
+	                { className: messageClass },
 	                message
 	            );
 	        }

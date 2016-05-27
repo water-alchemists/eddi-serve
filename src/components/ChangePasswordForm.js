@@ -59,7 +59,7 @@ class ChangePasswordForm extends Component {
             ]);
         if(!submitted) return null;
         return (
-           <div className='message'>
+           <div className={messageClass}>
                 { message }
            </div>
         );
