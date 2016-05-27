@@ -20,7 +20,7 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
 	return {
 		changePassword: ({ email, oldPassword, newPassword }) => dispatch(userChangePasswordThunk(email, oldPassword, newPassword)),
-        formClear : () => dispatch(formClear),
+        formClear : () => dispatch(formClear()),
         updateMenuName: name => dispatch(menuNameChange(name)),
 	};
 }

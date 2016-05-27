@@ -52070,7 +52070,7 @@
 	            return dispatch((0, _user.userChangePasswordThunk)(email, oldPassword, newPassword));
 	        },
 	        formClear: function formClear() {
-	            return dispatch(_form.formClear);
+	            return dispatch((0, _form.formClear)());
 	        },
 	        updateMenuName: function updateMenuName(name) {
 	            return dispatch((0, _menu.menuNameChange)(name));
@@ -52195,6 +52195,7 @@
 	        value: function componentWillUnmount() {
 	            var componentWillUnmount = this.props.componentWillUnmount;
 
+	            console.log('hello');
 	            if (componentWillUnmount instanceof Function) componentWillUnmount();
 	        }
 	    }, {

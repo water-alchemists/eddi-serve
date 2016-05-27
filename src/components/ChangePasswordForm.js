@@ -23,6 +23,7 @@ class ChangePasswordForm extends Component {
     
     componentWillUnmount(){
         const { componentWillUnmount } = this.props;
+        console.log('hello')
         if(componentWillUnmount instanceof Function) componentWillUnmount();
     }
     
