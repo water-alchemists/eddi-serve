@@ -211,6 +211,22 @@ class EddiFire {
 		});
 			});
 	}
+	
+	getCurrentReadingByEddi(eddiId){
+		return new Promise((resolve, reject) => {
+			this.refs.EDDI.child(eddiId)
+				.child(PATHS.READINGS)
+				.orderByKey()
+				.limitToFirst(1)
+				.once(
+					'value',
+					(snapshot) => {
+						// get value of the current reading
+						resolve()
+					}
+				)
+		});
+	}
 
 	isEddiOwner(eddiId){
 		return this.isAuthenticated()
@@ -404,9 +420,9 @@ class EddiFire {
 
 }
 
+let init;
 
 export default function(){
-	let init;
 	if(init) return init;
 	else {
 		init = new EddiFire();

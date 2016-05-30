@@ -126,16 +126,17 @@ class HistoricalGraph extends Component {
         >
           <span>This Month</span>
         </div>
-        <div className={weekClass}
-          onClick={event => this.clickHandler(event, HISTORICAL.WEEK)}
-        >
-          <span>This Week</span>
-        </div>
         <div className={todayClass}
           onClick={event => this.clickHandler(event, HISTORICAL.TODAY)}
         >
           <span>Today</span>
         </div>
+        <div className={weekClass}
+          onClick={event => this.clickHandler(event, HISTORICAL.WEEK)}
+        >
+          <span>This Week</span>
+        </div>
+        
       </div>
       <canvas ref='canvas' style={{width: "100%", height: "160px"}} className='historical-graph-canvas' />
     </div>

@@ -31217,7 +31217,6 @@
 	var _EVENTS;
 
 	exports.default = function () {
-		var init = void 0;
 		if (init) return init;else {
 			init = new EddiFire();
 			return init;
@@ -31449,14 +31448,26 @@
 				});
 			}
 		}, {
+			key: 'getCurrentReadingByEddi',
+			value: function getCurrentReadingByEddi(eddiId) {
+				var _this14 = this;
+
+				return new Promise(function (resolve, reject) {
+					_this14.refs.EDDI.child(eddiId).child(PATHS.READINGS).orderByKey().limitToFirst(1).once('value', function (snapshot) {
+						// get value of the current reading
+						resolve();
+					});
+				});
+			}
+		}, {
 			key: 'isEddiOwner',
 			value: function isEddiOwner(eddiId) {
-				var _this14 = this;
+				var _this15 = this;
 
 				return this.isAuthenticated().then(function (user) {
 					var userId = user.uid;
 					return new Promise(function (resolve, reject) {
-						_this14.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).once('value', function (snapshot) {
+						_this15.refs.EDDI.child(eddiId).child(PATHS.USER_PATH).once('value', function (snapshot) {
 							var data = snapshot && snapshot.val();
 							if (data === userId) return resolve(userId);else reject(new Error('User is not the owner of this eddi.'));
 						}, reject);
@@ -31466,13 +31477,13 @@
 		}, {
 			key: 'updateEddiSettings',
 			value: function updateEddiSettings(eddiId, settings) {
-				var _this15 = this;
+				var _this16 = this;
 
 				return this.findByEddi(eddiId).then(function () {
-					return _this15.isEddiOwner(eddiId);
+					return _this16.isEddiOwner(eddiId);
 				}).then(function (userId) {
 					return new Promise(function (resolve, reject) {
-						_this15.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).update(settings, function (error) {
+						_this16.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).update(settings, function (error) {
 							if (error) return reject(error);
 							resolve(_extends({}, settings));
 						});
@@ -31482,13 +31493,13 @@
 		}, {
 			key: 'setName',
 			value: function setName(eddiId, name) {
-				var _this16 = this;
+				var _this17 = this;
 
 				return this.findByEddi(eddiId).then(function () {
-					return _this16.isEddiOwner(eddiId);
+					return _this17.isEddiOwner(eddiId);
 				}).then(function (userId) {
 					return new Promise(function (resolve, reject) {
-						_this16.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.NAME_PATH).update(name, function (error) {
+						_this17.refs.EDDI.child(eddiId).child(PATHS.SETTINGS_PATH).child(PATHS.NAME_PATH).update(name, function (error) {
 							if (error) return reject(error);
 							resolve();
 						});
@@ -31498,14 +31509,14 @@
 		}, {
 			key: 'setSalinity',
 			value: function setSalinity(id, salinity) {
-				var _this17 = this;
+				var _this18 = this;
 
 				if (typeof salinity !== 'number') throw new Error('Salinity must be a number.');
 				return this.findByEddi(id).then(function () {
-					return _this17.isEddiOwner(id);
+					return _this18.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this17.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinity, function (error) {
+						_this18.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.SALINITY_PATH).set(salinity, function (error) {
 							if (error) return reject(error);
 							resolve({ id: id, settings: { salinity: salinity } });
 						});
@@ -31515,15 +31526,15 @@
 		}, {
 			key: 'setStartTime',
 			value: function setStartTime(id) {
-				var _this18 = this;
+				var _this19 = this;
 
 				var start = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 				return this.findByEddi(id).then(function () {
-					return _this18.isEddiOwner(id);
+					return _this19.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this18.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.START_TIME).update(start, function (error) {
+						_this19.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.START_TIME).update(start, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31536,15 +31547,15 @@
 		}, {
 			key: 'setEndTime',
 			value: function setEndTime(id) {
-				var _this19 = this;
+				var _this20 = this;
 
 				var end = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 				return this.findByEddi(id).then(function () {
-					return _this19.isEddiOwner(id);
+					return _this20.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this19.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.END_TIME).update(end, function (error) {
+						_this20.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.TIMING_PATH).child(PATHS.END_TIME).update(end, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31557,15 +31568,15 @@
 		}, {
 			key: 'setEddiState',
 			value: function setEddiState(id, state) {
-				var _this20 = this;
+				var _this21 = this;
 
 				if (typeof state !== 'number') throw new Error('State must be a number.');
 				if (!(state === 0 || state === 1)) throw new Error('State must be a number either: 0 = off, 1 = on.');
 				return this.findByEddi(id).then(function () {
-					return _this20.isEddiOwner(id);
+					return _this21.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this20.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(state, function (error) {
+						_this21.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(state, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31578,7 +31589,7 @@
 		}, {
 			key: 'setEddiSnooze',
 			value: function setEddiSnooze(id, minute) {
-				var _this21 = this;
+				var _this22 = this;
 
 				if (typeof minute !== 'number') throw new Error('Minutes must be a number.');
 				var snooze = {
@@ -31586,10 +31597,10 @@
 					requested: new Date()
 				};
 				return this.findByEddi(id).then(function () {
-					return _this21.isEddiOwner(id);
+					return _this22.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this21.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(snooze, function (error) {
+						_this22.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(snooze, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31631,6 +31642,8 @@
 
 		return EddiFire;
 	}();
+
+	var init = void 0;
 
 /***/ },
 /* 301 */
@@ -46369,7 +46382,7 @@
 
 
 	// module
-	exports.push([module.id, ".eddi-add {\n  padding: 10px;\n}\n.eddi-add h3 {\n  text-align: center;\n  font-weight: 500;\n  color: black;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .input-container .salinity-container {\n  position: relative;\n}\n.eddi-add .input-container .salinity-container p {\n  color: black;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  margin-right: 5px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n}\n", ""]);
+	exports.push([module.id, ".eddi-add {\n  padding: 10px;\n}\n.eddi-add h3 {\n  text-align: center;\n  font-weight: 500;\n  color: black;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .input-container .salinity-container {\n  position: relative;\n}\n.eddi-add .input-container .salinity-container p {\n  color: black;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  margin-right: 5px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n  background-color: white;\n  color: #006d60;\n}\n.eddi-add .button-container button.cancel {\n  background-color: #ab3524;\n  color: white;\n}\n", ""]);
 
 	// exports
 
@@ -48551,19 +48564,6 @@
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: weekClass,
-	              onClick: function onClick(event) {
-	                return _this2.clickHandler(event, _constants.HISTORICAL.WEEK);
-	              }
-	            },
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              'This Week'
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
 	            { className: todayClass,
 	              onClick: function onClick(event) {
 	                return _this2.clickHandler(event, _constants.HISTORICAL.TODAY);
@@ -48573,6 +48573,19 @@
 	              'span',
 	              null,
 	              'Today'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: weekClass,
+	              onClick: function onClick(event) {
+	                return _this2.clickHandler(event, _constants.HISTORICAL.WEEK);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'This Week'
 	            )
 	          )
 	        ),
@@ -49401,7 +49414,7 @@
 
 
 	// module
-	exports.push([module.id, ".add-eddi-button {\n  background-color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  color: white;\n  width: 160px!important;\n  margin: 20px auto;\n  text-align: center!important;\n}\n", ""]);
+	exports.push([module.id, ".add-eddi-button {\n  color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  background-color: white;\n  width: 160px!important;\n  margin: 20px auto;\n  text-align: center!important;\n}\n", ""]);
 
 	// exports
 
