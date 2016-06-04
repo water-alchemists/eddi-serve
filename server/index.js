@@ -4,7 +4,8 @@ const express = require('express'),
 
 const config = require('./config'),
     middleware = require('./middleware'),
-    api = require('./api');
+    api = require('./api'),
+    device = require('./device');
 
 const PORT = process.env.PORT || 3000;
 
@@ -17,6 +18,7 @@ app.set('root', path.resolve(__dirname, '../'));
 
 middleware(app);
 app.use('/api', api(app));
+app.use('/device', device(app));
 
 // properly sends 404 for any request for files with extensions
 app.use((req, res, next) => {
