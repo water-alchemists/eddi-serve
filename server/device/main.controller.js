@@ -17,7 +17,7 @@ RESPONSE = {
     reason : 'reason'
 };
 
-const REASONS = {
+const REASON = {
     override : 'override',
     schedule : 'schedule',
     weather : 'weather',
@@ -55,7 +55,7 @@ module.exports = app => {
     router.get('/:id', (req, res, next) => {
         const id = req.params.id,
             date = new Date();
-        
+        console.log('got to the device id route', id);
         /*
             Priority
             1. Manual Override
@@ -105,6 +105,7 @@ module.exports = app => {
                 }
                 else return weather.getJsonByZip(settings.zip)
                         .then(current => {
+                            console.log('got weather', weather);
                             const rain = current.rain || {},
                                 volume = rain['3h'];
                             if(isRaining(volume)) {
@@ -129,7 +130,8 @@ module.exports = app => {
                                 }); 
                             }
                         });
-            });
+            })
+            .catch(err => next(err)); //if error processing the request
             
     });
     
