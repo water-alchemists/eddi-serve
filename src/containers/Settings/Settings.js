@@ -7,6 +7,7 @@ import {
 	setEddiStartThunk,
 	setEddiEndThunk,
 	setEddiSalinityThunk,
+	setEddiZipThunk,
 	getAllEddiByUserThunk,
 } from '../../actions/eddis';
 import { menuNameChange } from '../../actions/menu';
@@ -29,6 +30,7 @@ function mapDispatchToProps(dispatch){
 		updateStart : (eddiId, hour, minutes) => dispatch(setEddiStartThunk(eddiId, hour, minutes)),
 		updateEnd : (eddiId, hour, minutes) => dispatch(setEddiEndThunk(eddiId, hour, minutes)),
 		updateSalinity : (eddiId, salinity) => dispatch(setEddiSalinityThunk(eddiId, salinity)),
+		updateZip : (eddiId, zip) => dispatch(setEddiZipThunk(eddiId, zip)),
 		getAllEddis : () => dispatch(getAllEddiByUserThunk()),
 		updateMenuName: name => dispatch(menuNameChange(name)),
 	};
@@ -42,23 +44,8 @@ class Settings extends Component {
 
 	}
 
-	onSalinityChange(id, salinity){
-		const { updateSalinity } = this.props;
-		updateSalinity(id, salinity);
-	}
-
-	onStartChange(id, hour, minutes){
-		const { updateStart } = this.props;
-		updateStart(id, hour, minutes);
-	}
-
-	onEndChange(id, hour, minutes){
-		const { updateEnd } = this.props;
-		updateEnd(id, hour, minutes);
-	}
-
 	_renderEddis(){
-		const { eddis, updateSalinity, updateEnd, updateStart } = this.props;
+		const { eddis, updateSalinity, updateEnd, updateStart, updateZip } = this.props;
 		return eddis.map(eddi => {
 			const eddiId = eddi.id;
 			return (
@@ -67,6 +54,7 @@ class Settings extends Component {
 					onSalinityChange={salinity => updateSalinity(eddiId, salinity)}
 					onStartChange={(hour, minutes) => updateStart(eddiId, hour, minutes)}
 					onEndChange={(hour, minutes) => updateEnd(eddiId, hour, minutes)}
+					onZipChange={zip => updateZip(eddiId, zip)}
 				/>
 			)
 		})

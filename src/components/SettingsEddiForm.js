@@ -6,6 +6,7 @@ import { salinityOptions } from '../data';
 import SalinityInput from './SalinityInput';
 import TimeSelect from './TimeSelect';
 import CropInput from './CropInput';
+import ZipInput from './ZipInput';
 
 class SettingsEddiForm extends Component {
 	render(){
@@ -13,9 +14,11 @@ class SettingsEddiForm extends Component {
 			salinityValue, 
 			startValue, 
 			endValue, 
+			zipValue,
 			onSalinityChange, 
 			onStartChange, 
-			onEndChange 
+			onEndChange,
+			onZipChange 
 		} = this.props;
 
 		return (
@@ -46,6 +49,14 @@ class SettingsEddiForm extends Component {
 						/>
 					</div>
 				</div>
+				<div className='zip-row'>
+					<h4>LOCATION - ZIP CODE</h4>
+					<div className='select-container'>
+						<ZipInput value={zipValue}
+							onChange={ zip => onZipChange(zip)}
+						/>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -55,6 +66,7 @@ SettingsEddiForm.propTypes = {
 	onSalinityChange : PropTypes.func.isRequired,
 	onStartChange : PropTypes.func.isRequired,
 	onEndChange : PropTypes.func.isRequired,
+	onZipChange : PropTypes.func.isRequired,
 	salinityValue : PropTypes.number,
 	startValue : PropTypes.shape({
 		hour : PropTypes.number,
@@ -63,7 +75,8 @@ SettingsEddiForm.propTypes = {
 	endValue : PropTypes.shape({
 		hour : PropTypes.number,
 		minute : PropTypes.number
-	})
+	}),
+	zipValue : PropTypes.number
 };
 
 SettingsEddiForm.defaultProps = {

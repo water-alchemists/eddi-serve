@@ -18,7 +18,8 @@ const initialState = {
 		name : null,
 		salinity: null,
 		state : null,
-		timing: null
+		timing: null,
+		zip : null
 	},
 	state : {
 		state : null,
@@ -82,6 +83,7 @@ export default function(state = initialState, action = {}){
 			return {
 				...state,
 				settings : {
+					...state.settings,
 					...settings
 				}
 			};

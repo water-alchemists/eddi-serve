@@ -176,6 +176,15 @@ export function setEddiSalinityThunk(eddiId, salinity){
 	}
 }
 
+export function setEddiZipThunk(eddiId, zip){
+	return dispatch => {
+		return EddiFire.setZip(eddiId, zip)
+			.then(update => dispatch(updateEddiSuccess(update.id, { zip : update.zip})))
+			.catch(error => dispatch(updateEddiError(error)));
+
+	}
+}
+
 export function setEddiStateThunk(eddiId, state){
 	return dispatch => {
 		return EddiFire.setEddiState(eddiId, state)

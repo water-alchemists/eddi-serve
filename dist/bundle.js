@@ -27699,7 +27699,7 @@
 			case _constants.EDDI_UPDATE_SUCCESS:
 				if (state.id === id) {
 					return _extends({}, state, {
-						settings: _extends({}, settings)
+						settings: _extends({}, state.settings, settings)
 					});
 				} else return state;
 				break;
@@ -27755,7 +27755,8 @@
 			name: null,
 			salinity: null,
 			state: null,
-			timing: null
+			timing: null,
+			zip: null
 		},
 		state: {
 			state: null,
@@ -30967,6 +30968,7 @@
 	exports.setEddiStartThunk = setEddiStartThunk;
 	exports.setEddiEndThunk = setEddiEndThunk;
 	exports.setEddiSalinityThunk = setEddiSalinityThunk;
+	exports.setEddiZipThunk = setEddiZipThunk;
 	exports.setEddiStateThunk = setEddiStateThunk;
 	exports.setEddiSnoozeThunk = setEddiSnoozeThunk;
 	exports.getEddiState = getEddiState;
@@ -31164,6 +31166,16 @@
 		};
 	}
 
+	function setEddiZipThunk(eddiId, zip) {
+		return function (dispatch) {
+			return EddiFire.setZip(eddiId, zip).then(function (update) {
+				return dispatch(updateEddiSuccess(update.id, { zip: update.zip }));
+			}).catch(function (error) {
+				return dispatch(updateEddiError(error));
+			});
+		};
+	}
+
 	function setEddiStateThunk(eddiId, state) {
 		return function (dispatch) {
 			return EddiFire.setEddiState(eddiId, state).then(function (update) {
@@ -31239,6 +31251,7 @@
 		PIN_PATH: 'pins',
 		SETTINGS_PATH: 'settings',
 		SALINITY_PATH: 'salinity',
+		ZIP_PATH: 'zip',
 		TIMING_PATH: 'timing',
 		NAME_PATH: 'name',
 		VERSION_PATH: 'version',
@@ -31566,17 +31579,36 @@
 				});
 			}
 		}, {
-			key: 'setEddiState',
-			value: function setEddiState(id, state) {
+			key: 'setZip',
+			value: function setZip(id, zip) {
 				var _this21 = this;
 
-				if (typeof state !== 'number') throw new Error('State must be a number.');
-				if (!(state === 0 || state === 1)) throw new Error('State must be a number either: 0 = off, 1 = on.');
 				return this.findByEddi(id).then(function () {
 					return _this21.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this21.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(state, function (error) {
+						_this21.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.ZIP_PATH).set(zip, function (error) {
+							if (error) return reject(error);
+							resolve({
+								id: id,
+								zip: zip
+							});
+						});
+					});
+				});
+			}
+		}, {
+			key: 'setEddiState',
+			value: function setEddiState(id, state) {
+				var _this22 = this;
+
+				if (typeof state !== 'number') throw new Error('State must be a number.');
+				if (!(state === 0 || state === 1)) throw new Error('State must be a number either: 0 = off, 1 = on.');
+				return this.findByEddi(id).then(function () {
+					return _this22.isEddiOwner(id);
+				}).then(function () {
+					return new Promise(function (resolve, reject) {
+						_this22.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(state, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -31589,7 +31621,7 @@
 		}, {
 			key: 'setEddiSnooze',
 			value: function setEddiSnooze(id, minute) {
-				var _this22 = this;
+				var _this23 = this;
 
 				if (typeof minute !== 'number') throw new Error('Minutes must be a number.');
 				var snooze = {
@@ -31597,10 +31629,10 @@
 					requested: new Date()
 				};
 				return this.findByEddi(id).then(function () {
-					return _this22.isEddiOwner(id);
+					return _this23.isEddiOwner(id);
 				}).then(function () {
 					return new Promise(function (resolve, reject) {
-						_this22.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(snooze, function (error) {
+						_this23.refs.EDDI.child(id).child(PATHS.SETTINGS_PATH).child(PATHS.STATE_PATH).set(snooze, function (error) {
 							if (error) return reject(error);
 							resolve({
 								id: id,
@@ -49521,6 +49553,9 @@
 			updateSalinity: function updateSalinity(eddiId, salinity) {
 				return dispatch((0, _eddis.setEddiSalinityThunk)(eddiId, salinity));
 			},
+			updateZip: function updateZip(eddiId, zip) {
+				return dispatch((0, _eddis.setEddiZipThunk)(eddiId, zip));
+			},
 			getAllEddis: function getAllEddis() {
 				return dispatch((0, _eddis.getAllEddiByUserThunk)());
 			},
@@ -49550,27 +49585,6 @@
 				updateMenuName('Settings');
 			}
 		}, {
-			key: 'onSalinityChange',
-			value: function onSalinityChange(id, salinity) {
-				var updateSalinity = this.props.updateSalinity;
-
-				updateSalinity(id, salinity);
-			}
-		}, {
-			key: 'onStartChange',
-			value: function onStartChange(id, hour, minutes) {
-				var updateStart = this.props.updateStart;
-
-				updateStart(id, hour, minutes);
-			}
-		}, {
-			key: 'onEndChange',
-			value: function onEndChange(id, hour, minutes) {
-				var updateEnd = this.props.updateEnd;
-
-				updateEnd(id, hour, minutes);
-			}
-		}, {
 			key: '_renderEddis',
 			value: function _renderEddis() {
 				var _props2 = this.props;
@@ -49578,6 +49592,7 @@
 				var updateSalinity = _props2.updateSalinity;
 				var updateEnd = _props2.updateEnd;
 				var updateStart = _props2.updateStart;
+				var updateZip = _props2.updateZip;
 
 				return eddis.map(function (eddi) {
 					var eddiId = eddi.id;
@@ -49591,6 +49606,9 @@
 						},
 						onEndChange: function onEndChange(hour, minutes) {
 							return updateEnd(eddiId, hour, minutes);
+						},
+						onZipChange: function onZipChange(zip) {
+							return updateZip(eddiId, zip);
 						}
 					});
 				});
@@ -49699,6 +49717,7 @@
 				var _onSalinityChange = _props.onSalinityChange;
 				var _onEndChange = _props.onEndChange;
 				var _onStartChange = _props.onStartChange;
+				var _onZipChange = _props.onZipChange;
 				var _eddi$version = eddi.version;
 				var version = _eddi$version === undefined ? {} : _eddi$version;
 				var _eddi$settings = eddi.settings;
@@ -49707,6 +49726,7 @@
 				var _settings$timing = settings.timing;
 				var timing = _settings$timing === undefined ? {} : _settings$timing;
 				var salinity = settings.salinity;
+				var zip = settings.zip;
 				var bodyClass = (0, _classnames2.default)(['settings-container', { hide: !isOpen }]);
 				var footerClass = (0, _classnames2.default)(['arrow-container', { hide: !isOpen }]);
 
@@ -49738,9 +49758,13 @@
 							onStartChange: function onStartChange(hour, minutes) {
 								return _onStartChange(hour, minutes);
 							},
+							onZipChange: function onZipChange(zip) {
+								return _onZipChange(zip);
+							},
 							salinityValue: salinity,
 							startValue: timing.start,
-							endValue: timing.end
+							endValue: timing.end,
+							zipValue: zip
 						})
 					),
 					_react2.default.createElement(
@@ -50017,6 +50041,10 @@
 
 	var _CropInput2 = _interopRequireDefault(_CropInput);
 
+	var _ZipInput = __webpack_require__(475);
+
+	var _ZipInput2 = _interopRequireDefault(_ZipInput);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -50041,9 +50069,11 @@
 				var salinityValue = _props.salinityValue;
 				var startValue = _props.startValue;
 				var endValue = _props.endValue;
+				var zipValue = _props.zipValue;
 				var _onSalinityChange = _props.onSalinityChange;
 				var onStartChange = _props.onStartChange;
 				var onEndChange = _props.onEndChange;
+				var onZipChange = _props.onZipChange;
 
 
 				return _react2.default.createElement(
@@ -50110,6 +50140,24 @@
 								}
 							})
 						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'zip-row' },
+						_react2.default.createElement(
+							'h4',
+							null,
+							'LOCATION - ZIP CODE'
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'select-container' },
+							_react2.default.createElement(_ZipInput2.default, { value: zipValue,
+								onChange: function onChange(zip) {
+									return onZipChange(zip);
+								}
+							})
+						)
 					)
 				);
 			}
@@ -50122,6 +50170,7 @@
 		onSalinityChange: _react.PropTypes.func.isRequired,
 		onStartChange: _react.PropTypes.func.isRequired,
 		onEndChange: _react.PropTypes.func.isRequired,
+		onZipChange: _react.PropTypes.func.isRequired,
 		salinityValue: _react.PropTypes.number,
 		startValue: _react.PropTypes.shape({
 			hour: _react.PropTypes.number,
@@ -50130,7 +50179,8 @@
 		endValue: _react.PropTypes.shape({
 			hour: _react.PropTypes.number,
 			minute: _react.PropTypes.number
-		})
+		}),
+		zipValue: _react.PropTypes.number
 	};
 
 	SettingsEddiForm.defaultProps = {
@@ -50590,7 +50640,7 @@
 
 
 	// module
-	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 30px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 50px;\n  padding-bottom: 50px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 100px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 30px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 50px;\n  padding-bottom: 50px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 100px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row {\n  padding-top: 50px;\n  padding-bottom: 50px;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .zip-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container .zip-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 200px;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container .zip-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
@@ -52374,6 +52424,111 @@
 
 	// exports
 
+
+/***/ },
+/* 475 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ZipInput = function (_Component) {
+	    _inherits(ZipInput, _Component);
+
+	    function ZipInput(props) {
+	        _classCallCheck(this, ZipInput);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ZipInput).call(this, props));
+
+	        _this.state = {
+	            value: null
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ZipInput, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            var value = nextProps.value;
+
+	            if (value && value !== this.state.value) this.setState({ value: value });
+	        }
+	    }, {
+	        key: 'changeHandler',
+	        value: function changeHandler(event) {
+	            event.preventDefault();
+	            var onChange = this.props.onChange;
+	            var value = event.target.value;
+	            if (!value || value.length < 6) this.setState({ value: value });
+	        }
+	    }, {
+	        key: 'blurHandler',
+	        value: function blurHandler(event) {
+	            event.preventDefault();
+	            var onChange = this.props.onChange;
+	            var value = event.target.value;
+	            var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
+
+	            if (onChange instanceof Function) onChange(formattedValue);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            var placeholder = this.props.placeholder;
+	            var value = this.state.value;
+
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'zip-input' },
+	                _react2.default.createElement('input', { type: 'number',
+	                    onChange: function onChange(event) {
+	                        return _this2.changeHandler(event);
+	                    },
+	                    placeholder: placeholder,
+	                    pattern: '[0-9]*',
+	                    onBlur: function onBlur(event) {
+	                        return _this2.blurHandler(event);
+	                    },
+	                    value: value
+	                })
+	            );
+	        }
+	    }]);
+
+	    return ZipInput;
+	}(_react.Component);
+
+	ZipInput.propTypes = {
+	    value: _react.PropTypes.number,
+	    onChange: _react.PropTypes.func,
+	    placeholder: _react.PropTypes.string
+	};
+
+	ZipInput.defaultProps = {
+	    placeholder: 'Enter Zip Code'
+	};
+
+	exports.default = ZipInput;
 
 /***/ }
 /******/ ]);

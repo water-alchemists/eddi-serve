@@ -25,9 +25,9 @@ class SettingsEddi extends Component {
 
 	render(){
 		const { isOpen } = this.state,
-			{ eddi, onSalinityChange, onEndChange, onStartChange } = this.props,
+			{ eddi, onSalinityChange, onEndChange, onStartChange, onZipChange } = this.props,
 			{ version={}, settings={} } = eddi,
-			{ name, timing={}, salinity } = settings,
+			{ name, timing={}, salinity, zip } = settings,
 			bodyClass= classNames(['settings-container', { hide : !isOpen }]),
 			footerClass=classNames(['arrow-container', { hide : !isOpen }]);
 
@@ -48,9 +48,11 @@ class SettingsEddi extends Component {
 					<SettingsEddiForm onSalinityChange={salinity => onSalinityChange(salinity)}
 						onEndChange={(hour, minutes) => onEndChange(hour, minutes)}
 						onStartChange={(hour, minutes) => onStartChange(hour, minutes)}
+						onZipChange={zip => onZipChange(zip)}
 						salinityValue={salinity}
 						startValue={timing.start}
 						endValue={timing.end}
+						zipValue={zip}
 					/>
 				</div>
 				<div className={footerClass}>

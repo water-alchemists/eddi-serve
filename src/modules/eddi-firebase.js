@@ -11,6 +11,7 @@ const PATHS = {
 	PIN_PATH : 'pins',
 	SETTINGS_PATH : 'settings',
 	SALINITY_PATH : 'salinity',
+	ZIP_PATH : 'zip',
 	TIMING_PATH : 'timing',
 	NAME_PATH : 'name',
 	VERSION_PATH : 'version',
@@ -343,6 +344,28 @@ class EddiFire {
 						);
 				})
 			});	
+	}
+	
+	setZip(id, zip){
+		return this.findByEddi(id)
+			.then(() => this.isEddiOwner(id))
+			.then(() => {
+				return new Promise((resolve, reject) => {
+					this.refs.EDDI.child(id)
+						.child(PATHS.SETTINGS_PATH)
+						.child(PATHS.ZIP_PATH)
+						.set(
+							zip,
+							error => {
+								if(error) return reject(error);
+								resolve({
+									id, 
+									zip : zip
+								});
+							}
+						)
+				})
+			});
 	}
 
 	setEddiState(id, state){
