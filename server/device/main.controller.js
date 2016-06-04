@@ -55,7 +55,7 @@ module.exports = app => {
     const WEATHER_KEY = app.get('WEATHER_KEY'),
         WEATHER_URL = app.get('WEATHER_URL');
     
-    const weather = weatherApi(WEATHER_KEY, WEATHER_URL);
+    const weather = weatherApi(WEATHER_URL, WEATHER_KEY);
     
     router.get('/:id', (req, res, next) => {
         const id = req.params.id,
