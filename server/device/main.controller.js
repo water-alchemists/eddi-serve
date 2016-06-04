@@ -80,7 +80,7 @@ module.exports = app => {
                         [RESPONSE.reason] : REASON.override 
                     });
                 }                                        
-                else if(!checkTime(settings.timing.start, settings.timing.start)) {
+                else if(!checkTime(settings.timing.start, settings.timing.end)) {
                     // 2. Schedule
                     return res.status(200).json({ 
                         [RESPONSE.state] : false, 
