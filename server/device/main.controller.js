@@ -3,7 +3,7 @@
 const express = require('express');
 
 const eddiFire = require('../modules/firebase'),
-    weather = require('../modules/weather');
+    weatherApi = require('../modules/weather');
     
 const router = express.Router();
 
@@ -52,6 +52,11 @@ function isRaining(volume){
 }
 
 module.exports = app => {
+    const WEATHER_KEY = app.get('WEATHER_KEY'),
+        WEATHER_URL = app.get('WEATHER_URL');
+    
+    const weather = weatherApi(WEATHER_KEY, WEATHER_URL);
+    
     router.get('/:id', (req, res, next) => {
         const id = req.params.id,
             date = new Date();
