@@ -16,6 +16,8 @@ function renderReason(reason, state){
         return `eddi is set to ${stateText}`;
     case 'schedule':
         return 'eddi is running on schedule';
+    case 'threshold':
+        return 'salinity of the incoming water is less than the set threshold';
     case 'weather':
         return 'rain volume is greater than 0.3';
     case 'initialize':
