@@ -86,8 +86,8 @@ class Troubleshoot extends Component {
 				<div className='cycle-list'>
 					{ 
 						cycles.map( (cycle, index) => {
-							const cycleClassName = className(['cycle', { active : index === state.state }]),
-								imageClassName = className(['sprite', 'circle', { blue : index === state.state}]);
+							const cycleClassName = className(['cycle', { active : index === state.state || 0 }]),
+								imageClassName = className(['sprite', 'circle', { blue : index === state.state || 0 }]);
 							return (
 								<div key={cycle} className={ cycleClassName }>
 									<div className={imageClassName}><span>{`${index + 1}`}</span></div>

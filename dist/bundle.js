@@ -50942,8 +50942,8 @@
 						'div',
 						{ className: 'cycle-list' },
 						cycles.map(function (cycle, index) {
-							var cycleClassName = (0, _classnames2.default)(['cycle', { active: index === state.state }]),
-							    imageClassName = (0, _classnames2.default)(['sprite', 'circle', { blue: index === state.state }]);
+							var cycleClassName = (0, _classnames2.default)(['cycle', { active: index === state.state || 0 }]),
+							    imageClassName = (0, _classnames2.default)(['sprite', 'circle', { blue: index === state.state || 0 }]);
 							return _react2.default.createElement(
 								'div',
 								{ key: cycle, className: cycleClassName },
