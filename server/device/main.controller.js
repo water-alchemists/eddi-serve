@@ -69,7 +69,7 @@ module.exports = app => {
             Priority
             1. Manual Override
             2. Schedule - Within time = On, Outside time = Off
-            3. Weather - Rain Volume > 0.5 = Off, else On
+            3. Weather - Rain Volume > 0.3 = Off, else On
             4. Salinity Threshold - Recent Salinity < Threshold = Off, else On             
         */
         

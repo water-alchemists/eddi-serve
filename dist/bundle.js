@@ -51340,13 +51340,13 @@
 	            var stateText = void 0;
 	            if (state === 0) stateText = 'manual off';else if (state === 1) stateText = 'manual on';else stateText = 'auto';
 
-	            return 'machine is set to ' + stateText;
+	            return 'eddi is set to ' + stateText;
 	        case 'schedule':
-	            return 'machine is running on schedule';
+	            return 'eddi is running on schedule';
 	        case 'weather':
-	            return 'rain volume is greater than 0.5';
+	            return 'rain volume is greater than 0.3';
 	        case 'initialize':
-	            return 'machine is starting up';
+	            return 'eddi is starting up';
 	        default:
 	            return "of reasons I can't understand";
 	    }
