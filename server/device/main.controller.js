@@ -133,7 +133,7 @@ module.exports = app => {
                                 // 3. Weather
                                 return res.status(200).json({ 
                                     [RESPONSE.state] : false, 
-                                    [RESPONSE.reason] : REASON.threshold 
+                                    [RESPONSE.reason] : REASON.weather
                                 }); 
                             }
                             else if(isBelowThreshold) {
