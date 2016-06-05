@@ -83,7 +83,6 @@ module.exports = app => {
                     timing = settings.timing,
                     zip = settings.zip,
                     isBelowThreshold = checkBelowThreshold(settings.salinity, reading.ppmIn);
-               console.log('this is a reading', reading);
                 
                 if(state === 0){
                     // 1. Manual Override Off
