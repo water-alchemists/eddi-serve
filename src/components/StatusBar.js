@@ -5,14 +5,21 @@ import EddiStateButton from './EddiStateButton';
 
 import style from '../less/StatusBar.less';
 
+function setStateText(state){
+	switch(state){
+	case 0 :
+		return 'OFF';
+	case 1 : 
+		return 'ON';
+	default : 
+		return 'AUTO';
+	};
+}
+
 function renderReason(reason, state){
     switch(reason){
     case 'override':
-        let stateText;
-        if(state === 0) stateText = 'manual off';
-        else if(state === 1) stateText = 'manual on';
-        else stateText = 'auto';
-        
+        const stateText = setStateText(state);
         return `eddi is set to ${stateText}`;
     case 'schedule':
         return 'eddi is running on schedule';
@@ -28,26 +35,63 @@ function renderReason(reason, state){
 }
 
 class StatusBar extends Component {
-    render(){
-        const { isOn, state, reason, onClick } = this.props,
-            stateText = isOn ? 'ON' : 'OFF',
+    _renderInitialize(){
+        console.log('rendering initialize');
+        return (
+          <div className='status-bar'>
+            <p>Fetching the status of your eddi...</p>
+          </div>  
+        );    
+    }
+    
+    _renderStatus(){
+        const { state, current, reason } = this.props,
+            stateText = setStateText(state),
+            isOn = !!current,
+            onText = isOn ? 'ON' : 'OFF',
             reasonText = renderReason(reason, state);
+        if(state != 2 && !!state != isOn){ // if pending override to take over
+            return (
+                <p>{`Setting the mode of your eddi to ${stateText}...`}</p>
+            );
+        }
+        else {
+            return (
+                <p>{`Currently is ${onText} because ${reasonText}.`}</p>
+            );
+        }
+    }
+    
+    _renderFetch(){
+        const { state, onClick } = this.props,
+            StatusElement = this._renderStatus();
         return (
             <div className='status-bar'>
-                <p>{`Currently is ${stateText} because ${reasonText}.`}</p>
+                { StatusElement }
                 <EddiStateButton onClick={state => onClick(state)}
                     value={state}
                 />
             </div>  
         );
     }
+    
+    render(){
+        const { current, state, reason } = this.props,
+            StatusBarElement = state === null ? this._renderInitialize() : this._renderFetch();
+        console.log('hi', current, state, reason, current === null && state === null)
+        return StatusBarElement;
+    }
 }
 
 StatusBar.propTypes = {
-    isOn : PropTypes.bool.isRequired,
-    reason : PropTypes.string.isRequired,
+    reason : PropTypes.string,
     onClick : PropTypes.func,
-    state : PropTypes.number.isRequired
+    state : PropTypes.number,
+    current : PropTypes.number
 };
+
+StatusBar.defaultProps = {
+    current : 0
+}
 
 export default StatusBar;

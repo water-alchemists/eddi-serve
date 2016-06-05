@@ -113,7 +113,7 @@ class Troubleshoot extends Component {
 			<div id='troubleshoot' className='page'>
 				<StatusBar onClick={state => setEddiState(eddi.id, state)}
 					 reason={eddi.state.reason}
-					 isOn={!!eddi.state.state}
+					 current={eddi.state.state}
 					 state={eddi.settings.state}
 				/>
 				{TroubleshootElement}

@@ -50986,7 +50986,7 @@
 							return setEddiState(eddi.id, state);
 						},
 						reason: eddi.state.reason,
-						isOn: !!eddi.state.state,
+						current: eddi.state.state,
 						state: eddi.settings.state
 					}),
 					TroubleshootElement
@@ -51334,15 +51334,26 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	function setStateText(state) {
+	    switch (state) {
+	        case 0:
+	            return 'OFF';
+	        case 1:
+	            return 'ON';
+	        default:
+	            return 'AUTO';
+	    };
+	}
+
 	function renderReason(reason, state) {
 	    switch (reason) {
 	        case 'override':
-	            var stateText = void 0;
-	            if (state === 0) stateText = 'manual off';else if (state === 1) stateText = 'manual on';else stateText = 'auto';
-
+	            var stateText = setStateText(state);
 	            return 'eddi is set to ' + stateText;
 	        case 'schedule':
 	            return 'eddi is running on schedule';
+	        case 'threshold':
+	            return 'salinity of the incoming water is less than the set threshold';
 	        case 'weather':
 	            return 'rain volume is greater than 0.3';
 	        case 'initialize':
@@ -51362,23 +51373,56 @@
 	    }
 
 	    _createClass(StatusBar, [{
-	        key: 'render',
-	        value: function render() {
-	            var _props = this.props;
-	            var isOn = _props.isOn;
-	            var state = _props.state;
-	            var reason = _props.reason;
-	            var _onClick = _props.onClick;
-	            var stateText = isOn ? 'ON' : 'OFF';
-	            var reasonText = renderReason(reason, state);
+	        key: '_renderInitialize',
+	        value: function _renderInitialize() {
+	            console.log('rendering initialize');
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'status-bar' },
 	                _react2.default.createElement(
 	                    'p',
 	                    null,
-	                    'Currently is ' + stateText + ' because ' + reasonText + '.'
-	                ),
+	                    'Fetching the status of your eddi...'
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_renderStatus',
+	        value: function _renderStatus() {
+	            var _props = this.props;
+	            var state = _props.state;
+	            var current = _props.current;
+	            var reason = _props.reason;
+	            var stateText = setStateText(state);
+	            var isOn = !!current;
+	            var onText = isOn ? 'ON' : 'OFF';
+	            var reasonText = renderReason(reason, state);
+	            if (state != 2 && !!state != isOn) {
+	                // if pending override to take over
+	                return _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Setting the mode of your eddi to ' + stateText + '...'
+	                );
+	            } else {
+	                return _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Currently is ' + onText + ' because ' + reasonText + '.'
+	                );
+	            }
+	        }
+	    }, {
+	        key: '_renderFetch',
+	        value: function _renderFetch() {
+	            var _props2 = this.props;
+	            var state = _props2.state;
+	            var _onClick = _props2.onClick;
+	            var StatusElement = this._renderStatus();
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'status-bar' },
+	                StatusElement,
 	                _react2.default.createElement(_EddiStateButton2.default, { onClick: function onClick(state) {
 	                        return _onClick(state);
 	                    },
@@ -51386,16 +51430,31 @@
 	                })
 	            );
 	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props3 = this.props;
+	            var current = _props3.current;
+	            var state = _props3.state;
+	            var reason = _props3.reason;
+	            var StatusBarElement = state === null ? this._renderInitialize() : this._renderFetch();
+	            console.log('hi', current, state, reason, current === null && state === null);
+	            return StatusBarElement;
+	        }
 	    }]);
 
 	    return StatusBar;
 	}(_react.Component);
 
 	StatusBar.propTypes = {
-	    isOn: _react.PropTypes.bool.isRequired,
-	    reason: _react.PropTypes.string.isRequired,
+	    reason: _react.PropTypes.string,
 	    onClick: _react.PropTypes.func,
-	    state: _react.PropTypes.number.isRequired
+	    state: _react.PropTypes.number,
+	    current: _react.PropTypes.number
+	};
+
+	StatusBar.defaultProps = {
+	    current: 0
 	};
 
 	exports.default = StatusBar;
