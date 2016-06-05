@@ -1,44 +1,97 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
+import classNames from 'classnames';
 
 import style from '../less/EddiStateButton.less';
 
+function setStateText(state){
+	switch(state){
+	case 0 :
+		return 'OFF';
+	case 1 : 
+		return 'ON';
+	default : 
+		return 'AUTO';
+	};
+}
+
 class EddiStateButton extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			hide : true
+		};
+	}
+	
+	componentWillReceiveProps(nextProps){
+		const { hide } = this.state;
+		this.setState({ hide : true });	
+	}
+	
+	_toggle(event){
+		event.preventDefault();
+		const { hide } = this.state;
+		this.setState({ hide : !hide });
+	}
+	
 	clickHandler(event, value, cb){
 		event.preventDefault();
 		if(cb instanceof Function) return cb(value);
 	}
-
-	_renderOff(){
-		const { onClick } = this.props;
+	
+	_renderOptions(){
+		const { onClick, value } = this.props;
+		
+		const options = [
+			0,
+			1,
+			2
+		],
+		optionsElements = options.map(option => {
+			const optionClass = classNames([
+				'state-options',
+				{ active : option === value }
+			]),
+			optionName = setStateText(option);
+			
+			return (
+				<div className={optionClass}
+					onClick={event => this.clickHandler(event, option, onClick) }
+					key={optionName}
+				>
+					{optionName}
+				</div>
+			);
+		});
+		
+		
+		
 		return (
-			<div className='eddi-state-button' 
-				onClick={ event => this.clickHandler(event, 1, onClick) }
-			>
-				ON
+			<div className='state-options-container'>
+				{ optionsElements }
 			</div>
-		);
+		)
 	}
-
-	_renderOn(){
-		const { onClick } = this.props;
+	
+	render(){
+		const { value } = this.props,
+			{ hide } = this.state,
+			stateText = setStateText(value),
+			OptionContainerElement = hide ? null : this._renderOptions();
 
 		return (
 			<div className='eddi-state-button'
-				onClick={ event => this.clickHandler(event, 0, onClick) }
+				onClick={event => this._toggle(event)}
 			>
-				OFF
+				{stateText}
+				{ OptionContainerElement }
 			</div>
 		);
-	}
-	render(){
-		const { value } = this.props;
-		return value ? this._renderOn() : this._renderOff();
 	}
 }
 
 EddiStateButton.propTypes = {
-	value : PropTypes.bool.isRequired,
+	value : PropTypes.number.isRequired,
 	onClick: PropTypes.func.isRequired
 };
 

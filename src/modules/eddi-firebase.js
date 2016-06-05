@@ -370,7 +370,7 @@ class EddiFire {
 
 	setEddiState(id, state){
 		if(typeof state !== 'number') throw new Error('State must be a number.');
-		if(!(state === 0 || state === 1)) throw new Error('State must be a number either: 0 = off, 1 = on.');
+		if(!(state === 0 || state === 1 || state === 2)) throw new Error('State must be a number either: 0 = off, 1 = on, 2 = auto.');
 		return this.findByEddi(id)
 			.then(() => this.isEddiOwner(id))
 			.then(() => {

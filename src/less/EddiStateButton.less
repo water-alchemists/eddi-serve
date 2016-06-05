@@ -8,6 +8,26 @@
 	width: 120px;
 	margin: 0px;
 	text-align: center;
+	position : relative;
+	.state-options-container {
+		position : absolute;
+		top : 0;
+		left : 0;
+		width : 120px;
+		border : 1px solid black;
+		.state-options {
+			padding: 8px;
+			text-align : center;
+			margin : 0;
+			color : @trim_color;
+			background-color: white;
+			cursor: pointer;
+			&.active {
+				color: white;
+				background-color: @true_blue;
+			}
+		}
+	}
 }
 
 .export {

@@ -35,7 +35,7 @@ class TroubleshootImage extends Component {
 		})
 	}
 	render(){
-		const { current } = this.props;
+		const { current, state } = this.props;
 		return (
 			<div className='troubleshoot-image-header'>
 				<div className='troubleshoot-image-container'>
@@ -45,7 +45,7 @@ class TroubleshootImage extends Component {
 					</div>
 				</div>
 				<div className='image-footer'>
-					<EddiStateButton value={!!current}
+					<EddiStateButton value={state}
 						onClick={value => this.clickHandler(value)}
 					/>
 				</div>
@@ -56,7 +56,8 @@ class TroubleshootImage extends Component {
 
 TroubleshootImage.propTypes = {
 	onClick : PropTypes.func,
-	current : PropTypes.number
+	current : PropTypes.number,
+	state : PropTypes.number
 }
 
 export default TroubleshootImage;

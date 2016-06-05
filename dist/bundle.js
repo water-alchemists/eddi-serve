@@ -27948,15 +27948,15 @@
 
 	var _Settings3 = _interopRequireDefault(_Settings2);
 
-	var _Troubleshoot2 = __webpack_require__(456);
+	var _Troubleshoot2 = __webpack_require__(457);
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(463);
+	var _Report2 = __webpack_require__(465);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
-	var _Profile2 = __webpack_require__(471);
+	var _Profile2 = __webpack_require__(473);
 
 	var _Profile3 = _interopRequireDefault(_Profile2);
 
@@ -31603,7 +31603,7 @@
 				var _this22 = this;
 
 				if (typeof state !== 'number') throw new Error('State must be a number.');
-				if (!(state === 0 || state === 1)) throw new Error('State must be a number either: 0 = off, 1 = on.');
+				if (!(state === 0 || state === 1 || state === 2)) throw new Error('State must be a number either: 0 = off, 1 = on, 2 = auto.');
 				return this.findByEddi(id).then(function () {
 					return _this22.isEddiOwner(id);
 				}).then(function () {
@@ -49521,7 +49521,7 @@
 
 	var _SettingsEddi2 = _interopRequireDefault(_SettingsEddi);
 
-	var _Settings = __webpack_require__(454);
+	var _Settings = __webpack_require__(455);
 
 	var _Settings2 = _interopRequireDefault(_Settings);
 
@@ -50041,7 +50041,7 @@
 
 	var _CropInput2 = _interopRequireDefault(_CropInput);
 
-	var _ZipInput = __webpack_require__(475);
+	var _ZipInput = __webpack_require__(454);
 
 	var _ZipInput2 = _interopRequireDefault(_ZipInput);
 
@@ -50609,10 +50609,115 @@
 /* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ZipInput = function (_Component) {
+	    _inherits(ZipInput, _Component);
+
+	    function ZipInput(props) {
+	        _classCallCheck(this, ZipInput);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ZipInput).call(this, props));
+
+	        _this.state = {
+	            value: null
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ZipInput, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            var value = nextProps.value;
+
+	            if (value && value !== this.state.value) this.setState({ value: value });
+	        }
+	    }, {
+	        key: 'changeHandler',
+	        value: function changeHandler(event) {
+	            event.preventDefault();
+	            var onChange = this.props.onChange;
+	            var value = event.target.value;
+	            if (!value || value.length < 6) this.setState({ value: value });
+	        }
+	    }, {
+	        key: 'blurHandler',
+	        value: function blurHandler(event) {
+	            event.preventDefault();
+	            var onChange = this.props.onChange;
+	            var value = event.target.value;
+	            var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
+
+	            if (onChange instanceof Function) onChange(formattedValue);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            var placeholder = this.props.placeholder;
+	            var value = this.state.value;
+
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'zip-input' },
+	                _react2.default.createElement('input', { type: 'number',
+	                    onChange: function onChange(event) {
+	                        return _this2.changeHandler(event);
+	                    },
+	                    placeholder: placeholder,
+	                    pattern: '[0-9]*',
+	                    onBlur: function onBlur(event) {
+	                        return _this2.blurHandler(event);
+	                    },
+	                    value: value
+	                })
+	            );
+	        }
+	    }]);
+
+	    return ZipInput;
+	}(_react.Component);
+
+	ZipInput.propTypes = {
+	    value: _react.PropTypes.number,
+	    onChange: _react.PropTypes.func,
+	    placeholder: _react.PropTypes.string
+	};
+
+	ZipInput.defaultProps = {
+	    placeholder: 'Enter Zip Code'
+	};
+
+	exports.default = ZipInput;
+
+/***/ },
+/* 455 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(455);
+	var content = __webpack_require__(456);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(274)(content, {});
@@ -50632,7 +50737,7 @@
 	}
 
 /***/ },
-/* 455 */
+/* 456 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(273)();
@@ -50646,7 +50751,7 @@
 
 
 /***/ },
-/* 456 */
+/* 457 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50671,7 +50776,7 @@
 
 	var _menu = __webpack_require__(424);
 
-	var _EddiStateButton = __webpack_require__(457);
+	var _EddiStateButton = __webpack_require__(458);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
@@ -50679,9 +50784,13 @@
 
 	var _AddEddiButton2 = _interopRequireDefault(_AddEddiButton);
 
-	var _TroubleshootImage = __webpack_require__(460);
+	var _TroubleshootImage = __webpack_require__(461);
 
 	var _TroubleshootImage2 = _interopRequireDefault(_TroubleshootImage);
+
+	var _StatusBar = __webpack_require__(462);
+
+	var _StatusBar2 = _interopRequireDefault(_StatusBar);
 
 	var _eddiFirebase = __webpack_require__(300);
 
@@ -50689,7 +50798,7 @@
 
 	var _data = __webpack_require__(304);
 
-	var _Troubleshoot = __webpack_require__(461);
+	var _Troubleshoot = __webpack_require__(463);
 
 	var _Troubleshoot2 = _interopRequireDefault(_Troubleshoot);
 
@@ -50799,6 +50908,8 @@
 				var _eddi$state = eddi.state;
 				var state = _eddi$state === undefined ? {} : _eddi$state;
 				var id = eddi.id;
+				var _eddi$settings = eddi.settings;
+				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 				var cycles = ['off', 'prime', 'channel a', 'channel b'];
 				var updatedTime = (0, _data.formatEpochToTime)(state.updated);
 				return _react2.default.createElement(
@@ -50807,12 +50918,13 @@
 					_react2.default.createElement(_TroubleshootImage2.default, { current: state.state,
 						onClick: function onClick(state) {
 							return setEddiState(eddi.id, state);
-						}
+						},
+						state: settings.state
 					}),
 					_react2.default.createElement(
 						'div',
 						{ className: 'troubleshoot-header' },
-						state.state ? _react2.default.createElement(
+						settings.state ? _react2.default.createElement(
 							'p',
 							{ className: 'troubleshoot-warning' },
 							'note: turns off entire eddi'
@@ -50873,6 +50985,13 @@
 				return _react2.default.createElement(
 					'div',
 					{ id: 'troubleshoot', className: 'page' },
+					_react2.default.createElement(_StatusBar2.default, { onClick: function onClick(state) {
+							return setEddiState(eddi.id, state);
+						},
+						reason: eddi.state.reason,
+						isOn: !!eddi.state.state,
+						state: eddi.settings.state
+					}),
 					TroubleshootElement
 				);
 			}
@@ -50884,7 +51003,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Troubleshoot);
 
 /***/ },
-/* 457 */
+/* 458 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50899,7 +51018,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _EddiStateButton = __webpack_require__(458);
+	var _classnames = __webpack_require__(270);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _EddiStateButton = __webpack_require__(459);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
@@ -50911,62 +51034,105 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	function setStateText(state) {
+		switch (state) {
+			case 0:
+				return 'OFF';
+			case 1:
+				return 'ON';
+			default:
+				return 'AUTO';
+		};
+	}
+
 	var EddiStateButton = function (_Component) {
 		_inherits(EddiStateButton, _Component);
 
-		function EddiStateButton() {
+		function EddiStateButton(props) {
 			_classCallCheck(this, EddiStateButton);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(EddiStateButton).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EddiStateButton).call(this, props));
+
+			_this.state = {
+				hide: true
+			};
+			return _this;
 		}
 
 		_createClass(EddiStateButton, [{
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var hide = this.state.hide;
+
+				this.setState({ hide: true });
+			}
+		}, {
+			key: '_toggle',
+			value: function _toggle(event) {
+				event.preventDefault();
+				var hide = this.state.hide;
+
+				this.setState({ hide: !hide });
+			}
+		}, {
 			key: 'clickHandler',
 			value: function clickHandler(event, value, cb) {
 				event.preventDefault();
 				if (cb instanceof Function) return cb(value);
 			}
 		}, {
-			key: '_renderOff',
-			value: function _renderOff() {
+			key: '_renderOptions',
+			value: function _renderOptions() {
 				var _this2 = this;
 
-				var _onClick = this.props.onClick;
+				var _props = this.props;
+				var _onClick = _props.onClick;
+				var value = _props.value;
+
+
+				var options = [0, 1, 2],
+				    optionsElements = options.map(function (option) {
+					var optionClass = (0, _classnames2.default)(['state-options', { active: option === value }]),
+					    optionName = setStateText(option);
+
+					return _react2.default.createElement(
+						'div',
+						{ className: optionClass,
+							onClick: function onClick(event) {
+								return _this2.clickHandler(event, option, _onClick);
+							},
+							key: optionName
+						},
+						optionName
+					);
+				});
 
 				return _react2.default.createElement(
 					'div',
-					{ className: 'eddi-state-button',
-						onClick: function onClick(event) {
-							return _this2.clickHandler(event, 1, _onClick);
-						}
-					},
-					'ON'
-				);
-			}
-		}, {
-			key: '_renderOn',
-			value: function _renderOn() {
-				var _this3 = this;
-
-				var _onClick2 = this.props.onClick;
-
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'eddi-state-button',
-						onClick: function onClick(event) {
-							return _this3.clickHandler(event, 0, _onClick2);
-						}
-					},
-					'OFF'
+					{ className: 'state-options-container' },
+					optionsElements
 				);
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var value = this.props.value;
+				var _this3 = this;
 
-				return value ? this._renderOn() : this._renderOff();
+				var value = this.props.value;
+				var hide = this.state.hide;
+				var stateText = setStateText(value);
+				var OptionContainerElement = hide ? null : this._renderOptions();
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'eddi-state-button',
+						onClick: function onClick(event) {
+							return _this3._toggle(event);
+						}
+					},
+					stateText,
+					OptionContainerElement
+				);
 			}
 		}]);
 
@@ -50974,20 +51140,20 @@
 	}(_react.Component);
 
 	EddiStateButton.propTypes = {
-		value: _react.PropTypes.bool.isRequired,
+		value: _react.PropTypes.number.isRequired,
 		onClick: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = EddiStateButton;
 
 /***/ },
-/* 458 */
+/* 459 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(459);
+	var content = __webpack_require__(460);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(274)(content, {});
@@ -51007,7 +51173,7 @@
 	}
 
 /***/ },
-/* 459 */
+/* 460 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(273)();
@@ -51015,13 +51181,13 @@
 
 
 	// module
-	exports.push([module.id, ".eddi-state-button {\n  background-color: white;\n  cursor: pointer;\n  padding: 8px;\n  color: #006d60;\n  width: 120px;\n  margin: 0px;\n  text-align: center;\n}\n.export {\n  background-color: white;\n  cursor: pointer;\n  padding: 10px;\n  color: #006d60;\n  width: 80px;\n  margin: 0px;\n  text-align: center;\n}\n", ""]);
+	exports.push([module.id, ".eddi-state-button {\n  background-color: white;\n  cursor: pointer;\n  padding: 8px;\n  color: #006d60;\n  width: 120px;\n  margin: 0px;\n  text-align: center;\n  position: relative;\n}\n.eddi-state-button .state-options-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 120px;\n  border: 1px solid black;\n}\n.eddi-state-button .state-options-container .state-options {\n  padding: 8px;\n  text-align: center;\n  margin: 0;\n  color: #006d60;\n  background-color: white;\n  cursor: pointer;\n}\n.eddi-state-button .state-options-container .state-options.active {\n  color: white;\n  background-color: #2abfd0;\n}\n.export {\n  background-color: white;\n  cursor: pointer;\n  padding: 10px;\n  color: #006d60;\n  width: 80px;\n  margin: 0px;\n  text-align: center;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 460 */
+/* 461 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51040,7 +51206,7 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _EddiStateButton = __webpack_require__(457);
+	var _EddiStateButton = __webpack_require__(458);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
 
@@ -51103,7 +51269,9 @@
 			value: function render() {
 				var _this2 = this;
 
-				var current = this.props.current;
+				var _props = this.props;
+				var current = _props.current;
+				var state = _props.state;
 
 				return _react2.default.createElement(
 					'div',
@@ -51121,7 +51289,7 @@
 					_react2.default.createElement(
 						'div',
 						{ className: 'image-footer' },
-						_react2.default.createElement(_EddiStateButton2.default, { value: !!current,
+						_react2.default.createElement(_EddiStateButton2.default, { value: state,
 							onClick: function onClick(value) {
 								return _this2.clickHandler(value);
 							}
@@ -51136,19 +51304,114 @@
 
 	TroubleshootImage.propTypes = {
 		onClick: _react.PropTypes.func,
-		current: _react.PropTypes.number
+		current: _react.PropTypes.number,
+		state: _react.PropTypes.number
 	};
 
 	exports.default = TroubleshootImage;
 
 /***/ },
-/* 461 */
+/* 462 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _EddiStateButton = __webpack_require__(458);
+
+	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function renderReason(reason, state) {
+	    switch (reason) {
+	        case 'override':
+	            var stateText = void 0;
+	            if (state === 0) stateText = 'manual off';else if (state === 1) stateText = 'manual on';else stateText = 'auto';
+
+	            return 'machine is set to ' + stateText;
+	        case 'schedule':
+	            return 'machine is running on schedule';
+	        case 'weather':
+	            return 'rain volume is greater than 0.5';
+	        case 'initialize':
+	            return 'machine is starting up';
+	        default:
+	            return "of reasons I can't understand";
+	    }
+	}
+
+	var StatusBar = function (_Component) {
+	    _inherits(StatusBar, _Component);
+
+	    function StatusBar() {
+	        _classCallCheck(this, StatusBar);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(StatusBar).apply(this, arguments));
+	    }
+
+	    _createClass(StatusBar, [{
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props;
+	            var isOn = _props.isOn;
+	            var state = _props.state;
+	            var reason = _props.reason;
+	            var _onClick = _props.onClick;
+	            var stateText = isOn ? 'on' : 'off';
+	            var reasonText = renderReason(reason, state);
+	            return _react2.default.createElement(
+	                'div',
+	                { 'class': 'status' },
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Currently is ' + stateText + ' because ' + reasonText + '.'
+	                ),
+	                _react2.default.createElement(_EddiStateButton2.default, { onClick: function onClick(state) {
+	                        return _onClick(state);
+	                    },
+	                    value: state
+	                })
+	            );
+	        }
+	    }]);
+
+	    return StatusBar;
+	}(_react.Component);
+
+	StatusBar.propTypes = {
+	    isOn: _react.PropTypes.bool.isRequired,
+	    reason: _react.PropTypes.string.isRequired,
+	    onClick: _react.PropTypes.func,
+	    state: _react.PropTypes.number.isRequired
+	};
+
+	exports.default = StatusBar;
+
+/***/ },
+/* 463 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(462);
+	var content = __webpack_require__(464);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(274)(content, {});
@@ -51168,7 +51431,7 @@
 	}
 
 /***/ },
-/* 462 */
+/* 464 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(273)();
@@ -51182,7 +51445,7 @@
 
 
 /***/ },
-/* 463 */
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51209,13 +51472,13 @@
 
 	var _data = __webpack_require__(304);
 
-	var _downloadTrigger = __webpack_require__(464);
+	var _downloadTrigger = __webpack_require__(466);
 
-	var _DateSelect = __webpack_require__(468);
+	var _DateSelect = __webpack_require__(470);
 
 	var _DateSelect2 = _interopRequireDefault(_DateSelect);
 
-	var _Report = __webpack_require__(469);
+	var _Report = __webpack_require__(471);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -51523,7 +51786,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 464 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51534,7 +51797,7 @@
 	exports.triggerDownload = triggerDownload;
 	exports.triggerPdf = triggerPdf;
 
-	var _filesaverjs = __webpack_require__(465);
+	var _filesaverjs = __webpack_require__(467);
 
 	var _constants = __webpack_require__(257);
 
@@ -51564,7 +51827,7 @@
 	}
 
 /***/ },
-/* 465 */
+/* 467 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
@@ -51842,7 +52105,7 @@
 
 	if (typeof module !== "undefined" && module.exports) {
 	  module.exports.saveAs = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(466) !== null) && (__webpack_require__(467) !== null)) {
+	} else if (("function" !== "undefined" && __webpack_require__(468) !== null) && (__webpack_require__(469) !== null)) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
 	    return saveAs;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -51850,14 +52113,14 @@
 
 
 /***/ },
-/* 466 */
+/* 468 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 467 */
+/* 469 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -51865,7 +52128,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 468 */
+/* 470 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52038,13 +52301,13 @@
 	exports.default = DateSelect;
 
 /***/ },
-/* 469 */
+/* 471 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(470);
+	var content = __webpack_require__(472);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(274)(content, {});
@@ -52064,7 +52327,7 @@
 	}
 
 /***/ },
-/* 470 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(273)();
@@ -52078,7 +52341,7 @@
 
 
 /***/ },
-/* 471 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52095,7 +52358,7 @@
 
 	var _reactRedux = __webpack_require__(176);
 
-	var _ChangePasswordForm = __webpack_require__(472);
+	var _ChangePasswordForm = __webpack_require__(474);
 
 	var _ChangePasswordForm2 = _interopRequireDefault(_ChangePasswordForm);
 
@@ -52105,7 +52368,7 @@
 
 	var _form = __webpack_require__(412);
 
-	var _Profile = __webpack_require__(473);
+	var _Profile = __webpack_require__(475);
 
 	var _Profile2 = _interopRequireDefault(_Profile);
 
@@ -52201,7 +52464,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Profile);
 
 /***/ },
-/* 472 */
+/* 474 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52386,13 +52649,13 @@
 	exports.default = ChangePasswordForm;
 
 /***/ },
-/* 473 */
+/* 475 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(474);
+	var content = __webpack_require__(476);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(274)(content, {});
@@ -52412,7 +52675,7 @@
 	}
 
 /***/ },
-/* 474 */
+/* 476 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(273)();
@@ -52424,111 +52687,6 @@
 
 	// exports
 
-
-/***/ },
-/* 475 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(5);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ZipInput = function (_Component) {
-	    _inherits(ZipInput, _Component);
-
-	    function ZipInput(props) {
-	        _classCallCheck(this, ZipInput);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ZipInput).call(this, props));
-
-	        _this.state = {
-	            value: null
-	        };
-	        return _this;
-	    }
-
-	    _createClass(ZipInput, [{
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            var value = nextProps.value;
-
-	            if (value && value !== this.state.value) this.setState({ value: value });
-	        }
-	    }, {
-	        key: 'changeHandler',
-	        value: function changeHandler(event) {
-	            event.preventDefault();
-	            var onChange = this.props.onChange;
-	            var value = event.target.value;
-	            if (!value || value.length < 6) this.setState({ value: value });
-	        }
-	    }, {
-	        key: 'blurHandler',
-	        value: function blurHandler(event) {
-	            event.preventDefault();
-	            var onChange = this.props.onChange;
-	            var value = event.target.value;
-	            var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
-
-	            if (onChange instanceof Function) onChange(formattedValue);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-
-	            var placeholder = this.props.placeholder;
-	            var value = this.state.value;
-
-
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'zip-input' },
-	                _react2.default.createElement('input', { type: 'number',
-	                    onChange: function onChange(event) {
-	                        return _this2.changeHandler(event);
-	                    },
-	                    placeholder: placeholder,
-	                    pattern: '[0-9]*',
-	                    onBlur: function onBlur(event) {
-	                        return _this2.blurHandler(event);
-	                    },
-	                    value: value
-	                })
-	            );
-	        }
-	    }]);
-
-	    return ZipInput;
-	}(_react.Component);
-
-	ZipInput.propTypes = {
-	    value: _react.PropTypes.number,
-	    onChange: _react.PropTypes.func,
-	    placeholder: _react.PropTypes.string
-	};
-
-	ZipInput.defaultProps = {
-	    placeholder: 'Enter Zip Code'
-	};
-
-	exports.default = ZipInput;
 
 /***/ }
 /******/ ]);

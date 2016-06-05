@@ -37,8 +37,10 @@ function checkTime(start, end){
     //set end date
     endTime.setHours(end.hour);
     endTime.setMinutes(end.minute);
-
-  return current < endTime && current > startTime;
+    
+    console.log('endTime', endTime, 'startTime', startTime, 'currentTime', currentTime, 'result', current < endTime && current >= startTime);
+    
+  return current < endTime && current >= startTime;
 }
 
 // checks if over salinity threshold
@@ -74,18 +76,27 @@ module.exports = app => {
             
         return Promise.all([getSettings, getReadings])
             .then(data => {
-                const settings = data[0],
-                    reading = data[1],
+                const settings = data[0] || {},
+                    reading = data[1] || {},
+                    state = settings.state,
+                    timing = settings.timing,
                     isBelowThreshold = checkBelowThreshold(settings.salinity, reading.ppmIn);
                 
-                if(settings.state === 0) {
-                    // 1. Manual Override
+                if(state === 0){
+                    // 1. Manual Override Off
                     return res.status(200).json({ 
                         [RESPONSE.state] : false, 
                         [RESPONSE.reason] : REASON.override 
                     });
-                }                                        
-                else if(!checkTime(settings.timing.start, settings.timing.end)) {
+                }
+                else if(state === 1){
+                    // 1. Manual Override On
+                    return res.status(200).json({
+                        [RESPONSE.state] : true,
+                        [RESPONSE.reason] : REASON.override
+                    });
+                }                                     
+                else if(!checkTime(timing.start, timing.end)) {
                     // 2. Schedule
                     return res.status(200).json({ 
                         [RESPONSE.state] : false, 
