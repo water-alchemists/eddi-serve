@@ -51357,7 +51357,9 @@
 	        case 'weather':
 	            return 'rain volume is greater than 0.3';
 	        case 'initialize':
-	            return 'eddi is starting up';
+	            return 'eddi is starting up...';
+	        case 'exit':
+	            return 'eddi has exited';
 	        default:
 	            return "of reasons I can't understand";
 	    }
