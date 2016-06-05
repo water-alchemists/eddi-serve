@@ -81,6 +81,7 @@ module.exports = app => {
                     reading = data[1] || {},
                     state = settings.state,
                     timing = settings.timing,
+                    zip = settings.zip,
                     isBelowThreshold = checkBelowThreshold(settings.salinity, reading.ppmIn);
                console.log('this is a reading', reading);
                 
@@ -105,7 +106,7 @@ module.exports = app => {
                         [RESPONSE.reason] : REASON.schedule 
                     }); 
                 }
-                else if(!settings.zip) {
+                else if(!zip) {
                     if(isBelowThreshold) {
                         // 4. Salinity Threshold
                         return res.status(200).json({ 
@@ -121,11 +122,13 @@ module.exports = app => {
                         }); 
                     }
                 }
-                else return weather.getJsonByZip(settings.zip)
+                else return weather.getJsonByZip(zip)
                         .then(current => {
                             const rain = current.rain || {},
                                 volume = rain['3h'];
+                            console.log('got weather reading', current, 'zip code', zip);
                             if(isRaining(volume)) {
+                                console.log('weather check says its raining');
                                 // 3. Weather
                                 return res.status(200).json({ 
                                     [RESPONSE.state] : false, 
