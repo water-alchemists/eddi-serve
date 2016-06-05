@@ -51300,6 +51300,10 @@
 		state: _react.PropTypes.number
 	};
 
+	TroubleshootImage.defaultProps = {
+		current: 0
+	};
+
 	exports.default = TroubleshootImage;
 
 /***/ },

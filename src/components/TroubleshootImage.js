@@ -61,4 +61,8 @@ TroubleshootImage.propTypes = {
 	state : PropTypes.number
 }
 
+TroubleshootImage.defaultProps = {
+	current : 0
+};
+
 export default TroubleshootImage;
