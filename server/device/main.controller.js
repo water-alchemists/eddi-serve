@@ -51,7 +51,8 @@ function checkBelowThreshold(threshold, salinityIn){
 
 // checks if raining
 function isRaining(volume){
-    return volume && volume > 0.5;
+    console.log('rain volume', volume, 'is raining?', volume > 0.3);
+    return volume > 0.3;
 }
 
 module.exports = app => {
@@ -124,8 +125,9 @@ module.exports = app => {
                 else return weather.getJsonByZip(zip)
                         .then(current => {
                             const rain = current.rain || {},
-                                volume = rain['3h'];
-                            console.log('got weather reading', current, 'zip code', zip);
+                                duration = Object.keys(rain)[0],
+                                volume = duration ? rain[duration] : 0;
+                            console.log('got weather reading', current, 'duration', duration, 'volume', volume);
                             if(isRaining(volume)) {
                                 console.log('weather check says its raining');
                                 // 3. Weather
