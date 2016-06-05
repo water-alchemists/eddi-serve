@@ -69,13 +69,14 @@ class Troubleshoot extends Component {
 	_renderSelected(){
 		const { eddi={} , setEddiState } = this.props,
 			{ state={} , id, settings={} } = eddi,
+			formattedState = state.state || 0,
 			cycles = ['off', 'prime', 'channel a', 'channel b'],
 			updatedTime = formatEpochToTime(state.updated);
 								// { settings.state ? <p className='troubleshoot-warning'>note: turns off entire eddi</p> : null }
 
 		return (
 			<div className='content'>
-				<TroubleshootImage current={state.state}
+				<TroubleshootImage current={formattedState}
 					onClick={state => setEddiState(eddi.id, state)}
 					state={settings.state}
 				/>
@@ -86,8 +87,8 @@ class Troubleshoot extends Component {
 				<div className='cycle-list'>
 					{ 
 						cycles.map( (cycle, index) => {
-							const cycleClassName = className(['cycle', { active : index === state.state || 0 }]),
-								imageClassName = className(['sprite', 'circle', { blue : index === state.state || 0 }]);
+							const cycleClassName = className(['cycle', { active : index === formattedState }]),
+								imageClassName = className(['sprite', 'circle', { blue : index === formattedState }]);
 							return (
 								<div key={cycle} className={ cycleClassName }>
 									<div className={imageClassName}><span>{`${index + 1}`}</span></div>

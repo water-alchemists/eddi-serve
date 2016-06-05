@@ -50910,6 +50910,7 @@
 				var id = eddi.id;
 				var _eddi$settings = eddi.settings;
 				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
+				var formattedState = state.state || 0;
 				var cycles = ['off', 'prime', 'channel a', 'channel b'];
 				var updatedTime = (0, _data.formatEpochToTime)(state.updated);
 				// { settings.state ? <p className='troubleshoot-warning'>note: turns off entire eddi</p> : null }
@@ -50917,7 +50918,7 @@
 				return _react2.default.createElement(
 					'div',
 					{ className: 'content' },
-					_react2.default.createElement(_TroubleshootImage2.default, { current: state.state,
+					_react2.default.createElement(_TroubleshootImage2.default, { current: formattedState,
 						onClick: function onClick(state) {
 							return setEddiState(eddi.id, state);
 						},
@@ -50942,8 +50943,8 @@
 						'div',
 						{ className: 'cycle-list' },
 						cycles.map(function (cycle, index) {
-							var cycleClassName = (0, _classnames2.default)(['cycle', { active: index === state.state || 0 }]),
-							    imageClassName = (0, _classnames2.default)(['sprite', 'circle', { blue: index === state.state || 0 }]);
+							var cycleClassName = (0, _classnames2.default)(['cycle', { active: index === formattedState }]),
+							    imageClassName = (0, _classnames2.default)(['sprite', 'circle', { blue: index === formattedState }]);
 							return _react2.default.createElement(
 								'div',
 								{ key: cycle, className: cycleClassName },
