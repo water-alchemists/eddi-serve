@@ -38,7 +38,7 @@ function checkTime(start, end){
     endTime.setHours(end.hour);
     endTime.setMinutes(end.minute);
     
-    console.log('endTime', endTime, 'startTime', startTime, 'currentTime', currentTime, 'result', current < endTime && current >= startTime);
+    console.log('endTime', endTime, 'startTime', startTime, 'currentTime', current, 'result', current < endTime && current >= startTime);
     
   return current < endTime && current >= startTime;
 }
