@@ -45,6 +45,7 @@ function checkTime(start, end){
 
 // checks if over salinity threshold
 function checkBelowThreshold(threshold, salinityIn){
+    console.log('salinityIn', salinityIn, 'threshold', threshold, 'below?', salinityIn < threshold);
     return salinityIn < threshold;
 }
 
@@ -81,6 +82,7 @@ module.exports = app => {
                     state = settings.state,
                     timing = settings.timing,
                     isBelowThreshold = checkBelowThreshold(settings.salinity, reading.ppmIn);
+               console.log('this is a reading', reading);
                 
                 if(state === 0){
                     // 1. Manual Override Off

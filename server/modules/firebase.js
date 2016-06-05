@@ -46,6 +46,13 @@ function getCurrentReadingById(id){
                 },
                 reject
             );
+    })
+    .then(data => {
+        const keys = Object.keys(data);
+        if(!keys.length) return {};
+        const epoch = keys[0],
+            time = new Date(parseInt(epoch) * 1000);
+        return Object.assign({}, { timestamp : time }, data[epoch]);
     });
 }
 
@@ -69,6 +76,6 @@ module.exports = {
     updateStateById : updateStateById
 };
 
-// getSettingsById('test-teddi')
+// getCurrentReadingById('test-teddi')
 //     .then(data => console.log('got data', data))
 //     .catch(err => console.error('error', err));
