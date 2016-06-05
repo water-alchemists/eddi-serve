@@ -3,6 +3,8 @@ import React, { Component, PropTypes } from 'react';
 
 import EddiStateButton from './EddiStateButton';
 
+import style from '../less/StatusBar.less';
+
 function renderReason(reason, state){
     switch(reason){
     case 'override':
@@ -26,10 +28,10 @@ function renderReason(reason, state){
 class StatusBar extends Component {
     render(){
         const { isOn, state, reason, onClick } = this.props,
-            stateText = isOn ? 'on' : 'off',
+            stateText = isOn ? 'ON' : 'OFF',
             reasonText = renderReason(reason, state);
         return (
-            <div class='status'>
+            <div className='status-bar'>
                 <p>{`Currently is ${stateText} because ${reasonText}.`}</p>
                 <EddiStateButton onClick={state => onClick(state)}
                     value={state}

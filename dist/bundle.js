@@ -27952,11 +27952,11 @@
 
 	var _Troubleshoot3 = _interopRequireDefault(_Troubleshoot2);
 
-	var _Report2 = __webpack_require__(465);
+	var _Report2 = __webpack_require__(467);
 
 	var _Report3 = _interopRequireDefault(_Report2);
 
-	var _Profile2 = __webpack_require__(473);
+	var _Profile2 = __webpack_require__(475);
 
 	var _Profile3 = _interopRequireDefault(_Profile2);
 
@@ -50798,7 +50798,7 @@
 
 	var _data = __webpack_require__(304);
 
-	var _Troubleshoot = __webpack_require__(463);
+	var _Troubleshoot = __webpack_require__(465);
 
 	var _Troubleshoot2 = _interopRequireDefault(_Troubleshoot);
 
@@ -50912,6 +50912,8 @@
 				var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 				var cycles = ['off', 'prime', 'channel a', 'channel b'];
 				var updatedTime = (0, _data.formatEpochToTime)(state.updated);
+				// { settings.state ? <p className='troubleshoot-warning'>note: turns off entire eddi</p> : null }
+
 				return _react2.default.createElement(
 					'div',
 					{ className: 'content' },
@@ -50924,11 +50926,6 @@
 					_react2.default.createElement(
 						'div',
 						{ className: 'troubleshoot-header' },
-						settings.state ? _react2.default.createElement(
-							'p',
-							{ className: 'troubleshoot-warning' },
-							'note: turns off entire eddi'
-						) : null,
 						_react2.default.createElement(
 							'h3',
 							null,
@@ -51267,8 +51264,6 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this2 = this;
-
 				var _props = this.props;
 				var current = _props.current;
 				var state = _props.state;
@@ -51285,15 +51280,6 @@
 							this._renderSprites(),
 							this._renderBoxes()
 						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'image-footer' },
-						_react2.default.createElement(_EddiStateButton2.default, { value: state,
-							onClick: function onClick(value) {
-								return _this2.clickHandler(value);
-							}
-						})
 					)
 				);
 			}
@@ -51301,6 +51287,12 @@
 
 		return TroubleshootImage;
 	}(_react.Component);
+
+	// <div className='image-footer'>
+	// 					<EddiStateButton value={state}
+	// 						onClick={value => this.clickHandler(value)}
+	// 					/>
+	// 				</div>
 
 	TroubleshootImage.propTypes = {
 		onClick: _react.PropTypes.func,
@@ -51329,6 +51321,10 @@
 	var _EddiStateButton = __webpack_require__(458);
 
 	var _EddiStateButton2 = _interopRequireDefault(_EddiStateButton);
+
+	var _StatusBar = __webpack_require__(463);
+
+	var _StatusBar2 = _interopRequireDefault(_StatusBar);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51373,11 +51369,11 @@
 	            var state = _props.state;
 	            var reason = _props.reason;
 	            var _onClick = _props.onClick;
-	            var stateText = isOn ? 'on' : 'off';
+	            var stateText = isOn ? 'ON' : 'OFF';
 	            var reasonText = renderReason(reason, state);
 	            return _react2.default.createElement(
 	                'div',
-	                { 'class': 'status' },
+	                { className: 'status-bar' },
 	                _react2.default.createElement(
 	                    'p',
 	                    null,
@@ -51420,8 +51416,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Troubleshoot.less", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Troubleshoot.less");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./StatusBar.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/less-loader/index.js!./StatusBar.less");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -51439,13 +51435,53 @@
 
 
 	// module
-	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .sprite > span {\n    top: 35%;\n  }\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: black;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  font-weight: 700;\n  border-bottom: 4px solid #006d60;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 300px;\n  width: 300px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite {\n  position: absolute;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-0 {\n  bottom: 20px;\n  left: 50px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-1 {\n  bottom: 10px;\n  right: 70px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-2 {\n  top: 15px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-3 {\n  top: 120px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions {\n  position: absolute;\n  border-right: 2px solid;\n  border-bottom: 2px solid;\n  border-color: #ab3524;\n  width: 90px;\n  height: 55px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-2 {\n  top: 55px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-3 {\n  top: 160px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.blue {\n  border-color: #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image-header .image-footer {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-end;\n  padding-bottom: 20px;\n  padding-right: 20px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n  margin-top: 30px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: black;\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
+	exports.push([module.id, ".status-bar {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  padding: 8px;\n}\n.status-bar p {\n  margin: 0;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
 /* 465 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(466);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(274)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Troubleshoot.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Troubleshoot.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 466 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(273)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .sprite > span {\n    top: 35%;\n  }\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: black;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  font-weight: 700;\n  border-bottom: 4px solid #006d60;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 300px;\n  width: 300px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite {\n  position: absolute;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-0 {\n  bottom: 20px;\n  left: 50px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-1 {\n  bottom: 10px;\n  right: 70px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-2 {\n  top: 15px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-3 {\n  top: 120px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions {\n  position: absolute;\n  border-right: 2px solid;\n  border-bottom: 2px solid;\n  border-color: #ab3524;\n  width: 90px;\n  height: 55px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-2 {\n  top: 55px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-3 {\n  top: 160px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.blue {\n  border-color: #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image-header .image-footer {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-end;\n  padding-bottom: 20px;\n  padding-right: 20px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n  margin-top: 30px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: black;\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 467 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51472,13 +51508,13 @@
 
 	var _data = __webpack_require__(304);
 
-	var _downloadTrigger = __webpack_require__(466);
+	var _downloadTrigger = __webpack_require__(468);
 
-	var _DateSelect = __webpack_require__(470);
+	var _DateSelect = __webpack_require__(472);
 
 	var _DateSelect2 = _interopRequireDefault(_DateSelect);
 
-	var _Report = __webpack_require__(471);
+	var _Report = __webpack_require__(473);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -51786,7 +51822,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Report);
 
 /***/ },
-/* 466 */
+/* 468 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51797,7 +51833,7 @@
 	exports.triggerDownload = triggerDownload;
 	exports.triggerPdf = triggerPdf;
 
-	var _filesaverjs = __webpack_require__(467);
+	var _filesaverjs = __webpack_require__(469);
 
 	var _constants = __webpack_require__(257);
 
@@ -51827,7 +51863,7 @@
 	}
 
 /***/ },
-/* 467 */
+/* 469 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
@@ -52105,7 +52141,7 @@
 
 	if (typeof module !== "undefined" && module.exports) {
 	  module.exports.saveAs = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(468) !== null) && (__webpack_require__(469) !== null)) {
+	} else if (("function" !== "undefined" && __webpack_require__(470) !== null) && (__webpack_require__(471) !== null)) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
 	    return saveAs;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -52113,14 +52149,14 @@
 
 
 /***/ },
-/* 468 */
+/* 470 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 469 */
+/* 471 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -52128,7 +52164,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 470 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52301,13 +52337,13 @@
 	exports.default = DateSelect;
 
 /***/ },
-/* 471 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(472);
+	var content = __webpack_require__(474);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(274)(content, {});
@@ -52327,7 +52363,7 @@
 	}
 
 /***/ },
-/* 472 */
+/* 474 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(273)();
@@ -52341,7 +52377,7 @@
 
 
 /***/ },
-/* 473 */
+/* 475 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52358,7 +52394,7 @@
 
 	var _reactRedux = __webpack_require__(176);
 
-	var _ChangePasswordForm = __webpack_require__(474);
+	var _ChangePasswordForm = __webpack_require__(476);
 
 	var _ChangePasswordForm2 = _interopRequireDefault(_ChangePasswordForm);
 
@@ -52368,7 +52404,7 @@
 
 	var _form = __webpack_require__(412);
 
-	var _Profile = __webpack_require__(475);
+	var _Profile = __webpack_require__(477);
 
 	var _Profile2 = _interopRequireDefault(_Profile);
 
@@ -52464,7 +52500,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Profile);
 
 /***/ },
-/* 474 */
+/* 476 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52649,13 +52685,13 @@
 	exports.default = ChangePasswordForm;
 
 /***/ },
-/* 475 */
+/* 477 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(476);
+	var content = __webpack_require__(478);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(274)(content, {});
@@ -52675,7 +52711,7 @@
 	}
 
 /***/ },
-/* 476 */
+/* 478 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(273)();

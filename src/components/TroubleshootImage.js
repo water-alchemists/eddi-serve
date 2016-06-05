@@ -44,15 +44,16 @@ class TroubleshootImage extends Component {
 						{ this._renderBoxes() }
 					</div>
 				</div>
-				<div className='image-footer'>
-					<EddiStateButton value={state}
-						onClick={value => this.clickHandler(value)}
-					/>
-				</div>
 			</div>
 		);
 	}
 }
+
+// <div className='image-footer'>
+// 					<EddiStateButton value={state}
+// 						onClick={value => this.clickHandler(value)}
+// 					/>
+// 				</div>
 
 TroubleshootImage.propTypes = {
 	onClick : PropTypes.func,

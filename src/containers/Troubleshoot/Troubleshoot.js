@@ -71,6 +71,8 @@ class Troubleshoot extends Component {
 			{ state={} , id, settings={} } = eddi,
 			cycles = ['off', 'prime', 'channel a', 'channel b'],
 			updatedTime = formatEpochToTime(state.updated);
+								// { settings.state ? <p className='troubleshoot-warning'>note: turns off entire eddi</p> : null }
+
 		return (
 			<div className='content'>
 				<TroubleshootImage current={state.state}
@@ -78,7 +80,6 @@ class Troubleshoot extends Component {
 					state={settings.state}
 				/>
 				<div className='troubleshoot-header'>
-					{ settings.state ? <p className='troubleshoot-warning'>note: turns off entire eddi</p> : null }
 					<h3>STAGE</h3>
 					<p>last cycle completion: {updatedTime}</p>
 				</div>
