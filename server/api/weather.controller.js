@@ -12,16 +12,18 @@ module.exports = app => {
   const weather = getWeatherApi(WEATHER_URL, WEATHER_KEY);
   
   router.get('/', (req, res, next) => {
-      const params = req.query || {};
+      const params = req.query || {},
+        zip = params.zip;
       let promise;
       if(params.lat && params.lon) {
         // if there is a latitude and longitude
         promise = weather.getJsonByLatLng(params.lat, params.lon);
       }
-      else if(params.zip){
+      else if(zip){
           // if there is a zip code
-          if(params.zip.length != 5) return next(new Error('Not a valid zip code'));
-          promise = weather.getJsonByZip(params.zip);
+          if(zip.length != 5) return next(new Error('Not a valid zip code'));
+          if(params.details && params.details === 'true') promise = weather.getXmlByZip(zip); 
+          else promise = weather.getJsonByZip(zip);
       }
       else return next(new Error('Not a valid weather search'));
       
