@@ -121,7 +121,6 @@ class DashboardMenu extends Component {
 				</Link>
 				<Link to={ ROUTES.SALINITY_REC(id) }
 					activeClassName={ACTIVE_CLASS}
-					className={defaultViewClass}
 				>
 					<div className={salinityRecClass} />
 					<p className={salinityRecFont}>rec</p>
