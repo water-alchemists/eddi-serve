@@ -25,7 +25,7 @@ class ZipInput extends Component {
 		event.preventDefault();
 		const { onChange } = this.props,
 			value = event.target.value,
-			formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
+			formattedValue = !isNaN(Number(value)) ? value : null;
 
         if(onChange instanceof Function) onChange(formattedValue);
 	}

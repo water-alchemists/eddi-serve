@@ -48113,8 +48113,7 @@
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: ROUTES.SALINITY_REC(id),
-							activeClassName: ACTIVE_CLASS,
-							className: defaultViewClass
+							activeClassName: ACTIVE_CLASS
 						},
 						_react2.default.createElement('div', { className: salinityRecClass }),
 						_react2.default.createElement(
@@ -50725,7 +50724,7 @@
 	            event.preventDefault();
 	            var onChange = this.props.onChange;
 	            var value = event.target.value;
-	            var formattedValue = !isNaN(Number(value)) ? parseInt(value) : null;
+	            var formattedValue = !isNaN(Number(value)) ? value : null;
 
 	            if (onChange instanceof Function) onChange(formattedValue);
 	        }
