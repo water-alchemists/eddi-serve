@@ -21,16 +21,16 @@ const EddiFire = EddiFireStarter();
 
 function getGoodBad(current, threshold){
 	if(!threshold) threshold = SALINITY_THRESHOLD; //default threshold for salinity
-	const { ppmIn, ppmOut, qOut } = current,
-		flowGood = qOut > FLOW_THRESHOLD ? false : true,
-		salinityInGood = ppmIn > threshold ? false : true,
-		salinityOutGood = ppmOut > threshold ? false : true,
-		powerGood = true;
+	const { ppmIn, ppmOut, qOut, ppmRec } = current,
+		flowGood = qOut <= FLOW_THRESHOLD,
+		salinityInGood = ppmIn <= threshold,
+		salinityOutGood = ppmOut <= threshold,
+		salinityRecGood = ppmRec <= threshold;
 
 	return {
 		salinityIn : salinityInGood,
 		salinityOut : salinityOutGood,
-		power : powerGood,
+		salinityRec : salinityRecGood,
 		flow : flowGood
 	};
 }
@@ -158,13 +158,12 @@ class Dashboard extends Component {
 			switch(view){
 			case QUERY.SALINITY_IN:
 				return this._renderSalinity(current.ppmIn, 'input');
-				break;
+			case QUERY.SALINITY_REC:
+				return this._renderSalinity(current.ppmRec, 'recirculation');
 			case QUERY.FLOW:
 				return this._renderFlow(current.qOut);
-				break;
-			case QUERY.POWER : 
-				return this._renderPower();
-				break;
+			// case QUERY.POWER : 
+			// 	return this._renderPower();
 			default:
 				return this._renderSalinity(current.ppmOut, 'output');
 			}
@@ -177,7 +176,7 @@ class Dashboard extends Component {
 			{ eddi={}, location={} } = this.props,
 			{ id, settings={} } = eddi,
 			{ view } = location.query,
-			{ salinityIn, salinityOut, flow, power } = getGoodBad(current, settings.salinity);
+			{ salinityIn, salinityOut, flow, salinityRec } = getGoodBad(current, settings.salinity);
 
 		let DashboardElement = readings.length ? this._renderViewBasedQuery(view) : this._renderNoReadings();
 		return (
@@ -187,7 +186,7 @@ class Dashboard extends Component {
 					salinityIn={salinityIn}
 					salinityOut={salinityOut}
 					flow={flow}
-					power={power}
+					salinityRec={salinityRec}
 				/>
 				{ DashboardElement }
 			</div>

@@ -14,8 +14,9 @@ export const PATHS = {
 export const QUERY = {
 	SALINITY_IN : 'in',
 	SALINITY_OUT : 'out',
+	SALINITY_REC : 'rec',
 	FLOW : 'flow',
-	POWER : 'power',
+	POWER : 'power'
 };
 
 //User Related

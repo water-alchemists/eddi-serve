@@ -26,6 +26,15 @@ const ROUTES = {
 			}
 		};
 	},
+	SALINITY_REC : function(id){ 
+		return {
+			pathname : PATHS.DASHBOARD, 
+			query : { 
+				view : QUERY.SALINITY_REC,
+				id
+			}
+		};
+	},
 	FLOW : function(id){ 
 		return {
 			pathname : PATHS.DASHBOARD, 
@@ -35,21 +44,21 @@ const ROUTES = {
 			}
 		};
 	},
-	POWER : function(id){ 
-		return {
-			pathname : PATHS.DASHBOARD, 
-			query : {
-				view : QUERY.POWER,
-				id
-			}
-		};
-	}
+	// POWER : function(id){ 
+	// 	return {
+	// 		pathname : PATHS.DASHBOARD, 
+	// 		query : {
+	// 			view : QUERY.POWER,
+	// 			id
+	// 		}
+	// 	};
+	// }
 }
 
 class DashboardMenu extends Component {
 	render(){
 		const { router } = this.context,
-			{ id, view, salinityIn, salinityOut, flow, power } = this.props,
+			{ id, view, salinityIn, salinityOut, flow, salinityRec } = this.props,
 			defaultViewClass = classNames({ [ACTIVE_CLASS] : !view }), //handles appearance of default tab
 			salinityInClass = classNames([
 				'sprite', 
@@ -72,13 +81,28 @@ class DashboardMenu extends Component {
 				{ bad : !flow }
 			]),
 			flowFont = classNames({ 'red-font' : !flow }),
-			powerClass = classNames([
+			salinityRecClass = classNames([
 				'sprite', 
-				'power', 
-				{ faded : !router.isActive(ROUTES.POWER) },
-				{ bad : !power }
+				'salinityRec', 
+				{ faded : view && !router.isActive(ROUTES.SALINITY_REC) },
+				{ bad : !salinityRec }
 			]),
-			powerFont = classNames({ 'red-font' : !power });		
+			salinityRecFont = classNames({ 'red-font' : !salinityRec });
+			// powerClass = classNames([
+			// 	'sprite', 
+			// 	'power', 
+			// 	{ faded : !router.isActive(ROUTES.POWER) },
+			// 	{ bad : !power }
+			// ]),
+			// powerFont = classNames({ 'red-font' : !power });	
+			
+			// Currently no power as part of the dashboard
+			// <Link to={ ROUTES.POWER(id) }
+			// 		activeClassName={ACTIVE_CLASS}
+			// 	>
+			// 		<div className={powerClass} />							
+			// 		<p className={powerFont}>power</p>
+			// 	</Link>	
 
  		return (
 			<div className='dashboard-menu'>
@@ -95,18 +119,20 @@ class DashboardMenu extends Component {
 					<div className={salinityOutClass} />
 					<p className={salinityOutFont}>out</p>
 				</Link>
+				<Link to={ ROUTES.SALINITY_REC(id) }
+					activeClassName={ACTIVE_CLASS}
+					className={defaultViewClass}
+				>
+					<div className={salinityRecClass} />
+					<p className={salinityRecFont}>rec</p>
+				</Link>
 				<Link to={ ROUTES.FLOW(id) }
 					activeClassName={ACTIVE_CLASS}
 				>
 					<div className={flowClass} />
 					<p className={flowFont}>flow</p>
 				</Link>
-				<Link to={ ROUTES.POWER(id) }
-					activeClassName={ACTIVE_CLASS}
-				>
-					<div className={powerClass} />							
-					<p className={powerFont}>power</p>
-				</Link>
+				
 			</div>
 		);
 	}

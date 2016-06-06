@@ -27388,6 +27388,7 @@
 	var QUERY = exports.QUERY = {
 		SALINITY_IN: 'in',
 		SALINITY_OUT: 'out',
+		SALINITY_REC: 'rec',
 		FLOW: 'flow',
 		POWER: 'power'
 	};
@@ -32290,10 +32291,19 @@
 	_moment2.default.locale('en');
 
 	function getDaysBetween(end, beginning) {
-		var days = [];
-		for (var x = beginning; x < end; x++) {
-			days.push(x + 1);
+		var days = [],
+		    beginDay = beginning.getDate(),
+		    endDay = end.getDate(),
+		    formattedEnd = endDay < beginDay ? beginDay + endDay : endDay;
+
+		var current = beginning;
+
+		while (current.getDate() != end.getDate()) {
+			var date = (0, _moment2.default)(current).date(current.getDate() + 1).toDate();
+			days.push(date);
+			current = date;
 		}
+
 		return days;
 	}
 
@@ -32460,13 +32470,13 @@
 		var current = new Date(),
 		    beginning = new Date(current - 7 * 1000 * 60 * 60 * 24),
 		    weekData = readings.filter(function (reading) {
-			return (0, _moment2.default)(reading.date).isBetween(beginning, current, 'day');
+			return (0, _moment2.default)(reading.date).isBetween(beginning, current);
 		}),
-		    daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
+		    daysBetween = getDaysBetween(current, beginning);
 
-		function getAverageOfDay(data, day) {
+		function getAverageOfDay(data, date) {
 			var dayData = data.filter(function (entry) {
-				return entry.date.getDate() === day;
+				return (0, _moment2.default)(date).isSame(entry.date, 'day');
 			});
 			var average = void 0;
 			if (dayData.length) average = dayData.reduce(function (sum, entry) {
@@ -32475,10 +32485,10 @@
 			return average;
 		}
 
-		return daysBetween.map(function (day) {
+		return daysBetween.map(function (date) {
 			return {
-				x: (0, _moment2.default)({ day: day, year: current.getFullYear(), month: current.getMonth() }).toDate(),
-				y: getAverageOfDay(weekData, day)
+				x: date,
+				y: getAverageOfDay(weekData, date)
 			};
 		});
 	}
@@ -46848,7 +46858,7 @@
 
 
 	// module
-	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: transparent;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/new-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -8px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -5px -223px;\n}\n.sprite.report.green {\n  background-position: -55px -223px;\n}\n.sprite.arrow.down {\n  background-position: 0px -420px;\n}\n.sprite.arrow.down.faded {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: 0px -365px;\n}\n.sprite.arrow.up.faded {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -460px;\n}\n.sprite.arrow.right.faded {\n  background-position: -55px -460px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\n.sprite.burger {\n  height: 48px;\n  width: 48px;\n  background-position: -105px -475px;\n}\n.sprite.burger.dark {\n  background-color: white;\n  background-position: -150px -475px;\n}\n.sprite.circle {\n  height: 60px;\n  width: 60px;\n  background-position: -312px -420px;\n}\n.sprite.circle.blue {\n  background-position: -312px -355px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: transparent;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n.sprite {\n  background-image: url('/assets/new-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -8px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -5px -223px;\n}\n.sprite.report.green {\n  background-position: -55px -223px;\n}\n.sprite.arrow.down {\n  background-position: 0px -420px;\n}\n.sprite.arrow.down.faded {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: 0px -365px;\n}\n.sprite.arrow.up.faded {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -460px;\n}\n.sprite.arrow.right.faded {\n  background-position: -55px -460px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.salinityRec {\n  background-position: -155px -81px;\n}\n.sprite.salinityRec.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityRec.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityRec.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\n.sprite.burger {\n  height: 48px;\n  width: 48px;\n  background-position: -105px -475px;\n}\n.sprite.burger.dark {\n  background-color: white;\n  background-position: -150px -475px;\n}\n.sprite.circle {\n  height: 60px;\n  width: 60px;\n  background-position: -312px -420px;\n}\n.sprite.circle.blue {\n  background-position: -312px -355px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
 
 	// exports
 
@@ -47682,15 +47692,16 @@
 		var ppmIn = current.ppmIn;
 		var ppmOut = current.ppmOut;
 		var qOut = current.qOut;
-		var flowGood = qOut > _constants.FLOW_THRESHOLD ? false : true;
-		var salinityInGood = ppmIn > threshold ? false : true;
-		var salinityOutGood = ppmOut > threshold ? false : true;
-		var powerGood = true;
+		var ppmRec = current.ppmRec;
+		var flowGood = qOut <= _constants.FLOW_THRESHOLD;
+		var salinityInGood = ppmIn <= threshold;
+		var salinityOutGood = ppmOut <= threshold;
+		var salinityRecGood = ppmRec <= threshold;
 
 		return {
 			salinityIn: salinityInGood,
 			salinityOut: salinityOutGood,
-			power: powerGood,
+			salinityRec: salinityRecGood,
 			flow: flowGood
 		};
 	}
@@ -47864,13 +47875,12 @@
 					switch (view) {
 						case _constants.QUERY.SALINITY_IN:
 							return this._renderSalinity(current.ppmIn, 'input');
-							break;
+						case _constants.QUERY.SALINITY_REC:
+							return this._renderSalinity(current.ppmRec, 'recirculation');
 						case _constants.QUERY.FLOW:
 							return this._renderFlow(current.qOut);
-							break;
-						case _constants.QUERY.POWER:
-							return this._renderPower();
-							break;
+						// case QUERY.POWER :
+						// 	return this._renderPower();
 						default:
 							return this._renderSalinity(current.ppmOut, 'output');
 					}
@@ -47898,7 +47908,7 @@
 				var salinityIn = _getGoodBad.salinityIn;
 				var salinityOut = _getGoodBad.salinityOut;
 				var flow = _getGoodBad.flow;
-				var power = _getGoodBad.power;
+				var salinityRec = _getGoodBad.salinityRec;
 
 
 				var DashboardElement = readings.length ? this._renderViewBasedQuery(view) : this._renderNoReadings();
@@ -47910,7 +47920,7 @@
 						salinityIn: salinityIn,
 						salinityOut: salinityOut,
 						flow: flow,
-						power: power
+						salinityRec: salinityRec
 					}),
 					DashboardElement
 				);
@@ -47997,6 +48007,15 @@
 				}
 			};
 		},
+		SALINITY_REC: function SALINITY_REC(id) {
+			return {
+				pathname: _constants.PATHS.DASHBOARD,
+				query: {
+					view: _constants.QUERY.SALINITY_REC,
+					id: id
+				}
+			};
+		},
 		FLOW: function FLOW(id) {
 			return {
 				pathname: _constants.PATHS.DASHBOARD,
@@ -48005,17 +48024,18 @@
 					id: id
 				}
 			};
-		},
-		POWER: function POWER(id) {
-			return {
-				pathname: _constants.PATHS.DASHBOARD,
-				query: {
-					view: _constants.QUERY.POWER,
-					id: id
-				}
-			};
 		}
 	};
+
+	// POWER : function(id){
+	// 	return {
+	// 		pathname : PATHS.DASHBOARD,
+	// 		query : {
+	// 			view : QUERY.POWER,
+	// 			id
+	// 		}
+	// 	};
+	// }
 
 	var DashboardMenu = function (_Component) {
 		_inherits(DashboardMenu, _Component);
@@ -48036,7 +48056,7 @@
 				var salinityIn = _props.salinityIn;
 				var salinityOut = _props.salinityOut;
 				var flow = _props.flow;
-				var power = _props.power;
+				var salinityRec = _props.salinityRec;
 				var defaultViewClass = (0, _classnames2.default)(_defineProperty({}, ACTIVE_CLASS, !view)); //handles appearance of default tab
 				var salinityInClass = (0, _classnames2.default)(['sprite', 'salinityIn', { faded: !router.isActive(ROUTES.SALINITY_IN) }, { bad: !salinityIn }]);
 				var salinityInFont = (0, _classnames2.default)({ 'red-font': !salinityIn });
@@ -48044,8 +48064,23 @@
 				var salinityOutFont = (0, _classnames2.default)({ 'red-font': !salinityOut });
 				var flowClass = (0, _classnames2.default)(['sprite', 'flow', { faded: !router.isActive(ROUTES.FLOW) }, { bad: !flow }]);
 				var flowFont = (0, _classnames2.default)({ 'red-font': !flow });
-				var powerClass = (0, _classnames2.default)(['sprite', 'power', { faded: !router.isActive(ROUTES.POWER) }, { bad: !power }]);
-				var powerFont = (0, _classnames2.default)({ 'red-font': !power });
+				var salinityRecClass = (0, _classnames2.default)(['sprite', 'salinityRec', { faded: view && !router.isActive(ROUTES.SALINITY_REC) }, { bad: !salinityRec }]);
+				var salinityRecFont = (0, _classnames2.default)({ 'red-font': !salinityRec });
+				// powerClass = classNames([
+				// 	'sprite',
+				// 	'power',
+				// 	{ faded : !router.isActive(ROUTES.POWER) },
+				// 	{ bad : !power }
+				// ]),
+				// powerFont = classNames({ 'red-font' : !power });	
+
+				// Currently no power as part of the dashboard
+				// <Link to={ ROUTES.POWER(id) }
+				// 		activeClassName={ACTIVE_CLASS}
+				// 	>
+				// 		<div className={powerClass} />							
+				// 		<p className={powerFont}>power</p>
+				// 	</Link>	
 
 				return _react2.default.createElement(
 					'div',
@@ -48077,6 +48112,19 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
+						{ to: ROUTES.SALINITY_REC(id),
+							activeClassName: ACTIVE_CLASS,
+							className: defaultViewClass
+						},
+						_react2.default.createElement('div', { className: salinityRecClass }),
+						_react2.default.createElement(
+							'p',
+							{ className: salinityRecFont },
+							'rec'
+						)
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
 						{ to: ROUTES.FLOW(id),
 							activeClassName: ACTIVE_CLASS
 						},
@@ -48085,18 +48133,6 @@
 							'p',
 							{ className: flowFont },
 							'flow'
-						)
-					),
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: ROUTES.POWER(id),
-							activeClassName: ACTIVE_CLASS
-						},
-						_react2.default.createElement('div', { className: powerClass }),
-						_react2.default.createElement(
-							'p',
-							{ className: powerFont },
-							'power'
 						)
 					)
 				);
@@ -48173,12 +48209,24 @@
 		return 'so everything is working correctly.';
 	}
 
-	function generateInput() {
-		return 'The current level of salinity of the water entering your EDDI is';
-	}
-
-	function generateOutput() {
-		return 'The current level of salinity of the water your EDDI is pushing out is';
+	function generateCharacteristics(direction) {
+		switch (direction) {
+			case 'input':
+				return {
+					prop: 'ppmIn',
+					prefix: 'The current level of salinity of the water entering your EDDI is'
+				};
+			case 'recirculation':
+				return {
+					prop: 'ppmRec',
+					prefix: 'The current level of salinity of the water your EDDI is recirculating is'
+				};
+			default:
+				return {
+					prop: 'ppmOut',
+					prefix: 'The current level of salinity of the water your EDDI is pushing out is'
+				};
+		}
 	}
 
 	var DashboardSalinity = function (_Component) {
@@ -48193,14 +48241,21 @@
 			var _this$props = _this.props;
 			var readings = _this$props.readings;
 			var direction = _this$props.direction;
-			var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
 			var formatter = FORMATTERS[type];
+
+			var _generateCharacterist = generateCharacteristics(direction);
+
+			var prop = _generateCharacterist.prop;
+			var prefix = _generateCharacterist.prefix;
+
 			var graphData = [];
 			if (formatter instanceof Function) graphData = formatter(readings, prop);
 
 			_this.state = {
 				type: type,
-				graphData: graphData
+				graphData: graphData,
+				prop: prop,
+				prefix: prefix
 			};
 			return _this;
 		}
@@ -48211,11 +48266,15 @@
 				var type = this.state.type;
 				var readings = nextProps.readings;
 				var direction = nextProps.direction;
-				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+
+				var _generateCharacterist2 = generateCharacteristics(direction);
+
+				var prop = _generateCharacterist2.prop;
+				var prefix = _generateCharacterist2.prefix;
 				var formatter = FORMATTERS[type];
 				var graphData = [];
 				if (formatter instanceof Function) graphData = formatter(readings, prop);
-				this.setState({ graphData: graphData });
+				this.setState({ graphData: graphData, prop: prop, prefix: prefix });
 			}
 		}, {
 			key: 'graphClick',
@@ -48223,8 +48282,9 @@
 				var _props = this.props;
 				var readings = _props.readings;
 				var direction = _props.direction;
-				var prop = direction === 'input' ? 'ppmIn' : 'ppmOut';
+				var prop = this.state.prop;
 				var formatter = FORMATTERS[type];
+				console.log('this is the type', type, prop);
 				var graphData = [];
 				if (formatter instanceof Function) graphData = formatter(readings, prop);
 				this.setState({ type: type, graphData: graphData });
@@ -48237,6 +48297,7 @@
 				var _state = this.state;
 				var type = _state.type;
 				var graphData = _state.graphData;
+				var prefix = _state.prefix;
 				var _props2 = this.props;
 				var threshold = _props2.threshold;
 				var current = _props2.current;
@@ -48277,7 +48338,7 @@
 						_react2.default.createElement(
 							'p',
 							{ className: 'dashboard-note' },
-							direction === 'input' ? generateInput() : generateOutput(),
+							prefix,
 							_react2.default.createElement(
 								'span',
 								null,

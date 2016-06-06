@@ -5,10 +5,19 @@ import { SALINITY_THRESHOLD } from './constants';
 moment.locale('en');
 
 function getDaysBetween(end, beginning){
-	const days = [];
-	for(let x = beginning; x < end; x++){
-		days.push(x + 1);
+	const days = [],
+		beginDay = beginning.getDate(),
+		endDay = end.getDate(),
+		formattedEnd = endDay < beginDay ? beginDay + endDay : endDay;
+	
+	let current = beginning;
+	
+	while(current.getDate() != end.getDate()){
+		const date = moment(current).date(current.getDate() + 1).toDate();
+		days.push(date);
+		current = date;
 	}
+	
 	return days;
 }
 
@@ -178,20 +187,20 @@ export function formatToTodayHistory(readings, yProp){
 export function formatToWeekHistory(readings, yProp){
 	const current = new Date(),
 		beginning = new Date(current - 7 * 1000 * 60 * 60 * 24),
-		weekData = readings.filter(reading => moment(reading.date).isBetween(beginning, current, 'day')),
-		daysBetween = getDaysBetween(current.getDate(), beginning.getDate());
+		weekData = readings.filter(reading => moment(reading.date).isBetween(beginning, current)),
+		daysBetween = getDaysBetween(current, beginning);
 
-	function getAverageOfDay(data, day){
-		const dayData = data.filter(entry => entry.date.getDate() === day);
+	function getAverageOfDay(data, date){
+		const dayData = data.filter(entry => moment(date).isSame(entry.date, 'day'));
 		let average;
 		if(dayData.length) average = dayData.reduce((sum, entry) => sum + entry[yProp], 0) / dayData.length;
 		return average;
 	}
 
-	return daysBetween.map(day => {
+	return daysBetween.map(date => {
 		return {
-			x : moment({ day, year : current.getFullYear(), month : current.getMonth() }).toDate(),
-			y : getAverageOfDay(weekData, day)
+			x : date,
+			y : getAverageOfDay(weekData, date)
 		};
 	});
 }
