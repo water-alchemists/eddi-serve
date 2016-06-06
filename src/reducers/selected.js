@@ -23,7 +23,8 @@ const initialState = {
 	},
 	state : {
 		state : null,
-		updated : null
+		updated : null,
+		reason : null
 	},
 	version : {
 		artik : {

@@ -65,6 +65,11 @@ export const TRIM_COLOR = "rgba(0,109,96,1)";
 export const FLOW_THRESHOLD = 5;
 export const SALINITY_THRESHOLD = 1000;
 
+// Weather
+export const WEATHER_SUCCESS = 'WEATHER_SUCCESS';
+export const WEATHER_ERROR = 'WEATHER_ERROR';
+export const WEATHER_CLEAR = 'WEATHER_CLEAR';
+
 //Graphs
 export const HISTORICAL = {
 	TODAY: 'today',

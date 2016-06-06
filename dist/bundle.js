@@ -27439,6 +27439,11 @@
 	var FLOW_THRESHOLD = exports.FLOW_THRESHOLD = 5;
 	var SALINITY_THRESHOLD = exports.SALINITY_THRESHOLD = 1000;
 
+	// Weather
+	var WEATHER_SUCCESS = exports.WEATHER_SUCCESS = 'WEATHER_SUCCESS';
+	var WEATHER_ERROR = exports.WEATHER_ERROR = 'WEATHER_ERROR';
+	var WEATHER_CLEAR = exports.WEATHER_CLEAR = 'WEATHER_CLEAR';
+
 	//Graphs
 	var HISTORICAL = exports.HISTORICAL = {
 		TODAY: 'today',
@@ -27761,7 +27766,8 @@
 		},
 		state: {
 			state: null,
-			updated: null
+			updated: null,
+			reason: null
 		},
 		version: {
 			artik: {
