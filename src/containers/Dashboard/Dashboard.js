@@ -66,6 +66,8 @@ class Dashboard extends Component {
 		
 		//if there is id, update the eddi's info
 		if( eddi.settings ) updateMenuName(eddi.settings.name);
+		else updateMenuName('Dashboard');
+
 		if( eddi.readings ){
 			//format the readings into an array for data handling
 			const readings = mapDateToReadings(eddi.readings),
@@ -89,7 +91,9 @@ class Dashboard extends Component {
 
 		//if there is id, update the eddi's info
 		if(eddi.id && oldEddi.id !== eddi.id) {
-			if( eddi.settings ) updateMenuName(eddi.settings.name);
+			if( eddi.settings.name ) updateMenuName(eddi.settings.name);
+			else updateMenuName('Dashboard');
+
 			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 			EddiFire.addEddiEventListener(eddi.id, 'readings', readings => updateEddiReadings(eddi.id, readings));
 		}

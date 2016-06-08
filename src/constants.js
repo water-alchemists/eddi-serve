@@ -9,6 +9,7 @@ export const PATHS = {
 	DASHBOARD : '/dashboard',
 	TROUBLESHOOT : '/troubleshoot',
 	PROFILE : '/profile',
+	WEATHER : '/weather'
 };
 
 export const QUERY = {

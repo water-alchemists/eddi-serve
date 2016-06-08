@@ -11,7 +11,7 @@ function getByZip(zip){
             resolve(data);
         }) 
     })
-    .then(res => res.data);
+    .then(res => res.body);
 }
 
 function getByCoords(latitude, longitude){
@@ -25,7 +25,7 @@ function getByCoords(latitude, longitude){
                 resolve(data);
             });
     })
-    .then(res => res.data);
+    .then(res => res.body);
 }
 
 function getDetailsByZip(zip){
@@ -39,10 +39,10 @@ function getDetailsByZip(zip){
                 resolve(data);
             });
     })
-    .then(res => res.data);
+    .then(res => res.body);
 }
 
-export default {
+export {
     getByZip,
     getByCoords,
     getDetailsByZip

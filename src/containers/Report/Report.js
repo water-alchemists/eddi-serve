@@ -69,6 +69,7 @@ class Report extends Component {
 		const { updateMenuName, eddi={} } = this.props,
 			{ id, readings, settings } = eddi;
 		if( id ) updateMenuName(settings.name);
+		else updateMenuName('Report');
 		if(readings) {
 			const newState = {},
 				formattedReadings = mapDateToReadings(readings);
@@ -84,7 +85,9 @@ class Report extends Component {
 			{ id, readings, settings } = eddi;
 
 		if( id !== oldEddi.id ) {
-			updateMenuName(settings.name);
+			if(id) updateMenuName(settings.name);
+			else updateMenuName('Report');
+
 			if(readings) {
 				const newState = {},
 				formattedReadings = mapDateToReadings(readings);

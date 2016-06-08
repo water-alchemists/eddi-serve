@@ -58,6 +58,11 @@ class Menu extends Component {
 				'sprite',
 				'burger',
 				{ dark : optionsOpen }
+			]),
+			weatherSpriteClass = classNames([
+				'sprite',
+				'empty',
+				{ dark : optionsOpen }
 			]);
 
 		let menuOptions;
@@ -91,6 +96,13 @@ class Menu extends Component {
 				>
 					<div className={troubleshootSpriteClass}></div>
 					<p>Troubleshoot</p>
+				</Link>),
+				(<Link to={{ pathname : PATHS.WEATHER, query }}
+					activeClassName='active'
+					key={`weather`}
+				>
+					<div className={weatherSpriteClass}></div>
+					<p>Weather</p>
 				</Link>),
 		  	];
 		}

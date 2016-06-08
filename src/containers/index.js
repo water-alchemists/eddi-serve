@@ -7,3 +7,4 @@ export Settings from './Settings/Settings';
 export Troubleshoot from './Troubleshoot/Troubleshoot';
 export Report from './Report/Report';
 export Profile from './Profile/Profile';
+export Weather from './Weather/Weather';

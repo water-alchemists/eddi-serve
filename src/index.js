@@ -16,7 +16,8 @@ import { App,
 	Report,
 	Settings,
 	Troubleshoot,
-	Profile
+	Profile,
+	Weather
 } from './containers';
 
 const reducer = combineReducers({
@@ -42,6 +43,7 @@ ReactDOM.render(
 				<Route path={PATHS.SETTINGS} component={Settings}/>
 				<Route path={PATHS.TROUBLESHOOT} component={Troubleshoot}/>
 				<Route path={PATHS.PROFILE} component={Profile}/>
+				<Route path={PATHS.WEATHER} component={Weather}/>
 			</Route>
 		</Router>
 	</Provider>,
