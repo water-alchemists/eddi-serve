@@ -27,29 +27,23 @@ function mapDispatchToProps(dispatch){
 }
 
 class Weather extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            zip : null
-        };
-    }
-
     componentWillMount(){
-        const { updateMenuName, getWeatherByZip, eddi={}, weather={} } = this.props;
-        
-        if( eddi.settings ) {
-            updateMenuName(eddi.settings.name);
-            const zip = eddi.settings.zip;
-            this.state.zip = zip;
-            if(zip) getWeatherByZip(zip);
-        }
+        const { updateMenuName, getWeatherByZip, eddi={} } = this.props;
+        // update the 
+        if( eddi.settings.name ) updateMenuName(eddi.settings.name);
         else updateMenuName('Weather');
+            
+        const { zip } = eddi.settings;
+        if(zip) getWeatherByZip(zip);
+
     }
     componentWillReceiveProps(nextProps){
-        const { zip } = this.state,
-            { selected={} } = nextProps.eddi;
-        if(selected.zip && selected.zip != zip) getWeatherByZip(zip);
-        this.setState({ zip: selected.zip }); 
+        const { eddi={}, getWeatherByZip } = this.props,
+            { settings={} } = eddi,
+            { zip:oldZip } = settings,
+            { zip:newZip } = nextProps.eddi.settings;
+
+        if(oldZip != newZip && newZip) getWeatherByZip(newZip);
     }
 
     componentWillUnmount(){
@@ -64,14 +58,20 @@ class Weather extends Component {
     }
 
     _renderWeather(){
-        const { zip } = this.state;
+        const { eddi={}, weather={} } = this.props,
+            { zip } = eddi.settings;
         return(
-            <div>{`This eddi got a location : ${zip}`}</div>
+            <div>
+                {`This eddi got a location : ${zip}`}
+                <div>{JSON.stringify(weather)}</div>
+            </div>
+            
         );
     }
 
     render(){
-        const { zip } = this.state;
+        const { eddi={} } = this.props,
+            { zip } = eddi.settings;
         return (
             <div id="weather" className="page">
                 { zip ? this._renderWeather() : this._renderNone() }

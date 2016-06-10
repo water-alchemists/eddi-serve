@@ -72,15 +72,6 @@ class Settings extends Component {
 	}
 }
 
-const styles = {
-	addButton : {
-		display : 'flex',
-		flexDirection : 'row',
-		justifyContent : 'space-between',
-		alignItems : 'center'
-	}
-}
-
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
