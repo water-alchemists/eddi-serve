@@ -328,3 +328,7 @@ export function formatDegreeToDirection(degree){
 	else if (degree > 236 || degree <= 281) return 'west';
 	else if (degree > 281 || degree <= 326) return 'northwest';
 }
+
+export function formatUTCtoDate(secs){
+	return new Date(secs * 1000);
+}

@@ -7,14 +7,14 @@ import { formatDateToPretty } from '../data';
 class WeatherOverview extends Component {
     render(){
         const { time, temperature, type, location, image } = this.props;
-        const formattedTime = formateDateToPretty(time);
+        const formattedTime = formatDateToPretty(time);
         return (
             <div className='weather-overview'>
                 <div className='image-container'>
                     <img src={image}></img>
                 </div>
                 <div>
-                    <p className='weather-location'>{`${location} (${zip})`}</p>
+                    <p className='weather-location'>{location}</p>
                     <p className='temperature'>{`${temperature} F`}</p>
                     <p className='weather-type'>{type}</p>
                     <p className='weather-updated'>{formattedTime}</p>

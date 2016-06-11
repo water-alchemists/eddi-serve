@@ -7,7 +7,8 @@ import { formatDegreeToDirection } from '../data';
 class WeatherTable extends Component {
     _renderRain(){
         const { rain } = this.props,
-            time = Object.keys(rain)[0],
+            keys = Object.keys(rain),
+            time = keys.length ? key[0] : undefined,
             height = time ? rain[time] : undefined,
             text = height ? `${height} inches` : 'None';
 
@@ -21,7 +22,8 @@ class WeatherTable extends Component {
 
     _renderSnow(){
         const { snow } = this.props,
-            time = Object.keys(snow)[0],
+            keys = Object.keys(snow),
+            time = keys.length ? key[0] : undefined,
             height = time ? snow[time] : undefined,
             text = height ? `${height} inches`: 'None';
 
@@ -99,7 +101,7 @@ WeatherTable.propTypes = {
         '2h' : PropTypes.number,
         '3h' : PropTypes.number
     }),
-    snow : PropType.shape({
+    snow : PropTypes.shape({
         '1h' : PropTypes.number,
         '2h' : PropTypes.number,
         '3h' : PropTypes.number

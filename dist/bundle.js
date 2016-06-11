@@ -32346,6 +32346,7 @@
 	exports.formatDateToTime = formatDateToTime;
 	exports.formatDateToPretty = formatDateToPretty;
 	exports.formatDegreeToDirection = formatDegreeToDirection;
+	exports.formatUTCtoDate = formatUTCtoDate;
 
 	var _moment = __webpack_require__(306);
 
@@ -32673,6 +32674,10 @@
 
 	function formatDegreeToDirection(degree) {
 		if (degree > 326 || degree <= 11) return 'north';else if (degree > 11 || degree <= 56) return 'northeast';else if (degree > 56 || degree <= 101) return 'east';else if (degree > 101 || degree <= 146) return 'southeast';else if (degree > 146 || degree <= 191) return 'south';else if (degree > 191 || degree <= 236) return 'southwest';else if (degree > 236 || degree <= 281) return 'west';else if (degree > 281 || degree <= 326) return 'northwest';
+	}
+
+	function formatUTCtoDate(secs) {
+		return new Date(secs * 1000);
 	}
 
 /***/ },
@@ -52945,6 +52950,10 @@
 
 	var _menu = __webpack_require__(425);
 
+	var _WeatherSummary = __webpack_require__(491);
+
+	var _WeatherSummary2 = _interopRequireDefault(_WeatherSummary);
+
 	var _Weather = __webpack_require__(489);
 
 	var _Weather2 = _interopRequireDefault(_Weather);
@@ -53044,28 +53053,24 @@
 	            var weather = _props3$weather === undefined ? {} : _props3$weather;
 	            var zip = eddi.settings.zip;
 
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                'This eddi got a location : ' + zip,
-	                _react2.default.createElement(
-	                    'div',
-	                    null,
-	                    JSON.stringify(weather)
-	                )
-	            );
+	            return _react2.default.createElement(_WeatherSummary2.default, { weather: weather,
+	                zip: zip
+	            });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _props$eddi2 = this.props.eddi;
-	            var eddi = _props$eddi2 === undefined ? {} : _props$eddi2;
+	            var _props4 = this.props;
+	            var _props4$eddi = _props4.eddi;
+	            var eddi = _props4$eddi === undefined ? {} : _props4$eddi;
+	            var _props4$weather = _props4.weather;
+	            var weather = _props4$weather === undefined ? {} : _props4$weather;
 	            var zip = eddi.settings.zip;
-
+	            var WeatherElement = weather.id ? this._renderWeather() : this._renderNone();
 	            return _react2.default.createElement(
 	                'div',
 	                { id: 'weather', className: 'page' },
-	                zip ? this._renderWeather() : this._renderNone()
+	                WeatherElement
 	            );
 	        }
 	    }]);
@@ -54735,6 +54740,438 @@
 
 	// exports
 
+
+/***/ },
+/* 491 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(271);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _data = __webpack_require__(305);
+
+	var _WeatherOverview = __webpack_require__(492);
+
+	var _WeatherOverview2 = _interopRequireDefault(_WeatherOverview);
+
+	var _WeatherTable = __webpack_require__(493);
+
+	var _WeatherTable2 = _interopRequireDefault(_WeatherTable);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function createImageUrl(icon) {
+	    return 'http://openweathermap.org/img/w/' + icon + '.png';
+	}
+
+	function createLocation(city, country, zip) {
+	    return city + ', ' + country + ' ' + zip;
+	}
+
+	var WeatherSummary = function (_Component) {
+	    _inherits(WeatherSummary, _Component);
+
+	    function WeatherSummary() {
+	        _classCallCheck(this, WeatherSummary);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(WeatherSummary).apply(this, arguments));
+	    }
+
+	    _createClass(WeatherSummary, [{
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props;
+	            var _props$weather = _props.weather;
+	            var weather = _props$weather === undefined ? {} : _props$weather;
+	            var zip = _props.zip;
+	            var _weather$sys = weather.sys;
+	            var sys = _weather$sys === undefined ? {} : _weather$sys;
+	            var dt = weather.dt;
+	            var _weather$main = weather.main;
+	            var main = _weather$main === undefined ? {} : _weather$main;
+	            var _weather$wind = weather.wind;
+	            var wind = _weather$wind === undefined ? {} : _weather$wind;
+	            var _weather$snow = weather.snow;
+	            var snow = _weather$snow === undefined ? {} : _weather$snow;
+	            var _weather$rain = weather.rain;
+	            var rain = _weather$rain === undefined ? {} : _weather$rain;
+	            var name = weather.name;
+	            var description = weather.weather[0];
+	            var image = createImageUrl(description.icon);
+	            var location = createLocation(name, sys.country, zip);
+	            var updated = (0, _data.formatUTCtoDate)(dt);
+	            var sunriseDate = (0, _data.formatUTCtoDate)(sys.sunrise);
+	            var sunsetDate = (0, _data.formatUTCtoDate)(sys.sunset);
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'weather-summary' },
+	                _react2.default.createElement(_WeatherOverview2.default, { image: image,
+	                    location: location,
+	                    temperature: main.temp,
+	                    type: description.main,
+	                    time: updated
+	                }),
+	                _react2.default.createElement(_WeatherTable2.default, { rain: rain,
+	                    snow: snow,
+	                    humidity: main.humidity,
+	                    wind: wind,
+	                    highTemp: main.temp_max,
+	                    lowTemp: main.temp_min,
+	                    sunrise: sunriseDate,
+	                    sunsetDate: sunsetDate
+	                })
+	            );
+	        }
+	    }]);
+
+	    return WeatherSummary;
+	}(_react.Component);
+
+	WeatherSummary.propTypes = {
+	    weather: _react.PropTypes.object.isRequired,
+	    zip: _react.PropTypes.string.isRequired
+	};
+
+	exports.default = WeatherSummary;
+
+/***/ },
+/* 492 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(271);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _data = __webpack_require__(305);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var WeatherOverview = function (_Component) {
+	    _inherits(WeatherOverview, _Component);
+
+	    function WeatherOverview() {
+	        _classCallCheck(this, WeatherOverview);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(WeatherOverview).apply(this, arguments));
+	    }
+
+	    _createClass(WeatherOverview, [{
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props;
+	            var time = _props.time;
+	            var temperature = _props.temperature;
+	            var type = _props.type;
+	            var location = _props.location;
+	            var image = _props.image;
+
+	            var formattedTime = (0, _data.formatDateToPretty)(time);
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'weather-overview' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'image-container' },
+	                    _react2.default.createElement('img', { src: image })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    null,
+	                    _react2.default.createElement(
+	                        'p',
+	                        { className: 'weather-location' },
+	                        location
+	                    ),
+	                    _react2.default.createElement(
+	                        'p',
+	                        { className: 'temperature' },
+	                        temperature + ' F'
+	                    ),
+	                    _react2.default.createElement(
+	                        'p',
+	                        { className: 'weather-type' },
+	                        type
+	                    ),
+	                    _react2.default.createElement(
+	                        'p',
+	                        { className: 'weather-updated' },
+	                        formattedTime
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return WeatherOverview;
+	}(_react.Component);
+
+	WeatherOverview.propTypes = {
+	    image: _react.PropTypes.string.isRequired,
+	    location: _react.PropTypes.string.isRequired,
+	    temperature: _react.PropTypes.number.isRequired,
+	    type: _react.PropTypes.string.isRequired,
+	    time: _react.PropTypes.instanceOf(Date)
+	};
+
+	exports.default = WeatherOverview;
+
+/***/ },
+/* 493 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(271);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _data = __webpack_require__(305);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var WeatherTable = function (_Component) {
+	    _inherits(WeatherTable, _Component);
+
+	    function WeatherTable() {
+	        _classCallCheck(this, WeatherTable);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(WeatherTable).apply(this, arguments));
+	    }
+
+	    _createClass(WeatherTable, [{
+	        key: '_renderRain',
+	        value: function _renderRain() {
+	            var rain = this.props.rain;
+	            var keys = Object.keys(rain);
+	            var time = keys.length ? key[0] : undefined;
+	            var height = time ? rain[time] : undefined;
+	            var text = height ? height + ' inches' : 'None';
+
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    'Rain'
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    text
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_renderSnow',
+	        value: function _renderSnow() {
+	            var snow = this.props.snow;
+	            var keys = Object.keys(snow);
+	            var time = keys.length ? key[0] : undefined;
+	            var height = time ? snow[time] : undefined;
+	            var text = height ? height + ' inches' : 'None';
+
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    'Snow'
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    text
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_renderHumidity',
+	        value: function _renderHumidity() {
+	            var humidity = this.props.humidity;
+
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    'Humidity'
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    humidty + '%'
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_renderWind',
+	        value: function _renderWind() {
+	            var wind = this.props.wind;
+	            var direction = (0, _data.formatDegreeToDirection)(wind.deg);
+
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    'Wind'
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    direction + '(' + wind.speed + ' miles/hour)'
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_renderDate',
+	        value: function _renderDate(date, type) {
+	            var text = formatDateToTime(date);
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    type
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    text
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_renderTemp',
+	        value: function _renderTemp(temp, type) {
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    type
+	                ),
+	                _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    temp + ' F'
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props;
+	            var highTemp = _props.highTemp;
+	            var lowTemp = _props.lowTemp;
+	            var sunrise = _props.sunrise;
+	            var sunset = _props.sunset;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'weather-table' },
+	                _react2.default.createElement(
+	                    'table',
+	                    null,
+	                    this._renderRain(),
+	                    this._renderSnow(),
+	                    this._renderHumidity(),
+	                    this._renderWind(),
+	                    this._renderTemp(highTemp, 'High'),
+	                    this._renderTemp(lowTemp, 'Low'),
+	                    this._renderDate(sunrise, 'Sunrise'),
+	                    this._renderDate(sunset, 'Sunset')
+	                )
+	            );
+	        }
+	    }]);
+
+	    return WeatherTable;
+	}(_react.Component);
+
+	WeatherTable.propTypes = {
+	    rain: _react.PropTypes.shape({
+	        '1h': _react.PropTypes.number,
+	        '2h': _react.PropTypes.number,
+	        '3h': _react.PropTypes.number
+	    }),
+	    snow: _react.PropTypes.shape({
+	        '1h': _react.PropTypes.number,
+	        '2h': _react.PropTypes.number,
+	        '3h': _react.PropTypes.number
+	    }),
+	    humidity: _react.PropTypes.number.isRequired,
+	    wind: _react.PropTypes.shape({
+	        speed: _react.PropTypes.number,
+	        deg: _react.PropTypes.number
+	    }),
+	    highTemp: _react.PropTypes.number.isRequired,
+	    lowTemp: _react.PropTypes.number.isRequired,
+	    sunrise: _react.PropTypes.instanceOf(Date),
+	    sunset: _react.PropTypes.instanceOf(Date)
+	};
+
+	exports.default = WeatherTable;
 
 /***/ }
 /******/ ]);

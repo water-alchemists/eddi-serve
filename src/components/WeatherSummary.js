@@ -2,6 +2,8 @@
 import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 
+import { formatUTCtoDate } from '../data';
+
 import WeatherOverview from './WeatherOverview';
 import WeatherTable from './WeatherTable';
 
@@ -15,28 +17,29 @@ function createLocation(city, country, zip){
 
 class WeatherSummary extends Component {
     render(){
-        const { weather, zip } = this.props,
-            main = weather.weather[0],
-            image = createImageUrl(main.icon),
-            location = createLocation(weather.name, sys.country, zip),
-            updated = new Date(weather.dt),
-            sunriseDate = new Date(weather.sys.sunrise),
-            sunsetDate = new Date(weather.sys.sunset);
-
+        const { weather={}, zip } = this.props,
+            { sys={}, dt, main={}, wind={}, snow={}, rain={}, name } = weather,
+            description = weather.weather[0],
+            image = createImageUrl(description.icon),
+            location = createLocation(name, sys.country, zip),
+            updated = formatUTCtoDate(dt),
+            sunriseDate = formatUTCtoDate(sys.sunrise),
+            sunsetDate = formatUTCtoDate(sys.sunset);
+            
         return (
             <div className='weather-summary'>
                 <WeatherOverview image={image}
                     location={location}
-                    temperature={weather.main.temp}
-                    type={main.main}
+                    temperature={main.temp}
+                    type={description.main}
                     time={updated}
                 />
-                <WeatherTable rain={weather.rain}
-                    snow={weather.snow}
-                    humidity={weather.main.humidity}
-                    wind={weather.wind}
-                    highTemp={weather.main.temp_max}
-                    lowTemp={weather.main.temp_min}
+                <WeatherTable rain={rain}
+                    snow={snow}
+                    humidity={main.humidity}
+                    wind={wind}
+                    highTemp={main.temp_max}
+                    lowTemp={main.temp_min}
                     sunrise={sunriseDate}
                     sunsetDate={sunsetDate}
                 />
@@ -47,7 +50,7 @@ class WeatherSummary extends Component {
 
 WeatherSummary.propTypes = {
     weather : PropTypes.object.isRequired,
-    zip : PropTypes.number.isRequired
+    zip : PropTypes.string.isRequired
 };
 
 export default WeatherSummary;

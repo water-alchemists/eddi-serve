@@ -9,6 +9,8 @@ import {
 
 import { menuNameChange } from '../../actions/menu';
 
+import WeatherSummary from '../../components/WeatherSummary';
+
 import style from './Weather.less';
 
 function mapStateToProps(state){
@@ -61,20 +63,19 @@ class Weather extends Component {
         const { eddi={}, weather={} } = this.props,
             { zip } = eddi.settings;
         return(
-            <div>
-                {`This eddi got a location : ${zip}`}
-                <div>{JSON.stringify(weather)}</div>
-            </div>
-            
+            <WeatherSummary weather={weather}
+                zip={zip}
+            />
         );
     }
 
     render(){
-        const { eddi={} } = this.props,
-            { zip } = eddi.settings;
+        const { eddi={}, weather={} } = this.props,
+            { zip } = eddi.settings,
+            WeatherElement = weather.id ? this._renderWeather() : this._renderNone();
         return (
             <div id="weather" className="page">
-                { zip ? this._renderWeather() : this._renderNone() }
+                { WeatherElement }
             </div>
         );
     }
