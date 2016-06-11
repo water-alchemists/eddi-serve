@@ -8,7 +8,7 @@ class WeatherTable extends Component {
     _renderRain(){
         const { rain } = this.props,
             keys = Object.keys(rain),
-            time = keys.length ? key[0] : undefined,
+            time = keys.length ? keys[0] : undefined,
             height = time ? rain[time] : undefined,
             text = height ? `${height} inches` : 'None';
 
@@ -27,7 +27,7 @@ class WeatherTable extends Component {
     _renderSnow(){
         const { snow } = this.props,
             keys = Object.keys(snow),
-            time = keys.length ? key[0] : undefined,
+            time = keys.length ? keys[0] : undefined,
             height = time ? snow[time] : undefined,
             text = height ? `${height} inches`: 'None';
 
@@ -41,6 +41,7 @@ class WeatherTable extends Component {
                 </td>
             </tr>
         )
+        
     }
 
     _renderHumidity(){
@@ -54,8 +55,9 @@ class WeatherTable extends Component {
                     <p>{`${humidity}%`}</p>
                 </td>
             </tr>
-        )
+        );
     }
+
 
     _renderWind(){
         const { wind } = this.props,
@@ -71,6 +73,7 @@ class WeatherTable extends Component {
                 </td>
             </tr>
         )
+        
     }
 
     _renderDate(date, type){
@@ -84,7 +87,7 @@ class WeatherTable extends Component {
                     <p>{text}</p>
                 </td>
             </tr>
-        )
+        );
     }
 
     _renderTemp(temp, type){

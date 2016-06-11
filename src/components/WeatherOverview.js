@@ -11,7 +11,7 @@ class WeatherOverview extends Component {
             formattedTemp = Math.floor(temperature);
         return (
             <div className='weather-overview'>
-                <h4 className='weather-location'>{location}</h4>
+                <h3 className='weather-location'>{location}</h3>
                 <div className='overview-content'>
                     <div className='image-container'>
                         <span className='icon' data-icon={image}></span>

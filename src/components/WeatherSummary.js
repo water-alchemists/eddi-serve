@@ -26,7 +26,7 @@ class WeatherSummary extends Component {
             sunriseDate = formatUTCtoDate(sys.sunrise),
             sunsetDate = formatUTCtoDate(sys.sunset),
             image = createImageUrl(description.id, sunriseDate, sunsetDate);
-        console.log('this is hte image', image, description.id);
+
         return (
             <div id='weather-summary'>
                 <WeatherOverview image={image}

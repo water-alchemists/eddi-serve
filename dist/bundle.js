@@ -54817,7 +54817,7 @@
 	            var sunriseDate = (0, _data.formatUTCtoDate)(sys.sunrise);
 	            var sunsetDate = (0, _data.formatUTCtoDate)(sys.sunset);
 	            var image = createImageUrl(description.id, sunriseDate, sunsetDate);
-	            console.log('this is hte image', image, description.id);
+
 	            return _react2.default.createElement(
 	                'div',
 	                { id: 'weather-summary' },
@@ -54905,7 +54905,7 @@
 	                'div',
 	                { className: 'weather-overview' },
 	                _react2.default.createElement(
-	                    'h4',
+	                    'h3',
 	                    { className: 'weather-location' },
 	                    location
 	                ),
@@ -54999,7 +54999,7 @@
 	        value: function _renderRain() {
 	            var rain = this.props.rain;
 	            var keys = Object.keys(rain);
-	            var time = keys.length ? key[0] : undefined;
+	            var time = keys.length ? keys[0] : undefined;
 	            var height = time ? rain[time] : undefined;
 	            var text = height ? height + ' inches' : 'None';
 
@@ -55031,7 +55031,7 @@
 	        value: function _renderSnow() {
 	            var snow = this.props.snow;
 	            var keys = Object.keys(snow);
-	            var time = keys.length ? key[0] : undefined;
+	            var time = keys.length ? keys[0] : undefined;
 	            var height = time ? snow[time] : undefined;
 	            var text = height ? height + ' inches' : 'None';
 
@@ -55275,7 +55275,7 @@
 
 
 	// module
-	exports.push([module.id, "#weather #weather-summary .weather-overview {\n  background-color: white;\n  color: black;\n  padding: 5px;\n}\n#weather #weather-summary .weather-overview .weather-location {\n  margin: 0;\n  padding-top: 5px;\n}\n#weather #weather-summary .weather-overview .overview-content {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container {\n  min-height: 200px;\n  width: 50%;\n  text-align: center;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container .icon {\n  font-size: 150px;\n  line-height: 100%;\n}\n#weather #weather-summary .weather-overview .overview-content p {\n  margin: 0;\n}\n#weather #weather-summary .weather-overview .overview-content .temperature {\n  font-size: 50px;\n}\n#weather #weather-summary .weather-table table {\n  width: 100%;\n}\n#weather #weather-summary .weather-table table tr {\n  border-bottom: 1px solid white;\n}\n#weather #weather-summary .weather-table table tr p {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  margin-left: 5px;\n}\n", ""]);
+	exports.push([module.id, "#weather #weather-summary .weather-overview {\n  background-color: white;\n  color: black;\n  padding: 5px;\n}\n#weather #weather-summary .weather-overview .weather-location {\n  margin: 0;\n  padding-top: 5px;\n  margin-bottom: 5px;\n}\n#weather #weather-summary .weather-overview .overview-content {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container {\n  min-height: 200px;\n  width: 50%;\n  text-align: center;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container .icon {\n  font-size: 150px;\n  line-height: 100%;\n}\n#weather #weather-summary .weather-overview .overview-content p {\n  margin: 0;\n}\n#weather #weather-summary .weather-overview .overview-content .temperature {\n  font-size: 50px;\n}\n#weather #weather-summary .weather-table table {\n  width: 100%;\n}\n#weather #weather-summary .weather-table table tr {\n  border-bottom: 1px solid white;\n}\n#weather #weather-summary .weather-table table tr p {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  margin-left: 5px;\n}\n", ""]);
 
 	// exports
 
