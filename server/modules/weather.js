@@ -9,6 +9,7 @@ function getJsonByLatLng(WEATHER_URL, WEATHER_KEY, lat, lon){
         request.get(WEATHER_URL)
             .query({ lat : lat })
             .query({ lon : lon })
+            .query({ units : `imperial` }) // metric, unit default is Kelvin
             .query({ APPID : WEATHER_KEY })
             .type('json')
             .end((err, data) => {
@@ -23,6 +24,7 @@ function getJsonByZip(WEATHER_URL, WEATHER_KEY, zip){
     return new Promise((resolve, reject) => {
         request.get(WEATHER_URL)
             .query({ zip : `${zip},us` })
+            .query({ units : `imperial` }) // metric, unit default is Kelvin
             .query({ APPID : WEATHER_KEY })
             .type('json')
             .end((err, data) => {

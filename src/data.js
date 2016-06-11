@@ -310,3 +310,10 @@ export const crops = [
 	}
 ].sort((a, b) => a.display > b.display);
 
+export function formatDateToTime(date){
+	return moment(date).format('hh:mm A');
+}
+
+export function formatDateToPretty(date){
+	return moment(date).format('MM-DD-YYYY hh:mm A');
+}

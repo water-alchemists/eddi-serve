@@ -32343,6 +32343,8 @@
 	exports.commaSeparateNumber = commaSeparateNumber;
 	exports.averageReadingsByHour = averageReadingsByHour;
 	exports.formatEpochToTime = formatEpochToTime;
+	exports.formatDateToTime = formatDateToTime;
+	exports.formatDateToPretty = formatDateToPretty;
 
 	var _moment = __webpack_require__(306);
 
@@ -32659,6 +32661,14 @@
 	}].sort(function (a, b) {
 		return a.display > b.display;
 	});
+
+	function formatDateToTime(date) {
+		return (0, _moment2.default)(date).format('hh:mm A');
+	}
+
+	function formatDateToPretty(date) {
+		return (0, _moment2.default)(date).format('MM-DD-YYYY hh:mm A');
+	}
 
 /***/ },
 /* 306 */
