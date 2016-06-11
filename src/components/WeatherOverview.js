@@ -14,6 +14,7 @@ class WeatherOverview extends Component {
                     <img src={image}></img>
                 </div>
                 <div>
+                    <p className='weather-location'>{`${location} (${zip})`}</p>
                     <p className='temperature'>{`${temperature} F`}</p>
                     <p className='weather-type'>{type}</p>
                     <p className='weather-updated'>{formattedTime}</p>
@@ -28,7 +29,8 @@ WeatherOverview.propTypes = {
     location : PropTypes.string.isRequired,
     temperature : PropTypes.number.isRequired,
     type : PropTypes.string.isRequired,
-    time : PropTypes.instanceOf(Date)
+    time : PropTypes.instanceOf(Date),
+    zip : PropTypes.number.isRequired
 };
 
 export default WeatherOverview;
