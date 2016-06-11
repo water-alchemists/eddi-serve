@@ -320,15 +320,39 @@ export function formatDateToPretty(date){
 
 export function formatDegreeToDirection(degree){
 	if(degree > 326 || degree <= 11) return 'North';
-	else if (degree > 11 || degree <= 56) return 'North East';
-	else if (degree > 56 || degree <= 101) return 'East';
-	else if (degree > 101 || degree <= 146) return 'South East';
-	else if (degree > 146 || degree <= 191) return 'South';
-	else if (degree > 191 || degree <= 236) return 'South West';
-	else if (degree > 236 || degree <= 281) return 'West';
-	else if (degree > 281 || degree <= 326) return 'North West';
+	else if (degree > 11 && degree <= 56) return 'North East';
+	else if (degree > 56 && degree <= 101) return 'East';
+	else if (degree > 101 && degree <= 146) return 'South East';
+	else if (degree > 146 && degree <= 191) return 'South';
+	else if (degree > 191 && degree <= 236) return 'South West';
+	else if (degree > 236 && degree <= 281) return 'West';
+	else if (degree > 281 && degree <= 326) return 'North West';
 }
 
 export function formatUTCtoDate(secs){
 	return new Date(secs * 1000);
+}
+
+export function getWeatherFontFromCode(code, isDay){
+	if(code >= 200 && code < 300) return; // 11d
+	else if((code >= 300 && code < 400) || (code >= 520 && code < 532)) return; // 09d
+	else if(code >= 500 && code < 505) return; // 10d
+	else if(code === 511 || code >= 600 && code < 623) return; // 13d
+	else if(code > 700 && code < 790) return; //50d
+	else if(code === 800) return; // 01d
+	else if(code === 801) return; // 02d
+	else if(code === 802) return; // 03d
+	else if(code >= 803 && code < 805) return // 04d
+	return;
+}
+
+export function isDay(sunrise, sunset){
+	const current = moment(),
+		sunriseDate = moment(sunrise),
+		sunsetDate = moment(sunset),
+		isSunriseToday = sunriseDate.isSame(current),
+		isSunsetToday = sunsetDate.isSame(current);
+	
+	// if both sunrise and sunset is the next day that means that the current day is after sunset
+	return !isSunriseToday && !isSunsetToday;
 }
