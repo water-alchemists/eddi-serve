@@ -65,6 +65,15 @@ class WeatherTable extends Component {
         )
     }
 
+    _renderTemp(temp, type){
+        return (
+            <tr>
+                <td>{type}</td>
+                <td>{`${temp} F`}</td>
+            </tr>
+        );
+    }
+
     render(){
         const { highTemp, lowTemp, sunrise, sunset } = this.props;
         return (
@@ -74,14 +83,8 @@ class WeatherTable extends Component {
                     { this._renderSnow() }
                     { this._renderHumidity() }
                     { this._renderWind() }
-                    <tr>
-                        <td>High</td>
-                        <td>{`${highTemp} F`}</td>
-                    </tr>
-                    <tr>
-                        <td>Low</td>
-                        <td>{`${lowTemp} F`}</td>
-                    </tr>
+                    { this._renderTemp(highTemp, 'High') }
+                    { this._renderTemp(lowTemp, 'Low') }
                     { this._renderDate(sunrise, 'Sunrise')}
                     { this._renderDate(sunset, 'Sunset') }
                 </table>

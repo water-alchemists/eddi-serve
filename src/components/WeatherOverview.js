@@ -29,8 +29,7 @@ WeatherOverview.propTypes = {
     location : PropTypes.string.isRequired,
     temperature : PropTypes.number.isRequired,
     type : PropTypes.string.isRequired,
-    time : PropTypes.instanceOf(Date),
-    zip : PropTypes.number.isRequired
+    time : PropTypes.instanceOf(Date)
 };
 
 export default WeatherOverview;
