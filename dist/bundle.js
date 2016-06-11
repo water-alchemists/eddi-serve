@@ -27857,7 +27857,16 @@
 
 	var _constants = __webpack_require__(257);
 
-	var initialState = {};
+	var initialState = {
+		id: undefined,
+		wind: {},
+		snow: {},
+		rain: {},
+		dt: undefined,
+		sys: {},
+		main: {},
+		weather: [{}]
+	};
 
 /***/ },
 /* 264 */
@@ -28517,7 +28526,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#menu {\n  background-color: #006d60;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 375px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #006d60;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 375px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
@@ -32347,8 +32356,8 @@
 	exports.formatDateToPretty = formatDateToPretty;
 	exports.formatDegreeToDirection = formatDegreeToDirection;
 	exports.formatUTCtoDate = formatUTCtoDate;
-	exports.getWeatherFontFromCode = getWeatherFontFromCode;
-	exports.isDay = isDay;
+	exports.getWeatherFont = getWeatherFont;
+	exports.checkNight = checkNight;
 
 	var _moment = __webpack_require__(306);
 
@@ -32682,20 +32691,20 @@
 		return new Date(secs * 1000);
 	}
 
-	function getWeatherFontFromCode(code, isDay) {
-		if (code >= 200 && code < 300) return; // 11d
-		else if (code >= 300 && code < 400 || code >= 520 && code < 532) return; // 09d
-			else if (code >= 500 && code < 505) return; // 10d
-				else if (code === 511 || code >= 600 && code < 623) return; // 13d
-					else if (code > 700 && code < 790) return; //50d
-						else if (code === 800) return; // 01d
-							else if (code === 801) return; // 02d
-								else if (code === 802) return; // 03d
-									else if (code >= 803 && code < 805) return; // 04d
+	function getWeatherFont(code, isNight) {
+		if (code === 800) return isNight ? 'C' : 'B'; // 01d
+		else if (code === 801) return isNight ? 'I' : 'H'; // 02d
+			else if (code === 802) return 'N'; // 03d
+				else if (code >= 803 && code < 805) return 'Y'; // 04d
+					else if (code >= 300 && code < 400 || code >= 520 && code < 532) return 'R'; // 09d
+						else if (code >= 500 && code < 505) return 'Q'; // 10d
+							else if (code >= 200 && code < 300) return 'Z'; // 11d
+								else if (code === 511 || code >= 600 && code < 623) return 'W'; // 13d
+									else if (code > 700 && code < 790) return isNight ? 'K' : 'J'; //50d
 		return;
 	}
 
-	function isDay(sunrise, sunset) {
+	function checkNight(sunrise, sunset) {
 		var current = (0, _moment2.default)(),
 		    sunriseDate = (0, _moment2.default)(sunrise),
 		    sunsetDate = (0, _moment2.default)(sunset),
@@ -46534,7 +46543,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n.eddi-add {\n  padding: 10px;\n}\n.eddi-add h3 {\n  text-align: center;\n  font-weight: 500;\n  color: black;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .input-container .salinity-container {\n  position: relative;\n}\n.eddi-add .input-container .salinity-container p {\n  color: black;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  margin-right: 5px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n  background-color: white;\n  color: #006d60;\n}\n.eddi-add .button-container button.cancel {\n  background-color: #ab3524;\n  color: white;\n}\n", ""]);
+	exports.push([module.id, ".eddi-add {\n  padding: 10px;\n}\n.eddi-add h3 {\n  text-align: center;\n  font-weight: 500;\n  color: black;\n}\n.eddi-add .input-container {\n  margin: 0 20px;\n}\n.eddi-add .input-container .salinity-container {\n  position: relative;\n}\n.eddi-add .input-container .salinity-container p {\n  color: black;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  margin-right: 5px;\n}\n.eddi-add .button-container {\n  text-align: center;\n}\n.eddi-add .button-container button {\n  margin: 10px;\n  background-color: white;\n  color: #006d60;\n}\n.eddi-add .button-container button.cancel {\n  background-color: #ab3524;\n  color: white;\n}\n", ""]);
 
 	// exports
 
@@ -46968,7 +46977,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\nform input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: transparent;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n@font-face {\n  font-family: 'MeteoconsRegular';\n  src: url('/assets/fonts/meteocons-webfont.eot');\n  src: url('/assets/fonts/meteocons-webfont.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/meteocons-webfont.woff') format('woff'), url('/assets/fonts/meteocons-webfont.ttf') format('truetype'), url('/assets/fonts/meteocons-webfont.svg#MeteoconsRegular') format('svg');\n  font-weight: normal;\n  font-style: normal;\n}\n.sprite {\n  background-image: url('/assets/new-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -8px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -5px -223px;\n}\n.sprite.report.green {\n  background-position: -55px -223px;\n}\n.sprite.arrow.down {\n  background-position: 0px -420px;\n}\n.sprite.arrow.down.faded {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: 0px -365px;\n}\n.sprite.arrow.up.faded {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -460px;\n}\n.sprite.arrow.right.faded {\n  background-position: -55px -460px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.salinityRec {\n  background-position: -155px -81px;\n}\n.sprite.salinityRec.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityRec.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityRec.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\n.sprite.burger {\n  height: 48px;\n  width: 48px;\n  background-position: -105px -475px;\n}\n.sprite.burger.dark {\n  background-color: white;\n  background-position: -150px -475px;\n}\n.sprite.circle {\n  height: 60px;\n  width: 60px;\n  background-position: -312px -420px;\n}\n.sprite.circle.blue {\n  background-position: -312px -355px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n", ""]);
+	exports.push([module.id, "form input {\n  display: block;\n  width: 100%;\n  margin: 20px 0;\n  background: transparent;\n  border: 0;\n  padding: 4px 12px;\n  opacity: 0.8;\n  font-size: 18px;\n  transition: opacity 0.3s ease;\n  font-style: italic;\n}\nform input:focus {\n  opacity: 1;\n  outline: none;\n}\nform input:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0 1000px #EEE inset;\n}\nform button {\n  background-color: transparent;\n  padding: 8px 24px;\n  font-size: 16px;\n  border: 0;\n  color: white;\n}\nform button.cancel {\n  background-color: #ab3524;\n}\n.light input {\n  color: #0d0e1f;\n  border-bottom: 1px solid #0d0e1f;\n}\n.dark input {\n  color: rgba(241, 241, 242, 0.9);\n  border-bottom: 1px solid rgba(241, 241, 242, 0.9);\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 700;\n  src: url('/assets/fonts/AauxNext-BdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 900;\n  src: url('/assets/fonts/AauxNext-BlkIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 300;\n  src: url('/assets/fonts/AauxNext-Lt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  src: url('/assets/fonts/AauxNext-Md.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 500;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-MdIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 400;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-RgIt.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  src: url('/assets/fonts/AauxNext-Ult.otf');\n}\n@font-face {\n  font-family: \"Aaux Next\";\n  font-weight: 200;\n  font-style: italic;\n  src: url('/assets/fonts/AauxNext-UltIt.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 300;\n  src: url('/assets/fonts/Oswald 300.otf');\n}\n@font-face {\n  font-family: \"Oswald\";\n  font-weight: 400;\n  src: url('/assets/fonts/Oswald regular.otf');\n}\n@font-face {\n  font-family: 'MeteoconsRegular';\n  src: url('/assets/fonts/meteocons-webfont.eot');\n  src: url('/assets/fonts/meteocons-webfont.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/meteocons-webfont.woff') format('woff'), url('/assets/fonts/meteocons-webfont.ttf') format('truetype'), url('/assets/fonts/meteocons-webfont.svg#MeteoconsRegular') format('svg');\n  font-weight: normal;\n  font-style: normal;\n}\n.sprite {\n  background-image: url('/assets/new-sprites.png');\n  background-repeat: no-repeat;\n  height: 35px;\n  width: 35px;\n}\n.sprite.home {\n  background-position: -8px -12px;\n}\n.sprite.home.green {\n  background-position: -60px -12px;\n}\n.sprite.dashboard {\n  background-position: -7px -81px;\n}\n.sprite.dashboard.green {\n  background-position: -57px -81px;\n}\n.sprite.settings {\n  background-position: -7px -150px;\n}\n.sprite.settings.green {\n  background-position: -57px -150px;\n}\n.sprite.troubleshoot {\n  background-position: -1px -294px;\n}\n.sprite.troubleshoot.green {\n  background-position: -52px -294px;\n}\n.sprite.report {\n  background-position: -5px -223px;\n}\n.sprite.report.green {\n  background-position: -55px -223px;\n}\n.sprite.arrow.down {\n  background-position: 0px -420px;\n}\n.sprite.arrow.down.faded {\n  background-position: -55px -420px;\n}\n.sprite.arrow.up {\n  background-position: 0px -365px;\n}\n.sprite.arrow.up.faded {\n  background-position: -55px -365px;\n}\n.sprite.arrow.right {\n  background-position: 0px -460px;\n}\n.sprite.arrow.right.faded {\n  background-position: -55px -460px;\n}\n.sprite.camera {\n  background-position: -207px -295px;\n}\n.sprite.csv {\n  background-position: -207px -425px;\n}\n.sprite.csv.faded {\n  background-position: -207px -362px;\n}\n.sprite.pdf {\n  background-position: -255px -425px;\n}\n.sprite.pdf.faded {\n  background-position: -255px -362px;\n}\n.sprite.salinityIn {\n  background-position: -109px -81px;\n}\n.sprite.salinityIn.faded {\n  background-position: -109px -10px;\n}\n.sprite.salinityIn.bad {\n  background-position: -109px -222px;\n}\n.sprite.salinityIn.bad.faded {\n  background-position: -109px -149px;\n}\n.sprite.salinityOut {\n  background-position: -155px -81px;\n}\n.sprite.salinityOut.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityOut.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityOut.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.salinityRec {\n  background-position: -155px -81px;\n}\n.sprite.salinityRec.faded {\n  background-position: -155px -10px;\n}\n.sprite.salinityRec.bad {\n  background-position: -155px -222px;\n}\n.sprite.salinityRec.bad.faded {\n  background-position: -155px -149px;\n}\n.sprite.flow {\n  background-position: -209px -81px;\n}\n.sprite.flow.faded {\n  background-position: -209px -10px;\n}\n.sprite.flow.bad {\n  background-position: -209px -222px;\n}\n.sprite.flow.bad.faded {\n  background-position: -209px -149px;\n}\n.sprite.power {\n  background-position: -253px -81px;\n}\n.sprite.power.faded {\n  background-position: -253px -10px;\n}\n.sprite.power.bad {\n  background-position: -253px -222px;\n}\n.sprite.power.bad.faded {\n  background-position: -253px -149px;\n}\n.sprite.empty {\n  background-position: 20px 20px;\n}\n.sprite.burger {\n  height: 48px;\n  width: 48px;\n  background-position: -105px -475px;\n}\n.sprite.burger.dark {\n  background-color: white;\n  background-position: -150px -475px;\n}\n.sprite.circle {\n  height: 60px;\n  width: 60px;\n  background-position: -312px -420px;\n}\n.sprite.circle.blue {\n  background-position: -312px -355px;\n}\nhtml,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  background-color: #0d0e1f;\n  color: white;\n  font-family: sans-serif;\n}\n* {\n  box-sizing: border-box;\n  font-family: \"Aaux Next\", sans-serif;\n}\n.page {\n  padding-top: 48px;\n}\n.dark {\n  background-color: #0d0e1f;\n}\n.light {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n.hide {\n  max-height: 0px;\n}\n.red-font {\n  color: #ab3524;\n}\n.icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n", ""]);
 
 	// exports
 
@@ -47732,7 +47741,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#home {\n  position: absolute;\n  min-height: 100vh;\n  width: 100%;\n  height: auto;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#home .content .logo-container img {\n  width: 100%;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
+	exports.push([module.id, "#home {\n  position: absolute;\n  min-height: 100vh;\n  width: 100%;\n  height: auto;\n  background: linear-gradient(0deg, #006d60, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#home .content .logo-container img {\n  width: 100%;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
 
 	// exports
 
@@ -49207,7 +49216,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  text-decoration: none;\n  color: #006d60;\n}\n#dashboard .dashboard-menu a p {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n  opacity: 0.6;\n  margin: 0;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-menu a.active p {\n  opacity: 1;\n}\n#dashboard .readings-empty {\n  text-align: center;\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view.power {\n  padding-top: 20px;\n  padding-bottom: 20px;\n  text-align: center;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n  text-transform: lowercase;\n  font-weight: 300;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection.selected span {\n  border-bottom: 4px solid #006d60;\n  font-weight: bold;\n  font-style: none !important;\n  color: #0d0e1f;\n}\n", ""]);
+	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  text-decoration: none;\n  color: #006d60;\n}\n#dashboard .dashboard-menu a p {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n  opacity: 0.6;\n  margin: 0;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-menu a.active p {\n  opacity: 1;\n}\n#dashboard .readings-empty {\n  text-align: center;\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n}\n#dashboard .dashboard-view.power {\n  padding-top: 20px;\n  padding-bottom: 20px;\n  text-align: center;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: white;\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n  text-transform: lowercase;\n  font-weight: 300;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection.selected span {\n  border-bottom: 4px solid #006d60;\n  font-weight: bold;\n  font-style: none !important;\n  color: #0d0e1f;\n}\n", ""]);
 
 	// exports
 
@@ -49618,7 +49627,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n.add-eddi-button {\n  color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  background-color: white;\n  width: 160px!important;\n  margin: 20px auto;\n  text-align: center!important;\n}\n", ""]);
+	exports.push([module.id, ".add-eddi-button {\n  color: #006d60;\n  cursor: pointer;\n  padding: 8px;\n  background-color: white;\n  width: 160px!important;\n  margin: 20px auto;\n  text-align: center!important;\n}\n", ""]);
 
 	// exports
 
@@ -49658,7 +49667,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#list {\n  min-height: 75vh;\n  margin-bottom: 25px;\n}\n#list .eddis-empty {\n  margin: 40px;\n  text-align: center;\n}\n#list .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  right: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding-bottom: 10px;\n}\n#list .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#list {\n  min-height: 75vh;\n  margin-bottom: 25px;\n}\n#list .eddis-empty {\n  margin: 40px;\n  text-align: center;\n}\n#list .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  right: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding-bottom: 10px;\n}\n#list .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
@@ -50600,7 +50609,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n.date-time-select {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: space-between;\n}\n.date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  cursor: pointer;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
+	exports.push([module.id, ".date-time-select {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: space-between;\n}\n.date-time-select select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  text-align: center;\n  padding: 5px;\n  cursor: pointer;\n}\n.date-time-select select:focus {\n  outline: none;\n}\n", ""]);
 
 	// exports
 
@@ -50763,7 +50772,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n.crop-input select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  padding: 5px;\n  cursor: pointer;\n  min-width: 198px;\n  text-align: center;\n}\n.crop-input select:focus {\n  outline: none;\n}\n.crop-input select option:first-child {\n  color: grey;\n}\n", ""]);
+	exports.push([module.id, ".crop-input select {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border: 2px solid #006d60;\n  border-radius: 0px;\n  font-size: 18px;\n  text-transform: uppercase;\n  padding: 5px;\n  cursor: pointer;\n  min-width: 198px;\n  text-align: center;\n}\n.crop-input select:focus {\n  outline: none;\n}\n.crop-input select option:first-child {\n  color: grey;\n}\n", ""]);
 
 	// exports
 
@@ -50908,7 +50917,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 30px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 50px;\n  padding-bottom: 50px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 100px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .zip-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container .zip-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 200px;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container .zip-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "#settings {\n  min-height: 100vh;\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#settings .settings-eddi {\n  background-color: white;\n  margin-top: 5px;\n}\n#settings .settings-eddi:first-child {\n  margin-top: 0px;\n}\n#settings .settings-eddi .arrow-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .header {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#settings .settings-eddi .header h3 {\n  font-weight: normal;\n  text-align: center;\n  margin: 0px;\n}\n#settings .settings-eddi .settings-container {\n  padding-top: 10px;\n  padding-left: 20px;\n  padding-right: 20px;\n  padding-bottom: 10px;\n  overflow-y: hidden;\n  transition-property: all;\n  transition-duration: .5s;\n  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);\n}\n#settings .settings-eddi .settings-container.hide {\n  max-height: 0;\n  padding-top: 0px;\n  padding-bottom: 0px;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .info {\n  color: black;\n  font-weight: 700;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-version .version-type .date {\n  color: #0d0e1f;\n  font-weight: 400;\n  font-style: italic;\n}\n#settings .settings-eddi .settings-container .settings-form h4 {\n  color: black;\n  font-weight: 200;\n  margin: 0;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row {\n  padding-top: 30px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container p {\n  color: #0d0e1f;\n  margin: 0;\n  margin-left: 5px;\n  margin-right: 5px;\n}\n#settings .settings-eddi .settings-container .settings-form .operate-row .select-container .date-time-select {\n  width: 120px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row {\n  padding-top: 50px;\n  padding-bottom: 50px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .salinity-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 100px;\n}\n#settings .settings-eddi .settings-container .settings-form .salinity-row .select-container .salinity-input input:focus {\n  outline: none;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-between;\n  -webkit-justify-content: space-between;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 0.5rem;\n}\n@media (max-width: 375px) {\n  #settings .settings-eddi .settings-container .settings-form .zip-row .select-container {\n    flex-direction: column;\n    -webkit-flex-direction: column;\n    justify-content: flex-end;\n    -webkit-justify-content: flex-end;\n    align-items: flex-start;\n    -webkit-align-items: flex-start;\n  }\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container p {\n  margin: 0;\n  color: black;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container .zip-input input {\n  border-color: #006d60;\n  border-width: 2px;\n  padding: 5px 5px 5px 20px;\n  font-size: 18px;\n  text-transform: uppercase;\n  width: 200px;\n}\n#settings .settings-eddi .settings-container .settings-form .zip-row .select-container .zip-input input:focus {\n  outline: none;\n}\n#settings .footer {\n  position: fixed;\n  width: 100%;\n  bottom: 0;\n  left: 0;\n  padding-top: 5px;\n}\n#settings .footer .add-eddi-button {\n  width: 100%;\n  margin: 0px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n", ""]);
 
 	// exports
 
@@ -51342,7 +51351,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n.eddi-state-button {\n  background-color: white;\n  cursor: pointer;\n  padding: 8px;\n  color: #006d60;\n  width: 120px;\n  margin: 0px;\n  text-align: center;\n  position: relative;\n}\n.eddi-state-button .state-options-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 120px;\n  border: 1px solid black;\n}\n.eddi-state-button .state-options-container .state-options {\n  padding: 8px;\n  text-align: center;\n  margin: 0;\n  color: #006d60;\n  background-color: white;\n  cursor: pointer;\n}\n.eddi-state-button .state-options-container .state-options.active {\n  color: white;\n  background-color: #2abfd0;\n}\n.export {\n  background-color: white;\n  cursor: pointer;\n  padding: 10px;\n  color: #006d60;\n  width: 80px;\n  margin: 0px;\n  text-align: center;\n}\n", ""]);
+	exports.push([module.id, ".eddi-state-button {\n  background-color: white;\n  cursor: pointer;\n  padding: 8px;\n  color: #006d60;\n  width: 120px;\n  margin: 0px;\n  text-align: center;\n  position: relative;\n}\n.eddi-state-button .state-options-container {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 120px;\n  border: 1px solid black;\n}\n.eddi-state-button .state-options-container .state-options {\n  padding: 8px;\n  text-align: center;\n  margin: 0;\n  color: #006d60;\n  background-color: white;\n  cursor: pointer;\n}\n.eddi-state-button .state-options-container .state-options.active {\n  color: white;\n  background-color: #2abfd0;\n}\n.export {\n  background-color: white;\n  cursor: pointer;\n  padding: 10px;\n  color: #006d60;\n  width: 80px;\n  margin: 0px;\n  text-align: center;\n}\n", ""]);
 
 	// exports
 
@@ -51664,7 +51673,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n.status-bar {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  padding: 8px;\n}\n.status-bar p {\n  margin: 0;\n}\n", ""]);
+	exports.push([module.id, ".status-bar {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  padding: 8px;\n}\n.status-bar p {\n  margin: 0;\n}\n", ""]);
 
 	// exports
 
@@ -51704,7 +51713,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .sprite > span {\n    top: 35%;\n  }\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: black;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  font-weight: 700;\n  border-bottom: 4px solid #006d60;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 300px;\n  width: 300px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite {\n  position: absolute;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-0 {\n  bottom: 20px;\n  left: 50px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-1 {\n  bottom: 10px;\n  right: 70px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-2 {\n  top: 15px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-3 {\n  top: 120px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions {\n  position: absolute;\n  border-right: 2px solid;\n  border-bottom: 2px solid;\n  border-color: #ab3524;\n  width: 90px;\n  height: 55px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-2 {\n  top: 55px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-3 {\n  top: 160px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.blue {\n  border-color: #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image-header .image-footer {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-end;\n  padding-bottom: 20px;\n  padding-right: 20px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n  margin-top: 30px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: black;\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
+	exports.push([module.id, "#troubleshoot {\n  min-height: 100vh;\n}\n#troubleshoot .content {\n  height: 100%;\n}\n#troubleshoot .content .sprite {\n  position: relative;\n}\n#troubleshoot .content .sprite > span {\n  position: absolute;\n  top: 40%;\n  right: 45%;\n  color: white;\n}\n@media (min-width: 320px) and (max-width: 375px) {\n  #troubleshoot .content .sprite > span {\n    top: 35%;\n  }\n}\n#troubleshoot .content .image-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: row;\n  padding: 10px;\n}\n#troubleshoot .content .cycle-list {\n  background-color: white;\n  padding-bottom: 10px;\n}\n#troubleshoot .content .cycle-list .cycle {\n  padding: 10px 20px;\n  color: black;\n  text-transform: lowercase;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#troubleshoot .content .cycle-list .cycle p {\n  margin-left: 10px;\n  font-size: 18px;\n}\n#troubleshoot .content .cycle-list .cycle.active {\n  color: black;\n}\n#troubleshoot .content .cycle-list .cycle.active p {\n  font-weight: 700;\n  border-bottom: 4px solid #006d60;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image {\n  background-image: url(\"/assets/troubleshoot.svg\");\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: auto 250px;\n  height: 300px;\n  width: 300px;\n  position: relative;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite {\n  position: absolute;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-0 {\n  bottom: 20px;\n  left: 50px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-1 {\n  bottom: 10px;\n  right: 70px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-2 {\n  top: 15px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .sprite.state-3 {\n  top: 120px;\n  right: 0px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions {\n  position: absolute;\n  border-right: 2px solid;\n  border-bottom: 2px solid;\n  border-color: #ab3524;\n  width: 90px;\n  height: 55px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-2 {\n  top: 55px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.state-3 {\n  top: 160px;\n  right: 30px;\n}\n#troubleshoot .content .troubleshoot-image-header .troubleshoot-image-container .troubleshoot-image .extensions.blue {\n  border-color: #2abfd0;\n}\n#troubleshoot .content .troubleshoot-image-header .image-footer {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-end;\n  padding-bottom: 20px;\n  padding-right: 20px;\n}\n#troubleshoot .content .troubleshoot-header {\n  background-color: white;\n  padding-left: 30px;\n  padding-right: 20px;\n  padding-top: 10px;\n  padding-bottom: 20px;\n}\n#troubleshoot .content .troubleshoot-header h3 {\n  color: black;\n  margin: 0;\n  font-weight: 200;\n  margin-bottom: 10px;\n  margin-top: 30px;\n}\n#troubleshoot .content .troubleshoot-header p {\n  color: black;\n  margin: 0;\n}\n#troubleshoot .content .troubleshoot-header p.troubleshoot-warning {\n  text-align: right;\n}\n", ""]);
 
 	// exports
 
@@ -52601,7 +52610,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 20px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
+	exports.push([module.id, "#report {\n  background-color: rgba(241, 241, 242, 0.9);\n}\n#report .section {\n  background-color: white;\n  padding: 20px;\n}\n#report .section h3 {\n  color: black;\n  font-weight: 500;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  text-transform: uppercase;\n}\n#report .section .date-time-select {\n  max-width: 225px;\n}\n#report .document-section {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: space-around;\n  -webkit-justify-content: space-around;\n  align-items: center;\n  -webkit-align-items: center;\n  margin-top: 5px;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n#report .document-section .selection {\n  background-color: rgba(241, 241, 242, 0.9);\n  width: 80px;\n  height: 80px;\n  display: flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#report .document-section .selection p {\n  color: #006d60;\n  opacity: 0.6;\n  margin: 0px;\n  padding-top: 5px;\n  padding-bottom: 5px;\n  text-align: center;\n}\n#report .document-section .selection.active {\n  background-color: white;\n}\n#report .document-section .selection.active p {\n  opacity: 1;\n}\n", ""]);
 
 	// exports
 
@@ -52949,7 +52958,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#profile .password-form {\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n#profile .password-form h3 {\n  margin: 0;\n  text-align: center;\n  color: black;\n}\n#profile .password-form .message {\n  text-align: center;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n#profile .password-form .message.success {\n  color: #2abfd0;\n}\n#profile .password-form .message.warning {\n  color: #ab3524;\n}\n#profile .password-form .button-container {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n#profile .password-form .button-container button {\n  color: #006d60;\n  background-color: white;\n}\n", ""]);
+	exports.push([module.id, "#profile .password-form {\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n#profile .password-form h3 {\n  margin: 0;\n  text-align: center;\n  color: black;\n}\n#profile .password-form .message {\n  text-align: center;\n  padding-top: 5px;\n  padding-bottom: 5px;\n}\n#profile .password-form .message.success {\n  color: #2abfd0;\n}\n#profile .password-form .message.warning {\n  color: #ab3524;\n}\n#profile .password-form .button-container {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\n#profile .password-form .button-container button {\n  color: #006d60;\n  background-color: white;\n}\n", ""]);
 
 	// exports
 
@@ -54765,8 +54774,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	function createImageUrl(icon) {
-	    return 'http://openweathermap.org/img/w/' + icon + '.png';
+	function createImageUrl(code, sunrise, sunset) {
+	    var isNight = (0, _data.checkNight)(sunrise, sunset);
+	    return (0, _data.getWeatherFont)(code, isNight);
 	}
 
 	function createLocation(city, country, zip) {
@@ -54802,12 +54812,12 @@
 	            var rain = _weather$rain === undefined ? {} : _weather$rain;
 	            var name = weather.name;
 	            var description = weather.weather[0];
-	            var image = createImageUrl(description.icon);
 	            var location = createLocation(name, sys.country, zip);
 	            var updated = (0, _data.formatUTCtoDate)(dt);
 	            var sunriseDate = (0, _data.formatUTCtoDate)(sys.sunrise);
 	            var sunsetDate = (0, _data.formatUTCtoDate)(sys.sunset);
-
+	            var image = createImageUrl(description.id, sunriseDate, sunsetDate);
+	            console.log('this is hte image', image, description.id);
 	            return _react2.default.createElement(
 	                'div',
 	                { id: 'weather-summary' },
@@ -54894,32 +54904,37 @@
 	                'div',
 	                { className: 'weather-overview' },
 	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'image-container' },
-	                    _react2.default.createElement('img', { src: image })
+	                    'h5',
+	                    { className: 'weather-location' },
+	                    location
 	                ),
 	                _react2.default.createElement(
 	                    'div',
-	                    null,
+	                    { className: 'overview-content' },
 	                    _react2.default.createElement(
-	                        'p',
-	                        { className: 'weather-location' },
-	                        location
+	                        'div',
+	                        { className: 'image-container' },
+	                        _react2.default.createElement('span', { className: 'icon', 'data-icon': image })
 	                    ),
 	                    _react2.default.createElement(
-	                        'p',
-	                        { className: 'temperature' },
-	                        temperature + ' F'
-	                    ),
-	                    _react2.default.createElement(
-	                        'p',
-	                        { className: 'weather-type' },
-	                        type
-	                    ),
-	                    _react2.default.createElement(
-	                        'p',
-	                        { className: 'weather-updated' },
-	                        'as of ' + formattedTime
+	                        'div',
+	                        { className: 'overview-info' },
+	                        _react2.default.createElement(
+	                            'p',
+	                            { className: 'temperature' },
+	                            '' + temperature,
+	                            _react2.default.createElement('span', { className: 'icon', 'data-icon': '+' })
+	                        ),
+	                        _react2.default.createElement(
+	                            'p',
+	                            { className: 'weather-type' },
+	                            type
+	                        ),
+	                        _react2.default.createElement(
+	                            'p',
+	                            { className: 'weather-updated' },
+	                            'as of ' + formattedTime
+	                        )
 	                    )
 	                )
 	            );
@@ -54992,13 +55007,21 @@
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    'Rain'
+	                    { className: 'label' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'Rain'
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    text
+	                    { className: 'value' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        text
+	                    )
 	                )
 	            );
 	        }
@@ -55016,13 +55039,21 @@
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    'Snow'
+	                    { className: 'label' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'Snow'
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    text
+	                    { className: 'value' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        text
+	                    )
 	                )
 	            );
 	        }
@@ -55036,13 +55067,21 @@
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    'Humidity'
+	                    { className: 'label' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'Humidity'
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    humidity + '%'
+	                    { className: 'value' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        humidity + '%'
+	                    )
 	                )
 	            );
 	        }
@@ -55057,13 +55096,21 @@
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    'Wind'
+	                    { className: 'label' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'Wind'
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    direction + '  (' + wind.speed + ' miles/hour)'
+	                    { className: 'value' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        direction + ' (' + wind.speed + ' miles/hour)'
+	                    )
 	                )
 	            );
 	        }
@@ -55076,13 +55123,21 @@
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    type
+	                    { className: 'label' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        type
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    text
+	                    { className: 'value' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        text
+	                    )
 	                )
 	            );
 	        }
@@ -55095,13 +55150,21 @@
 	                null,
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    type
+	                    { className: 'label' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        type
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'td',
-	                    null,
-	                    rounded + ' F'
+	                    { className: 'value' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        rounded + ' F'
+	                    )
 	                )
 	            );
 	        }
@@ -55172,6 +55235,8 @@
 	    sunset: _react.PropTypes.instanceOf(Date)
 	};
 
+	WeatherTable.defaultProps = {};
+
 	exports.default = WeatherTable;
 
 /***/ },
@@ -55209,7 +55274,7 @@
 
 
 	// module
-	exports.push([module.id, ".icon:before {\n  font-family: 'MeteoconsRegular';\n  content: attr(data-icon);\n}\n#weather #weather-summary .weather-overview {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: center;\n  background-color: white;\n  color: black;\n}\n#weather #weather-summary .weather-overview .image-container {\n  min-height: 200px;\n  width: 50%;\n}\n#weather #weather-summary .weather-overview .image-container img {\n  height: 100%;\n  width: 100%;\n}\n#weather #weather-summary .weather-overview p {\n  margin: 0;\n}\n#weather #weather-summary .weather-table table {\n  width: 100%;\n  border: 1px solid white;\n}\n", ""]);
+	exports.push([module.id, "#weather #weather-summary .weather-overview {\n  background-color: white;\n  color: black;\n}\n#weather #weather-summary .weather-overview .weather-location {\n  margin: 0;\n  padding-top: 5px;\n}\n#weather #weather-summary .weather-overview .overview-content {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container {\n  min-height: 200px;\n  width: 50%;\n  text-align: center;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container .icon {\n  font-size: 150px;\n  line-height: 100%;\n}\n#weather #weather-summary .weather-overview .overview-content p {\n  margin: 0;\n}\n#weather #weather-summary .weather-table table {\n  width: 100%;\n}\n#weather #weather-summary .weather-table table tr {\n  border-bottom: 1px solid white;\n}\n#weather #weather-summary .weather-table table tr p {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  margin-left: 5px;\n}\n", ""]);
 
 	// exports
 

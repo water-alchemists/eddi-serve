@@ -333,20 +333,20 @@ export function formatUTCtoDate(secs){
 	return new Date(secs * 1000);
 }
 
-export function getWeatherFontFromCode(code, isDay){
-	if(code >= 200 && code < 300) return; // 11d
-	else if((code >= 300 && code < 400) || (code >= 520 && code < 532)) return; // 09d
-	else if(code >= 500 && code < 505) return; // 10d
-	else if(code === 511 || code >= 600 && code < 623) return; // 13d
-	else if(code > 700 && code < 790) return; //50d
-	else if(code === 800) return; // 01d
-	else if(code === 801) return; // 02d
-	else if(code === 802) return; // 03d
-	else if(code >= 803 && code < 805) return // 04d
+export function getWeatherFont(code, isNight){
+	if(code === 800) return isNight ? 'C' : 'B'; // 01d
+	else if(code === 801) return isNight ? 'I' : 'H'; // 02d
+	else if(code === 802) return 'N'; // 03d
+	else if(code >= 803 && code < 805) return 'Y'; // 04d
+	else if((code >= 300 && code < 400) || (code >= 520 && code < 532)) return 'R'; // 09d
+	else if(code >= 500 && code < 505) return 'Q'; // 10d
+	else if(code >= 200 && code < 300) return 'Z'; // 11d
+	else if(code === 511 || code >= 600 && code < 623) return 'W'; // 13d
+	else if(code > 700 && code < 790) return isNight ? 'K' : 'J'; //50d
 	return;
 }
 
-export function isDay(sunrise, sunset){
+export function checkNight(sunrise, sunset){
 	const current = moment(),
 		sunriseDate = moment(sunrise),
 		sunsetDate = moment(sunset),

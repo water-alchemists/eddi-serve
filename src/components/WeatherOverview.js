@@ -10,15 +10,20 @@ class WeatherOverview extends Component {
         const formattedTime = formatDateToPretty(time);
         return (
             <div className='weather-overview'>
-                <div className='image-container'>
-                    <img src={image}></img>
-                </div>
-                <div>
-                    <p className='weather-location'>{location}</p>
-                    <p className='temperature'>{`${temperature} F`}</p>
-                    <p className='weather-type'>{type}</p>
-                    <p className='weather-updated'>{`as of ${formattedTime}`}</p>
-                </div>
+                <h5 className='weather-location'>{location}</h5>
+                <div className='overview-content'>
+                    <div className='image-container'>
+                        <span className='icon' data-icon={image}></span>
+                    </div>
+                    <div className='overview-info'>
+                        <p className='temperature'>
+                            {`${temperature}`}
+                            <span className='icon' data-icon='+'></span>
+                        </p>
+                        <p className='weather-type'>{type}</p>
+                        <p className='weather-updated'>{`as of ${formattedTime}`}</p>
+                    </div>
+                </div> 
             </div>
         );
     }

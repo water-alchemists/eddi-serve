@@ -2,13 +2,14 @@
 import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 
-import { formatUTCtoDate } from '../data';
+import { formatUTCtoDate, checkNight, getWeatherFont } from '../data';
 
 import WeatherOverview from './WeatherOverview';
 import WeatherTable from './WeatherTable';
 
-function createImageUrl(icon){
-    return `http://openweathermap.org/img/w/${icon}.png`
+function createImageUrl(code, sunrise, sunset){
+    const isNight = checkNight(sunrise, sunset);
+    return getWeatherFont(code, isNight);
 }
 
 function createLocation(city, country, zip){
@@ -20,12 +21,12 @@ class WeatherSummary extends Component {
         const { weather={}, zip } = this.props,
             { sys={}, dt, main={}, wind={}, snow={}, rain={}, name } = weather,
             description = weather.weather[0],
-            image = createImageUrl(description.icon),
             location = createLocation(name, sys.country, zip),
             updated = formatUTCtoDate(dt),
             sunriseDate = formatUTCtoDate(sys.sunrise),
-            sunsetDate = formatUTCtoDate(sys.sunset);
-            
+            sunsetDate = formatUTCtoDate(sys.sunset),
+            image = createImageUrl(description.id, sunriseDate, sunsetDate);
+        console.log('this is hte image', image, description.id);
         return (
             <div id='weather-summary'>
                 <WeatherOverview image={image}

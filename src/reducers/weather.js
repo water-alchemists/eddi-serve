@@ -5,6 +5,14 @@ import {
 } from '../constants';
 
 const initialState = {
+	id : undefined,
+	wind : {},
+	snow : {},
+	rain : {},
+	dt : undefined,
+	sys : {},
+	main : {},
+	weather : [{}]
 };
 
 export default function(state = initialState, action = {}){

@@ -14,8 +14,12 @@ class WeatherTable extends Component {
 
         return (
             <tr>
-                <td>Rain</td>
-                <td>{text}</td>
+                <td className='label'>
+                    <p>Rain</p>
+                </td>
+                <td className='value'>
+                    <p>{text}</p>
+                </td>
             </tr>
         );
     }
@@ -29,8 +33,12 @@ class WeatherTable extends Component {
 
         return (
             <tr>
-                <td>Snow</td>
-                <td>{text}</td>
+                <td className='label'>
+                    <p>Snow</p>
+                </td>
+                <td className='value'>
+                    <p>{text}</p>
+                </td>
             </tr>
         )
     }
@@ -39,8 +47,12 @@ class WeatherTable extends Component {
         const { humidity } = this.props;
         return (
             <tr>
-                <td>Humidity</td>
-                <td>{`${humidity}%`}</td>
+                <td className='label'>
+                    <p>Humidity</p>
+                </td>
+                <td className='value'>
+                    <p>{`${humidity}%`}</p>
+                </td>
             </tr>
         )
     }
@@ -51,8 +63,12 @@ class WeatherTable extends Component {
 
         return (
             <tr>
-                <td>Wind</td>
-                <td>{`${direction}  (${wind.speed} miles/hour)`}</td>
+                <td className='label'>
+                    <p>Wind</p>
+                </td>
+                <td className='value'>
+                    <p>{`${direction} (${wind.speed} miles/hour)`}</p>
+                </td>
             </tr>
         )
     }
@@ -61,8 +77,12 @@ class WeatherTable extends Component {
         const text = formatDateToTime(date);
         return (
             <tr>
-                <td>{type}</td>
-                <td>{text}</td>
+                <td className='label'>
+                    <p>{type}</p>
+                </td>
+                <td className='value'>
+                    <p>{text}</p>
+                </td>
             </tr>
         )
     }
@@ -71,8 +91,12 @@ class WeatherTable extends Component {
         const rounded = Math.floor(temp);
         return (
             <tr>
-                <td>{type}</td>
-                <td>{`${rounded} F`}</td>
+                <td className='label'>
+                    <p>{type}</p>
+                </td>
+                <td className='value'>
+                    <p>{`${rounded} F`}</p>
+                </td>
             </tr>
         );
     }
@@ -129,5 +153,9 @@ WeatherTable.propTypes = {
     sunrise : PropTypes.instanceOf(Date),
     sunset : PropTypes.instanceOf(Date)
 };
+
+WeatherTable.defaultProps = {
+
+}
 
 export default WeatherTable;
