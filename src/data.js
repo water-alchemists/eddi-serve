@@ -319,14 +319,14 @@ export function formatDateToPretty(date){
 }
 
 export function formatDegreeToDirection(degree){
-	if(degree > 326 || degree <= 11) return 'north';
-	else if (degree > 11 || degree <= 56) return 'northeast';
-	else if (degree > 56 || degree <= 101) return 'east';
-	else if (degree > 101 || degree <= 146) return 'southeast';
-	else if (degree > 146 || degree <= 191) return 'south';
-	else if (degree > 191 || degree <= 236) return 'southwest';
-	else if (degree > 236 || degree <= 281) return 'west';
-	else if (degree > 281 || degree <= 326) return 'northwest';
+	if(degree > 326 || degree <= 11) return 'North';
+	else if (degree > 11 || degree <= 56) return 'North East';
+	else if (degree > 56 || degree <= 101) return 'East';
+	else if (degree > 101 || degree <= 146) return 'South East';
+	else if (degree > 146 || degree <= 191) return 'South';
+	else if (degree > 191 || degree <= 236) return 'South West';
+	else if (degree > 236 || degree <= 281) return 'West';
+	else if (degree > 281 || degree <= 326) return 'North West';
 }
 
 export function formatUTCtoDate(secs){

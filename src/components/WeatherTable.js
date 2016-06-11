@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 
-import { formatDegreeToDirection } from '../data';
+import { formatDegreeToDirection, formatDateToTime } from '../data';
 
 class WeatherTable extends Component {
     _renderRain(){
@@ -40,7 +40,7 @@ class WeatherTable extends Component {
         return (
             <tr>
                 <td>Humidity</td>
-                <td>{`${humidty}%`}</td>
+                <td>{`${humidity}%`}</td>
             </tr>
         )
     }
@@ -52,7 +52,7 @@ class WeatherTable extends Component {
         return (
             <tr>
                 <td>Wind</td>
-                <td>{`${direction}(${wind.speed} miles/hour)`}</td>
+                <td>{`${direction}  (${wind.speed} miles/hour)`}</td>
             </tr>
         )
     }
@@ -68,27 +68,40 @@ class WeatherTable extends Component {
     }
 
     _renderTemp(temp, type){
+        const rounded = Math.floor(temp);
         return (
             <tr>
                 <td>{type}</td>
-                <td>{`${temp} F`}</td>
+                <td>{`${rounded} F`}</td>
             </tr>
         );
     }
 
     render(){
         const { highTemp, lowTemp, sunrise, sunset } = this.props;
+
+        const RainElement = this._renderRain(),
+            SnowElement = this._renderSnow(),
+            HumidityElement = this._renderHumidity(),
+            WindElement = this._renderWind(),
+            HighElement = this._renderTemp(highTemp, 'High'),
+            LowElement = this._renderTemp(lowTemp, 'Low'),
+            SunriseElement = this._renderDate(sunrise, 'Sunrise'),
+            SunsetElement = this._renderDate(sunset, 'Sunset');
+            
         return (
             <div className='weather-table'>
                 <table>
-                    { this._renderRain() }
-                    { this._renderSnow() }
-                    { this._renderHumidity() }
-                    { this._renderWind() }
-                    { this._renderTemp(highTemp, 'High') }
-                    { this._renderTemp(lowTemp, 'Low') }
-                    { this._renderDate(sunrise, 'Sunrise')}
-                    { this._renderDate(sunset, 'Sunset') }
+                    <tbody>
+                        { RainElement }
+                        { SnowElement }
+                        { HumidityElement }
+                        { WindElement }
+                        { HighElement }
+                        { LowElement }
+                        { SunriseElement }
+                        { SunsetElement }
+                    </tbody>
                 </table>
             </div>
         );

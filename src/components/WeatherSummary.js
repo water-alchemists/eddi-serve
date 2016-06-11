@@ -27,7 +27,7 @@ class WeatherSummary extends Component {
             sunsetDate = formatUTCtoDate(sys.sunset);
             
         return (
-            <div className='weather-summary'>
+            <div id='weather-summary'>
                 <WeatherOverview image={image}
                     location={location}
                     temperature={main.temp}

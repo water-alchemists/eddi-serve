@@ -17,7 +17,7 @@ class WeatherOverview extends Component {
                     <p className='weather-location'>{location}</p>
                     <p className='temperature'>{`${temperature} F`}</p>
                     <p className='weather-type'>{type}</p>
-                    <p className='weather-updated'>{formattedTime}</p>
+                    <p className='weather-updated'>{`as of ${formattedTime}`}</p>
                 </div>
             </div>
         );

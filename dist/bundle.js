@@ -32673,7 +32673,7 @@
 	}
 
 	function formatDegreeToDirection(degree) {
-		if (degree > 326 || degree <= 11) return 'north';else if (degree > 11 || degree <= 56) return 'northeast';else if (degree > 56 || degree <= 101) return 'east';else if (degree > 101 || degree <= 146) return 'southeast';else if (degree > 146 || degree <= 191) return 'south';else if (degree > 191 || degree <= 236) return 'southwest';else if (degree > 236 || degree <= 281) return 'west';else if (degree > 281 || degree <= 326) return 'northwest';
+		if (degree > 326 || degree <= 11) return 'North';else if (degree > 11 || degree <= 56) return 'North East';else if (degree > 56 || degree <= 101) return 'East';else if (degree > 101 || degree <= 146) return 'South East';else if (degree > 146 || degree <= 191) return 'South';else if (degree > 191 || degree <= 236) return 'South West';else if (degree > 236 || degree <= 281) return 'West';else if (degree > 281 || degree <= 326) return 'North West';
 	}
 
 	function formatUTCtoDate(secs) {
@@ -54736,7 +54736,7 @@
 
 
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, "#weather #weather-summary .weather-overview {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: center;\n  background-color: white;\n  color: black;\n}\n#weather #weather-summary .weather-overview .image-container {\n  min-height: 200px;\n  width: 50%;\n}\n#weather #weather-summary .weather-overview .image-container img {\n  height: 100%;\n  width: 100%;\n}\n#weather #weather-summary .weather-overview p {\n  margin: 0;\n}\n#weather #weather-summary .weather-table table {\n  width: 100%;\n  border: 1px solid white;\n}\n", ""]);
 
 	// exports
 
@@ -54824,7 +54824,7 @@
 
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'weather-summary' },
+	                { id: 'weather-summary' },
 	                _react2.default.createElement(_WeatherOverview2.default, { image: image,
 	                    location: location,
 	                    temperature: main.temp,
@@ -54933,7 +54933,7 @@
 	                    _react2.default.createElement(
 	                        'p',
 	                        { className: 'weather-updated' },
-	                        formattedTime
+	                        'as of ' + formattedTime
 	                    )
 	                )
 	            );
@@ -55056,7 +55056,7 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    null,
-	                    humidty + '%'
+	                    humidity + '%'
 	                )
 	            );
 	        }
@@ -55077,14 +55077,14 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    null,
-	                    direction + '(' + wind.speed + ' miles/hour)'
+	                    direction + '  (' + wind.speed + ' miles/hour)'
 	                )
 	            );
 	        }
 	    }, {
 	        key: '_renderDate',
 	        value: function _renderDate(date, type) {
-	            var text = formatDateToTime(date);
+	            var text = (0, _data.formatDateToTime)(date);
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
@@ -55103,6 +55103,7 @@
 	    }, {
 	        key: '_renderTemp',
 	        value: function _renderTemp(temp, type) {
+	            var rounded = Math.floor(temp);
 	            return _react2.default.createElement(
 	                'tr',
 	                null,
@@ -55114,7 +55115,7 @@
 	                _react2.default.createElement(
 	                    'td',
 	                    null,
-	                    temp + ' F'
+	                    rounded + ' F'
 	                )
 	            );
 	        }
@@ -55127,20 +55128,34 @@
 	            var sunrise = _props.sunrise;
 	            var sunset = _props.sunset;
 
+
+	            var RainElement = this._renderRain(),
+	                SnowElement = this._renderSnow(),
+	                HumidityElement = this._renderHumidity(),
+	                WindElement = this._renderWind(),
+	                HighElement = this._renderTemp(highTemp, 'High'),
+	                LowElement = this._renderTemp(lowTemp, 'Low'),
+	                SunriseElement = this._renderDate(sunrise, 'Sunrise'),
+	                SunsetElement = this._renderDate(sunset, 'Sunset');
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'weather-table' },
 	                _react2.default.createElement(
 	                    'table',
 	                    null,
-	                    this._renderRain(),
-	                    this._renderSnow(),
-	                    this._renderHumidity(),
-	                    this._renderWind(),
-	                    this._renderTemp(highTemp, 'High'),
-	                    this._renderTemp(lowTemp, 'Low'),
-	                    this._renderDate(sunrise, 'Sunrise'),
-	                    this._renderDate(sunset, 'Sunset')
+	                    _react2.default.createElement(
+	                        'tbody',
+	                        null,
+	                        RainElement,
+	                        SnowElement,
+	                        HumidityElement,
+	                        WindElement,
+	                        HighElement,
+	                        LowElement,
+	                        SunriseElement,
+	                        SunsetElement
+	                    )
 	                )
 	            );
 	        }
