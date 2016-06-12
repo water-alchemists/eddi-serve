@@ -47497,7 +47497,7 @@
 
 
 	// module
-	exports.push([module.id, "#home {\n  position: absolute;\n  min-height: 100vh;\n  width: 100%;\n  height: auto;\n  background: linear-gradient(0deg, #009da7, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#home .content .logo-container img {\n  width: 100%;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
+	exports.push([module.id, "#home {\n  position: absolute;\n  min-height: 100vh;\n  width: 40%;\n  height: auto;\n  background: linear-gradient(0deg, #009da7, #0d0e1f 30%, #0d0e1f);\n}\n#home .content {\n  margin: 60px 30px;\n  text-align: center;\n}\n#home .content .logo-container {\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#home .content .logo-container img {\n  width: 100%;\n}\n#home .content .auth-button {\n  display: block;\n  padding: 10px 30px;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n", ""]);
 
 	// exports
 
