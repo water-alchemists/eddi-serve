@@ -31,7 +31,7 @@ function mapDispatchToProps(dispatch){
 class Weather extends Component {
     componentWillMount(){
         const { updateMenuName, getWeatherByZip, eddi={} } = this.props;
-        // update the 
+        // update the name
         if( eddi.settings.name ) updateMenuName(eddi.settings.name);
         else updateMenuName('Weather');
             
@@ -40,10 +40,14 @@ class Weather extends Component {
 
     }
     componentWillReceiveProps(nextProps){
-        const { eddi={}, getWeatherByZip } = this.props,
+        const { eddi={}, getWeatherByZip, updateMenuName } = this.props,
             { settings={} } = eddi,
             { zip:oldZip } = settings,
-            { zip:newZip } = nextProps.eddi.settings;
+            { zip:newZip, name } = nextProps.eddi.settings;
+
+        // update the name
+        if( name ) updateMenuName(name);
+        else updateMenuName('Weather');
 
         if(oldZip != newZip && newZip) getWeatherByZip(newZip);
     }

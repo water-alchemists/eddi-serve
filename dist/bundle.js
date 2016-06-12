@@ -28282,7 +28282,7 @@
 
 
 	// module
-	exports.push([module.id, "#menu {\n  background-color: #006d60;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 375px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
+	exports.push([module.id, "#menu {\n  background-color: #006d60;\n  height: 48px;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1;\n}\n#menu .burger-menu {\n  width: 48px;\n  height: 48px;\n  font-size: 36px;\n  position: absolute;\n  top: 0;\n  right: 0;\n}\n#menu .burger-menu .icon {\n  display: block;\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  line-height: 48px;\n  cursor: pointer;\n}\n#menu .burger-menu.open .icon {\n  background-color: white;\n  color: black;\n}\n#menu .burger-menu.open .menu-options {\n  display: block;\n}\n#menu .burger-menu .menu-options {\n  display: none;\n  position: absolute;\n  top: 48px;\n  right: 0;\n  width: 325px;\n  background-color: white;\n  color: black;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);\n}\n#menu .burger-menu .menu-options a {\n  font-size: 20px;\n  text-decoration: none;\n  color: black;\n  padding: 8px;\n  display: flex;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  align-items: center;\n  -webkit-align-items: center;\n}\n#menu .burger-menu .menu-options a.active {\n  color: #006d60;\n}\n#menu .burger-menu .menu-options a .sprite {\n  margin: 5px 10px;\n}\n#menu .burger-menu .menu-options a p {\n  margin: 0px;\n  text-transform: uppercase;\n  padding-left: 5px;\n}\n#menu h1 {\n  position: absolute;\n  top: 0;\n  left: 48px;\n  right: 48px;\n  height: 48px;\n  margin: 0;\n  padding: 0;\n  line-height: 48px;\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: normal;\n  font-size: 24px;\n}\n", ""]);
 
 	// exports
 
@@ -50852,6 +50852,13 @@
 						},
 						state: settings.state
 					}),
+					_react2.default.createElement(_StatusBar2.default, { onClick: function onClick(state) {
+							return setEddiState(eddi.id, state);
+						},
+						reason: eddi.state.reason,
+						current: eddi.state.state,
+						state: eddi.settings.state
+					}),
 					_react2.default.createElement(
 						'div',
 						{ className: 'troubleshoot-header' },
@@ -50911,13 +50918,6 @@
 				return _react2.default.createElement(
 					'div',
 					{ id: 'troubleshoot', className: 'page' },
-					_react2.default.createElement(_StatusBar2.default, { onClick: function onClick(state) {
-							return setEddiState(eddi.id, state);
-						},
-						reason: eddi.state.reason,
-						current: eddi.state.state,
-						state: eddi.settings.state
-					}),
 					TroubleshootElement
 				);
 			}
@@ -52795,7 +52795,7 @@
 	            var getWeatherByZip = _props.getWeatherByZip;
 	            var _props$eddi = _props.eddi;
 	            var eddi = _props$eddi === undefined ? {} : _props$eddi;
-	            // update the
+	            // update the name
 
 	            if (eddi.settings.name) updateMenuName(eddi.settings.name);else updateMenuName('Weather');
 
@@ -52810,11 +52810,17 @@
 	            var _props2$eddi = _props2.eddi;
 	            var eddi = _props2$eddi === undefined ? {} : _props2$eddi;
 	            var getWeatherByZip = _props2.getWeatherByZip;
+	            var updateMenuName = _props2.updateMenuName;
 	            var _eddi$settings = eddi.settings;
 	            var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 	            var oldZip = settings.zip;
-	            var newZip = nextProps.eddi.settings.zip;
+	            var _nextProps$eddi$setti = nextProps.eddi.settings;
+	            var newZip = _nextProps$eddi$setti.zip;
+	            var name = _nextProps$eddi$setti.name;
 
+	            // update the name
+
+	            if (name) updateMenuName(name);else updateMenuName('Weather');
 
 	            if (oldZip != newZip && newZip) getWeatherByZip(newZip);
 	        }
@@ -55031,7 +55037,7 @@
 
 
 	// module
-	exports.push([module.id, "#weather #weather-summary .weather-overview {\n  background-color: white;\n  color: black;\n  padding: 5px;\n}\n#weather #weather-summary .weather-overview .weather-location {\n  margin: 0;\n  padding-top: 5px;\n  margin-bottom: 5px;\n}\n#weather #weather-summary .weather-overview .overview-content {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container {\n  min-height: 200px;\n  width: 50%;\n  text-align: center;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container .icon {\n  font-size: 150px;\n  line-height: 100%;\n}\n#weather #weather-summary .weather-overview .overview-content p {\n  margin: 0;\n}\n#weather #weather-summary .weather-overview .overview-content .temperature {\n  font-size: 50px;\n}\n#weather #weather-summary .weather-table table {\n  width: 100%;\n}\n#weather #weather-summary .weather-table table tr {\n  border-bottom: 1px solid white;\n}\n#weather #weather-summary .weather-table table tr p {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  margin-left: 5px;\n}\n", ""]);
+	exports.push([module.id, "#weather #weather-summary .weather-overview {\n  background-color: white;\n  color: black;\n  padding: 5px;\n}\n#weather #weather-summary .weather-overview .weather-location {\n  margin: 0;\n  padding-top: 5px;\n  margin-bottom: 5px;\n}\n#weather #weather-summary .weather-overview .overview-content {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container {\n  min-height: 150px;\n  min-width: 150px;\n  width: 50%;\n}\n#weather #weather-summary .weather-overview .overview-content .image-container .icon {\n  font-size: 150px;\n  line-height: 100%;\n}\n#weather #weather-summary .weather-overview .overview-content p {\n  margin: 0;\n}\n#weather #weather-summary .weather-overview .overview-content .temperature {\n  font-size: 50px;\n}\n#weather #weather-summary .weather-table table {\n  width: 100%;\n}\n#weather #weather-summary .weather-table table tr {\n  border-bottom: 1px solid white;\n}\n#weather #weather-summary .weather-table table tr p {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  margin-left: 5px;\n}\n", ""]);
 
 	// exports
 
