@@ -81,6 +81,11 @@ class Troubleshoot extends Component {
 					onClick={state => setEddiState(eddi.id, state)}
 					state={settings.state}
 				/>
+				<StatusBar onClick={state => setEddiState(eddi.id, state)}
+					 reason={eddi.state.reason}
+					 current={eddi.state.state}
+					 state={eddi.settings.state}
+				/>
 				<div className='troubleshoot-header'>
 					<h3>STAGE</h3>
 					<p>last cycle completion: {updatedTime}</p>
@@ -113,11 +118,6 @@ class Troubleshoot extends Component {
 		
 		return (
 			<div id='troubleshoot' className='page'>
-				<StatusBar onClick={state => setEddiState(eddi.id, state)}
-					 reason={eddi.state.reason}
-					 current={eddi.state.state}
-					 state={eddi.settings.state}
-				/>
 				{TroubleshootElement}
 			</div>
 		);
