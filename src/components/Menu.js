@@ -54,6 +54,11 @@ class Menu extends Component {
 				'dashboard',
 				{ green : router.isActive(PATHS.DASHBOARD) }
 			]),
+			profileSpriteClass = classNames([
+				'sprite', 
+				'profile', 
+				{ green : router.isActive(PATHS.PROFILE) }
+			]),
 			burgerSpriteClass = classNames([
 				'sprite',
 				'burger',
@@ -61,8 +66,8 @@ class Menu extends Component {
 			]),
 			weatherSpriteClass = classNames([
 				'sprite',
-				'empty',
-				{ dark : optionsOpen }
+				'weather',
+				{ green : router.isActive(PATHS.WEATHER) }
 			]);
 
 		let menuOptions;
@@ -125,7 +130,7 @@ class Menu extends Component {
 						<Link to={PATHS.PROFILE}
 							activeClassName='active'
 						>
-							<div className='sprite empty'></div>
+							<div className={profileSpriteClass}></div>
 							<p>Profile</p>
 						</Link>
 						<a onClick={() => this.logoutHandler()}>
