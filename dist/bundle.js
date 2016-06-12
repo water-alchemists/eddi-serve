@@ -53039,7 +53039,7 @@
 	            var getWeatherByZip = _props.getWeatherByZip;
 	            var _props$eddi = _props.eddi;
 	            var eddi = _props$eddi === undefined ? {} : _props$eddi;
-	            // update the
+	            // update the name
 
 	            if (eddi.settings.name) updateMenuName(eddi.settings.name);else updateMenuName('Weather');
 
@@ -53054,11 +53054,17 @@
 	            var _props2$eddi = _props2.eddi;
 	            var eddi = _props2$eddi === undefined ? {} : _props2$eddi;
 	            var getWeatherByZip = _props2.getWeatherByZip;
+	            var updateMenuName = _props2.updateMenuName;
 	            var _eddi$settings = eddi.settings;
 	            var settings = _eddi$settings === undefined ? {} : _eddi$settings;
 	            var oldZip = settings.zip;
-	            var newZip = nextProps.eddi.settings.zip;
+	            var _nextProps$eddi$setti = nextProps.eddi.settings;
+	            var newZip = _nextProps$eddi$setti.zip;
+	            var name = _nextProps$eddi$setti.name;
 
+	            // update the name
+
+	            if (name) updateMenuName(name);else updateMenuName('Weather');
 
 	            if (oldZip != newZip && newZip) getWeatherByZip(newZip);
 	        }
