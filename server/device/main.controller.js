@@ -187,22 +187,13 @@ module.exports = app => {
 
     router.post('/:id/readings', (req, res, next) => {
         // handles eddi adding to the db a new reading
-        const keys = [
-            INFO.flowOut,
-            INFO.salinityIn,
-            INFO.salinityOut,
-            INFO.salinityRec
-        ];
-
         const id = req.params.id,
-            input = req.body,
-            readings = keys.reduce((accum, key) => {
-                if(input[key]) accum[key] = input[key];
-                return accum
-            }, {});
-
-            return;
-    })
+            reading = req.body;
+            console.log('this is the id', id, reading);
+            // return eddiFire.createReadingById(id, reading)
+            //     .then(() => res.status(200).send())
+            //     .catch(err => next(err));
+    });
     
     return router;
 };
