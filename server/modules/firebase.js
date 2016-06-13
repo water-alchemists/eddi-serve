@@ -76,7 +76,7 @@ function createReadingById(id, reading){
             .child(PATHS.READINGS)
             .update(
                 reading, 
-                err => {
+                error => {
                     if(error) return reject(error);
                     resolve();
                 }

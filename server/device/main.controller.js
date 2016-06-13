@@ -189,10 +189,9 @@ module.exports = app => {
         // handles eddi adding to the db a new reading
         const id = req.params.id,
             reading = req.body;
-            console.log('this is the id', id, reading);
-            // return eddiFire.createReadingById(id, reading)
-            //     .then(() => res.status(200).send())
-            //     .catch(err => next(err));
+            return eddiFire.createReadingById(id, reading)
+                .then(() => res.status(200).send())
+                .catch(err => next(err));
     });
     
     return router;
