@@ -12,6 +12,13 @@ const KEYS = {
     updated : 'updated',
     reason : 'reason'
 },
+INFO = {
+    flowOut : 'qOut',
+    flowRec : 'qDump',
+    salinityIn : 'ppmIn',
+    salinityOut : 'ppmOut',
+    salinityRec : 'ppmRec'
+},
 RESPONSE = {
     state : 'running',
     reason : 'reason'
@@ -62,6 +69,8 @@ module.exports = app => {
     const weather = weatherApi(WEATHER_URL, WEATHER_KEY);
     
     router.get('/:id', (req, res, next) => {
+        // handles request by eddi for whether it should currently be running
+
         const id = req.params.id,
             date = new Date();
 
@@ -157,6 +166,7 @@ module.exports = app => {
     });
     
     router.put('/:id', (req, res, next) => {
+        // handles eddi updating the db of its current cycle
         const keys = [
             KEYS.state,
             KEYS.updated,
@@ -173,6 +183,15 @@ module.exports = app => {
         return eddiFire.updateStateById(id, state)
             .then(() => res.status(200).send())
             .catch(err => next(err));
+    });
+
+    router.post('/:id/readings', (req, res, next) => {
+        // handles eddi adding to the db a new reading
+        const id = req.params.id,
+            reading = req.body;
+            return eddiFire.createReadingById(id, reading)
+                .then(() => res.status(200).send())
+                .catch(err => next(err));
     });
     
     return router;

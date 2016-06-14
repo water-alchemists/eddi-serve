@@ -70,10 +70,25 @@ function updateStateById(id, state){
     });
 }
 
+function createReadingById(id, reading){
+    return new Promise((resolve, reject) => {
+        fire.child(id)
+            .child(PATHS.READINGS)
+            .update(
+                reading, 
+                error => {
+                    if(error) return reject(error);
+                    resolve();
+                }
+            );
+    });
+}
+
 module.exports = {
     getSettingsById : getSettingsById,
     getCurrentReadingById : getCurrentReadingById,
-    updateStateById : updateStateById
+    updateStateById : updateStateById,
+    createReadingById : createReadingById
 };
 
 // getCurrentReadingById('test-teddi')
