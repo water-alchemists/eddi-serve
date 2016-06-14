@@ -1,8 +1,7 @@
 node_modules
 .gitignore~
-dist/bundle.js
+dist/
 
-dist/bundle.js
 *.DS_Store
 browse.VC.db
 
