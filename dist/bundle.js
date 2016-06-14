@@ -48944,7 +48944,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(428);
+	var content = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./Dashboard.less\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(269)(content, {});
@@ -48964,20 +48964,7 @@
 	}
 
 /***/ },
-/* 428 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(268)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "#dashboard .dashboard-menu {\n  width: 100%;\n}\n#dashboard .dashboard-menu a {\n  display: inline-block;\n  width: 25%;\n  height: 72px;\n  background-color: rgba(241, 241, 242, 0.9);\n  text-decoration: none;\n  color: #009da7;\n}\n#dashboard .dashboard-menu a p {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 15px;\n  opacity: 0.6;\n  margin: 0;\n}\n#dashboard .dashboard-menu a .sprite {\n  width: 34px;\n  height: 34px;\n  margin: 8px auto 4px;\n}\n#dashboard .dashboard-menu a.active {\n  background-color: white;\n}\n#dashboard .dashboard-menu a.active p {\n  opacity: 1;\n}\n#dashboard .readings-empty {\n  text-align: center;\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n#dashboard .dashboard-view {\n  overflow: hidden;\n}\n#dashboard .dashboard-view h1 {\n  font-weight: normal;\n  text-transform: uppercase;\n  font-size: 18px;\n  margin-top: 0;\n  color: #58595b;\n  font-weight: 900;\n}\n#dashboard .dashboard-view.power {\n  padding-top: 20px;\n  padding-bottom: 20px;\n  text-align: center;\n}\n#dashboard .dashboard-view .dashboard-current {\n  padding: 20px;\n  position: relative;\n  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers {\n  padding-right: 140px;\n  height: 140px;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers h3 {\n  font-size: 36px;\n  margin: 12px 0 0;\n  font-weight: 500;\n  color: #58595b;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-current-numbers p {\n  font-size: 12px;\n  margin: 0;\n  color: #58595b;\n}\n#dashboard .dashboard-view .dashboard-current .salinity-graph,\n#dashboard .dashboard-view .dashboard-current .flow-graph {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  z-index: -1;\n}\n#dashboard .dashboard-view .dashboard-current .dashboard-note {\n  margin-top: 0px;\n  font-size: 12px;\n  line-height: 20px;\n  color: #58595b;\n}\n#dashboard .dashboard-view .historical-graph {\n  background-color: rgba(241, 241, 242, 0.9);\n  color: #0d0e1f;\n  padding: 20px;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection {\n  display: inline-block;\n  text-align: center;\n  width: 33%;\n  text-transform: lowercase;\n  font-weight: 300;\n}\n#dashboard .dashboard-view .historical-graph .historical-selector .historical-selection.selected span {\n  border-bottom: 4px solid #009da7;\n  font-weight: bold;\n  font-style: none !important;\n  color: #0d0e1f;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
+/* 428 */,
 /* 429 */
 /***/ function(module, exports, __webpack_require__) {
 
