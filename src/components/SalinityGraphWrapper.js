@@ -6,10 +6,20 @@ import SalinityGraph from './graphs/SalinityGraph';
 
 class SalinityGraphWrapper extends Component {
     render(){
-        const { salinity, threshold } = this.props;
+        const { salinity, threshold } = this.props,
+            hideWarning = salinity < threshold,
+            warningSpriteClass = classNames([
+                'sprite-wrapper',
+                { hide : hideWarning },
+            ]);
         return (
             <div className='salinity-graph-wrapper'>
-                <SalinityGraph salinity={salinity} threshold={threshold}/>
+                <div>
+                    <div className={warningSpriteClass}>
+                        <div className='sprite warning'></div>
+                    </div>
+                    <SalinityGraph salinity={salinity} threshold={threshold}/>
+                </div>
             </div>
         );
     }
