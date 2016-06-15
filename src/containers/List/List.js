@@ -67,7 +67,6 @@ class List extends Component {
 		if(eddis) {
 			return eddis.map((eddi, i) => {
 				const { current={}, settings={} } = eddi;
-				console.log('this is the current', current, eddi);
 				return <EddiListItem key={eddi.id} name={eddi.settings.name} id={eddi.id} url={'http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg'} salinity={current.ppmOut} threshold={settings.salinity}/>
 			});
 		}

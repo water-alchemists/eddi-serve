@@ -22,7 +22,6 @@ class EddiListItem extends Component {
 				'warning',
 				{ hide : !overThreshold }
 			]);
-			console.log('this is the overThreshold', overThreshold, salinity, threshold);
 
     return (
     	<Link to={{ pathname: PATHS.DASHBOARD, query: { id } }}
