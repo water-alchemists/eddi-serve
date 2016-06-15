@@ -61,7 +61,7 @@ class Troubleshoot extends Component {
 	_renderNoEddis(){
 		return (
 			<div className='eddis-empty'>
-				<p> Currently you are not tracking any eddis. </p>
+				<p> Currently you are not tracking any EDDIs.</p>
 				<AddEddiButton />
 			</div>
 		);
