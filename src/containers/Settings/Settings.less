@@ -2,9 +2,9 @@
 
 #settings {
 	min-height : 100vh;
-	background-color: @light_color;
+	background-color: white;
 	.settings-eddi {
-		background-color : white;
+		background-color : @light_color;
 		margin-top: 5px;
 		&:first-child {
 			margin-top: 0px;
@@ -39,11 +39,7 @@
 		}
 		
 		.settings-container {
-			padding-top : 10px;
-			padding-left : 20px;
-			padding-right : 20px;
-			padding-bottom : 10px;
-
+			padding: 0px;
 			//for sliding
 			overflow-y : hidden;
 			transition-property: all;
@@ -56,8 +52,12 @@
 			}
 
 			.settings-version {
-				
-				
+				background-color: white;
+				box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+				width: 100%;
+				margin: 0px;
+				padding: 20px 20px;
+
 				.version-type {
 					display : flex;
 					flex-direction : row;
@@ -79,6 +79,11 @@
 			}
 
 			.settings-form { 
+			padding-top : 10px;
+			padding-left : 20px;
+			padding-right : 20px;
+			padding-bottom : 10px;
+
 				h4 {
 					color: black;
 					font-weight: 200;
@@ -103,6 +108,9 @@
 						}
 						.date-time-select { 
 							width : 120px;
+							border: none;
+							padding: 10px;
+							margin: 2px;
 						}
 					}
 					
@@ -137,8 +145,8 @@
 						}
 						.salinity-input {
 							input {
-								border-color : @trim_color;
-								border-width : 2px;
+								border-color : none;
+								border-width : none;
 								padding : 5px 5px 5px 20px;
 								font-size : @input_font_size;
 								text-transform : uppercase;
@@ -177,8 +185,8 @@
 						}
 						.zip-input {
 							input {
-								border-color : @trim_color;
-								border-width : 2px;
+								border-color : none;
+								border-width : none;
 								padding : 5px 5px 5px 20px;
 								font-size : @input_font_size;
 								text-transform : uppercase;
