@@ -1,9 +1,5 @@
 'use strict';
-import React, { Component } from 'react';
-
-const {
-	PropTypes
-} = React;
+import React, { Component, PropTypes } from 'react';
 
 class LoginForm extends Component {
 	constructor(props){

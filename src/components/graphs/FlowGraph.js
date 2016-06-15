@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import { BACKGROUND_COLOR } from '../../constants';
 
@@ -103,8 +103,10 @@ export default class FlowGraph extends Component {
 
 }
 
-
+FlowGraph.propTypes = {
+  rate : PropTypes.number.isRequired
+};
 
 FlowGraph.defaultProps = {
-  salinity: 0
-}
+  rate: 0
+};

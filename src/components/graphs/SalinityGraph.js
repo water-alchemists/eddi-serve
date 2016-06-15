@@ -1,11 +1,14 @@
-import React, { Component } from 'react';
-
+import React, { Component, PropTypes } from 'react';
 
 const SIZE = 120;
 const CENTER = SIZE/2;
 
 const DANGEROUS_SALINITY = 2000;
 
+const COLOR = {
+  good : 'rgba(0, 157, 167, 1)',
+  bad : 'rgba(171, 53, 36, 1)'
+};
 
 function colorAtPPM(ppm){
   var ppmFactor = Math.min(1, (ppm / DANGEROUS_SALINITY));
@@ -15,18 +18,22 @@ function colorAtPPM(ppm){
   return `rgba(${red}, ${green}, ${blue}, 1)`;
 }
 
-
+function determineColor(ppm, threshold){
+  return ppm < threshold ? COLOR.good : COLOR.bad;
+}
 
 export default class SalinityGraph extends Component {
 
   componentDidMount(){
+    const { salinity, threshold } = this.props;
     this.canvas = this.refs.canvas;
     this.context = this.canvas.getContext('2d');
-    this.paint(this.props.salinity);
+    this.paint(salinity, threshold);
   }
 
   componentWillReceiveProps(newProps){
-    this.paint(newProps.salinity);
+    const { salinity, threshold } = newProps;
+    this.paint(salinity, threshold);
   }
 
   shouldComponentUpdate(){
@@ -34,15 +41,24 @@ export default class SalinityGraph extends Component {
   }
 
 
-  paint(ppm){
+  paint(ppm, threshold){
     ppm = Math.min(ppm, 4000);
     var context = this.context;
     context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     var density = ppm / 400;
+    const color = determineColor(ppm, threshold);
+    // draw circle
+    context.beginPath();
+    context.arc(CENTER, CENTER, CENTER - 3, 0, 2 * Math.PI, false)
+    context.lineWidth = 3;
+    context.strokeStyle = color;
+    context.stroke();
+
+    // draw dots
     for( var ix=0; ix < density; ix++ ){
       let radius = (ix * ((CENTER)/density));
       let angleIncr = 60 / ix;
-      let color = colorAtPPM((radius / CENTER) * ppm);
+      // let color = colorAtPPM((radius / CENTER) * ppm); // no gradient in the new designs
       for( let ir=0; ir < 360; ir += angleIncr ){
         var centerX = CENTER + (radius * Math.sin(Math.PI * (((ix*2)+ir)/180)));
         var centerY = CENTER + (radius * Math.cos(Math.PI * (((ix*2)+ir)/180)));
@@ -60,7 +76,12 @@ export default class SalinityGraph extends Component {
 
 }
 
+SalinityGraph.propTypes = {
+  salinity : PropTypes.number.isRequired,
+  threshold : PropTypes.number.isRequired
+}
 
 SalinityGraph.defaultProps = {
-  salinity: 0
+  salinity: 0,
+  threshold : DANGEROUS_SALINITY
 }

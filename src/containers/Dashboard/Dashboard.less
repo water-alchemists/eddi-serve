@@ -75,11 +75,37 @@
           color: @trim_color;
         }
       }
-      .salinity-graph, .flow-graph{
+
+      .salinity-graph-wrapper, .flow-graph-wrapper {
         position: absolute;
-          top: 20px;
-          right: 20px;
-        z-index: -1;
+        top: 20px;
+        right: 20px;
+        .sprite-wrapper {
+          position:absolute;
+          top : 0;
+          right : 0;
+          &.hide {
+            max-height: 0px;
+            display:none;
+          }
+        }
+      }
+      .salinity-graph-wrapper {
+        &>div {
+          position:relative;
+          padding-top : 10px;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+
+      .flow-graph-wrapper {
+        &>div {
+          position:relative;
+          padding-top : 15px;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
       }
       .dashboard-note{
         margin-top: 0px;

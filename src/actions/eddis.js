@@ -122,6 +122,18 @@ export function getAllEddiByUserThunk(){
 	return dispatch => {
 		return EddiFire.isAuthenticated()
 			.then(user => EddiFire.getAllEddiByUser(user.uid))
+			.then(eddis => {
+				const getCurrentReadings = eddis.map(eddi => {
+					return EddiFire.getCurrentReadingByEddi(eddi.id)
+						.then(current => {
+							if(!current) current = {};
+							eddi.current = current;
+							return eddi;
+						})
+						.catch(err => eddi);
+				});
+				return Promise.all(getCurrentReadings);
+			})
 			.then( eddis => dispatch(getAllEddiSuccess(eddis)))
 			.catch(err => dispatch(getAllEddiError(err)));
 	}
