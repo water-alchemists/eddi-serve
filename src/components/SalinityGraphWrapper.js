@@ -16,7 +16,7 @@ class SalinityGraphWrapper extends Component {
             <div className='salinity-graph-wrapper'>
                 <div>
                     <div className={warningSpriteClass}>
-                        <div className='sprite warning'></div>
+                        <div className='sprite small warning'></div>
                     </div>
                     <SalinityGraph salinity={salinity} threshold={threshold}/>
                 </div>

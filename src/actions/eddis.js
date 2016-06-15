@@ -126,7 +126,14 @@ export function getAllEddiByUserThunk(){
 				const getCurrentReadings = eddis.map(eddi => {
 					return EddiFire.getCurrentReadingByEddi(eddi.id)
 						.then(current => {
-							if(!current) current = {};
+							if(!current) {
+								current = {};
+							}
+							else {
+								const keys = Object.keys(current),
+									epoch = parseInt(keys[0]);
+								current = Object.assign({}, current[epoch], { epoch });
+							}
 							eddi.current = current;
 							return eddi;
 						})
