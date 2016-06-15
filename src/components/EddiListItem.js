@@ -13,7 +13,7 @@ class EddiListItem extends Component {
   render(){
   	const { name, url, id, threshold, salinity } = this.props,
       itemStyle = {
-        'background-image' : `linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url("${url}")`
+        'backgroundImage' : `linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url("${url}")`
       },
 			overThreshold = salinity && salinity > threshold,
 			circleSpriteClass = classNames([
