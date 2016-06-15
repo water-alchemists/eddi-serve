@@ -16,7 +16,7 @@ class FlowGraphWrapper extends Component {
             <div className='flow-graph-wrapper'>
                 <div>
                     <div className={warningSpriteClass}>
-                        <div className='sprite warning'></div>
+                        <div className='sprite small warning'></div>
                     </div>
                     <FlowGraph rate={rate}/>
                 </div>
