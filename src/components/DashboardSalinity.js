@@ -90,7 +90,7 @@ class DashboardSalinity extends Component {
 			{ threshold, current, direction, readings } = this.props,
 			isIn = direction === 'input',
 			status = current > threshold ? generateBadText(isIn) : generateGoodText(),
-			currentString = commaSeparateNumber(current),
+			currentString = commaSeparateNumber(Math.floor(current)),
 			thresholdString = commaSeparateNumber(threshold);
 
 		return (
