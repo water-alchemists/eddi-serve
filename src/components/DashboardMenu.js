@@ -64,30 +64,46 @@ class DashboardMenu extends Component {
 				'sprite', 
 				'salinityIn', 
 				{ faded : !router.isActive(ROUTES.SALINITY_IN) },
-				{ bad : !salinityIn }
+				{ bad : salinityIn === false },
+				{ none : salinityIn === undefined }
 			]),
-			salinityInFont = classNames({ 'red-font' : !salinityIn }),
+			salinityInFont = classNames({ 
+				'red-font' : salinityIn === false,
+				'gray-font' : salinityIn === undefined
+			}),
 			salinityOutClass = classNames([
 				'sprite', 
 				'salinityOut', 
 				{ faded : view && !router.isActive(ROUTES.SALINITY_OUT) },
-				{ bad : !salinityOut }
+				{ bad : salinityOut === false },
+				{ none : salinityOut === undefined }
 			]),
-			salinityOutFont = classNames({ 'red-font' : !salinityOut }),
+			salinityOutFont = classNames({ 
+				'red-font' : salinityOut === false,
+				'gray-font' : salinityOut === undefined
+			}),
 			flowClass = classNames([
 				'sprite', 
 				'flow', 
 				{ faded : !router.isActive(ROUTES.FLOW) },
-				{ bad : !flow }
+				{ bad : flow === false },
+				{ none : flow === undefined }
 			]),
-			flowFont = classNames({ 'red-font' : !flow }),
+			flowFont = classNames({ 
+				'red-font' : flow === false,
+				'gray-font' : flow === undefined 
+			}),
 			salinityRecClass = classNames([
 				'sprite', 
 				'salinityRec', 
 				{ faded : view && !router.isActive(ROUTES.SALINITY_REC) },
-				{ bad : !salinityRec }
+				{ bad : salinityRec === false },
+				{ none : salinityRec === undefined }
 			]),
-			salinityRecFont = classNames({ 'red-font' : !salinityRec });
+			salinityRecFont = classNames({ 
+				'red-font' : salinityRec === false,
+				'gray-font' : salinityRec === undefined
+			});
 			// powerClass = classNames([
 			// 	'sprite', 
 			// 	'power', 

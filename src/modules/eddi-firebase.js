@@ -218,13 +218,15 @@ class EddiFire {
 			this.refs.EDDI.child(eddiId)
 				.child(PATHS.READINGS)
 				.orderByKey()
-				.limitToFirst(1)
+				.limitToLast(1)
 				.once(
 					'value',
 					(snapshot) => {
 						// get value of the current reading
-						resolve()
-					}
+						const value = snapshot.val()
+						resolve(value);
+					},
+					reject
 				)
 		});
 	}

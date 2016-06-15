@@ -22,10 +22,10 @@ const EddiFire = EddiFireStarter();
 function getGoodBad(current, threshold){
 	if(!threshold) threshold = SALINITY_THRESHOLD; //default threshold for salinity
 	const { ppmIn, ppmOut, qOut, ppmRec } = current,
-		flowGood = qOut <= FLOW_THRESHOLD,
-		salinityInGood = ppmIn <= threshold,
-		salinityOutGood = ppmOut <= threshold,
-		salinityRecGood = ppmRec <= threshold;
+		flowGood = qOut != undefined ? qOut <= FLOW_THRESHOLD : undefined,
+		salinityInGood = ppmIn != undefined ? ppmIn <= threshold : undefined,
+		salinityOutGood = ppmOut != undefined ? ppmOut <= threshold : undefined,
+		salinityRecGood = ppmRec != undefined ? ppmRec <= threshold : undefined;
 
 	return {
 		salinityIn : salinityInGood,
