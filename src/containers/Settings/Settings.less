@@ -10,6 +10,7 @@
 			margin-top: 10%;
 		}
 		.arrow-container {
+			display: none;
 			flex-direction : row;
 			-webkit-flex-direction : row;
 			justify-content : center;
@@ -143,6 +144,9 @@
 						.salinity-input {
 							input {
 								font-size : @input_font_size;
+								border-width: 1px;
+								padding : 10px;
+								margin: 2px;
 								text-transform : uppercase;
 								width : 100px;
 								&:focus {
@@ -181,6 +185,7 @@
 							input {
 								border-width : 1px;
 								padding : 5px 5px 5px 20px;
+								margin-bottom: 50px;
 								font-size : @input_font_size;
 								text-transform : uppercase;
 								width : 200px;

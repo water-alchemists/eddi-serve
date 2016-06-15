@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { BACKGROUND_COLOR } from '../../constants';
+import { GRAPH_INDICTATOR } from '../../constants';
 
 const SIZE = 120;
 const CENTER = SIZE/2;
@@ -79,7 +79,7 @@ export default class FlowGraph extends Component {
     var angle = angleForRate(rate);
     var baseAngleA = angle - 0.2;
     var baseAngleB = angle + 0.2;
-    context.fillStyle = BACKGROUND_COLOR;
+    context.fillStyle = GRAPH_INDICTATOR;
     context.beginPath();
     context.moveTo(
       CENTER + (pointEdge * Math.cos(angle)),
