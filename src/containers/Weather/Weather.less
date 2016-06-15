@@ -5,8 +5,11 @@
         .weather-overview{
             background-color: white;
             color: black;
-            padding : 5px;
-            .weather-location {
+            padding: 20px;
+            position: relative;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+            h3.weather-location {
+                text-transform: uppercase;
                 margin : 0;
                 padding-top: 5px;
                 margin-bottom : 5px;
@@ -30,16 +33,39 @@
                     margin : 0;
                 }
                 .temperature {
-                    font-size : 50px;
+                    font-size: 36px;
+                      margin: 12px 0 0;
+                      font-weight: 500;
+                      color: @trim_color;
+                      font-weight: 200;
+                }
+                .weather-type,
+                .weather-updated {
+                    font-size: 12px;
+                    margin: 0;
+                    color: @trim_color;
+                    clear: right;
                 }
             }
         }
         
         .weather-table {
             table {
+                background-color: rgba(241, 241, 242, 1);
                 width : 100%;
                 tr {
                     border-bottom : 1px solid white;
+                    margin-left: 20px;
+                    td.label {
+                        margin-left: 20px;
+                        font-weight: 700;
+                        color:black;
+                        text-transform: lowercase;
+                    }
+                    td.value {
+                        color:black;
+                        text-transform: lowercase;
+                    }
                     p {
                         margin-top : 10px;
                         margin-bottom : 10px;
