@@ -2,9 +2,10 @@
 
 #weather {
     #weather-summary {
-        .weather-overview{
+        .weather-overview {
             background-color: white;
             color: black;
+            height: 215px;
             padding: 20px;
             position: relative;
             box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
@@ -19,7 +20,9 @@
                 flex-direction: row;
                 justify-content : space-around;
                 align-items : flex-start;
-                
+                .overview-info {
+                    padding-top: 25px;
+                }
                 .image-container {
                     min-height : 150px;
                     min-width : 150px;
@@ -27,6 +30,7 @@
                     .icon {
                         font-size : 150px;
                         line-height : 100%;
+                        color: @dark_grey;
                     }
                 }
                 p {
@@ -50,20 +54,22 @@
         }
         
         .weather-table {
+            padding-bottom: 50px;
             table {
+                padding: 20px 0px 50px 40px;
                 background-color: rgba(241, 241, 242, 1);
                 width : 100%;
                 tr {
                     border-bottom : 1px solid white;
                     margin-left: 20px;
                     td.label {
-                        margin-left: 20px;
+                        line-height: 1.5;
                         font-weight: 700;
                         color:black;
                         text-transform: lowercase;
                     }
-                    td.value {
-                        color:black;
+                    td.value p {
+                        color:@dark_grey;
                         text-transform: lowercase;
                     }
                     p {
