@@ -6,10 +6,20 @@ import FlowGraph from './graphs/FlowGraph';
 
 class FlowGraphWrapper extends Component {
     render(){
-        const { rate } = this.props;
+        const { rate } = this.props,
+            hideWarning = rate < 4.5,
+            warningSpriteClass = classNames([
+                'sprite-wrapper',
+                { hide : hideWarning },
+            ]);
         return (
-            <div className='salinity-graph-wrapper'>
-                <FlowGraph rate={rate}/>
+            <div className='flow-graph-wrapper'>
+                <div>
+                    <div className={warningSpriteClass}>
+                        <div className='sprite warning'></div>
+                    </div>
+                    <FlowGraph rate={rate}/>
+                </div>
             </div>
         );
     }
