@@ -49,7 +49,10 @@ class ZipInput extends Component {
 }
 
 ZipInput.propTypes = {
-    value : PropTypes.number,
+    value : PropTypes.oneOfType([
+		PropTypes.number,
+		PropTypes.string
+	]),
     onChange : PropTypes.func,
     placeholder : PropTypes.string
 };

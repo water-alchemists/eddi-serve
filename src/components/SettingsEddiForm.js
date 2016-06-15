@@ -76,7 +76,10 @@ SettingsEddiForm.propTypes = {
 		hour : PropTypes.number,
 		minute : PropTypes.number
 	}),
-	zipValue : PropTypes.number
+	zipValue : PropTypes.oneOfType([
+		PropTypes.number,
+		PropTypes.string
+	])
 };
 
 SettingsEddiForm.defaultProps = {

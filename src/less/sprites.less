@@ -60,6 +60,7 @@
       background-position : -259px -467px;
     }
     &.up {
+      background-position : -205px -467px;
     }
     &.right {
       background-position : -200px -508px;
@@ -81,25 +82,37 @@
   }
 
   &.salinityIn{
-    background-position: -105px -224px;
+    background-position: -105px -81px;
     &.faded {
-      background-position : -105px -150px;
+      background-position : -105px -10px;
     }
     &.bad {
-      background-position : -109px -222px;
+      background-position : -305px -81px;
       &.faded {
-        background-position : -109px -149px;
+        background-position : -305px -10px;
+      }
+    }
+    &.inactive {
+      background-position : -105px -223px;
+      &.faded {
+        background-position : -105px -150px;
       }
     }
   }
 
   &.salinityOut{
-    background-position: -155px -223px;
+    background-position: -155px -81px;
     &.faded {
-      background-position : -155px -148px;
+      background-position : -155px -9px;
     }
     &.bad {
-      background-position : -155px -222px;
+      background-position : -355px -81px;
+      &.faded {
+        background-position : -355px -9px;
+      }
+    }
+    &.inactive {
+      background-position : -155px -223px;
       &.faded {
         background-position : -155px -149px;
       }
@@ -107,25 +120,37 @@
   }
   
   &.salinityRec{
-    background-position: -250px -222px;
+    background-position: -260px -81px;
     &.faded {
-      background-position : -250px -149px;
+      background-position : -260px -10px;
     }
     &.bad {
-      background-position : -155px -222px;
+      background-position : -461px -81px;
       &.faded {
-        background-position : -155px -149px;
+        background-position : -461px -10px;
+      }
+    }
+    &.inactive {
+      background-position : -260px -223px;
+      &.faded {
+        background-position : -260px -149px;
       }
     }
   }
 
   &.flow{
-    background-position: -209px -222px;
+    background-position: -209px -81px;
     &.faded {
-      background-position : -209px -149px;
+      background-position : -209px -10px;
     }
     &.bad {
-      background-position : -209px -222px;
+      background-position : -409px -81px;
+      &.faded {
+        background-position : -409px -10px;
+      }
+    }
+    &.inactive {
+      background-position : -209px -223px;
       &.faded {
         background-position : -209px -149px;
       }
@@ -166,6 +191,10 @@
 
     &.blue {
       background-position : -312px -355px;
+    }
+
+    &.warning {
+      background-position : -384px -420px;
     }
   }
 
