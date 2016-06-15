@@ -9,15 +9,7 @@ import {
 
 import { menuNameChange } from '../../actions/menu';
 
-
-import EddiStateButton from '../../components/EddiStateButton';
-import StatusBar from '../../components/StatusBar';
-
-
 import WeatherSummary from '../../components/WeatherSummary';
-
-
-
 
 import style from './Weather.less';
 
