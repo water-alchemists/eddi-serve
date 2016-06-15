@@ -1,7 +1,7 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 
-import FlowGraph from './graphs/FlowGraph';
+import FlowGraphWrapper from './FlowGraphWrapper';
 import HistoricalGraph from './graphs/HistoricalGraph';
 
 import { HISTORICAL } from '../constants';
@@ -70,7 +70,7 @@ class DashboardFlow extends Component {
 						<h3>{`${formattedRate}`}</h3>
 						<p>liters per minute</p>
 					</div>
-					<FlowGraph rate={rate} />
+					<FlowGraphWrapper rate={rate} />
 					<p className='dashboard-note'>
 						Your current water flow rate is
 						<span>{` ${formattedRate} lpm, `}</span>

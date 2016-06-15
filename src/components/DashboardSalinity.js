@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { SALINITY_THRESHOLD, HISTORICAL } from '../constants';
 
-import SalinityGraph from './graphs/SalinityGraph';
+import SalinityGraphWrapper from './SalinityGraphWrapper';
 import HistoricalGraph from './graphs/HistoricalGraph';
 
 import { formatToTodayHistory, 
@@ -101,7 +101,7 @@ class DashboardSalinity extends Component {
 						<h3>{`${currentString}`}</h3>
 						<p>parts per million</p>
 					</div>
-					<SalinityGraph salinity={current}/>
+					<SalinityGraphWrapper salinity={current} threshold={threshold}/>
 					<p className='dashboard-note'>
 						{ prefix }
 						<span>{` ${currentString} ppm. `}</span>

@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-
+import React, { Component, PropTypes } from 'react';
 
 const SIZE = 120;
 const CENTER = SIZE/2;
@@ -60,7 +59,12 @@ export default class SalinityGraph extends Component {
 
 }
 
+SalinityGraph.propTypes = {
+  salinity : PropTypes.number.isRequired,
+  threshold : PropTypes.number.isRequired
+}
 
 SalinityGraph.defaultProps = {
-  salinity: 0
+  salinity: 0,
+  threshold : DANGEROUS_SALINITY
 }
