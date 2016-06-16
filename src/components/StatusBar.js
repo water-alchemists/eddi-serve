@@ -52,9 +52,10 @@ class StatusBar extends Component {
             isOn = !!current,
             onText = isOn ? 'ON' : 'OFF',
             reasonText = renderReason(reason, state);
-        if(state != 2 && !!state != isOn){ // if pending override to take over
+        if(state != 2 && !!state != isOn){ 
+            // if pending override to take over, show this pending state change text to user
             return (
-                <p id="state">Turn your EDDI:</p>
+                <p id="state">{`Turning your EDDI ${stateText}...`}</p>
             );
         }
         else {
