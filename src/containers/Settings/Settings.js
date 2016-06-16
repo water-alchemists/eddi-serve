@@ -59,26 +59,30 @@ class Settings extends Component {
 		if( eddi.settings ) updateMenuName(eddi.settings.name);
 		else updateMenuName('Settings');
 
-		// if(eddi.id) EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+		if(eddi.id) EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 
 	}
 
 	componentWillReceiveProps(newProps){
-		const { updateMenuName, updateEddiSettings, selectEddiById, eddi:oldEddi={} } = this.props,
+		const { updateMenuName, updateEddiSettings, selectEddiById, eddi:oldEddi={}, location={} } = this.props,
 			{ eddi } = newProps;
+		
+		//if the id in the query changes, update the selected to that id
+		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
+
 		//if there is id, update the eddi's info
 		if(eddi.id && oldEddi.id !== eddi.id) {
 			if( eddi.settings.name ) updateMenuName(eddi.settings.name);
 			else updateMenuName('Settings');
 
-			// EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 		}
 	}
 
-	// componentWillUnmount(){
-	// 	const { eddi={} } = this.props;
-	// 	EddiFire.removeEddiEventListener(eddi.id, 'settings');
-	// }
+	componentWillUnmount(){
+		const { eddi={} } = this.props;
+		EddiFire.removeEddiEventListener(eddi.id, 'settings');
+	}
 
 	_renderEddis(){
 		const { eddis, updateSalinity, updateEnd, updateStart, updateZip } = this.props;
