@@ -59,7 +59,7 @@ class Settings extends Component {
 		if( eddi.settings ) updateMenuName(eddi.settings.name);
 		else updateMenuName('Settings');
 
-		if(eddi.id) EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+		// if(eddi.id) EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 
 	}
 
@@ -71,14 +71,14 @@ class Settings extends Component {
 			if( eddi.settings.name ) updateMenuName(eddi.settings.name);
 			else updateMenuName('Settings');
 
-			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+			// EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 		}
 	}
 
-	componentWillUnmount(){
-		const { eddi={} } = this.props;
-		EddiFire.removeEddiEventListener(eddi.id, 'settings');
-	}
+	// componentWillUnmount(){
+	// 	const { eddi={} } = this.props;
+	// 	EddiFire.removeEddiEventListener(eddi.id, 'settings');
+	// }
 
 	_renderEddis(){
 		const { eddis, updateSalinity, updateEnd, updateStart, updateZip } = this.props;
