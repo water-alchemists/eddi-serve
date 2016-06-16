@@ -4,11 +4,11 @@
 	background-color : @light_color;
 
 	.section {
-		background-color : white;
+		background-color : @light_color;
 		padding: 20px;
 		h3 {
 			color: black;
-			font-weight : 500;
+			font-weight : 700;
 			margin-top: 5px;
 			margin-bottom: 5px;
 			text-transform: uppercase;
@@ -33,7 +33,7 @@
 		padding-top: 15px;
 		padding-bottom : 15px;
 		.selection {
-			background-color : @light_color;
+			background-color : rgba(255,255, 255, 0.8);
 			width: 80px;
 			height: 80px;
 			display:flex;
@@ -59,5 +59,16 @@
 				}
 			}
 		}
+		button[type=submit] {
+			  display: block;
+		      padding: 10px 30px;
+		      color: white;
+		      margin: 3% 33%;
+		      width: 140px;
+		      background-color: rgba(0, 157, 167, 0.8);
+		      text-decoration: none;
+		      cursor: pointer;
+		}
+
 	}
 }

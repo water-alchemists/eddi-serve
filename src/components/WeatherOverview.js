@@ -13,9 +13,6 @@ class WeatherOverview extends Component {
             <div className='weather-overview'>
                 <h3 className='weather-location'>{location}</h3>
                 <div className='overview-content'>
-                    <div className='image-container'>
-                        <span className='icon' data-icon={image}></span>
-                    </div>
                     <div className='overview-info'>
                         <p className='temperature'>
                             {`${formattedTemp}`}
@@ -23,6 +20,9 @@ class WeatherOverview extends Component {
                         </p>
                         <p className='weather-type'>{type}</p>
                         <p className='weather-updated'>{`as of ${formattedTime}`}</p>
+                    </div>
+                    <div className='image-container'>
+                        <span className='icon' data-icon={image}></span>
                     </div>
                 </div> 
             </div>

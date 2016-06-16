@@ -1,16 +1,16 @@
-@import '../../less/vars';
+	@import '../../less/vars';
 
 #settings {
 	min-height : 100vh;
-	background-color: white;
+	background-color: @dark_color;
 	.settings-eddi {
-		background-color : @light_color;
+		background-color: @light_color;
 		margin-top: 5px;
 		&:first-child {
-			margin-top: 0px;
+			margin-top: 10%;
 		}
 		.arrow-container {
-			display:flex;
+			display: none;
 			flex-direction : row;
 			-webkit-flex-direction : row;
 			justify-content : center;
@@ -57,7 +57,7 @@
 				width: 100%;
 				margin: 0px;
 				padding: 20px 20px;
-
+				font-weight: 800;
 				.version-type {
 					display : flex;
 					flex-direction : row;
@@ -66,8 +66,8 @@
 					
 					.info {
 						color: black;
-						font-weight : 700;
-						font-style: italic;
+						font-weight : 800;
+						font-style: bold;
 					}
 
 					.date {
@@ -86,7 +86,7 @@
 
 				h4 {
 					color: black;
-					font-weight: 200;
+					font-weight: 700;
 					margin : 0;
 				}
 				.operate-row {
@@ -107,13 +107,8 @@
 							margin-right : 5px;
 						}
 						.date-time-select { 
-							width : 120px;
+							width : 140px;
 							border: none;
-							padding: 10px;
-							margin: 2px;
-							select {
-								background-color: white;
-							}
 						}
 					}
 					
@@ -148,8 +143,10 @@
 						}
 						.salinity-input {
 							input {
-								padding : 5px 5px 5px 20px;
 								font-size : @input_font_size;
+								border-width: 1px;
+								padding : 10px;
+								margin: 2px;
 								text-transform : uppercase;
 								width : 100px;
 								background-color : white;
@@ -188,9 +185,9 @@
 						}
 						.zip-input {
 							input {
-								border-color : none;
-								border-width : none;
+								border-width : 1px;
 								padding : 5px 5px 5px 20px;
+								margin-bottom: 50px;
 								font-size : @input_font_size;
 								text-transform : uppercase;
 								width : 200px;

@@ -19,7 +19,7 @@ class AddEddiButton extends Component {
     const { openAddForm } = this.props;
     return (
       <div className='add-eddi-button' onClick={() => openAddForm()}>
-        <span>ADD NEW +</span>
+        <span>ADD NEW</span>
       </div>
     );
   }

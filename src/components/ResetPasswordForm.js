@@ -53,7 +53,7 @@ class ResetPasswordForm extends Component {
 					value={email}
 					placeholder="email"
 				/>
-				<button type='submit'>Reset Password > </button>
+				<button type='submit'>RESET </button>
 			</form>
 		);
 	}

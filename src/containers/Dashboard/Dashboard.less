@@ -47,11 +47,11 @@
   .dashboard-view{
     overflow: hidden;
     h1{
-      font-weight: 200;
+      font-weight: 700;
       text-transform: uppercase;
       font-size: 18px;
       margin-top: 0;
-      color: @dark_grey;
+      color: black;
     }
     &.power {
       padding-top : 20px;
@@ -61,8 +61,7 @@
     .dashboard-current{
       padding: 20px;
       position: relative;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
       .dashboard-current-numbers{
         padding-right: 20px + 100px + 20px;
         height: 20px + 100px + 20px;
@@ -71,12 +70,13 @@
           font-size: 36px;
           margin: 12px 0 0;
           font-weight: 500;
-          color: @dark_grey;
+          color: @trim_color;
+          font-weight: 200;
         }
         p{
           font-size: 12px;
           margin: 0;
-          color: @dark_grey;
+          color: @trim_color;
         }
       }
 
@@ -135,7 +135,7 @@
             span {
               border-bottom : 4px solid @trim_color;
               font-weight: bold;
-              font-style: none !important;
+              font-style: none!important;
               color: @dark_color;
             }
           }

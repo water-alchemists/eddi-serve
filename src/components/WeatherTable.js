@@ -115,7 +115,7 @@ class WeatherTable extends Component {
             LowElement = this._renderTemp(lowTemp, 'Low'),
             SunriseElement = this._renderDate(sunrise, 'Sunrise'),
             SunsetElement = this._renderDate(sunset, 'Sunset');
-            
+            console.log('this is the sunset', sunset);
         return (
             <div className='weather-table'>
                 <table>

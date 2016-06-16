@@ -93,17 +93,17 @@ class Home extends Component {
 			(<div className='auth-button'
 				onClick={ () => browserHistory.push(ROUTES.LOGIN)}
 			>
-				Login ›
+				LOGIN
 			</div>),
 			(<div className='auth-button'
 				onClick={ () => browserHistory.push(ROUTES.SIGNUP)}
 				>
-				Sign Up ›
+				SIGN UP
 			</div>),
 			(<div className='auth-button'
 				onClick={ () => browserHistory.push(ROUTES.RESET)}
 				>
-				Reset Password ›
+				RESET
 			</div>)
 		];
 	}

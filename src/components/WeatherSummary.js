@@ -42,7 +42,7 @@ class WeatherSummary extends Component {
                     highTemp={main.temp_max}
                     lowTemp={main.temp_min}
                     sunrise={sunriseDate}
-                    sunsetDate={sunsetDate}
+                    sunset={sunsetDate}
                 />
             </div>
         );

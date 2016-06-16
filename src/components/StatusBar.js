@@ -54,7 +54,7 @@ class StatusBar extends Component {
             reasonText = renderReason(reason, state);
         if(state != 2 && !!state != isOn){ // if pending override to take over
             return (
-                <p>{`Setting the mode of your eddi to ${stateText}...`}</p>
+                <p id="state">Turn your EDDI:</p>
             );
         }
         else {

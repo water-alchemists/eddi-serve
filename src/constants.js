@@ -60,6 +60,7 @@ export const FORM_CLEAR = 'FORM_CLEAR';
 
 // Style Related
 export const BACKGROUND_COLOR = "rgba(13,14,31,1)";
+export const GRAPH_INDICTATOR = "rgba(255,255,255,1)";
 export const TRIM_COLOR = "rgba(0,109,96,1)";
 
 //Thresholds

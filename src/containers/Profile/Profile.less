@@ -2,10 +2,20 @@
 
 #profile {
     .password-form {
-        padding-top: 10px;
-        padding-bottom : 10px;
+        padding-top: 10%;
+        padding-bottom : 10%;        
+        input {
+            width: 70%;
+            margin: 10% 15%;
+            border-width : 1px;
+            padding : 5px 5px 5px 20px;
+            font-size : @input_font_size;
+            &:focus {
+                outline: none;
+            }
+        }
+
         h3 {
-            margin : 0;
             text-align: center;
             color: black;
         }
@@ -30,8 +40,14 @@
             align-items : center;
             
             button {
-               color : @trim_color;
-               background-color: white;
+              display: block;
+              padding: 10px 30px;
+              color: white;
+              margin: 10% 0%;
+              width: 140px;
+              background-color: rgba(0, 157, 167, 0.8);
+              text-decoration: none;
+              cursor: pointer;
             }
         }
     }

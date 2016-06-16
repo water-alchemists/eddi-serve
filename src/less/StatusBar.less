@@ -1,12 +1,15 @@
 @import './vars.less';
 
 .status-bar {
+	background-color: white;
     display : flex;
     flex-direction : row;
     justify-content : space-between;
     align-items : center;
     padding : 8px;
-    p {
-        margin : 0;
+    p#state {
+    	float: right;
+        padding: 20px;
+        color: @dark_grey;
     }
 }
