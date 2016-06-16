@@ -18,7 +18,7 @@ class SettingsEddiHeader extends Component {
 			formattedName = name.toUpperCase();
 		return (
 			<div className='header' 
-				style={{backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('http://www.inuvikgreenhouse.com/web_images/greenhouse01lg.jpg')"}}
+				style={{backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('assets/greenhouse.jpg')"}}
 				onClick={event => this.clickHandler(event)}
 			>
 				<h3>{formattedName}</h3>
