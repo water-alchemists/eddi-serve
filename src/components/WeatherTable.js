@@ -113,9 +113,9 @@ class WeatherTable extends Component {
             WindElement = this._renderWind(),
             HighElement = this._renderTemp(highTemp, 'High'),
             LowElement = this._renderTemp(lowTemp, 'Low'),
-            SunriseElement = this._renderDate(sunrise, 'Sunrise'),
-            SunsetElement = this._renderDate(sunset, 'Sunset');
-            console.log('this is the sunset', sunset);
+            SunriseElement = this._renderDate(sunrise, 'Next Sunrise'),
+            SunsetElement = this._renderDate(sunset, 'Next Sunset');
+
         return (
             <div className='weather-table'>
                 <table>
@@ -146,13 +146,13 @@ WeatherTable.propTypes = {
         '2h' : PropTypes.number,
         '3h' : PropTypes.number
     }),
-    humidity : PropTypes.number.isRequired,
+    humidity : PropTypes.number,
     wind : PropTypes.shape({
         speed : PropTypes.number,
         deg : PropTypes.number
     }),
-    highTemp : PropTypes.number.isRequired,
-    lowTemp : PropTypes.number.isRequired,
+    highTemp : PropTypes.number,
+    lowTemp : PropTypes.number,
     sunrise : PropTypes.instanceOf(Date),
     sunset : PropTypes.instanceOf(Date)
 };

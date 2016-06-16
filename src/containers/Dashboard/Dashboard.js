@@ -87,7 +87,7 @@ class Dashboard extends Component {
 		const { updateMenuName, updateEddiReadings, updateEddiSettings, selectEddiById, eddi:oldEddi={}, location } = this.props,
 			{ eddi } = newProps;
 		//if the id in the query changes, update the selected to that id
-		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
+		// if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
 
 		//if there is id, update the eddi's info
 		if(eddi.id && oldEddi.id !== eddi.id) {

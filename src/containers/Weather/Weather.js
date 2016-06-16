@@ -75,8 +75,12 @@ class Weather extends Component {
 
     render(){
         const { eddi={}, weather={} } = this.props,
-            { zip } = eddi.settings,
-            WeatherElement = weather.id ? this._renderWeather() : this._renderNone();
+            { zip } = eddi.settings;
+            let WeatherElement;
+            if(zip) WeatherElement = this._renderWeather();
+            else if(weather.id) WeatherElement.this._renderNone();
+            else WeatherElement = null;
+
         return (
             <div id="weather" className="page">
                 { WeatherElement }

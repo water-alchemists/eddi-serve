@@ -31,13 +31,15 @@ class SettingsEddi extends Component {
 			bodyClass= classNames(['settings-container', { hide : !isOpen }]),
 			footerClass=classNames(['arrow-container', { hide : !isOpen }]);
 
+		// REMOVE HEADER
+		// <SettingsEddiHeader 
+		// 			name={settings.name}
+		// 			onClick={() => this.toggleShow()}
+		// 			isOpen={isOpen}
+		// 		/>
 		return (
 			<div className='settings-eddi'>
-				<SettingsEddiHeader 
-					name={settings.name}
-					onClick={() => this.toggleShow()}
-					isOpen={isOpen}
-				/>
+				
 				<div className={bodyClass}>
 					<SettingsEddiVersion 
 						artikNumber={version.artik.number}

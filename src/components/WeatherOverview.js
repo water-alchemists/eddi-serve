@@ -31,10 +31,10 @@ class WeatherOverview extends Component {
 }
 
 WeatherOverview.propTypes = {
-    image : PropTypes.string.isRequired,
-    location : PropTypes.string.isRequired,
-    temperature : PropTypes.number.isRequired,
-    type : PropTypes.string.isRequired,
+    image : PropTypes.string,
+    location : PropTypes.string,
+    temperature : PropTypes.number,
+    type : PropTypes.string,
     time : PropTypes.instanceOf(Date)
 };
 
