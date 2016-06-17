@@ -38,7 +38,6 @@ function renderReason(reason, state){
 
 class StatusBar extends Component {
     _renderInitialize(){
-        console.log('rendering initialize');
         return (
           <div className='status-bar'>
             <p>Fetching the status of your eddi...</p>
@@ -52,6 +51,7 @@ class StatusBar extends Component {
             isOn = !!current,
             onText = isOn ? 'ON' : 'OFF',
             reasonText = renderReason(reason, state);
+
         if(state != 2 && !!state != isOn){ 
             // if pending override to take over, show this pending state change text to user
             return (
@@ -81,7 +81,6 @@ class StatusBar extends Component {
     render(){
         const { current, state, reason } = this.props,
             StatusBarElement = state === null ? this._renderInitialize() : this._renderFetch();
-        console.log('hi', current, state, reason, current === null && state === null)
         return StatusBarElement;
     }
 }
