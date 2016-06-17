@@ -21,8 +21,9 @@ class CropInput extends Component {
 
 	componentWillReceiveProps(nextProps){
 		// if the value was changed somewhere else, reset this
-		const { value } = this.state;
-		if(value && nextProps.value !== value) this.setState({ ... initialState });
+		// const { value } = this.state;
+		// console.log('value', value, 'nextporps', nextProps.value, nextProps.value && nextProps.value !== value);
+		// if(value && nextProps.value !== value) return this.setState({ ... initialState });
 	}
 
 	changeHandler(event){
@@ -53,6 +54,7 @@ class CropInput extends Component {
 				selected : !index,
 				value : null
 			};
+
 		return (
 			<div className='crop-input'>
 				<select value={index} 
