@@ -37,6 +37,7 @@ class SettingsEddi extends Component {
 		// 			onClick={() => this.toggleShow()}
 		// 			isOpen={isOpen}
 		// 		/>
+
 		return (
 			<div className='settings-eddi'>
 				

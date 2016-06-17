@@ -9,6 +9,11 @@ class ZipInput extends Component {
         };
     }
     
+    componentWillMount(){
+        const { value } = this.props;
+        if(value) this.setState({ value });
+    }
+
     componentWillReceiveProps(nextProps){
         const { value } = nextProps;
         if(value && (value !== this.state.value)) this.setState({ value });

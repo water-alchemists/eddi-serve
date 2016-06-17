@@ -11,6 +11,11 @@ class SalinityInput extends Component {
 		};
 	}
 
+	componentWillMount(){
+		const { value } = this.props;
+		this.setState({ value });
+	}
+
 	componentWillReceiveProps(nextProps){
 		const { value } = nextProps;
 		this.setState({ value });
@@ -34,6 +39,7 @@ class SalinityInput extends Component {
 	render(){
 		const { placeholder } = this.props,
 			{ value } = this.state;
+
 		return (
 			<div className='salinity-input'>
 				<input type='number'

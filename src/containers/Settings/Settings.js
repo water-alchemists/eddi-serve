@@ -53,20 +53,19 @@ class Settings extends Component {
 		// NEW
 		const { updateMenuName, updateEddiSettings, selectEddiById, eddi={}, location={} } = this.props;
 		//if the id in the query changes, update the selected to that id
-		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
+		// if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
 		
 		//if there is id, update the eddi's info
 		if( eddi.settings ) updateMenuName(eddi.settings.name);
 		else updateMenuName('Settings');
 
-		if(eddi.id) EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+		// if(eddi.id) EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 
 	}
 
 	componentWillReceiveProps(newProps){
 		const { updateMenuName, updateEddiSettings, selectEddiById, eddi:oldEddi={}, location={} } = this.props,
 			{ eddi } = newProps;
-		
 		//if the id in the query changes, update the selected to that id
 		if(location.query.id && location.query.id !== eddi.id) return selectEddiById(location.query.id);
 
@@ -75,14 +74,14 @@ class Settings extends Component {
 			if( eddi.settings.name ) updateMenuName(eddi.settings.name);
 			else updateMenuName('Settings');
 
-			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
+			// EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 		}
 	}
 
-	componentWillUnmount(){
-		const { eddi={} } = this.props;
-		EddiFire.removeEddiEventListener(eddi.id, 'settings');
-	}
+	// componentWillUnmount(){
+	// 	const { eddi={} } = this.props;
+	// 	EddiFire.removeEddiEventListener(eddi.id, 'settings');
+	// }
 
 	_renderEddis(){
 		const { eddis, updateSalinity, updateEnd, updateStart, updateZip } = this.props;
@@ -100,29 +99,21 @@ class Settings extends Component {
 		})
 	}
 
-	_renderSettings(){
+	render(){
+		// const EddiElements = this._renderEddis();
 		const { eddi={}, updateSalinity, updateEnd, updateStart, updateZip } = this.props;
 		const eddiId = eddi.id;
 		if(!eddiId) return null;
 		return (
-			<SettingsEddi key={eddiId}
-				eddi={eddi}
-				onSalinityChange={salinity => updateSalinity(eddiId, salinity)}
-				onStartChange={(hour, minutes) => updateStart(eddiId, hour, minutes)}
-				onEndChange={(hour, minutes) => updateEnd(eddiId, hour, minutes)}
-				onZipChange={zip => updateZip(eddiId, zip)}
-			/>
-		);
-	}
-
-	render(){
-		// const EddiElements = this._renderEddis();
-		const EddiElements = this._renderSettings();
-
-		return (
 			<div id="settings" className="page">
 				<div>
-					{EddiElements}
+					<SettingsEddi
+						eddi={eddi}
+						onSalinityChange={salinity => updateSalinity(eddiId, salinity)}
+						onStartChange={(hour, minutes) => updateStart(eddiId, hour, minutes)}
+						onEndChange={(hour, minutes) => updateEnd(eddiId, hour, minutes)}
+						onZipChange={zip => updateZip(eddiId, zip)}
+					/>
 				</div>
 			</div>
 		);
