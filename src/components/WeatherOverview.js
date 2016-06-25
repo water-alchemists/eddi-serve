@@ -7,10 +7,11 @@ import { formatDateToPretty, getTimezone } from '../data';
 class WeatherOverview extends Component {
     
     render(){
-        console.log('timezone', getTimezone())
         const { time, temperature, type, location, image } = this.props;
         const formattedTime = formatDateToPretty(time),
-            formattedTemp = Math.floor(temperature);
+            formattedTemp = Math.floor(temperature),
+            timezone = getTimezone();
+            
         return (
             <div className='weather-overview'>
                 <h3 className='weather-location'>{location}</h3>
@@ -21,7 +22,7 @@ class WeatherOverview extends Component {
                             <span className='icon' data-icon='+'></span>
                         </p>
                         <p className='weather-type'>{type}</p>
-                        <p className='weather-updated'>{`as of ${formattedTime}`}</p>
+                        <p className='weather-updated'>{`as of ${formattedTime} ${timezone}`}</p>
                     </div>
                     <div className='image-container'>
                         <span className='icon' data-icon={image}></span>

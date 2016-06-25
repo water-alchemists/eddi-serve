@@ -1,6 +1,5 @@
 'use strict';
 import moment from 'moment';
-// import timezone from 'moment-timezone';
 
 import { SALINITY_THRESHOLD } from './constants';
 moment.locale('en');
@@ -335,7 +334,9 @@ export function formatUTCtoDate(secs){
 }
 
 export function getTimezone(){
-	// return timezone.tz.guess();
+	const dateString = new Date().toString(),
+		search = dateString.match(/\((\w+)\)/);
+	if(search) return search[1];
 }
 
 export function getWeatherFont(code, isNight){
