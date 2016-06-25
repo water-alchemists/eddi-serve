@@ -49,14 +49,14 @@ export default class SalinityGraph extends Component {
     const color = determineColor(ppm, threshold);
     // draw circle
     context.beginPath();
-    context.arc(CENTER, CENTER, CENTER - 3, 0, 2 * Math.PI, false)
+    context.arc(CENTER, CENTER, CENTER - 2, 0, 2 * Math.PI, false)
     context.lineWidth = 3;
     context.strokeStyle = color;
     context.stroke();
 
     // draw dots
     for( var ix=0; ix < density; ix++ ){
-      let radius = (ix * ((CENTER)/density));
+      let radius = (ix * ((CENTER)/density)) - 2;
       let angleIncr = 60 / ix;
       // let color = colorAtPPM((radius / CENTER) * ppm); // no gradient in the new designs
       for( let ir=0; ir < 360; ir += angleIncr ){
