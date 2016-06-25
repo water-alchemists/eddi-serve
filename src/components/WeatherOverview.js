@@ -2,10 +2,12 @@
 import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 
-import { formatDateToPretty } from '../data'; 
+import { formatDateToPretty, getTimezone } from '../data'; 
 
 class WeatherOverview extends Component {
+    
     render(){
+        console.log('timezone', getTimezone())
         const { time, temperature, type, location, image } = this.props;
         const formattedTime = formatDateToPretty(time),
             formattedTemp = Math.floor(temperature);

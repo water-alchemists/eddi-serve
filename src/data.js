@@ -1,5 +1,6 @@
 'use strict';
 import moment from 'moment';
+// import timezone from 'moment-timezone';
 
 import { SALINITY_THRESHOLD } from './constants';
 moment.locale('en');
@@ -331,6 +332,10 @@ export function formatDegreeToDirection(degree){
 
 export function formatUTCtoDate(secs){
 	return new Date(secs * 1000);
+}
+
+export function getTimezone(){
+	// return timezone.tz.guess();
 }
 
 export function getWeatherFont(code, isNight){
