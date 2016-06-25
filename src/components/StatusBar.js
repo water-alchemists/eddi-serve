@@ -26,7 +26,7 @@ function renderReason(reason, state){
     case 'threshold':
         return 'salinity of the incoming water is less than the set threshold';
     case 'weather':
-        return 'rain volume is greater than 0.3';
+        return 'it is raining';
     case 'initialize':
         return 'eddi is starting up...';
     case 'exit':
