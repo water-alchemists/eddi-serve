@@ -117,15 +117,8 @@ class HistoricalGraph extends Component {
         { selected : isSelected(HISTORICAL.WEEK, type)}
       ]);
 
-    console.log('this is the data', data);
-
     return <div className='historical-graph'>
       <div className='historical-selector'>
-        <div className={monthClass}
-          onClick={event => this.clickHandler(event, HISTORICAL.MONTH)}
-        >
-          <span>This Month</span>
-        </div>
         <div className={todayClass}
           onClick={event => this.clickHandler(event, HISTORICAL.TODAY)}
         >
@@ -136,7 +129,11 @@ class HistoricalGraph extends Component {
         >
           <span>This Week</span>
         </div>
-        
+        <div className={monthClass}
+          onClick={event => this.clickHandler(event, HISTORICAL.MONTH)}
+        >
+          <span>This Month</span>
+        </div>
       </div>
       <canvas ref='canvas' style={{width: "100%", height: "160px"}} className='historical-graph-canvas' />
     </div>
