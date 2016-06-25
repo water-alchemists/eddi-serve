@@ -361,3 +361,8 @@ export function checkNight(sunrise, sunset){
 	// if both sunrise and sunset is the next day that means that the current day is after sunset
 	return !isSunriseToday && !isSunsetToday;
 }
+
+export function isGoodFlow(rate){
+	rate = rate || 0;
+	return rate > 1 && rate < 25;
+}

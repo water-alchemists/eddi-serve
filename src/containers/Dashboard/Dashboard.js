@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { menuNameChange } from '../../actions/menu';
 import { selectEddiById, updateEddiSuccess, getEddiReadings } from '../../actions/eddis';
 
-import { QUERY, FLOW_THRESHOLD, SALINITY_THRESHOLD } from '../../constants';
+import { QUERY, SALINITY_THRESHOLD } from '../../constants';
 
-import { mapDateToReadings } from '../../data';
+import { mapDateToReadings, isGoodFlow } from '../../data';
 
 import DashboardMenu from '../../components/DashboardMenu';
 import DashboardSalinity from '../../components/DashboardSalinity';
@@ -22,7 +22,7 @@ const EddiFire = EddiFireStarter();
 function getGoodBad(current, threshold){
 	if(!threshold) threshold = SALINITY_THRESHOLD; //default threshold for salinity
 	const { ppmIn, ppmOut, qOut, ppmRec } = current,
-		flowGood = qOut != undefined ? qOut <= FLOW_THRESHOLD : undefined,
+		flowGood = qOut != undefined ? isGoodFlow(qOut) : undefined,
 		salinityInGood = ppmIn != undefined ? ppmIn <= threshold : undefined,
 		salinityOutGood = ppmOut != undefined ? ppmOut <= threshold : undefined,
 		salinityRecGood = ppmRec != undefined ? ppmRec <= threshold : undefined;

@@ -3,11 +3,12 @@ import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 
 import FlowGraph from './graphs/FlowGraph';
+import { isGoodFlow } from '../data';
 
 class FlowGraphWrapper extends Component {
     render(){
         const { rate } = this.props,
-            hideWarning = rate < 4.5,
+            hideWarning = isGoodFlow(rate),
             warningSpriteClass = classNames([
                 'sprite-wrapper',
                 { hide : hideWarning },
