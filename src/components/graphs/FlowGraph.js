@@ -8,14 +8,15 @@ const LINE_THICKNESS = 20;
 const BASE10 = Math.log(10);
 
 //slow is 0.3, medium is 3, fast is 30
+const FLOW_TARGET = 5; // LPM
 
 function colorForRate(rate){
-  if( rate < 0.3 ){
-    rate = 0.3;
-  } else if( rate > 30 ){
+  if( rate > 30 ){
     rate = 30;
   }
-  var rateFactor = Math.abs( (Math.log(rate/3) / BASE10) );
+  var targetDiff = Math.abs(rate - FLOW_TARGET);
+  
+  var rateFactor = Math.abs( (Math.log(targetDiff/FLOW_TARGET) / BASE10) );
   return colorForFactor(rateFactor);
 }
 
@@ -39,7 +40,7 @@ function angleForRate(rate){
     rate = 30;
   }
 
-  var logMult = ((Math.log(rate/3) / BASE10) + 1) / 2; // goes from 0 to 1
+  var logMult = ((Math.log(rate/FLOW_TARGET) / BASE10) + 1) / 2; // goes from 0 to 1
   return ((logMult * 1.4) + 0.8) * Math.PI;
 }
 
