@@ -94,8 +94,14 @@ class Dashboard extends Component {
 			if( eddi.settings.name ) updateMenuName(eddi.settings.name);
 			else updateMenuName('Dashboard');
 
+			if(oldEddi.id){
+				EddiFire.removeEddiEventListener(oldEddi.id, 'settings');
+				EddiFire.removeEddiEventListener(oldEddi.id, 'readings');
+			}
+			
 			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 			EddiFire.addEddiEventListener(eddi.id, 'readings', readings => updateEddiReadings(eddi.id, readings));
+
 		}
 
 		if( eddi.readings ){
