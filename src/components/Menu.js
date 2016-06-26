@@ -100,7 +100,7 @@ class Menu extends Component {
 					key={`troubleshoot`}
 				>
 					<div className={troubleshootSpriteClass}></div>
-					<p>Troubleshoot</p>
+					<p>Status</p>
 				</Link>),
 				(<Link to={{ pathname : PATHS.WEATHER, query }}
 					activeClassName='active'

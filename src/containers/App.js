@@ -9,7 +9,7 @@ import { userLogout } from '../actions/user';
 import { appStartThunk } from '../actions/app';
 
 import style from '../less/base.less';
-
+import awesomeStyle from '../../assets/font-awesome/less/font-awesome.less';
 
 function mapStateToProps(state){
 	return {

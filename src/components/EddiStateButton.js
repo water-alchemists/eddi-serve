@@ -84,6 +84,9 @@ class EddiStateButton extends Component {
 				onClick={event => this._toggle(event)}
 			>
 				{stateText}
+				<span className='icon-container'>
+					<i className="fa fa-angle-down" ariaHidden="true"></i>
+				</span>
 				{ OptionContainerElement }
 			</div>
 		);

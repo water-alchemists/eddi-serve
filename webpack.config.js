@@ -21,6 +21,10 @@ module.exports = {
 			test: /\.less$/,
 			loader: "style!css!less"
 		},
+		{
+   			test: /\.(jpe|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/, 
+			loader: 'url?limit=100000&name=[name].[ext]'
+        }
 		]
 	}
 }

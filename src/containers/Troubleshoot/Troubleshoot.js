@@ -40,7 +40,7 @@ class Troubleshoot extends Component {
 			updateMenuName(eddi.settings.name);
 			EddiFire.addEddiEventListener(eddi.id, 'state', cycle => getEddiCycle(eddi.id, cycle));
 		}
-		else updateMenuName('Troubleshoot');
+		else updateMenuName('Status');
 	}
 
 	componentWillReceiveProps(newProps){
