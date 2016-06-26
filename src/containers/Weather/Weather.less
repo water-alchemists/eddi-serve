@@ -40,14 +40,14 @@
                     font-size: 36px;
                       margin: 12px 0 0;
                       font-weight: 500;
-                      color: @trim_color;
+                      color: @dark_grey;
                       font-weight: 200;
                 }
                 .weather-type,
                 .weather-updated {
                     font-size: 12px;
                     margin: 0;
-                    color: @trim_color;
+                    color: @dark_grey;
                     clear: right;
                 }
             }
@@ -67,7 +67,7 @@
                         color:black;
                         text-transform: lowercase;
                     }
-                    td.value p {
+                    td.value {
                         color:@dark_grey;
                         text-transform: lowercase;
                     }
@@ -75,6 +75,11 @@
                         margin-top : 10px;
                         margin-bottom : 10px;
                         margin-left : 5px;
+                    }
+                    &.date-row, &.temp-row {
+                        td.value {
+                            text-transform: uppercase;
+                        }
                     }
                 }
             }

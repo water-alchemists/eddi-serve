@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 
-import { formatDegreeToDirection, formatDateToTime } from '../data';
+import { formatDegreeToDirection, formatDateToTime, getTimezone } from '../data';
 
 class WeatherTable extends Component {
     _renderRain(){
@@ -77,14 +77,15 @@ class WeatherTable extends Component {
     }
 
     _renderDate(date, type){
-        const text = formatDateToTime(date);
+        const text = formatDateToTime(date),
+            timezone = getTimezone();
         return (
-            <tr>
+            <tr className='date-row'>
                 <td className='label'>
                     <p>{type}</p>
                 </td>
                 <td className='value'>
-                    <p>{text}</p>
+                    <p>{`${text} ${timezone}`}</p>
                 </td>
             </tr>
         );
@@ -93,7 +94,7 @@ class WeatherTable extends Component {
     _renderTemp(temp, type){
         const rounded = Math.floor(temp);
         return (
-            <tr>
+            <tr className='temp-row'>
                 <td className='label'>
                     <p>{type}</p>
                 </td>
