@@ -12,6 +12,7 @@ class SalinityGraphWrapper extends Component {
                 'sprite-wrapper',
                 { hide : hideWarning },
             ]);
+
         return (
             <div className='salinity-graph-wrapper'>
                 <div>

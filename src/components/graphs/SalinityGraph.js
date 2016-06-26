@@ -37,16 +37,17 @@ export default class SalinityGraph extends Component {
   }
 
   shouldComponentUpdate(){
-    return false;
+    return true;
   }
 
 
-  paint(ppm, threshold){
-    ppm = Math.min(ppm, 4000);
+  paint(salinity, threshold){
+    const ppm = Math.min(salinity, 4000);
     var context = this.context;
     context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     var density = ppm / 400;
-    const color = determineColor(ppm, threshold);
+    const color = determineColor(salinity, threshold);
+
     // draw circle
     context.beginPath();
     context.arc(CENTER, CENTER, CENTER - 2, 0, 2 * Math.PI, false)

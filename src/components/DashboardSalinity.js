@@ -79,7 +79,7 @@ class DashboardSalinity extends Component {
 		const { readings, direction } = this.props,
 			{ prop } = this.state,
 			formatter = FORMATTERS[type];
-		console.log('this is the type', type, prop);
+
 		let graphData = [];
 		if(formatter instanceof Function) graphData = formatter(readings, prop);
 		this.setState({ type, graphData });
@@ -92,7 +92,6 @@ class DashboardSalinity extends Component {
 			status = current > threshold ? generateBadText(isIn) : generateGoodText(),
 			currentString = commaSeparateNumber(Math.floor(current)),
 			thresholdString = commaSeparateNumber(threshold);
-
 		return (
 			<div className='dashboard-view salinity'>
 				<div className='dashboard-current'>
