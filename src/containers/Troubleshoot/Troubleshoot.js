@@ -49,6 +49,11 @@ class Troubleshoot extends Component {
 
 		if( eddi.id && eddi.id !== oldEddi.id ) {
 			updateMenuName(eddi.settings.name);
+
+			if(oldEddi.id){
+				EddiFire.removeEddiEventListener(oldEddi.id, 'state');
+			}
+			
 			EddiFire.addEddiEventListener(eddi.id, 'state', cycle => getEddiCycle(eddi.id, cycle));
 		}
 	}
