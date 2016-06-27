@@ -97,10 +97,11 @@ class DashboardSalinity extends Component {
 	
 	render(){
 		const { type, graphData, prefix } = this.state,
-			{ threshold, current, direction, readings } = this.props,
+			{ threshold, current:raw, direction, readings } = this.props,
 			isIn = direction === 'input',
+			current = Math.floor(raw),
 			status = current > threshold ? generateBadText(isIn) : generateGoodText(),
-			currentString = commaSeparateNumber(Math.floor(current)),
+			currentString = commaSeparateNumber(current),
 			thresholdString = commaSeparateNumber(threshold);
 		return (
 			<div className='dashboard-view salinity'>
