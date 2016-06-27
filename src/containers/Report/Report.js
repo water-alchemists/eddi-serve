@@ -72,7 +72,7 @@ class Report extends Component {
 		else updateMenuName('Report');
 		if(readings) {
 			const newState = {},
-				formattedReadings = mapDateToReadings(readings);
+				formattedReadings = Array.isArray(readings) ? readings : mapDateToReadings(readings);
 			if(formattedReadings.length) newState.start = getDateObject(formattedReadings[0].date);
 			newState.readings = formattedReadings;
 			this.setState(newState);
@@ -90,7 +90,7 @@ class Report extends Component {
 
 			if(readings) {
 				const newState = {},
-				formattedReadings = mapDateToReadings(readings);
+					formattedReadings = Array.isArray(readings) ? readings : mapDateToReadings(readings);
 				if(formattedReadings.length) newState.start = getDateObject(formattedReadings[0].date);
 				newState.readings = formattedReadings;
 				this.setState(newState);

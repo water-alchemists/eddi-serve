@@ -425,7 +425,7 @@ class EddiFire {
 	}
 
 	addReadingsListener(path, func){
-		this.refs.BASE.child(path).orderByKey().limitToLast(1500).on('value', snapshot => func(snapshot.val()));
+		this.refs.BASE.child(path).orderByKey().limitToLast(360).on('value', snapshot => func(snapshot.val()));
 	}
 
 	removeEventListeners(path){

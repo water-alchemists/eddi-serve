@@ -12,6 +12,8 @@ import {
 	USER_LOGOUT
 } from '../constants';
 
+import { mapDateToReadings } from '../data';
+
 const initialState = {
 	id : null,
 	settings : {
@@ -52,18 +54,26 @@ export default function(state = initialState, action = {}){
 
 	switch(type){
 	case APP_START_SUCCESS : 
+		if(!selected.readings) selected.readings = [];
+		else if(!Array.isArray(selected.readings)) selected.readings = mapDateToReadings(selected.readings);
 		return {
 			...initialState,
 			...selected
 		};
 		break;
 	case EDDI_SELECT : 
+		if(!selected.readings) selected.readings = [];
+		else if(!Array.isArray(selected.readings)) selected.readings = mapDateToReadings(selected.readings);
+
 		return {
 			...initialState,
 			...selected
 		};
 		break;
-	case EDDI_GETONE_SUCCESS : 
+	case EDDI_GETONE_SUCCESS :
+		if(!selected.readings) selected.readings = [];
+		else if(!Array.isArray(selected.readings)) selected.readings = mapDateToReadings(selected.readings);
+
 		return {
 			...initialState,
 			...selected
@@ -73,6 +83,9 @@ export default function(state = initialState, action = {}){
 		let newSelected;
 		if(!state.id && list.length) newSelected = list[0];
 		if(newSelected) {
+			if(!selected.readings) newSelected.readings = [];
+			else if(!Array.isArray(newSelected.readings)) newSelected.readings = mapDateToReadings(newSelected.readings);
+
 			return {
 				...initialState,
 				...newSelected
@@ -124,11 +137,15 @@ export default function(state = initialState, action = {}){
 		break;
 	case EDDI_READINGS_SUCCESS : 
 		if(state.id === id){
+			state.readings.forEach(r => delete readings[r.epoch]);
+			const additional = mapDateToReadings(readings);
+
 			return {
 				...state,
-				readings : {
-					...readings
-				}
+				readings : [
+					...state.readings,
+					...additional
+				]
 			}
 		} else return state;
 		break;

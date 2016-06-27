@@ -70,8 +70,9 @@ class Dashboard extends Component {
 
 		if( eddi.readings ){
 			//format the readings into an array for data handling
-			const readings = mapDateToReadings(eddi.readings),
-				readingsLength = readings.length,
+			const readings = Array.isArray(eddi.readings) ? eddi.readings : mapDateToReadings(eddi.readings);
+			
+			const readingsLength = readings.length,
 				current = readingsLength ? readings[readingsLength - 1] : {};
 
 			this.setState({ readings, current });
@@ -98,6 +99,7 @@ class Dashboard extends Component {
 				EddiFire.removeEddiEventListener(oldEddi.id, 'settings');
 				EddiFire.removeEddiEventListener(oldEddi.id, 'readings');
 			}
+
 			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 			EddiFire.addEddiEventListener(eddi.id, 'readings', readings => updateEddiReadings(eddi.id, readings));
 
@@ -105,8 +107,9 @@ class Dashboard extends Component {
 
 		if( eddi.readings ){
 			//format the readings into an array for data handling
-			const readings = mapDateToReadings(eddi.readings),
-				readingsLength = readings.length,
+			const readings = Array.isArray(eddi.readings) ? eddi.readings : mapDateToReadings(eddi.readings);
+			
+			const readingsLength = readings.length,
 				current = readingsLength ? readings[readingsLength - 1] : {};
 			
 			this.setState({ readings, current });
@@ -186,7 +189,7 @@ class Dashboard extends Component {
 			{ id, settings={} } = eddi,
 			{ view } = location.query,
 			{ salinityIn, salinityOut, flow, salinityRec } = getGoodBad(current, settings.salinity);
-
+		console.log('this is the readings', readings, readings.length);
 		let DashboardElement = readings.length ? this._renderViewBasedQuery(view) : this._renderNoReadings();
 		return (
 			<div id="dashboard" className="page">

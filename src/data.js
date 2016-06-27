@@ -96,13 +96,14 @@ export const salinityOptions = {
 //readings
 export function mapDateToReadings(readings){
 	return Object.keys(readings)
-		.map(utc => {
+		.map(epoch => {
 			return {
-				...readings[utc],
-				date : new Date(utc * 1000)
-			}
+				...readings[epoch],
+				epoch : epoch,
+				date : new Date(epoch * 1000)
+			};
 		})
-		.sort((a,b) => a.date > b.date);
+		.sort((a, b) => a.date > b.date);
 }
 
 export function formatReadingsToCsv(readings){
