@@ -165,8 +165,8 @@ class Dashboard extends Component {
 		//defaults to salinity out
 		if(eddi.settings){
 			switch(view){
-			case QUERY.SALINITY_IN:
-				return this._renderSalinity(current.ppmIn, 'input');
+			case QUERY.SALINITY_OUT:
+				return this._renderSalinity(current.ppmOut, 'output');
 			case QUERY.SALINITY_REC:
 				return this._renderSalinity(current.ppmRec, 'recirculation');
 			case QUERY.FLOW:
@@ -174,7 +174,7 @@ class Dashboard extends Component {
 			// case QUERY.POWER : 
 			// 	return this._renderPower();
 			default:
-				return this._renderSalinity(current.ppmOut, 'output');
+				return this._renderSalinity(current.ppmIn, 'input');
 			}
 		}
 		return null;

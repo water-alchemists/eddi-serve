@@ -124,13 +124,14 @@ class DashboardMenu extends Component {
 			<div className='dashboard-menu'>
 				<Link to={ ROUTES.SALINITY_IN(id) }
 					activeClassName={ACTIVE_CLASS}
+					className={defaultViewClass}
 				>
 					<div className={salinityInClass} />
 					<p className={salinityInFont}>in</p>
 				</Link>
 				<Link to={ ROUTES.SALINITY_OUT(id) }
 					activeClassName={ACTIVE_CLASS}
-					className={defaultViewClass}
+					
 				>
 					<div className={salinityOutClass} />
 					<p className={salinityOutFont}>out</p>
