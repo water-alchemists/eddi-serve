@@ -118,7 +118,6 @@ class EddiFire {
 
 	createUser(email, password){
 		const submission = { email, password };
-		console.log('this is the submission', submission);
 		return new Promise((resolve, reject) => {
 			this.refs.BASE.createUser(
 				submission, 
@@ -425,6 +424,10 @@ class EddiFire {
 		this.refs.BASE.child(path).on('value', snapshot => func(snapshot.val()));
 	}
 
+	addReadingsListener(path, func){
+		this.refs.BASE.child(path).orderByKey().limitToLast(1500).on('value', snapshot => func(snapshot.val()));
+	}
+
 	removeEventListeners(path){
 		this.refs.BASE.child(path).off('value');
 	}
@@ -433,7 +436,10 @@ class EddiFire {
 		const path = `${PATHS.EDDI_PATH}/${id}/${event}`,
 			isMatch = path.match(EVENTS[event]);
 		if(!isMatch) throw new Error(`${path} is not valid to listen on.`);
-		this.addEventListener(path, func);
+		
+		// add appropriate listener
+		if(event != 'readings') this.addEventListener(path, func);
+		else this.addReadingsListener(path, func);
 	}
 
 	removeEddiEventListener(id, event, func){

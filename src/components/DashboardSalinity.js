@@ -65,6 +65,16 @@ class DashboardSalinity extends Component {
 		};
 	}
 
+	componentWillMount(){
+		const type = HISTORICAL.TODAY,
+			{ readings, direction } = this.props,
+			formatter = FORMATTERS[type],
+			{ prop, prefix } = generateCharacteristics(direction);
+		let graphData = [];
+		if(formatter instanceof Function) graphData = formatter(readings, prop);
+		this.setState({ graphData, prop, prefix });
+	}
+
 	componentWillReceiveProps(nextProps){
 		const { type } = this.state,
 			{ readings, direction } = nextProps,

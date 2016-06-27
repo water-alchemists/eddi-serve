@@ -98,7 +98,6 @@ class Dashboard extends Component {
 				EddiFire.removeEddiEventListener(oldEddi.id, 'settings');
 				EddiFire.removeEddiEventListener(oldEddi.id, 'readings');
 			}
-			
 			EddiFire.addEddiEventListener(eddi.id, 'settings', settings => updateEddiSettings(eddi.id, settings));
 			EddiFire.addEddiEventListener(eddi.id, 'readings', readings => updateEddiReadings(eddi.id, readings));
 
@@ -109,13 +108,14 @@ class Dashboard extends Component {
 			const readings = mapDateToReadings(eddi.readings),
 				readingsLength = readings.length,
 				current = readingsLength ? readings[readingsLength - 1] : {};
-
+			
 			this.setState({ readings, current });
 		}
 	}
 
 	componentWillUnmount(){
 		const { eddi={} } = this.props;
+
 		EddiFire.removeEddiEventListener(eddi.id, 'settings');
 		EddiFire.removeEddiEventListener(eddi.id, 'readings');
 	}
@@ -132,7 +132,6 @@ class Dashboard extends Component {
 		const { readings } = this.state,
 			{ eddi={} } = this.props,
 			threshold = eddi.settings.salinity;
-
 
 		return (
 			<DashboardSalinity key={direction} 
