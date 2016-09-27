@@ -6,3 +6,5 @@ dist/
 browse.VC.db
 
 *.log
+.DS_Store
+.vscode
