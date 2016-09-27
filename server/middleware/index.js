@@ -1,8 +1,9 @@
 'use strict';
-const path = require('path'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    favicon = require('serve-favicon');
+import path from 'path';
+import express from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import favicon from 'serve-favicon';
     
 module.exports = app => {
     
@@ -17,4 +18,6 @@ module.exports = app => {
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
     
+    //parses cookies
+    app.use(cookieParser());
 };
