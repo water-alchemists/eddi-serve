@@ -54,5 +54,8 @@
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1",
     "xml2json": "^0.9.1"
+  },
+  "engines" : {
+    "node" : "~4"
   }
 }

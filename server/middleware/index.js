@@ -1,10 +1,10 @@
 'use strict';
-import path from 'path';
-import express from 'express';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import favicon from 'serve-favicon';
-    
+const path = require('path'),
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
+    favicon = require('serve-favicon');
+
 module.exports = app => {
     
     //static middleware

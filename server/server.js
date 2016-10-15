@@ -1,11 +1,11 @@
 'use strict';
-import express from 'express';
-import path from 'path';
+const express = require('express'),
+    path = require('path');
 
-import config from './config';
-import middleware from './middleware';
-import api from './api';
-import device from './device';
+const config = require('./config'),
+    middleware = require('./middleware'),
+    api = require('./api'),
+    device  = require('./device');
 
 
 const PORT = process.env.PORT || 3000;
